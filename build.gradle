@@ -8,17 +8,27 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'DocsQuickstart'
+mainClassName = 'StructurizrQuickstart'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 version = '1.0'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    //Google doc api
     compile 'com.google.api-client:google-api-client:1.30.1'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.1'
     compile 'com.google.apis:google-api-services-docs:v1-rev20190827-1.30.1'
+
+    //Structurizr
+    compile 'com.structurizr:structurizr-client:1.3.1'
+    compile 'com.google.code.gson:gson:2.8.6'
+
+
 }

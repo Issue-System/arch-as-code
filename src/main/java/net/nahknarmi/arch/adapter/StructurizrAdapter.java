@@ -1,6 +1,5 @@
 package net.nahknarmi.arch.adapter;
 
-import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
@@ -10,7 +9,6 @@ import com.structurizr.util.WorkspaceUtils;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.Objects;
 
 public class StructurizrAdapter {
     private final Workspace workspace;
@@ -38,7 +36,8 @@ public class StructurizrAdapter {
     }
 
     public void upload() throws Exception {
-        buildClient().putWorkspace(this.workspace.getId(), WorkspaceUtils.loadWorkspaceFromJson(new File("/Users/ikhan/scratch/trilogy/google-docs-spike/src/main/resources/structurizr/49328.json")));
+        String path = getClass().getResource("/structurizr/49328.json").getPath();
+        buildClient().putWorkspace(this.workspace.getId(), WorkspaceUtils.loadWorkspaceFromJson(new File(path)));
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +48,6 @@ public class StructurizrAdapter {
 
         printEnvs();
 
-        System.err.println(String.format("----------%s ----------%s", structurizrApiKey.length(), structurizrApiSecret.length()));
 
         if (structurizrApiKey != null && structurizrApiSecret != null) {
             structurizrClient = new StructurizrClient(structurizrApiKey, structurizrApiSecret);

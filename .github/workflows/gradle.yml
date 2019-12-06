@@ -17,4 +17,4 @@ jobs:
       env: # Or as an environment variable
         structurizr_api_key: ${{ secrets.structurizr_api_key }}
         structurizr_api_secret: ${{ secrets.structurizr_api_secret }}
-      run: ./gradlew build
+      run: ./gradlew run

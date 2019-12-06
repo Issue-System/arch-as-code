@@ -49,7 +49,7 @@ public class StructurizrAdapter {
 
         printEnvs();
 
-        System.err.println(String.format("----------%s ----------%s", structurizrApiKey, structurizrApiSecret));
+        System.err.println(String.format("----------%s ----------%s", structurizrApiKey.length(), structurizrApiSecret.length()));
 
         if (structurizrApiKey != null && structurizrApiSecret != null) {
             structurizrClient = new StructurizrClient(structurizrApiKey, structurizrApiSecret);

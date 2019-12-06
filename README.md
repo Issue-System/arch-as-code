@@ -27,4 +27,9 @@ This project shows examples of integrating with:
 
 # Structurizr Notes
 - In order to get the API keys & secret you need to first create a workspace
+- Java example - https://github.com/structurizr/java-quickstart
+- API documentation - https://structurizr.com/help/web-api
+- Structurizr open API docs - https://structurizr.com/static/assets/structurizr-api.yaml
 
+# Google Docs API
+- Java API example - https://developers.google.com/docs/api/quickstart/java 

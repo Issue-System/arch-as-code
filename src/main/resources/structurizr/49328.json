@@ -1,38 +1,54 @@
 {
     "id": 49328,
-    "name": "DevSpaces Product Architecture as Code!!!",
-    "description": "This is a model of my software system.",
+    "name": "DevSpaces Product Architecture",
     "model": {
+        "enterprise": {
+            "name": "DevFactory"
+        },
         "people": [
             {
-                "id": "1",
+                "id": "2",
                 "tags": "Element,Person",
-                "name": "User",
-                "description": "A user of my software system.",
+                "name": "Developer",
                 "relationships": [
                     {
-                        "id": "3",
-                        "tags": "Relationship,Synchronous",
-                        "sourceId": "1",
-                        "destinationId": "2",
-                        "description": "Uses",
+                        "id": "9",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "8",
+                        "description": "uses",
                         "interactionStyle": "Synchronous"
-                    }
-                ],
-                "location": "Unspecified"
-            },
-            {
-                "id": "99",
-                "tags": "Element,Person",
-                "name": "Admin",
-                "description": "An admin of my software system.",
-                "relationships": [
+                    },
                     {
-                        "id": "4",
-                        "tags": "Relationship,Synchronous",
-                        "sourceId": "1",
-                        "destinationId": "2",
-                        "description": "Uses",
+                        "id": "13",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "5",
+                        "description": "pays for DevSpaces via",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "12",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "4",
+                        "description": "interacts with DevSpaces via",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "10",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "1",
+                        "description": "uses",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "11",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "3",
+                        "description": "reads DevSpaces information from",
                         "interactionStyle": "Synchronous"
                     }
                 ],
@@ -41,10 +57,82 @@
         ],
         "softwareSystems": [
             {
-                "id": "2",
+                "id": "1",
                 "tags": "Element,Software System",
-                "name": "Software System",
-                "description": "My software system.",
+                "name": "DevSpaces",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "4",
+                        "tags": "Element,Container",
+                        "name": "Command Line Interface",
+                        "relationships": [
+                            {
+                                "id": "15",
+                                "tags": "Relationship",
+                                "sourceId": "4",
+                                "destinationId": "7",
+                                "description": "invokes",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "7",
+                        "tags": "Element,Container",
+                        "name": "Container Management Platform"
+                    },
+                    {
+                        "id": "6",
+                        "tags": "Element,Container",
+                        "name": "Data Repository"
+                    },
+                    {
+                        "id": "5",
+                        "tags": "Element,Container",
+                        "name": "Payment Gateway",
+                        "relationships": [
+                            {
+                                "id": "17",
+                                "tags": "Relationship",
+                                "sourceId": "5",
+                                "destinationId": "6",
+                                "description": "updates information in",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "3",
+                        "tags": "Element,Container",
+                        "name": "Web Interface",
+                        "relationships": [
+                            {
+                                "id": "16",
+                                "tags": "Relationship",
+                                "sourceId": "3",
+                                "destinationId": "6",
+                                "description": "reads from",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "8",
+                "tags": "Element,Software System",
+                "name": "Local Developer Workstation",
+                "relationships": [
+                    {
+                        "id": "14",
+                        "tags": "Relationship",
+                        "sourceId": "8",
+                        "destinationId": "4",
+                        "description": "invokes",
+                        "interactionStyle": "Synchronous"
+                    }
+                ],
                 "location": "Unspecified"
             }
         ],
@@ -53,48 +141,260 @@
     "documentation": {
         "sections": [
             {
-                "elementId": "2",
                 "title": "Context",
                 "order": 1,
                 "format": "Markdown",
-                "content": "Here is some context about the software system...\n\n![](embed:SystemContext)",
+                "content": "",
                 "number": 1
+            },
+            {
+                "title": "Functional Overview",
+                "order": 2,
+                "format": "Markdown",
+                "content": "DevFactory DevSpaces standardizes the definition of the development environment in a developer-centric way using Docker as an enabling technology.  It then makes it easy for developers to combine the power and speed of cloud computing with the familiarity and richness of their local IDE.  Using DF DevSpaces, developers can:\nReduce the time wasted setting up a working dev environment from days to minutes\nReduce the time wasted waiting on builds, deployments, and test runs\nReduce the time wasted debugging your cloud-based applications that utilize cloud resources (such as databases, queues, caches, and microservices)\nSave hundreds of dollars per developer by avoiding the cost of expensive VM farms and virtualization software or powerful developer workstations that spend 98% of their time is a text editor.\nDF DevSpaces is unlike VM/VDI-based approaches because:\nIt lets developers continue to use their local IDE and maintain a great user experience without making developers suffer using slow, network-lagged IDEs over VDI.\nIt packs more active developers on the same powerful cloud-based hardware than VM-based solutions.  This increased density can translate to millions of dollars saved for a mid-sized enterprise.\nDF DevSpaces is unlike Cloud-based IDEs because:\nIt lets developers continue to use their local IDE instead of using a simplistic, web-based development environment\n\nThe DevSpaces client application currently supports the following list of Operating Systems and should be tested at the minimum with oldest versions of the Operating Systems:\nmacOS 10.12: Sierra+\nWindows 10\nUbuntu 16+",
+                "number": 2
+            },
+            {
+                "title": "Technical Debt",
+                "order": 12,
+                "format": "Markdown",
+                "content": "- Item: \n  - Inherited / Conscious?: \n  - Criticality:\n  - Effort to Fix:\n  - Fix by Date:\n  - Related Specs:",
+                "number": 12
+            },
+            {
+                "title": "Software Architecture",
+                "order": 4,
+                "format": "Markdown",
+                "content": "![](embed:DevSpacesContainers)",
+                "number": 4
+            },
+            {
+                "title": "Deployment",
+                "order": 8,
+                "format": "Markdown",
+                "content": "",
+                "number": 8
+            },
+            {
+                "title": "Data",
+                "order": 9,
+                "format": "Markdown",
+                "content": "",
+                "number": 9
+            },
+            {
+                "title": "Cross Functional Requirements",
+                "order": 5,
+                "format": "Markdown",
+                "content": "- **Requirement**: System Uptime\n  - Inherited / Conscious: Inherited\n  - Criticality: Priority 1\n  - Adhere by Date: Immediate\n  - Acceptable Value Range: 99.999%\n  - Related Specs: N/A",
+                "number": 5
+            },
+            {
+                "title": "Principles",
+                "order": 3,
+                "format": "Markdown",
+                "content": "",
+                "number": 3
+            },
+            {
+                "title": "Infrastructure Architecture",
+                "order": 7,
+                "format": "Markdown",
+                "content": "",
+                "number": 7
+            },
+            {
+                "title": "Development Environment",
+                "order": 10,
+                "format": "Markdown",
+                "content": "",
+                "number": 10
+            },
+            {
+                "title": "Quality Attributes",
+                "order": 6,
+                "format": "Markdown",
+                "content": "",
+                "number": 6
+            },
+            {
+                "title": "Operation and Support",
+                "order": 11,
+                "format": "Markdown",
+                "content": "",
+                "number": 11
             }
         ],
-        "template": {
-            "name": "Software Guidebook",
-            "author": "Simon Brown",
-            "url": "https://leanpub.com/visualising-software-architecture"
-        },
-        "decisions": [],
+        "decisions": [
+            {
+                "elementId": "1",
+                "id": "1",
+                "date": "2019-11-19T16:04:32Z",
+                "title": "Docker as the containerization technology platform",
+                "status": "Accepted",
+                "content": "## Context\nWe need to choose the default containerization technology that DevSpaces will support\n\n## Decision\nWe will choose Docker as the default platform\n\n## Consequences\nWe will only be able to support Linux based environments for the moment until Docker is able to support full Windows workspaces",
+                "format": "Markdown"
+            },
+            {
+                "elementId": "1",
+                "id": "2",
+                "date": "2019-11-19T19:07:15Z",
+                "title": "Kubernetes as the container management platform",
+                "status": "Accepted",
+                "content": "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences",
+                "format": "Markdown"
+            }
+        ],
         "images": []
     },
     "views": {
-        "systemContextViews": [
+        "systemLandscapeViews": [
             {
-                "softwareSystemId": "2",
-                "description": "An example of a System Context diagram.",
-                "key": "SystemContext",
+                "key": "OverallView",
                 "paperSize": "A5_Landscape",
+                "animations": [
+                    {
+                        "order": 1,
+                        "elements": [
+                            "1",
+                            "2",
+                            "8"
+                        ],
+                        "relationships": [
+                            "9",
+                            "10"
+                        ]
+                    }
+                ],
                 "enterpriseBoundaryVisible": true,
                 "elements": [
                     {
                         "id": "1",
-                        "x": 60,
-                        "y": 160
+                        "x": 605,
+                        "y": 335
                     },
                     {
                         "id": "2",
-                        "x": 955,
-                        "y": 180
+                        "x": 1305,
+                        "y": 235
+                    },
+                    {
+                        "id": "8",
+                        "x": 1275,
+                        "y": 890
                     }
                 ],
                 "relationships": [
                     {
-                        "id": "3"
+                        "id": "9"
+                    },
+                    {
+                        "id": "10"
+                    }
+                ]
+            }
+        ],
+        "containerViews": [
+            {
+                "softwareSystemId": "1",
+                "key": "DevSpacesContainers",
+                "paperSize": "A3_Landscape",
+                "animations": [
+                    {
+                        "order": 1,
+                        "elements": [
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8"
+                        ],
+                        "relationships": [
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15",
+                            "16",
+                            "9"
+                        ]
                     }
                 ],
-                "animations": []
+                "elements": [
+                    {
+                        "id": "2",
+                        "x": 1080,
+                        "y": 1329
+                    },
+                    {
+                        "id": "3",
+                        "x": 2680,
+                        "y": 2204
+                    },
+                    {
+                        "id": "4",
+                        "x": 2680,
+                        "y": 1004
+                    },
+                    {
+                        "id": "5",
+                        "x": 2680,
+                        "y": 1604
+                    },
+                    {
+                        "id": "6",
+                        "x": 3430,
+                        "y": 2204
+                    },
+                    {
+                        "id": "7",
+                        "x": 3430,
+                        "y": 1004
+                    },
+                    {
+                        "id": "8",
+                        "x": 1780,
+                        "y": 1079
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "17"
+                    },
+                    {
+                        "id": "16"
+                    },
+                    {
+                        "id": "15"
+                    },
+                    {
+                        "id": "14"
+                    },
+                    {
+                        "id": "13"
+                    },
+                    {
+                        "id": "11"
+                    },
+                    {
+                        "id": "12",
+                        "vertices": [
+                            {
+                                "x": 2355,
+                                "y": 1450
+                            },
+                            {
+                                "x": 2420,
+                                "y": 1260
+                            }
+                        ]
+                    },
+                    {
+                        "id": "9"
+                    }
+                ]
             }
         ],
         "configuration": {
@@ -102,24 +402,16 @@
             "styles": {
                 "elements": [
                     {
-                        "tag": "Software System",
-                        "background": "#1168bd",
-                        "color": "#ffffff"
-                    },
-                    {
                         "tag": "Person",
-                        "background": "#08427b",
-                        "color": "#ffffff",
                         "shape": "Person"
                     }
                 ],
                 "relationships": []
             },
             "terminology": {},
-            "lastSavedView": "SystemContext"
+            "lastSavedView": "OverallView"
         },
-        "systemLandscapeViews": [],
-        "containerViews": [],
+        "systemContextViews": [],
         "componentViews": [],
         "dynamicViews": [],
         "deploymentViews": [],

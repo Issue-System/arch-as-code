@@ -13,6 +13,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
+    - name: Print environment variables
+      run: env
+      env: # Or as an environment variable
+        structurizr_api_key: ${{ secrets.structurizr_api_key }}
+        structurizr_api_secret: ${{ secrets.structurizr_api_secret }}
+
     - name: Build with Gradle
       run: ./gradlew run
       env: # Or as an environment variable

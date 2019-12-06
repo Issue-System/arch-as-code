@@ -17,11 +17,11 @@ jobs:
     - name: Print environment variables
       run: env
       env: # Or as an environment variable
-        structurizr_api_key: ${{ secrets.structurizr_api_key }}
-        structurizr_api_secret: ${{ secrets.structurizr_api_secret }}
+        STRUCTURIZR_API_KEY: ${{ secrets.STRUCTURIZR_API_KEY }}
+        STRUCTURIZR_API_SECRET: ${{ secrets.STRUCTURIZR_API_SECRET }}
 
     - name: Build with Gradle
       run: ./gradlew run
       env: # Or as an environment variable
-        structurizr_api_key: ${{ secrets.structurizr_api_key }}
-        structurizr_api_secret: ${{ secrets.structurizr_api_secret }}
+        STRUCTURIZR_API_KEY: ${{ secrets.STRUCTURIZR_API_KEY }}
+        STRUCTURIZR_API_SECRET: ${{ secrets.STRUCTURIZR_API_SECRET }}

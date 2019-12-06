@@ -43,8 +43,8 @@ public class StructurizrAdapter {
 
     @SuppressWarnings("unchecked")
     private static StructurizrClient buildClient() {
-        String structurizrApiKey = System.getenv("STRUCTURIZR_API_KEY");
-        String structurizrApiSecret = System.getenv("STRUCTURIZR_API_SECRET");
+        String structurizrApiKey = System.getenv().get("STRUCTURIZR_API_KEY");
+        String structurizrApiSecret = System.getenv().get("STRUCTURIZR_API_SECRET");
         StructurizrClient structurizrClient;
 
         printEnvs();

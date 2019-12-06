@@ -1,6 +1,10 @@
 {
     "id": 49328,
     "name": "DevSpaces Product Architecture",
+    "revision": 24,
+    "lastModifiedDate": "2019-12-06T21:03:38Z",
+    "lastModifiedUser": "nsavic@thoughtworks.com",
+    "lastModifiedAgent": "structurizr-web/1678",
     "model": {
         "enterprise": {
             "name": "DevFactory"
@@ -11,6 +15,22 @@
                 "tags": "Element,Person",
                 "name": "Developer",
                 "relationships": [
+                    {
+                        "id": "11",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "3",
+                        "description": "reads DevSpaces information from",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "12",
+                        "tags": "Relationship",
+                        "sourceId": "2",
+                        "destinationId": "4",
+                        "description": "interacts with DevSpaces via",
+                        "interactionStyle": "Synchronous"
+                    },
                     {
                         "id": "9",
                         "tags": "Relationship",
@@ -28,27 +48,11 @@
                         "interactionStyle": "Synchronous"
                     },
                     {
-                        "id": "12",
-                        "tags": "Relationship",
-                        "sourceId": "2",
-                        "destinationId": "4",
-                        "description": "interacts with DevSpaces via",
-                        "interactionStyle": "Synchronous"
-                    },
-                    {
                         "id": "10",
                         "tags": "Relationship",
                         "sourceId": "2",
                         "destinationId": "1",
                         "description": "uses",
-                        "interactionStyle": "Synchronous"
-                    },
-                    {
-                        "id": "11",
-                        "tags": "Relationship",
-                        "sourceId": "2",
-                        "destinationId": "3",
-                        "description": "reads DevSpaces information from",
                         "interactionStyle": "Synchronous"
                     }
                 ],
@@ -151,7 +155,7 @@
                 "title": "Functional Overview",
                 "order": 2,
                 "format": "Markdown",
-                "content": "DevFactory DevSpaces standardizes the definition of the development environment in a developer-centric way using Docker as an enabling technology.  It then makes it easy for developers to combine the power and speed of cloud computing with the familiarity and richness of their local IDE.  Using DF DevSpaces, developers can:\nReduce the time wasted setting up a working dev environment from days to minutes\nReduce the time wasted waiting on builds, deployments, and test runs\nReduce the time wasted debugging your cloud-based applications that utilize cloud resources (such as databases, queues, caches, and microservices)\nSave hundreds of dollars per developer by avoiding the cost of expensive VM farms and virtualization software or powerful developer workstations that spend 98% of their time is a text editor.\nDF DevSpaces is unlike VM/VDI-based approaches because:\nIt lets developers continue to use their local IDE and maintain a great user experience without making developers suffer using slow, network-lagged IDEs over VDI.\nIt packs more active developers on the same powerful cloud-based hardware than VM-based solutions.  This increased density can translate to millions of dollars saved for a mid-sized enterprise.\nDF DevSpaces is unlike Cloud-based IDEs because:\nIt lets developers continue to use their local IDE instead of using a simplistic, web-based development environment\n\nThe DevSpaces client application currently supports the following list of Operating Systems and should be tested at the minimum with oldest versions of the Operating Systems:\nmacOS 10.12: Sierra+\nWindows 10\nUbuntu 16+",
+                "content": "DevFactory DevSpaces standardizes the definition of the development environment in a developer-centric way using Docker as an enabling technology.  It then makes it easy for developers to combine the power and speed of cloud computing with the familiarity and richness of their local IDE.  Using DF DevSpaces, developers can:\n\n* Reduce the time wasted setting up a working dev environment from days to minutes\n* Reduce the time wasted waiting on builds, deployments, and test runs\n* Reduce the time wasted debugging your cloud-based applications that utilize cloud resources (such as databases, queues, caches, and microservices)\n* Save hundreds of dollars per developer by avoiding the cost of expensive VM farms and virtualization software or powerful developer workstations that spend 98% of their time is a text editor.\n\nDF DevSpaces is unlike VM/VDI-based approaches because:\n* It lets developers continue to use their local IDE and maintain a great user experience without making developers suffer using slow, network-lagged IDEs over VDI.\n* It packs more active developers on the same powerful cloud-based hardware than VM-based solutions.  This increased density can translate to millions of dollars saved for a mid-sized enterprise.\n\nDF DevSpaces is unlike Cloud-based IDEs because:\n* It lets developers continue to use their local IDE instead of using a simplistic, web-based development environment\n\nThe DevSpaces client application currently supports the following list of Operating Systems and should be tested at the minimum with oldest versions of the Operating Systems:\n* macOS 10.12: Sierra+\n* Windows 10\n* Ubuntu 16+",
                 "number": 2
             },
             {
@@ -409,7 +413,7 @@
                 "relationships": []
             },
             "terminology": {},
-            "lastSavedView": "OverallView"
+            "lastSavedView": "SystemContext"
         },
         "systemContextViews": [],
         "componentViews": [],

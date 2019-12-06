@@ -46,9 +46,6 @@ public class StructurizrAdapter {
         String structurizrApiSecret = System.getenv().get("STRUCTURIZR_API_SECRET");
         StructurizrClient structurizrClient;
 
-        printEnvs();
-
-
         if (structurizrApiKey != null && structurizrApiSecret != null) {
             structurizrClient = new StructurizrClient(structurizrApiKey, structurizrApiSecret);
         } else {
@@ -60,12 +57,5 @@ public class StructurizrAdapter {
         structurizrClient.setWorkspaceArchiveLocation(null);
 
         return structurizrClient;
-    }
-
-    private static void printEnvs() {
-        Map<String, String> map = System.getenv();
-        for (Map.Entry <String, String> entry: map.entrySet()) {
-            System.out.println("Variable Name:- " + entry.getKey() + " Value:- " + entry.getValue());
-        }
     }
 }

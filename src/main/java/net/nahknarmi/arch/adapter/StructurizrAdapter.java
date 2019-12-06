@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.adapter;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
@@ -42,11 +43,20 @@ public class StructurizrAdapter {
 
     @SuppressWarnings("unchecked")
     private static StructurizrClient buildClient() {
-        InputStreamReader reader =
-                new InputStreamReader(StructurizrQuickstart.class.getResourceAsStream("/structurizr/credentials.json"));
-        Map<String, String> map = new Gson().fromJson(reader, Map.class);
-        StructurizrClient structurizrClient = new StructurizrClient(map.get("api_key"), map.get("api_secret"));
+        String structurizrApiKey = System.getenv("structurizr_api_key");
+        String structurizrApiSecret = System.getenv("structurizr_api_secret");
+        StructurizrClient structurizrClient;
+
+        if (structurizrApiKey != null && structurizrApiSecret != null) {
+            structurizrClient = new StructurizrClient(structurizrApiKey, structurizrApiSecret);
+        } else {
+            InputStreamReader reader =
+                    new InputStreamReader(StructurizrQuickstart.class.getResourceAsStream("/structurizr/credentials.json"));
+            Map<String, String> map = new Gson().fromJson(reader, Map.class);
+            structurizrClient = new StructurizrClient(map.get("api_key"), map.get("api_secret"));
+        }
         structurizrClient.setWorkspaceArchiveLocation(null);
+
         return structurizrClient;
     }
 }

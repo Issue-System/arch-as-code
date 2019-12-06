@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
+import com.structurizr.util.WorkspaceUtils;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Objects;
@@ -32,6 +34,10 @@ public class StructurizrAdapter {
 
     public Workspace workspace() {
         return this.workspace;
+    }
+
+    public void upload() throws Exception {
+        buildClient().putWorkspace(this.workspace.getId(), WorkspaceUtils.loadWorkspaceFromJson(new File("/Users/ikhan/scratch/trilogy/google-docs-spike/src/main/resources/structurizr/49328.json")));
     }
 
     @SuppressWarnings("unchecked")

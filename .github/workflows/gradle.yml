@@ -14,7 +14,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
+      run: ./gradlew run
       env: # Or as an environment variable
         structurizr_api_key: ${{ secrets.structurizr_api_key }}
         structurizr_api_secret: ${{ secrets.structurizr_api_secret }}
-      run: ./gradlew run

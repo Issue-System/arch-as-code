@@ -1,10 +1,6 @@
 {
     "id": 49328,
     "name": "DevSpaces Product Architecture",
-    "revision": 24,
-    "lastModifiedDate": "2019-12-06T21:03:38Z",
-    "lastModifiedUser": "nsavic@thoughtworks.com",
-    "lastModifiedAgent": "structurizr-web/1678",
     "model": {
         "enterprise": {
             "name": "DevFactory"

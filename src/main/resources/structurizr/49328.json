@@ -20,6 +20,23 @@
                     }
                 ],
                 "location": "Unspecified"
+            },
+            {
+                "id": "2",
+                "tags": "Element,Person",
+                "name": "Admin",
+                "description": "An admin of my software system.",
+                "relationships": [
+                    {
+                        "id": "4",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "1",
+                        "destinationId": "2",
+                        "description": "Uses",
+                        "interactionStyle": "Synchronous"
+                    }
+                ],
+                "location": "Unspecified"
             }
         ],
         "softwareSystems": [

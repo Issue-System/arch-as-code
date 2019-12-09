@@ -22,9 +22,6 @@ public class ArchitectureDataStructureTransformerTest {
         dataStructure.setId(1L);
 
         ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
-        System.out.println(transformer);
-
-        assertNotNull("Transformer shouldnt be null!", transformer);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);

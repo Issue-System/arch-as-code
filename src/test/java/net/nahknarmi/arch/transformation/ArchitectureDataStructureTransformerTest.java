@@ -21,9 +21,11 @@ public class ArchitectureDataStructureTransformerTest {
         dataStructure.setDescription(PRODUCT_DESCRIPTION);
         dataStructure.setId(1L);
 
-        ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
-        System.out.println(architectureDataStructureTransformer);
-        Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
+        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
+        System.out.println(transformer);
+
+        assertNotNull("Transformer shouldnt be null!", transformer);
+        Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
         assertThat(workspace.getId(), equalTo(1L));

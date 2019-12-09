@@ -21,7 +21,8 @@ public class ArchitectureDataStructureTransformerTest {
         dataStructure.setDescription(PRODUCT_DESCRIPTION);
         dataStructure.setId(1L);
 
-        Workspace workspace = new ArchitectureDataStructureTransformer().toWorkSpace(dataStructure);
+        ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
+        Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
         assertThat(workspace.getId(), equalTo(1L));

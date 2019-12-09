@@ -2,8 +2,10 @@ package net.nahknarmi.arch.model;
 
 public class ArchitectureDataStructure {
     private String name;
-    private Integer id;
+    private Long id;
     private String businessUnit;
+    private Documentation documentation;
+    private String description;
 
     public ArchitectureDataStructure() {
     }
@@ -16,11 +18,11 @@ public class ArchitectureDataStructure {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -30,5 +32,21 @@ public class ArchitectureDataStructure {
 
     public void setBusinessUnit(String businessUnit) {
         this.businessUnit = businessUnit;
+    }
+
+    public Documentation getDocumentation() {
+        return this.documentation;
+    }
+
+    public void setDocumentation(Documentation documentation) {
+        this.documentation = documentation;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

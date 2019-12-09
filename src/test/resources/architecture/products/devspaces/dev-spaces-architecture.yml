@@ -1,5 +1,6 @@
 id: 49328
 name: "DevSpaces"
+description: "DevFactory is a tool"
 businessUnit: "DevFactory"
 #views:
 #  containerView:
@@ -11,7 +12,7 @@ businessUnit: "DevFactory"
 #
 #
 documentation:
-  functionalOverview:
+  functionalOverview: "functional-overview.md"
     ##point to fiel functional-overview.md
 #
 #  techDebt:

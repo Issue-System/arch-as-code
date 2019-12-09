@@ -15,12 +15,15 @@ public class ArchitectureDataStructureImporterTest {
 
     @Test
     public void should_load_architecture_data_structure_from_yaml_file() {
-        InputStream inputStream = getClass().getResourceAsStream("/dev-spaces-architecture.yml");
+        InputStream inputStream = getClass().getResourceAsStream("/architecture/products/devspaces/dev-spaces-architecture.yml");
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(inputStream);
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo("DevSpaces")));
         assertThat(dataStructure.getId(), is(equalTo(49328)));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("DevFactory")));
+        assertThat(dataStructure.getDescription(), is(equalTo("DevFactory is a tool")));
+        assertNotNull(dataStructure.getDocumentation());
+        assertThat(dataStructure.getDocumentation().getFunctionalOverview(), equalTo("functional-overview.md"));
     }
 }

@@ -1,8 +1,12 @@
 package net.nahknarmi.arch.adapter;
 
+import com.structurizr.Workspace;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
 import net.nahknarmi.arch.model.ArchitectureDataStructureImporter;
+import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import org.junit.Test;
+
+import java.io.InputStream;
 
 public class YAMLToStructurizrE2E {
 
@@ -10,19 +14,17 @@ public class YAMLToStructurizrE2E {
     @Test
     public void should_be_able_to_submit_generated_workspace_to_structurizr_api_and_save_changes() {
         //given
-        //yaml file with arch data structurizr
-
-
+        InputStream architectureManifestYaml =
+                getClass().getResourceAsStream("/architecture/products/devspaces/dev-spaces-architecture.yml");
 
         //when
         //transform yaml file to workspace json
         ArchitectureDataStructureImporter importer = new ArchitectureDataStructureImporter();
-        ArchitectureDataStructure dataStructure = importer.load(null);
-
+        ArchitectureDataStructure dataStructure = importer.load(architectureManifestYaml);
 
         //then
         //load generated json to workspace
-
+        Workspace workspace = new ArchitectureDataStructureTransformer().toWorkSpace(dataStructure);
 
         //submit json to struturizr
 

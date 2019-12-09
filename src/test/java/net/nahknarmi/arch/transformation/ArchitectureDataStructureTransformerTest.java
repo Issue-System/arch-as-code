@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class ArchitectureDataStructureTransformerTest {
-    private static final String PRODUCT_NAME = "DevSpaces";
+    private static final String PRODUCT_NAME = "devspaces";
     private static final String PRODUCT_DESCRIPTION = "DevSpaces is a tool";
 
     @Test

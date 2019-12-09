@@ -4,7 +4,6 @@ public class ArchitectureDataStructure {
     private String name;
     private Long id;
     private String businessUnit;
-    private Documentation documentation;
     private String description;
 
     public ArchitectureDataStructure() {
@@ -32,14 +31,6 @@ public class ArchitectureDataStructure {
 
     public void setBusinessUnit(String businessUnit) {
         this.businessUnit = businessUnit;
-    }
-
-    public Documentation getDocumentation() {
-        return this.documentation;
-    }
-
-    public void setDocumentation(Documentation documentation) {
-        this.documentation = documentation;
     }
 
     public String getDescription() {

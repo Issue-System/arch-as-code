@@ -19,7 +19,7 @@ public class StructurizrAdapterTest {
         Long revision = workspace.getRevision();
 
         //when
-        adapter.publish();
+        adapter.publish(workspace);
 
         //then
         Workspace updatedWorkspace = StructurizrAdapter.load(WORKSPACE_ID).workspace();

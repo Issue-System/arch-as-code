@@ -12,22 +12,14 @@ import java.util.Map;
 
 public class StructurizrAdapter {
     private final Workspace workspace;
-    private final ModelBuilder modelBuilder;
 
-    private StructurizrAdapter(Workspace workspace, ModelBuilder modelBuilder) {
+    private StructurizrAdapter(Workspace workspace) {
         this.workspace = workspace;
-        this.modelBuilder = modelBuilder;
     }
 
     public static StructurizrAdapter load(long workspaceId) throws StructurizrClientException {
         Workspace workspace = buildClient().getWorkspace(workspaceId);
-        return new StructurizrAdapter(workspace, new ModelBuilder());
-    }
-
-    public void publish() throws StructurizrClientException {
-        Workspace workspace = new Workspace(this.workspace.getName(), this.workspace.getDescription());
-        modelBuilder.buildModel(workspace);
-        this.publish(workspace);
+        return new StructurizrAdapter(workspace);
     }
 
     public void publish(Workspace workspace) throws StructurizrClientException {
@@ -38,6 +30,7 @@ public class StructurizrAdapter {
         return this.workspace;
     }
 
+    //TODO: Modify to read from products directory and batch update all products instead of hardcoding
     public void upload() throws Exception {
         String path = getClass().getResource("/structurizr/49328.json").getPath();
         buildClient().putWorkspace(this.workspace.getId(), WorkspaceUtils.loadWorkspaceFromJson(new File(path)));

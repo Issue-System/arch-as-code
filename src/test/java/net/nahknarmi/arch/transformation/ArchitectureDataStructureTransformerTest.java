@@ -27,7 +27,7 @@ public class ArchitectureDataStructureTransformerTest {
         assertThat(workspace.getId(), equalTo(1L));
         assertThat(workspace.getName(), equalTo(PRODUCT_NAME));
         assertThat(workspace.getDescription(), equalTo(PRODUCT_DESCRIPTION));
-        assertThat(workspace.getDocumentation().getSections().size(), equalTo(1));
+        assertThat(workspace.getDocumentation().getSections().size(), equalTo(2));
     }
 
 

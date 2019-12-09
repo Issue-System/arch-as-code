@@ -20,10 +20,8 @@ public class ArchitectureDataStructureImporterTest {
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo("DevSpaces")));
-        assertThat(dataStructure.getId(), is(equalTo(49328)));
+        assertThat(dataStructure.getId(), is(equalTo(49328L)));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("DevFactory")));
         assertThat(dataStructure.getDescription(), is(equalTo("DevFactory is a tool")));
-        assertNotNull(dataStructure.getDocumentation());
-        assertThat(dataStructure.getDocumentation().getFunctionalOverview(), equalTo("functional-overview.md"));
     }
 }

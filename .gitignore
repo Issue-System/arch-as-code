@@ -6,3 +6,6 @@ build
 
 # Ignore IntelliJ
 .idea/
+
+# Ignore credentials.json
+credentials.json

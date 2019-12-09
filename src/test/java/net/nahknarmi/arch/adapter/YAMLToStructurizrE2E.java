@@ -32,10 +32,10 @@ public class YAMLToStructurizrE2E {
         Workspace workspace = new ArchitectureDataStructureTransformer().toWorkSpace(dataStructure);
 
         //submit json to struturizr
-        StructurizrAdapter.load(workspace.getId()).publish(workspace);
+        new StructurizrAdapter(workspace.getId()).publish(workspace);
 
         //retrieve workspace from structurizr & ensure data was saved
-        StructurizrAdapter adapter = StructurizrAdapter.load(workspace.getId());
+        StructurizrAdapter adapter = new StructurizrAdapter(workspace.getId());
         assertThat(adapter.workspace().getDocumentation().getSections().size(), equalTo(2));
     }
 }

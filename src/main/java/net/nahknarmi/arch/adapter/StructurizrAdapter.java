@@ -12,14 +12,11 @@ import java.util.Map;
 
 public class StructurizrAdapter {
     private final Workspace workspace;
+    private final StructurizrClient buildClient;
 
-    private StructurizrAdapter(Workspace workspace) {
-        this.workspace = workspace;
-    }
-
-    public static StructurizrAdapter load(long workspaceId) throws StructurizrClientException {
-        Workspace workspace = buildClient().getWorkspace(workspaceId);
-        return new StructurizrAdapter(workspace);
+    public StructurizrAdapter(long workspaceId) throws StructurizrClientException {
+        this.buildClient = buildClient();
+        this.workspace = buildClient.getWorkspace(workspaceId);
     }
 
     public void publish(Workspace workspace) throws StructurizrClientException {
@@ -37,7 +34,7 @@ public class StructurizrAdapter {
     }
 
     @SuppressWarnings("unchecked")
-    private static StructurizrClient buildClient() {
+    private StructurizrClient buildClient() {
         String structurizrApiKey = System.getenv().get("STRUCTURIZR_API_KEY");
         String structurizrApiSecret = System.getenv().get("STRUCTURIZR_API_SECRET");
         StructurizrClient structurizrClient;

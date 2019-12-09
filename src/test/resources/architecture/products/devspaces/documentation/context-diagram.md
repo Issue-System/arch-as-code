@@ -4,7 +4,7 @@ A **client running on the developer’s local workstation** and a server running
 
 The client initiates execution requests, synchronizes filesystem changes, and gives developers a view of the execution results.
 
-The software developer is able to deploy one or more pods/containers in a DevSpace using a kubernetes configuration file. 
+The software developer is able to deploy one or more pods/containers in a DevSpace using a kubernetes configuration file... 
 
 The **DevSpaces server** stores the configuration of the DevSpace definitions and synchronizes changes back to the client.
 

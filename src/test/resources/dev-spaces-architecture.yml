@@ -1,0 +1,22 @@
+id: 49328
+name: "DevSpaces"
+businessUnit: "DevFactory"
+#views:
+#  containerView:
+#
+#  componentView:
+#
+#  systemContextView:
+#
+#
+#
+documentation:
+  functionalOverview:
+    ##point to fiel functional-overview.md
+#
+#  techDebt:
+#
+#  crossFunctionalRequirements:
+#
+#
+#decisions:

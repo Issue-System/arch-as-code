@@ -22,7 +22,7 @@ public class ArchitectureDataStructureTransformerTest {
         dataStructure.setId(1L);
 
         ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
-        System.err.println(architectureDataStructureTransformer);
+        System.out.println(architectureDataStructureTransformer);
         Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);

@@ -11,8 +11,12 @@ import java.net.URL;
 public class ArchitectureDataStructureTransformer {
 
 
+    public ArchitectureDataStructureTransformer() {
+        System.out.println("In constructor!!");
+    }
+
     public Workspace toWorkSpace(ArchitectureDataStructure dataStructure) throws IOException {
-        System.err.println("Workspace.toWorkSpace()");
+        System.out.println("Workspace.toWorkSpace()");
         Workspace workspace = new Workspace(dataStructure.getName(), dataStructure.getDescription());
         workspace.setId(dataStructure.getId());
 

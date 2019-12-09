@@ -23,7 +23,10 @@ public class ArchitectureDataStructureTransformer {
         //add functional overview
         AutomaticDocumentationTemplate template = new AutomaticDocumentationTemplate(workspace);
 
-        URL resource = getClass().getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName()));
+        Class<? extends ArchitectureDataStructureTransformer> aClass = getClass();
+        URL resource = aClass.getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName()));
+        System.out.println("Resource: " + resource);
+
         template.addSections(new File(resource.getPath()));
 
         return workspace;

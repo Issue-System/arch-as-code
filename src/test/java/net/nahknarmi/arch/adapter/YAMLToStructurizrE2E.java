@@ -30,6 +30,7 @@ public class YAMLToStructurizrE2E {
         //then
         //load generated json to workspace
         ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
+        System.err.println(architectureDataStructureTransformer);
         Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
 
         //submit json to struturizr

@@ -11,9 +11,6 @@ businessUnit: "DevFactory"
 #
 #
 #
-documentation:
-  functionalOverview: "functional-overview.md"
-    ##point to fiel functional-overview.md
 #
 #  techDebt:
 #

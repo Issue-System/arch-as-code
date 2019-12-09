@@ -26,9 +26,12 @@ public class StructurizrAdapter {
 
     public void publish() throws StructurizrClientException {
         Workspace workspace = new Workspace(this.workspace.getName(), this.workspace.getDescription());
-
         modelBuilder.buildModel(workspace);
-        buildClient().putWorkspace(this.workspace.getId(), this.workspace);
+        this.publish(workspace);
+    }
+
+    public void publish(Workspace workspace) throws StructurizrClientException {
+        buildClient().putWorkspace(workspace.getId(), workspace);
     }
 
     public Workspace workspace() {

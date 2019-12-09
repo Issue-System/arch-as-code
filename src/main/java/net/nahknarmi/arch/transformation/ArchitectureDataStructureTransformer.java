@@ -24,7 +24,7 @@ public class ArchitectureDataStructureTransformer {
         AutomaticDocumentationTemplate template = new AutomaticDocumentationTemplate(workspace);
 
         Class<? extends ArchitectureDataStructureTransformer> aClass = getClass();
-        URL resource = aClass.getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName()));
+        URL resource = aClass.getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName().toLowerCase()));
         System.out.println("Resource: " + resource);
 
         template.addSections(new File(resource.getPath()));

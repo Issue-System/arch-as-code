@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class ArchitectureDataStructureTransformerTest {
-    private static final String PRODUCT_NAME = "DevSpaces";
+    private static final String PRODUCT_NAME = "devspaces";
     private static final String PRODUCT_DESCRIPTION = "DevSpaces is a tool";
 
     @Test
@@ -21,9 +21,8 @@ public class ArchitectureDataStructureTransformerTest {
         dataStructure.setDescription(PRODUCT_DESCRIPTION);
         dataStructure.setId(1L);
 
-        ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
-        System.out.println(architectureDataStructureTransformer);
-        Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
+        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
+        Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
         assertThat(workspace.getId(), equalTo(1L));

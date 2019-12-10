@@ -14,3 +14,8 @@ decisions:
     title: "Kubernetes as the container management platform"
     status: Accepted
     content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences."
+
+  - id: "3"
+    date: 2019-12-19T19:07:15Z
+    title: "AngularJS as frontend technology"
+    content: "## Context\nWe need to decide which SPA framework to proceed with.\n\n## Decision\nAngular is the framework currently being adopted \n\n## Consequences."

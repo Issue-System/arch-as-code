@@ -14,13 +14,16 @@ public class ArchitectureDataStructureTransformer {
         Workspace workspace = new Workspace(dataStructure.getName(), dataStructure.getDescription());
         workspace.setId(dataStructure.getId());
 
-        //add functional overview
+        // Add Documentation
         AutomaticDocumentationTemplate template = new AutomaticDocumentationTemplate(workspace);
 
-        Class<? extends ArchitectureDataStructureTransformer> aClass = getClass();
-        URL resource = aClass.getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName().toLowerCase()));
+        String productName = dataStructure.getName().toLowerCase();
+        URL documentationResource = getClass().getResource(String.format("/architecture/products/%s/documentation/", productName));
 
-        template.addSections(new File(resource.getPath()));
+        template.addSections(new File(documentationResource.getPath()));
+
+        // TODO: Add Decisions
+
 
         return workspace;
     }

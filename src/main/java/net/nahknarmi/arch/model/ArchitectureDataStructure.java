@@ -1,10 +1,14 @@
 package net.nahknarmi.arch.model;
 
+
+import java.util.List;
+
 public class ArchitectureDataStructure {
     private String name;
     private Long id;
     private String businessUnit;
     private String description;
+    private List<ImportantTechnicalDecision> decisions;
 
     public ArchitectureDataStructure() {
     }
@@ -39,5 +43,13 @@ public class ArchitectureDataStructure {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<ImportantTechnicalDecision> getDecisions() {
+        return decisions;
+    }
+
+    public void setDecisions(List<ImportantTechnicalDecision> decisions) {
+        this.decisions = decisions;
     }
 }

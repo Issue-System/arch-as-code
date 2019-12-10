@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
-import com.structurizr.util.WorkspaceUtils;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -25,12 +23,6 @@ public class StructurizrAdapter {
 
     public Workspace workspace() {
         return this.workspace;
-    }
-
-    //TODO: Modify to read from products directory and batch update all products instead of hardcoding
-    public void upload() throws Exception {
-        String path = getClass().getResource("/structurizr/49328.json").getPath();
-        buildClient().putWorkspace(this.workspace.getId(), WorkspaceUtils.loadWorkspaceFromJson(new File(path)));
     }
 
     @SuppressWarnings("unchecked")
@@ -55,6 +47,6 @@ public class StructurizrAdapter {
     }
 
     private InputStream credentialsAsStream() {
-        return StructurizrQuickstart.class.getResourceAsStream("/structurizr/credentials.json");
+        return StructurizrPublisher.class.getResourceAsStream("/structurizr/credentials.json");
     }
 }

@@ -12,14 +12,11 @@ public class StructurizrPublisher {
     private static final int PRODUCTION_WORKSPACE = 49328;
 
     public static void main(String[] args) throws Exception {
-        InputStream architectureManifestYaml =
+        InputStream manifest =
                 StructurizrPublisher.class.getResourceAsStream("/architecture/products/devspaces/data-structure.yml");
 
-        ArchitectureDataStructureImporter importer = new ArchitectureDataStructureImporter();
-        ArchitectureDataStructure dataStructure = importer.load(architectureManifestYaml);
-
-        ArchitectureDataStructureTransformer architectureDataStructureTransformer = new ArchitectureDataStructureTransformer();
-        Workspace workspace = architectureDataStructureTransformer.toWorkSpace(dataStructure);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(manifest);
+        Workspace workspace = new ArchitectureDataStructureTransformer().toWorkSpace(dataStructure);
 
         new StructurizrAdapter(PRODUCTION_WORKSPACE).publish(workspace);
     }

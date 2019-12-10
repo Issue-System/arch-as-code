@@ -41,19 +41,23 @@ public class ArchitectureDataStructureTransformer {
 
     private DecisionStatus getDecisionStatus(String status) {
         DecisionStatus decisionStatus;
-        String s = status.toLowerCase();
-        if (s.equals("accepted")) {
-            decisionStatus = DecisionStatus.Accepted;
-        } else if (s.equals("superseded")) {
-            decisionStatus = DecisionStatus.Superseded;
-        } else if (s.equals("deprecated")) {
-            decisionStatus = DecisionStatus.Deprecated;
-        } else if (s.equals("rejected")) {
-            decisionStatus = DecisionStatus.Rejected;
-        } else {
-            decisionStatus = DecisionStatus.Proposed;
+        switch (status.toLowerCase()) {
+            case "accepted":
+                decisionStatus = DecisionStatus.Accepted;
+                break;
+            case "superseded":
+                decisionStatus = DecisionStatus.Superseded;
+                break;
+            case "deprecated":
+                decisionStatus = DecisionStatus.Deprecated;
+                break;
+            case "rejected":
+                decisionStatus = DecisionStatus.Rejected;
+                break;
+            default:
+                decisionStatus = DecisionStatus.Proposed;
+                break;
         }
-
         return decisionStatus;
     }
 

@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.transformation;
 
+import com.google.common.collect.ImmutableList;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.DecisionStatus;
@@ -10,8 +11,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -22,10 +23,8 @@ public class ArchitectureDataStructureTransformerTest {
 
     @Test
     public void should_transform_architecture_yaml_to_structurizr_workspace() throws IOException {
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructure();
-        dataStructure.setName(PRODUCT_NAME);
-        dataStructure.setDescription(PRODUCT_DESCRIPTION);
-        dataStructure.setId(1L);
+        ArchitectureDataStructure dataStructure =
+                new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION, emptyList());
 
         ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
         Workspace workspace = transformer.toWorkSpace(dataStructure);
@@ -72,14 +71,9 @@ public class ArchitectureDataStructureTransformerTest {
     }
 
     private void checkStatus(DecisionStatus decisionStatus, String statusString) throws IOException {
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructure();
-        dataStructure.setName(PRODUCT_NAME);
-        dataStructure.setDescription(PRODUCT_DESCRIPTION);
-        dataStructure.setId(1L);
-
-        List<ImportantTechnicalDecision> itds = new ArrayList<ImportantTechnicalDecision>();
-        itds.add(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content"));
-        dataStructure.setDecisions(itds);
+        ArchitectureDataStructure dataStructure =
+                new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION,
+                        ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")));
 
         ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
         Workspace workspace = transformer.toWorkSpace(dataStructure);

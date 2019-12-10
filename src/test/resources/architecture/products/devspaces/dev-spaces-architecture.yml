@@ -1,6 +1,6 @@
 id: 49328
 name: "DevSpaces"
-description: "DevFactory is a tool"
+description: "DevFactory is a tool!"
 businessUnit: "DevFactory"
 decisions:
   - id: "1"

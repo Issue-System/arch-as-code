@@ -13,4 +13,4 @@ decisions:
     date: 2019-11-19T19:07:15Z
     title: "Kubernetes as the container management platform"
     status: Accepted
-    content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences"
+    content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences."

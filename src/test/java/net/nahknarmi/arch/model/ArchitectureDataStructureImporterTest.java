@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import static net.nahknarmi.arch.TestHelper.TEST_WORKSPACE_ID;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +25,7 @@ public class ArchitectureDataStructureImporterTest {
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo(PRODUCT_NAME)));
-        assertThat(dataStructure.getId(), is(equalTo(49344L)));
+        assertThat(dataStructure.getId(), is(equalTo(TEST_WORKSPACE_ID)));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("DevFactory")));
         assertThat(dataStructure.getDescription(), is(equalTo("TestSpaces is a tool!")));
 

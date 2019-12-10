@@ -15,17 +15,18 @@ import static org.junit.Assert.assertNotNull;
 
 
 public class ArchitectureDataStructureImporterTest {
+    private static final String PRODUCT_NAME = "TestSpaces";
 
     @Test
     public void should_load_architecture_data_structure_from_yaml_file() {
-        InputStream inputStream = getClass().getResourceAsStream("/architecture/products/devspaces/dev-spaces-architecture.yml");
+        InputStream inputStream = getClass().getResourceAsStream("/architecture/products/testspaces/data-structure.yml");
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(inputStream);
 
         assertNotNull(dataStructure);
-        assertThat(dataStructure.getName(), is(equalTo("DevSpaces")));
-        assertThat(dataStructure.getId(), is(equalTo(49328L)));
+        assertThat(dataStructure.getName(), is(equalTo(PRODUCT_NAME)));
+        assertThat(dataStructure.getId(), is(equalTo(49344L)));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("DevFactory")));
-        assertThat(dataStructure.getDescription(), is(equalTo("DevFactory is a tool")));
+        assertThat(dataStructure.getDescription(), is(equalTo("TestSpaces is a tool!")));
 
 
         assertThat(dataStructure.getDecisions().size(), is(equalTo(2)));

@@ -20,7 +20,7 @@ public class YAMLToStructurizrE2E {
     public void should_be_able_to_submit_generated_workspace_to_structurizr_api_and_save_changes() throws IOException, StructurizrClientException {
         //given
         InputStream architectureManifestYaml =
-                getClass().getResourceAsStream("/architecture/products/devspaces/dev-spaces-architecture.yml");
+                getClass().getResourceAsStream("/architecture/products/testspaces/data-structure.yml");
 
         //when
         //transform yaml file to workspace json

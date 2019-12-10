@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class StructurizrAdapterTest {
-    private int WORKSPACE_ID = 49328;
+    private int WORKSPACE_ID = 49344;
 
     @Test
     public void should_bump_structurizr_revision_after_publishing() throws StructurizrClientException {
@@ -26,9 +26,4 @@ public class StructurizrAdapterTest {
         assertThat(updatedWorkspace.getRevision(), is(equalTo(revision + 1)));
     }
 
-    @Test
-    public void should_upload_project_from_json_file() throws Exception {
-        StructurizrAdapter adapter = new StructurizrAdapter(WORKSPACE_ID);
-        adapter.upload();
-    }
 }

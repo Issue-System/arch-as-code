@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import static com.structurizr.documentation.DecisionStatus.Deprecated;
+import static com.structurizr.documentation.DecisionStatus.*;
+import static java.util.Optional.ofNullable;
+
 public class ArchitectureDataStructureTransformer {
 
     public Workspace toWorkSpace(ArchitectureDataStructure dataStructure) throws IOException {
@@ -41,21 +45,21 @@ public class ArchitectureDataStructureTransformer {
 
     private DecisionStatus getDecisionStatus(String status) {
         DecisionStatus decisionStatus;
-        switch (status.toLowerCase()) {
+        switch (ofNullable(status).orElse(Proposed.name()).toLowerCase()) {
             case "accepted":
-                decisionStatus = DecisionStatus.Accepted;
+                decisionStatus = Accepted;
                 break;
             case "superseded":
-                decisionStatus = DecisionStatus.Superseded;
+                decisionStatus = Superseded;
                 break;
             case "deprecated":
-                decisionStatus = DecisionStatus.Deprecated;
+                decisionStatus = Deprecated;
                 break;
             case "rejected":
-                decisionStatus = DecisionStatus.Rejected;
+                decisionStatus = Rejected;
                 break;
             default:
-                decisionStatus = DecisionStatus.Proposed;
+                decisionStatus = Proposed;
                 break;
         }
         return decisionStatus;

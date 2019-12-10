@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
+import net.nahknarmi.arch.StructurizrPublisher;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

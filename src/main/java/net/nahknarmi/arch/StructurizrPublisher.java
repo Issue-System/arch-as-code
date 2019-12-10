@@ -1,6 +1,7 @@
-package net.nahknarmi.arch.adapter;
+package net.nahknarmi.arch;
 
 import com.structurizr.Workspace;
+import net.nahknarmi.arch.adapter.StructurizrAdapter;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
 import net.nahknarmi.arch.model.ArchitectureDataStructureImporter;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;

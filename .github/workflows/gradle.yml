@@ -25,3 +25,14 @@ jobs:
       env: # Or as an environment variable
         STRUCTURIZR_API_KEY: ${{ secrets.STRUCTURIZR_API_KEY }}
         STRUCTURIZR_API_SECRET: ${{ secrets.STRUCTURIZR_API_SECRET }}
+
+    - name: Publish
+      if: github.ref == 'refs/heads/master'
+      run: ./gradlew run
+      env: # Or as an environment variable
+        STRUCTURIZR_API_KEY: ${{ secrets.STRUCTURIZR_API_KEY }}
+        STRUCTURIZR_API_SECRET: ${{ secrets.STRUCTURIZR_API_SECRET }}
+
+
+
+

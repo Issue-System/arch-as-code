@@ -16,3 +16,6 @@ The DevSpaces client application currently supports the following list of Operat
 * macOS 10.12: Sierra+
 * Windows 10
 * Ubuntu 16+
+
+
+This is just a demo

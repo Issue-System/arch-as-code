@@ -21,7 +21,7 @@ This project shows examples of integrating with:
 # Run
 
 ```bash
-./gradle build
+./gradle run
 ```
 
 

@@ -3,18 +3,14 @@ name: "DevSpaces"
 description: "DevFactory is a tool"
 businessUnit: "DevFactory"
 decisions:
-  - elementId: "1"
-    id: "1"
-    date: 2019-11-19T16:04:32Z
+  - id: "1"
+    date: 2018-11-29T16:04:32Z
     title: "Docker as the containerization technology platform"
     status: Accepted
     content: "## Context\nWe need to choose the default containerization technology that DevSpaces will support\n\n## Decision\nWe will choose Docker as the default platform\n\n## Consequences\nWe will only be able to support Linux based environments for the moment until Docker is able to support full Windows workspaces"
-    format: Markdown
 
-  - elementId: "2"
-    id: "2"
+  - id: "2"
     date: 2019-11-19T19:07:15Z
     title: "Kubernetes as the container management platform"
     status: Accepted
     content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences"
-    format: Markdown

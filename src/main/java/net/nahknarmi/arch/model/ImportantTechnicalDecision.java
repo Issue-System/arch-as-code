@@ -1,23 +1,23 @@
 package net.nahknarmi.arch.model;
 
-import com.google.api.client.util.DateTime;
+import java.util.Date;
 
 public class ImportantTechnicalDecision {
-    private String elementId;
     private String id;
-    private DateTime date;
+    private Date date;
     private String title;
     private String status;
     private String content;
-    private String format;
 
-
-    public void setElementId(String elementId) {
-        this.elementId = elementId;
+    public ImportantTechnicalDecision() {
     }
 
-    public String getElementId() {
-        return this.elementId;
+    public ImportantTechnicalDecision(String id, Date date, String title, String status, String content) {
+        this.id = id;
+        this.date = date;
+        this.title = title;
+        this.status = status;
+        this.content = content;
     }
 
     public void setId(String id) {
@@ -28,12 +28,12 @@ public class ImportantTechnicalDecision {
         return this.id;
     }
 
-    public void setDate(DateTime date) {
-        this.date = date;
+    public Date getDate() {
+        return date;
     }
 
-    public DateTime getDate() {
-        return this.date;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setStatus(String status) {
@@ -58,13 +58,5 @@ public class ImportantTechnicalDecision {
 
     public String getContent() {
         return this.content;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public String getFormat() {
-        return this.format;
     }
 }

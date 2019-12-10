@@ -38,5 +38,6 @@ public class YAMLToStructurizrE2E {
         //retrieve workspace from structurizr & ensure data was saved
         StructurizrAdapter adapter = new StructurizrAdapter(workspace.getId());
         assertThat(adapter.workspace().getDocumentation().getSections().size(), equalTo(2));
+        assertThat(adapter.workspace().getDocumentation().getDecisions().size(), equalTo(2));
     }
 }

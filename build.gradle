@@ -5,8 +5,23 @@
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds
  */
 
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:4.1.6"
+    }
+}
+
+
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: "io.freefair.lombok"
+
 
 mainClassName = 'net.nahknarmi.arch.adapter.StructurizrQuickstart'
 sourceCompatibility = 1.8

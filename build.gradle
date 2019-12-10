@@ -22,7 +22,7 @@ apply plugin: 'application'
 //See https://www.baeldung.com/lombok-ide for how to configure intellij to work with lombok
 apply plugin: "io.freefair.lombok"
 
-mainClassName = 'net.nahknarmi.arch.adapter.StructurizrPublisher'
+mainClassName = 'net.nahknarmi.arch.StructurizrPublisher'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 version = '1.0'

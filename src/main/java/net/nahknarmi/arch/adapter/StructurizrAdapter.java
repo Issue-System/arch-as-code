@@ -10,20 +10,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class StructurizrAdapter {
-    private final Workspace workspace;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    public StructurizrAdapter(long workspaceId) throws StructurizrClientException {
+public class StructurizrAdapter {
+    private final long workspaceId;
+
+    public StructurizrAdapter(long workspaceId) {
+        checkArgument(workspaceId > 0, String.format("Workspace id (%d) must be greater than 0.", workspaceId));
+        this.workspaceId = workspaceId;
+    }
+
+    public Workspace load() throws StructurizrClientException {
         StructurizrClient buildClient = buildClient();
-        this.workspace = buildClient.getWorkspace(workspaceId);
+        return buildClient.getWorkspace(workspaceId);
     }
 
     public void publish(Workspace workspace) throws StructurizrClientException {
+        checkNotNull(workspace, "Workspace must not be null!");
         buildClient().putWorkspace(workspace.getId(), workspace);
-    }
-
-    public Workspace workspace() {
-        return this.workspace;
     }
 
     @SuppressWarnings("unchecked")

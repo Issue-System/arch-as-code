@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import static net.nahknarmi.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
 import static net.nahknarmi.arch.TestHelper.TEST_WORKSPACE_ID;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -20,7 +21,7 @@ public class ArchitectureDataStructureImporterTest {
 
     @Test
     public void should_load_architecture_data_structure_from_yaml_file() {
-        InputStream inputStream = getClass().getResourceAsStream("/architecture/products/testspaces/data-structure.yml");
+        InputStream inputStream = getClass().getResourceAsStream(TEST_SPACES_MANIFEST_PATH);
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(inputStream);
 
         assertNotNull(dataStructure);

@@ -20,18 +20,16 @@ public class ArchitectureDataStructureTransformer {
     public Workspace toWorkSpace(ArchitectureDataStructure dataStructure) throws IOException {
         Workspace workspace = new Workspace(dataStructure.getName(), dataStructure.getDescription());
         workspace.setId(dataStructure.getId());
-        String productName = dataStructure.getName().toLowerCase();
 
-        addDocumentation(workspace, productName);
+        addDocumentation(workspace, dataStructure);
         addDecisions(workspace, dataStructure);
 
         return workspace;
     }
 
-    private void addDocumentation(Workspace workspace, String productName) throws IOException {
-        AutomaticDocumentationTemplate template = new AutomaticDocumentationTemplate(workspace);
-        URL documentationResource = getClass().getResource(String.format("/architecture/products/%s/documentation/", productName));
-        template.addSections(new File(documentationResource.getPath()));
+    private void addDocumentation(Workspace workspace, ArchitectureDataStructure dataStructure) throws IOException {
+        URL resource = getClass().getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName().toLowerCase()));
+        new AutomaticDocumentationTemplate(workspace).addSections(new File(resource.getPath()));
     }
 
     private void addDecisions(Workspace workspace, ArchitectureDataStructure dataStructure) {

@@ -1,3 +1,5 @@
+![](https://github.com/nahknarmi/google-docs-spike/workflows/Build%20&%20Test/badge.svg)
+
 
 # Intro
 

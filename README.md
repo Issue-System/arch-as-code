@@ -40,7 +40,9 @@ By default the documentation is store under `documentation/products/`.
 
 ## Continuous Integration & Continuous Deployment
 
-Continuous integration is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon). 
+Continuous integration is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon).
+
+Continuous deployment (publishing documentation) is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon). 
 
 GitHub Actions configuration is captured under `.github/workflows/`
 

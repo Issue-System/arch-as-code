@@ -3,10 +3,16 @@ package net.nahknarmi.arch.transformation;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
 import com.structurizr.documentation.DecisionStatus;
-import net.nahknarmi.arch.model.ArchitectureDataStructure;
+import com.structurizr.model.Model;
+import com.structurizr.model.Person;
+import com.structurizr.model.SoftwareSystem;
+import com.structurizr.view.SystemContextView;
+import com.structurizr.view.ViewSet;
+import net.nahknarmi.arch.model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.structurizr.documentation.DecisionStatus.Deprecated;
@@ -31,7 +37,87 @@ public class ArchitectureDataStructureTransformer {
         addDocumentation(workspace, dataStructure);
         addDecisions(workspace, dataStructure);
 
+        Model model = workspace.getModel();
+        C4Model dataStructureModel = dataStructure.getModel();
+        dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
+        dataStructureModel.getSystems().forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
+        dataStructureModel.relationships().forEach(r -> {
+            String fromName = r.getFrom().getName();
+            String toName = r.getTo().getName();
+
+            if (r.getFrom() instanceof C4Person) {
+                processPerson(model, r, fromName, toName);
+            } else if (r.getFrom() instanceof C4SoftwareSystem) {
+                processSoftwareSystem(model, r, fromName, toName);
+            } else {
+                throw new IllegalStateException("Unsupported type - " + r.getFrom().getClass());
+            }
+        });
+
+        ViewSet viewSet = workspace.getViews();
+
+        model.getSoftwareSystems().forEach(ss -> {
+            SystemContextView context = viewSet.createSystemContextView(ss, "context" + new Random().nextInt(), ss.getName() + " Diagram");
+            context.addAllSoftwareSystems();
+            context.addAllPeople();
+        });
+
         return workspace;
+    }
+
+    private void processPerson(Model model, C4Relationship r, String fromName, String toName) {
+        Person fromPerson = ofNullable(model.getPersonWithName(fromName))
+                .orElseThrow(() -> new IllegalStateException("Person with name " + fromName + " not found."));
+
+        switch (r.getRelationshipType()){
+            case USES:
+                SoftwareSystem toSystem = ofNullable(model.getSoftwareSystemWithName(toName))
+                        .orElseThrow(() -> new IllegalStateException("System with name " + toName + " not found."));
+
+                fromPerson.uses(toSystem, "uses");
+                break;
+
+            case INTERACTS_WITH: //person to person relationship
+                Person interactsWith = ofNullable(model.getPersonWithName(toName))
+                        .orElseThrow(() -> new IllegalStateException("Person with name " + fromName + " not found."));
+
+                fromPerson.interactsWith(interactsWith, "interacts with");
+                break;
+
+            case DELIVERS: //person to person relationship
+                Person deliversTo = ofNullable(model.getPersonWithName(toName))
+                        .orElseThrow(() -> new IllegalStateException("Person with name " + fromName + " not found."));
+
+                fromPerson.delivers(deliversTo, "delivers");
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected relationship type " + r.getRelationshipType());
+        }
+    }
+
+    private void processSoftwareSystem(Model model, C4Relationship r, String fromName, String toName) {
+        SoftwareSystem fromSystem = ofNullable(model.getSoftwareSystemWithName(fromName))
+                .orElseThrow(() -> new IllegalStateException("SoftwareSystem with name " + fromName + " not found."));
+
+        switch (r.getRelationshipType()){
+            case USES:
+                SoftwareSystem toSystem = ofNullable(model.getSoftwareSystemWithName(toName))
+                        .orElseThrow(() -> new IllegalStateException("System with name " + toName + " not found."));
+
+                fromSystem.uses(toSystem, "uses");
+                break;
+
+            case DELIVERS:
+                Person deliversTo = ofNullable(model.getPersonWithName(toName))
+                        .orElseThrow(() -> new IllegalStateException("System with name " + fromName + " not found."));
+
+                fromSystem.delivers(deliversTo, "delivers");
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected relationship type " + r.getRelationshipType());
+        }
     }
 
     private void addDocumentation(Workspace workspace, ArchitectureDataStructure dataStructure) throws IOException {

@@ -14,3 +14,28 @@ decisions:
     title: "Kubernetes as the container management platform"
     status: Accepted
     content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences."
+model:
+  persons:
+    - name: "Developer"
+      description: "Developer building software"
+      relationships:
+        - name: "USES"
+          with: "GitHub"
+        - name: "USES"
+          with: "DevSpaces CLI"
+        - name: "INTERACTS_WITH"
+          with: "SaasOps"
+
+    - name: "SaasOps"
+      description: "SaasOps operating system"
+
+  systems:
+    - name: "GitHub"
+      description: "Hosts code and used for identity management"
+    - name: "DevSpaces CLI"
+      description: "Command Line Interface for interacting with DevSpaces Backend"
+      relationships:
+        - name: "USES"
+          with: "DevSpaces Backend"
+    - name: "DevSpaces Backend"
+      description: "Restful API providing capabilities for interacting with a DevSpace"

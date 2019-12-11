@@ -18,4 +18,5 @@ decisions:
   - id: "3"
     date: 2019-12-19T19:07:15Z
     title: "AngularJS as frontend technology"
+    status: Rejected
     content: "## Context\nWe need to decide which SPA framework to proceed with.\n\n## Decision\nAngular is the framework currently being adopted \n\n## Consequences."

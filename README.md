@@ -6,6 +6,9 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/github/nahknarmi/arch-as-code/badge.svg)](https://snyk.io/test/github/nahknarmi/arch-as-code)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/bf154787f36e5afed62e/maintainability)](https://codeclimate.com/github/nahknarmi/arch-as-code/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/bf154787f36e5afed62e/test_coverage)](https://codeclimate.com/github/nahknarmi/arch-as-code/test_coverage)
 
 Arch as code project is to manage **product architecture as code**. 
 

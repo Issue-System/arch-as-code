@@ -53,6 +53,6 @@ public class StructurizrAdapter {
     }
 
     private InputStream credentialsAsStream() {
-        return Bootstrap.class.getResourceAsStream("/structurizr/credentials.json");
+        return getClass().getResourceAsStream("/structurizr/credentials.json");
     }
 }

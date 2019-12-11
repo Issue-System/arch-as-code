@@ -1,4 +1,4 @@
-package net.nahknarmi.arch;
+package net.nahknarmi.arch.publish;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
@@ -13,13 +13,10 @@ import java.io.IOException;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class StructurizrPublisher {
-    private static final int PRODUCTION_WORKSPACE = 49328;
-    private static final String PRODUCT_DOCUMENTATION_ROOT = "./documentation/products/";
-    private static final String PRODUCT_NAME = "DevSpaces";
+public class ArchitectureDataStructurePublisher {
     private final File productDocumentationRoot;
 
-    public StructurizrPublisher(File productDocumentationRoot) {
+    public ArchitectureDataStructurePublisher(File productDocumentationRoot) {
         this.productDocumentationRoot = productDocumentationRoot;
     }
 
@@ -34,10 +31,5 @@ public class StructurizrPublisher {
         Workspace workspace = new ArchitectureDataStructureTransformer(this.productDocumentationRoot).toWorkSpace(dataStructure);
 
         new StructurizrAdapter(workspaceId).publish(workspace);
-    }
-
-    public static void main(String[] args) throws Exception {
-        new StructurizrPublisher(new File(PRODUCT_DOCUMENTATION_ROOT))
-                .publish(PRODUCTION_WORKSPACE, PRODUCT_NAME);
     }
 }

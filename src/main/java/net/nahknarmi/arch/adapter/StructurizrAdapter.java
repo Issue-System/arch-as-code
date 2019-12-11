@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
-import net.nahknarmi.arch.StructurizrPublisher;
+import net.nahknarmi.arch.Bootstrap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,6 +53,6 @@ public class StructurizrAdapter {
     }
 
     private InputStream credentialsAsStream() {
-        return StructurizrPublisher.class.getResourceAsStream("/structurizr/credentials.json");
+        return Bootstrap.class.getResourceAsStream("/structurizr/credentials.json");
     }
 }

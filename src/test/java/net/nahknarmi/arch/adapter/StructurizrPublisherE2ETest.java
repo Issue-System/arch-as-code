@@ -4,11 +4,10 @@ import com.structurizr.api.StructurizrClientException;
 import net.nahknarmi.arch.StructurizrPublisher;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
-import static net.nahknarmi.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
-import static net.nahknarmi.arch.TestHelper.TEST_WORKSPACE_ID;
+import static net.nahknarmi.arch.TestHelper.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -17,10 +16,11 @@ public class StructurizrPublisherE2ETest {
     @Test
     public void should_publish_architecture_data_structure_changes_to_structurizr() throws IOException, StructurizrClientException {
         //given
-        InputStream manifest = StructurizrPublisher.class.getResourceAsStream(TEST_SPACES_MANIFEST_PATH);
+        File documentationRoot =
+                new File(StructurizrPublisher.class.getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
 
         //when
-        new StructurizrPublisher().publish(TEST_WORKSPACE_ID, manifest);
+        new StructurizrPublisher(documentationRoot).publish(TEST_WORKSPACE_ID, PRODUCT_NAME);
 
         //then
         StructurizrAdapter adapter = new StructurizrAdapter(TEST_WORKSPACE_ID);

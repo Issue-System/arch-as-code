@@ -3,21 +3,28 @@ package net.nahknarmi.arch.transformation;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
 import com.structurizr.documentation.DecisionStatus;
-import com.structurizr.documentation.Documentation;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.structurizr.documentation.DecisionStatus.Deprecated;
 import static com.structurizr.documentation.DecisionStatus.*;
 import static com.structurizr.documentation.Format.Markdown;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 public class ArchitectureDataStructureTransformer {
+    private final File documentationRoot;
+
+    public ArchitectureDataStructureTransformer(File documentationRoot) {
+        this.documentationRoot = documentationRoot;
+    }
 
     public Workspace toWorkSpace(ArchitectureDataStructure dataStructure) throws IOException {
+        checkNotNull(dataStructure, "ArchitectureDataStructure must not be null.");
+
         Workspace workspace = new Workspace(dataStructure.getName(), dataStructure.getDescription());
         workspace.setId(dataStructure.getId());
 
@@ -28,17 +35,15 @@ public class ArchitectureDataStructureTransformer {
     }
 
     private void addDocumentation(Workspace workspace, ArchitectureDataStructure dataStructure) throws IOException {
-        URL resource = getClass().getResource(String.format("/architecture/products/%s/documentation/", dataStructure.getName().toLowerCase()));
-        new AutomaticDocumentationTemplate(workspace).addSections(new File(resource.getPath()));
+        new AutomaticDocumentationTemplate(workspace).addSections(documentationPath(dataStructure));
     }
 
     private void addDecisions(Workspace workspace, ArchitectureDataStructure dataStructure) {
-        if (dataStructure.getDecisions() != null) {
-            Documentation documentation = workspace.getDocumentation();
-            dataStructure
-                    .getDecisions()
-                    .forEach(d -> documentation.addDecision(d.getId(), d.getDate(), d.getTitle(), getDecisionStatus(d.getStatus()), Markdown, d.getContent()));
-        }
+        ofNullable(dataStructure.getDecisions())
+                .orElse(emptyList())
+                .forEach(d ->
+                        workspace.getDocumentation()
+                                .addDecision(d.getId(), d.getDate(), d.getTitle(), getDecisionStatus(d.getStatus()), Markdown, d.getContent()));
     }
 
     private DecisionStatus getDecisionStatus(String status) {
@@ -63,4 +68,8 @@ public class ArchitectureDataStructureTransformer {
         return decisionStatus;
     }
 
+    private File documentationPath(ArchitectureDataStructure dataStructure) {
+        String path = String.format("%s/%s/documentation/", documentationRoot.getAbsolutePath(), dataStructure.getName().toLowerCase());
+        return new File(path);
+    }
 }

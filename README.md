@@ -1,5 +1,8 @@
-![](https://github.com/nahknarmi/google-docs-spike/workflows/Build%20&%20Test/badge.svg)
+![](https://github.com/nahknarmi/google-docs-spike/workflows/Build%20&%20Test/badge.svg) 
 
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nahknarmi/google-docs-spike)](https://dependabot.com)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/nahknarmi/google-docs-spike/badge.svg)](https://snyk.io/test/github/nahknarmi/google-docs-spike)
 
 # Intro
 

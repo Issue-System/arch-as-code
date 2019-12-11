@@ -2,6 +2,7 @@ package net.nahknarmi.arch.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import static java.util.Collections.emptyList;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class C4Model {
     public static final C4Model NONE = new C4Model();
 
@@ -19,9 +21,6 @@ public class C4Model {
     private List<C4Person> persons = emptyList();
     @NonNull
     private List<C4SoftwareSystem> systems = emptyList();
-
-    C4Model() {
-    }
 
     public List<C4Relationship> relationships() {
         return fromRelationships(Stream.concat(systems.stream(), this.persons.stream()));

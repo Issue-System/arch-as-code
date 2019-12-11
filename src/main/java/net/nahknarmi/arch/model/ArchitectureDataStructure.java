@@ -1,19 +1,21 @@
 package net.nahknarmi.arch.model;
 
 
+import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class ArchitectureDataStructure {
-    private String name;
-    private Long id;
-    private String businessUnit;
-    private String description;
-    private List<ImportantTechnicalDecision> decisions;
+    @NonNull private String name;
+    @NonNull private Long id;
+    @NonNull private String businessUnit;
+    @NonNull private String description;
+    @NonNull private List<ImportantTechnicalDecision> decisions = ImmutableList.of();
 
     ArchitectureDataStructure() {
     }

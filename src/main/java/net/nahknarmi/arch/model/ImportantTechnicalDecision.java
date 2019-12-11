@@ -2,17 +2,18 @@ package net.nahknarmi.arch.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 public class ImportantTechnicalDecision {
-    private String id;
-    private Date date;
-    private String title;
-    private String status;
-    private String content;
+    @NonNull private String id;
+    @NonNull private Date date;
+    @NonNull private String title;
+    @NonNull private String status;
+    @NonNull private String content;
 
     ImportantTechnicalDecision() {
     }

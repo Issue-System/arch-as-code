@@ -4,7 +4,6 @@ import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
 import com.structurizr.documentation.DecisionStatus;
 import com.structurizr.documentation.Documentation;
-import com.structurizr.documentation.Format;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
 
 import java.io.File;
@@ -13,6 +12,7 @@ import java.net.URL;
 
 import static com.structurizr.documentation.DecisionStatus.Deprecated;
 import static com.structurizr.documentation.DecisionStatus.*;
+import static com.structurizr.documentation.Format.Markdown;
 import static java.util.Optional.ofNullable;
 
 public class ArchitectureDataStructureTransformer {
@@ -39,7 +39,7 @@ public class ArchitectureDataStructureTransformer {
             Documentation documentation = workspace.getDocumentation();
             dataStructure
                     .getDecisions()
-                    .forEach(d -> documentation.addDecision(d.getId(), d.getDate(), d.getTitle(), getDecisionStatus(d.getStatus()), Format.Markdown, d.getContent()));
+                    .forEach(d -> documentation.addDecision(d.getId(), d.getDate(), d.getTitle(), getDecisionStatus(d.getStatus()), Markdown, d.getContent()));
         }
     }
 

@@ -4,24 +4,16 @@ import com.google.gson.Gson;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
-import net.nahknarmi.arch.Bootstrap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class StructurizrAdapter {
-    private final long workspaceId;
 
-    public StructurizrAdapter(long workspaceId) {
-        checkArgument(workspaceId > 0, String.format("Workspace id (%d) must be greater than 0.", workspaceId));
-        this.workspaceId = workspaceId;
-    }
-
-    public Workspace load() throws StructurizrClientException {
+    public Workspace load(long workspaceId) throws StructurizrClientException {
         StructurizrClient buildClient = buildClient();
         return buildClient.getWorkspace(workspaceId);
     }

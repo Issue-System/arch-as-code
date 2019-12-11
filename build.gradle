@@ -49,6 +49,7 @@ dependencies {
 
     //Testing
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-all:2.0.2-beta'
 }
 
 jacocoTestCoverageVerification {

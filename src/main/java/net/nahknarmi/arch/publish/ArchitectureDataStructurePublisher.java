@@ -10,26 +10,40 @@ import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import java.io.File;
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ArchitectureDataStructurePublisher {
     private final File productDocumentationRoot;
+    private final ArchitectureDataStructureImporter dataStructureImporter;
+    private final ArchitectureDataStructureTransformer dataStructureTransformer;
+    private final StructurizrAdapter structurizrAdapter;
 
-    public ArchitectureDataStructurePublisher(File productDocumentationRoot) {
+    ArchitectureDataStructurePublisher(File productDocumentationRoot,
+                                              ArchitectureDataStructureImporter importer,
+                                              ArchitectureDataStructureTransformer transformer,
+                                              StructurizrAdapter structurizrAdapter) {
         this.productDocumentationRoot = productDocumentationRoot;
+        this.dataStructureTransformer = transformer;
+        this.dataStructureImporter = importer;
+        this.structurizrAdapter = structurizrAdapter;
     }
 
-    public void publish(long workspaceId, String productName) throws StructurizrClientException, IOException {
-        checkArgument(workspaceId > 0, "Workspace id must be greater than 0.");
+    public void publish(String productName) throws StructurizrClientException, IOException {
         checkNotNull(productName, "Product name must not be null.");
 
         File manifestFile = new File(productDocumentationRoot + File.separator + productName.toLowerCase() + File.separator + "data-structure.yml");
-        checkArgument(manifestFile.exists(), String.format("Manifest file %s does not exist.", manifestFile));
 
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(manifestFile);
-        Workspace workspace = new ArchitectureDataStructureTransformer(this.productDocumentationRoot).toWorkSpace(dataStructure);
+        ArchitectureDataStructure dataStructure = dataStructureImporter.load(manifestFile);
+        Workspace workspace = dataStructureTransformer.toWorkSpace(dataStructure);
 
-        new StructurizrAdapter(workspaceId).publish(workspace);
+        structurizrAdapter.publish(workspace);
+    }
+
+    public static ArchitectureDataStructurePublisher create(File productDocumentationRoot) {
+        ArchitectureDataStructureImporter importer = new ArchitectureDataStructureImporter();
+        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(productDocumentationRoot);
+        StructurizrAdapter adapter = new StructurizrAdapter();
+
+        return new ArchitectureDataStructurePublisher(productDocumentationRoot, importer, transformer, adapter);
     }
 }

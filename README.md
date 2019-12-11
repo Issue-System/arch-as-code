@@ -6,35 +6,47 @@
 
 # Intro
 
-This project shows examples of integrating with:
-- Google Docs API
-- Structurizr API
+The purpose of this project is to document **product architecture as code**. 
 
+By following this approach we will be able to **manage our architecture documents, models, decisions and diagrams** in the same way we do code and gain all the **tools and workflows supporting modern development**. Think PR reviews, static code analysis, continuous integration & continuous deployment.
 
-# Pre-requisites
-- Java 1.8
-- Download Google Doc API credentials see - https://developers.google.com/docs/api/quickstart/java and put it under src/main/resources/StoredCredentials.json
-- Create structurizr credentials file under /src/main/resources/credentials.json with structure found in src/main/resources/sample_credentials.json and update with contents from https://structurizr.com/dashboard 
+Specifically we are making use of the [Structurizr](https://structurizr.com/) tool by Simon Brown as the basis for structuring and storing our architecture models, decisions, views and documentation.
+
+# Build Pre-requisites
+- Java 1.8 or greater.
+- Create [Structurizr](https://structurizr.com/) credentials file under /src/main/resources/credentials.json with structure found in `src/main/resources/sample_credentials.json` and update with contents from [https://structurizr.com/dashboard](https://structurizr.com/) 
 
 # Build
+
+Builds and tests application cod for publishing architecture data structure to Structurizr.
+
+Tests operate against a "test" workspace.
 
 ```bash
 ./gradle build
 ```
 
 
-# Run
+# Publish Artifacts
+
+Publishes documentation to production Structurizr workspace.
+
+By default the documentation is store under `documentation/products/`.
+
+Publish results in changes being pushed to "production" workspace.
 
 ```bash
 ./gradle run
 ```
 
+# Continuous Integration 
+
+Continuous integration is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon). 
+
+GitHub Actions configuration is captured under `.github/workflows/`
 
 # Structurizr Notes
 - In order to get the API keys & secret you need to first create a workspace
-- Java example - https://github.com/structurizr/java-quickstart
-- API documentation - https://structurizr.com/help/web-api
-- Structurizr open API docs - https://structurizr.com/static/assets/structurizr-api.yaml
-
-# Google Docs API
-- Java API example - https://developers.google.com/docs/api/quickstart/java 
+- [Structurizr Java example](https://github.com/structurizr/java-quickstart)
+- [API documentation](https://structurizr.com/help/web-api)
+- [Structurizr open API docs](https://structurizr.com/static/assets/structurizr-api.yaml)

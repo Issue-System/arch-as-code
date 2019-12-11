@@ -8,11 +8,13 @@ import net.nahknarmi.arch.model.ArchitectureDataStructure;
 import net.nahknarmi.arch.model.ImportantTechnicalDecision;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import static java.util.Collections.emptyList;
+import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -26,7 +28,8 @@ public class ArchitectureDataStructureTransformerTest {
         ArchitectureDataStructure dataStructure =
                 new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION, emptyList());
 
-        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
+        File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
@@ -75,7 +78,8 @@ public class ArchitectureDataStructureTransformerTest {
                 new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION,
                         ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")));
 
-        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer();
+        File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         ArrayList<Decision> decisions = new ArrayList<>(workspace.getDocumentation().getDecisions());

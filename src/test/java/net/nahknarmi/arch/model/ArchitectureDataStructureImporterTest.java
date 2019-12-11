@@ -3,7 +3,8 @@ package net.nahknarmi.arch.model;
 
 import org.junit.Test;
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -20,9 +21,9 @@ public class ArchitectureDataStructureImporterTest {
     private static final String PRODUCT_NAME = "TestSpaces";
 
     @Test
-    public void should_load_architecture_data_structure_from_yaml_file() {
-        InputStream inputStream = getClass().getResourceAsStream(TEST_SPACES_MANIFEST_PATH);
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(inputStream);
+    public void should_load_architecture_data_structure_from_yaml_file() throws FileNotFoundException {
+        File productDocumentationRoot = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(productDocumentationRoot);
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo(PRODUCT_NAME)));

@@ -14,15 +14,15 @@ public class StructurizrAdapterTest {
 
     @Test
     public void should_bump_structurizr_revision_after_publishing() throws StructurizrClientException {
-        StructurizrAdapter adapter = new StructurizrAdapter(TEST_WORKSPACE_ID);
-        Workspace workspace = adapter.load();
+        StructurizrAdapter adapter = new StructurizrAdapter();
+        Workspace workspace = adapter.load(TEST_WORKSPACE_ID);
         Long revision = workspace.getRevision();
 
         //when
         adapter.publish(workspace);
 
         //then
-        Workspace updatedWorkspace = new StructurizrAdapter(TEST_WORKSPACE_ID).load();
+        Workspace updatedWorkspace = new StructurizrAdapter().load(TEST_WORKSPACE_ID);
         assertThat(updatedWorkspace.getRevision(), is(equalTo(revision + 1)));
     }
 

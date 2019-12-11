@@ -2,7 +2,6 @@ package net.nahknarmi.arch.adapter;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
-import net.nahknarmi.arch.Bootstrap;
 import net.nahknarmi.arch.publish.ArchitectureDataStructurePublisher;
 import org.junit.Test;
 
@@ -19,11 +18,10 @@ public class ArchitectureDataStructurePublishingE2ETest {
     public void should_publish_architecture_data_structure_changes_to_structurizr() throws IOException, StructurizrClientException {
         //given
         File documentationRoot =
-                new File(Bootstrap.class.getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+                new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
 
         //when
-        File root = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
-        ArchitectureDataStructurePublisher.create(root).publish(PRODUCT_NAME);
+        ArchitectureDataStructurePublisher.create(documentationRoot).publish(PRODUCT_NAME);
 
         //then
         StructurizrAdapter adapter = new StructurizrAdapter();

@@ -21,6 +21,8 @@ apply plugin: 'java'
 apply plugin: 'application'
 //See https://www.baeldung.com/lombok-ide for how to configure intellij to work with lombok
 apply plugin: "io.freefair.lombok"
+apply plugin: 'jacoco'
+
 
 mainClassName = 'net.nahknarmi.arch.Bootstrap'
 sourceCompatibility = 1.8
@@ -50,3 +52,17 @@ dependencies {
     //Testing
     testCompile 'junit:junit:4.12'
 }
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.9
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification

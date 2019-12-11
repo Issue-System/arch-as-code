@@ -4,7 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
 import net.nahknarmi.arch.adapter.StructurizrAdapter;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
-import net.nahknarmi.arch.model.ArchitectureDataStructureImporter;
+import net.nahknarmi.arch.model.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 
 import java.io.File;
@@ -14,12 +14,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ArchitectureDataStructurePublisher {
     private final File productDocumentationRoot;
-    private final ArchitectureDataStructureImporter dataStructureImporter;
+    private final ArchitectureDataStructureReader dataStructureImporter;
     private final ArchitectureDataStructureTransformer dataStructureTransformer;
     private final StructurizrAdapter structurizrAdapter;
 
     ArchitectureDataStructurePublisher(File productDocumentationRoot,
-                                              ArchitectureDataStructureImporter importer,
+                                              ArchitectureDataStructureReader importer,
                                               ArchitectureDataStructureTransformer transformer,
                                               StructurizrAdapter structurizrAdapter) {
         this.productDocumentationRoot = productDocumentationRoot;
@@ -40,7 +40,7 @@ public class ArchitectureDataStructurePublisher {
     }
 
     public static ArchitectureDataStructurePublisher create(File productDocumentationRoot) {
-        ArchitectureDataStructureImporter importer = new ArchitectureDataStructureImporter();
+        ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader();
         ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(productDocumentationRoot);
         StructurizrAdapter adapter = new StructurizrAdapter();
 

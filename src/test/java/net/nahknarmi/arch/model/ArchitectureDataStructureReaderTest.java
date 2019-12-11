@@ -17,13 +17,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 
-public class ArchitectureDataStructureImporterTest {
+public class ArchitectureDataStructureReaderTest {
     private static final String PRODUCT_NAME = "TestSpaces";
 
     @Test
     public void should_load_architecture_data_structure_from_yaml_file() throws FileNotFoundException {
         File productDocumentationRoot = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureImporter().load(productDocumentationRoot);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(productDocumentationRoot);
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo(PRODUCT_NAME)));

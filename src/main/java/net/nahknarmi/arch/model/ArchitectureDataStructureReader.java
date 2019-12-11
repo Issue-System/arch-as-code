@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ArchitectureDataStructureImporter {
+public class ArchitectureDataStructureReader {
 
     public ArchitectureDataStructure load(File manifest) throws FileNotFoundException {
         checkNotNull(manifest, "Manifest must not be null.");

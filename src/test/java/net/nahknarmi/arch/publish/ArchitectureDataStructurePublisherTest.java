@@ -4,7 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
 import net.nahknarmi.arch.adapter.StructurizrAdapter;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
-import net.nahknarmi.arch.model.ArchitectureDataStructureImporter;
+import net.nahknarmi.arch.model.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ArchitectureDataStructurePublisherTest {
     @Test
     public void given_file_that_exists_should_publish_workspace() throws IOException, StructurizrClientException {
         File productDocumentationRoot = mock(File.class);
-        ArchitectureDataStructureImporter importer = mock(ArchitectureDataStructureImporter.class);
+        ArchitectureDataStructureReader importer = mock(ArchitectureDataStructureReader.class);
         ArchitectureDataStructureTransformer transformer = mock(ArchitectureDataStructureTransformer.class);
         StructurizrAdapter adapter = mock(StructurizrAdapter.class);
 

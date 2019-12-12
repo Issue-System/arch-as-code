@@ -20,11 +20,17 @@ jobs:
         STRUCTURIZR_API_KEY: ${{ secrets.TEST_STRUCTURIZR_API_KEY }}
         STRUCTURIZR_API_SECRET: ${{ secrets.TEST_STRUCTURIZR_API_SECRET }}
 
+  - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
     - name: Push Test Coverage
       run: ./scripts/push-to-code-coverage.sh
       env: # Or as an environment variable
         STRUCTURIZR_API_KEY: ${{ secrets.TEST_STRUCTURIZR_API_KEY }}
         STRUCTURIZR_API_SECRET: ${{ secrets.TEST_STRUCTURIZR_API_SECRET }}
+        GIT_BRANCH: ${{ steps.extract_branch.outputs.branch }}
 
     - name: Publish
       if: github.ref == 'refs/heads/master'

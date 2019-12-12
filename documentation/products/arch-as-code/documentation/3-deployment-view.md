@@ -1,3 +1,5 @@
+## Deployment Diagram
+
 DevSpaces uses DevOps practices and automatically deploys the complete system to an environment using Jenkins CI through release pipelines and automation scripts which builds, tests and deploys all required services for Devspaces to operate.
 The build pipeline is represented through the Jenkins pipeline GUI, all steps involved in the pipeline are shown below:
 

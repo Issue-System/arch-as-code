@@ -1,3 +1,5 @@
+## Context Diagram
+
 DevSpaces operates with the following elements in mind:
 
 A **client running on the developer’s local workstation** and a server running in the cloud that works together to seamlessly run workloads in the cloud while keeping the developer experience local. 

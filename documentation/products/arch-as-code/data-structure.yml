@@ -5,7 +5,7 @@ businessUnit: "DevFactory"
 decisions:
   - id: "1"
     date: 2019-12-11
-    title: "Treat Structurizr WorkSpace published artifact"
+    title: "Build workspaces from code"
     status: Accepted
     content: "## Context\nModifying the json version of Workspace is a poor experience.\n\n## Decision\nWe will treat yml architecture data structure as the 'source' to generate and publish the Structurizr workplace 'artificat'. Structurizr Cloud Service will continue to persit state and provide a read-only view.\n\n## Consequences\nWe will not checkin any workspace json files. We will not provide 2 way sync. We will not use the revision numbers in Structurizr, rather relying on git for versioning and tagging."
 

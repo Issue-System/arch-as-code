@@ -1,0 +1,56 @@
+id: 49328
+name: "arch-as-code"
+description: "Arch as code project is to manage product architecture as code."
+businessUnit: "DevFactory"
+decisions:
+  - id: "1"
+    date: 2019-12-11
+    title: "Treat Structurizr WorkSpace published artifact"
+    status: Accepted
+    content: "## Context\nModifying the json version of Workspace is a poor experience.\n\n## Decision\nWe will treat yml architecture data structure as the 'source' to generate and publish the Structurizr workplace 'artificat'. Structurizr Cloud Service will continue to persit state and provide a read-only view.\n\n## Consequences\nWe will not checkin any workspace json files. We will not provide 2 way sync. We will not use the revision numbers in Structurizr, rather relying on git for versioning and tagging."
+
+model:
+  persons:
+    - name: "Developer"
+      description: "Developer building software"
+      relationships:
+        - name: "USES"
+          with: "GitHub"
+        - name: "USES"
+          with: "Structurizr Cloud Service Web Interface"
+    - name: "Product Chief Architect"
+      description: "Designs the software"
+      relationships:
+        - name: "USES"
+          with: "GitHub"
+        - name: "USES"
+          with: "Structurizr Cloud Service Web Interface"
+    - name: "Technical Product Manager"
+      description: "Makes Important Technical Decisions"
+      relationships:
+        - name: "USES"
+          with: "Structurizr Cloud Service Web Interface"
+    - name: "Engineering Architects"
+      description: "Make Architecture Updates"
+      relationships:
+        - name: "USES"
+          with: "Structurizr Cloud Service Web Interface"
+
+  systems:
+    - name: "GitHub"
+      description: "Hosts code and used for identity management"
+      relationships:
+        - name: "USES"
+          with: "GitHub Actions"
+    - name: "Structurizr Cloud Service Web Interface"
+      description: "Web Interface managing Structurizr Workspaces"
+      relationships:
+        - name: "USES"
+          with: "Structurizr Cloud Service API"
+    - name: "Structurizr Cloud Service API"
+      description: "API for managing Structurizr Workspaces"
+    - name: "GitHub Actions"
+      description: "Continuous Integration & Continuous Deployment of Architecture Artificats"
+      relationships:
+        - name: "USES"
+          with: "Structurizr Cloud Service API"

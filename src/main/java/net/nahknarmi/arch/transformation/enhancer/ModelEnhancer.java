@@ -17,8 +17,12 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         Model model = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
-        dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
-        dataStructureModel.getSystems().forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
+        addPersons(model, dataStructureModel);
+        addSystems(model, dataStructureModel);
+        addRelationships(model, dataStructureModel);
+    }
+
+    private void addRelationships(Model model, C4Model dataStructureModel) {
         dataStructureModel.relationships().forEach(r -> {
             String fromName = r.getFrom().getName();
             String toName = r.getTo().getName();
@@ -31,6 +35,14 @@ public class ModelEnhancer implements WorkspaceEnhancer {
                 throw new IllegalStateException("Unsupported type - " + r.getFrom().getClass());
             }
         });
+    }
+
+    private void addSystems(Model model, C4Model dataStructureModel) {
+        dataStructureModel.getSystems().forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
+    }
+
+    private void addPersons(Model model, C4Model dataStructureModel) {
+        dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
     }
 
     private void processPerson(Model model, C4Relationship r, String fromName, String toName) {

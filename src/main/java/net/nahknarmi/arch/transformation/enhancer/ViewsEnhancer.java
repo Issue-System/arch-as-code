@@ -1,9 +1,8 @@
 package net.nahknarmi.arch.transformation.enhancer;
 
 import com.structurizr.Workspace;
-import com.structurizr.view.AutomaticLayout;
-import com.structurizr.view.SystemContextView;
-import com.structurizr.view.ViewSet;
+import com.structurizr.model.Tags;
+import com.structurizr.view.*;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 
 public class ViewsEnhancer implements WorkspaceEnhancer {
@@ -16,7 +15,12 @@ public class ViewsEnhancer implements WorkspaceEnhancer {
             context.addAllSoftwareSystems();
             context.addAllPeople();
             context.setAutomaticLayout(true);
-            context.setAutomaticLayout(AutomaticLayout.RankDirection.LeftRight, 300, 600, 200, false);
+
+            Styles styles = viewSet.getConfiguration().getStyles();
+            styles.addElementStyle(Tags.SOFTWARE_SYSTEM).background("#1168bd").color("#ffffff");
+            styles.addElementStyle(Tags.PERSON).background("#08427b").color("#ffffff").shape(Shape.Person);
+
+            context.setAutomaticLayout(AutomaticLayout.RankDirection.TopBottom, 300, 600, 200, false);
         });
     }
 }

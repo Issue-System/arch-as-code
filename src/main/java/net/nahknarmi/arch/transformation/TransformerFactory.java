@@ -1,6 +1,7 @@
 package net.nahknarmi.arch.transformation;
 
 import com.google.common.collect.ImmutableList;
+import net.nahknarmi.arch.preview.ArchitectureDataStructurePreviewer;
 import net.nahknarmi.arch.transformation.enhancer.DecisionEnhancer;
 import net.nahknarmi.arch.transformation.enhancer.DocumentationEnhancer;
 import net.nahknarmi.arch.transformation.enhancer.ModelEnhancer;
@@ -17,7 +18,9 @@ public abstract class TransformerFactory {
                         new DocumentationEnhancer(documentRoot),
                         new DecisionEnhancer(),
                         new ModelEnhancer(),
-                        new ViewsEnhancer())
+                        new ViewsEnhancer(),
+                        new ArchitectureDataStructurePreviewer()
+                )
         );
     }
 }

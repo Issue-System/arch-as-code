@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ArchitectureDataStructurePublisher {
     private final File productDocumentationRoot;
-    private final ArchitectureDataStructureReader dataStructureImporter;
+    private final ArchitectureDataStructureReader dataStructureReader;
     private final ArchitectureDataStructureTransformer dataStructureTransformer;
     private final StructurizrAdapter structurizrAdapter;
 
@@ -24,7 +24,7 @@ public class ArchitectureDataStructurePublisher {
                                               StructurizrAdapter structurizrAdapter) {
         this.productDocumentationRoot = productDocumentationRoot;
         this.dataStructureTransformer = transformer;
-        this.dataStructureImporter = importer;
+        this.dataStructureReader = importer;
         this.structurizrAdapter = structurizrAdapter;
     }
 
@@ -33,7 +33,7 @@ public class ArchitectureDataStructurePublisher {
 
         File manifestFile = new File(productDocumentationRoot + File.separator + productName.toLowerCase() + File.separator + "data-structure.yml");
 
-        ArchitectureDataStructure dataStructure = dataStructureImporter.load(manifestFile);
+        ArchitectureDataStructure dataStructure = dataStructureReader.load(manifestFile);
         Workspace workspace = dataStructureTransformer.toWorkSpace(dataStructure);
 
         structurizrAdapter.publish(workspace);

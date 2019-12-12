@@ -6,13 +6,13 @@ import com.structurizr.documentation.DecisionStatus;
 import com.structurizr.model.Model;
 import com.structurizr.model.Person;
 import com.structurizr.model.SoftwareSystem;
+import com.structurizr.view.AutomaticLayout;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.structurizr.documentation.DecisionStatus.Deprecated;
@@ -37,6 +37,13 @@ public class ArchitectureDataStructureTransformer {
         addDocumentation(workspace, dataStructure);
         addDecisions(workspace, dataStructure);
 
+        Model model = addModel(dataStructure, workspace);
+        addViews(workspace, model);
+
+        return workspace;
+    }
+
+    private Model addModel(ArchitectureDataStructure dataStructure, Workspace workspace) {
         Model model = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
         dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
@@ -53,16 +60,19 @@ public class ArchitectureDataStructureTransformer {
                 throw new IllegalStateException("Unsupported type - " + r.getFrom().getClass());
             }
         });
+        return model;
+    }
 
+    private void addViews(Workspace workspace, Model model) {
         ViewSet viewSet = workspace.getViews();
 
-        model.getSoftwareSystems().forEach(ss -> {
-            SystemContextView context = viewSet.createSystemContextView(ss, "context" + new Random().nextInt(), ss.getName() + " Diagram");
+        model.getSoftwareSystems().stream().findFirst().ifPresent(ss -> {
+            SystemContextView context = viewSet.createSystemContextView(ss, ss.getName() + "-context", ss.getName() + " Diagram");
             context.addAllSoftwareSystems();
             context.addAllPeople();
+            context.setAutomaticLayout(true);
+            context.setAutomaticLayout(AutomaticLayout.RankDirection.LeftRight, 300, 600, 200, false);
         });
-
-        return workspace;
     }
 
     private void processPerson(Model model, C4Relationship r, String fromName, String toName) {

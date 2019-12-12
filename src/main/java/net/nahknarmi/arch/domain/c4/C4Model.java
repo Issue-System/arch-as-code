@@ -33,7 +33,7 @@ public class C4Model {
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Unable to find system or person named " + rp.getWith()));
             RelationshipType relationshipType = RelationshipType.valueOf(rp.getName());
-            return new C4Relationship(from, to, relationshipType);
+            return C4Relationship.builder().from(from).to(to).relationshipType(relationshipType).description(rp.getDescription()).build();
         })).collect(Collectors.toList());
     }
 }

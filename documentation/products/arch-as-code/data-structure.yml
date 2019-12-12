@@ -16,25 +16,37 @@ model:
       relationships:
         - name: "USES"
           with: "GitHub"
+          description: "Raise Pull Request to update architecture"
         - name: "USES"
           with: "Structurizr Cloud Service Web Interface"
+          description: "Read"
     - name: "Product Chief Architect"
       description: "Designs the software"
       relationships:
         - name: "USES"
           with: "GitHub"
+          description: "Raise Pull Request to update architecture"
+        - name: "USES"
+          with: "GitHub"
+          description: "Reviews changes to architecture"
         - name: "USES"
           with: "Structurizr Cloud Service Web Interface"
+          description: "Reads"
     - name: "Technical Product Manager"
       description: "Makes Important Technical Decisions"
       relationships:
         - name: "USES"
           with: "Structurizr Cloud Service Web Interface"
-    - name: "Engineering Architects"
+          description: "Reads"
+    - name: "Engineering Architect"
       description: "Make Architecture Updates"
       relationships:
         - name: "USES"
           with: "Structurizr Cloud Service Web Interface"
+          description: "Reads"
+        - name: "USES"
+          with: "GitHub"
+          description: "Raise Pull Request to update architecture"
 
   systems:
     - name: "GitHub"
@@ -42,11 +54,13 @@ model:
       relationships:
         - name: "USES"
           with: "GitHub Actions"
+          description: "Triggers continuous integration on"
     - name: "Structurizr Cloud Service Web Interface"
       description: "Web Interface managing Structurizr Workspaces"
       relationships:
         - name: "USES"
           with: "Structurizr Cloud Service API"
+          description: "Reads from and writes to"
     - name: "Structurizr Cloud Service API"
       description: "API for managing Structurizr Workspaces"
     - name: "GitHub Actions"
@@ -54,3 +68,4 @@ model:
       relationships:
         - name: "USES"
           with: "Structurizr Cloud Service API"
+          description: "Publishes change to"

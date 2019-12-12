@@ -23,16 +23,17 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private void addRelationships(Model model, C4Model dataStructureModel) {
-        dataStructureModel.relationships().forEach(r -> {
-            String fromName = r.getFrom().getName();
-            String toName = r.getTo().getName();
+        dataStructureModel.relationships().forEach(relationship -> {
+            String fromName = relationship.getFrom().getName();
+            String toName = relationship.getTo().getName();
+            String description = relationship.getDescription();
 
-            if (r.getFrom() instanceof C4Person) {
-                processPerson(model, r, fromName, toName);
-            } else if (r.getFrom() instanceof C4SoftwareSystem) {
-                processSoftwareSystem(model, r, fromName, toName);
+            if (relationship.getFrom() instanceof C4Person) {
+                processPerson(model, relationship, fromName, toName, description);
+            } else if (relationship.getFrom() instanceof C4SoftwareSystem) {
+                processSoftwareSystem(model, relationship, fromName, toName, description);
             } else {
-                throw new IllegalStateException("Unsupported type - " + r.getFrom().getClass());
+                throw new IllegalStateException("Unsupported type - " + relationship.getFrom().getClass());
             }
         });
     }
@@ -45,12 +46,12 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
     }
 
-    private void processPerson(Model model, C4Relationship r, String fromName, String toName) {
+    private void processPerson(Model model, C4Relationship r, String fromName, String toName, String description) {
         Person fromPerson = findPerson(model, fromName, fromName);
 
         switch (r.getRelationshipType()){
             case USES:
-                personUses(model, toName, fromPerson);
+                personUses(model, toName, fromPerson, description);
                 break;
 
             case INTERACTS_WITH: //person to person relationship
@@ -66,12 +67,12 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         }
     }
 
-    private void processSoftwareSystem(Model model, C4Relationship r, String fromName, String toName) {
+    private void processSoftwareSystem(Model model, C4Relationship r, String fromName, String toName, String description) {
         SoftwareSystem fromSystem = findSoftwareSystem(model, fromName);
 
         switch (r.getRelationshipType()){
             case USES:
-                systemUses(model, toName, fromSystem);
+                systemUses(model, toName, fromSystem, description);
                 break;
 
             case DELIVERS:
@@ -88,14 +89,14 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         fromSystem.delivers(deliversTo, "delivers");
     }
 
-    private void systemUses(Model model, String toName, SoftwareSystem fromSystem) {
+    private void systemUses(Model model, String toName, SoftwareSystem fromSystem, String description) {
         SoftwareSystem toSystem = findSoftwareSystem(model, toName);
-        fromSystem.uses(toSystem, "uses");
+        fromSystem.uses(toSystem, description);
     }
 
-    private void personUses(Model model, String toName, Person fromPerson) {
+    private void personUses(Model model, String toName, Person fromPerson, String description) {
         SoftwareSystem toSystem = findSoftwareSystem(model, toName);
-        fromPerson.uses(toSystem, "uses");
+        fromPerson.uses(toSystem, description);
     }
 
     private void personDelivers(Model model, String fromName, String toName, Person fromPerson) {

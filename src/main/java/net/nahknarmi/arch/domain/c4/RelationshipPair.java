@@ -14,4 +14,6 @@ public class RelationshipPair {
     private String name;
     @NonNull
     private String with;
+    @NonNull
+    private String description;
 }

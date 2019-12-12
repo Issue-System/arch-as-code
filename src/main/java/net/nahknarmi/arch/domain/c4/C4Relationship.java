@@ -9,4 +9,6 @@ public class C4Relationship {
     private final Relatable from;
     private final Relatable to;
     private final RelationshipType relationshipType;
+    private final String description;
+
 }

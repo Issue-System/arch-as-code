@@ -11,16 +11,12 @@ import java.io.IOException;
 
 public class ArchitectureDataStructurePreviewer implements WorkspaceEnhancer {
 
-    public void preview(Workspace workspace) {
-
-    }
-
     @Override
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         PlantUMLWriter writer = new PlantUMLWriter();
-
+        new File(".preview").mkdir();
         try (FileWriter fileWriter = new FileWriter(".preview/diagrams.puml")) {
-            new File(".preview").mkdir();
+
             writer.write(workspace, fileWriter);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write preview diagram.", e);

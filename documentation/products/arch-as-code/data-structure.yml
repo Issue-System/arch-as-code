@@ -8,6 +8,11 @@ decisions:
     title: "Build workspaces from code"
     status: Accepted
     content: "## Context\nModifying the json version of Workspace is a poor experience.\n\n## Decision\nWe will treat yml architecture data structure as the 'source' to generate and publish the Structurizr workplace 'artificat'. Structurizr Cloud Service will continue to persit state and provide a read-only view.\n\n## Consequences\nWe will not checkin any workspace json files. We will not provide 2 way sync. We will not use the revision numbers in Structurizr, rather relying on git for versioning and tagging."
+  - id: "2"
+    date: 2019-12-11
+    title: "No two way sync"
+    status: Proposed
+    content: "## Context\nModifying the json version of Workspace is a poor experience.\n\n## Decision\nWe will treat yml architecture data structure as the 'source' to generate and publish the Structurizr workplace 'artificat'. Structurizr Cloud Service will continue to persit state and provide a read-only view.\n\n## Consequences\nWe will not checkin any workspace json files. We will not provide 2 way sync. We will not use the revision numbers in Structurizr, rather relying on git for versioning and tagging."
 
 model:
   persons:
@@ -49,6 +54,12 @@ model:
           description: "Raise Pull Request to update architecture"
     - name: "QA"
       description: "Test the product"
+      relationships:
+        - name: "USES"
+          with: "Structurizr Cloud Service Web Interface"
+          description: "Reads"
+    - name: "VP of Engineering"
+      description: "Review and understand product"
       relationships:
         - name: "USES"
           with: "Structurizr Cloud Service Web Interface"

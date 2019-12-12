@@ -1,6 +1,8 @@
-package net.nahknarmi.arch.model;
+package net.nahknarmi.arch.domain;
 
 
+import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Person;
 import org.junit.Test;
 
 import java.io.File;

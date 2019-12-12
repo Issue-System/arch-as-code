@@ -4,7 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.view.AutomaticLayout;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
-import net.nahknarmi.arch.model.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 
 public class ViewsEnhancer implements WorkspaceEnhancer {
     @Override

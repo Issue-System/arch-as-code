@@ -1,4 +1,4 @@
-package net.nahknarmi.arch.model;
+package net.nahknarmi.arch.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package net.nahknarmi.arch.transformation.enhancer;
 
 import com.structurizr.Workspace;
 import com.structurizr.documentation.DecisionStatus;
-import net.nahknarmi.arch.model.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 
 import static com.structurizr.documentation.DecisionStatus.Deprecated;
 import static com.structurizr.documentation.DecisionStatus.*;

@@ -1,4 +1,4 @@
-package net.nahknarmi.arch.model;
+package net.nahknarmi.arch.domain.c4;
 
 import java.util.List;
 

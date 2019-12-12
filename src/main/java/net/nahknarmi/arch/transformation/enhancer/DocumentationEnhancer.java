@@ -2,7 +2,7 @@ package net.nahknarmi.arch.transformation.enhancer;
 
 import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
-import net.nahknarmi.arch.model.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;
 import java.io.IOException;

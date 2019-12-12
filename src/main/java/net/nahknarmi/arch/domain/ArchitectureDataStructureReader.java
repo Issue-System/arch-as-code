@@ -1,4 +1,4 @@
-package net.nahknarmi.arch.model;
+package net.nahknarmi.arch.domain;
 
 import org.yaml.snakeyaml.Yaml;
 

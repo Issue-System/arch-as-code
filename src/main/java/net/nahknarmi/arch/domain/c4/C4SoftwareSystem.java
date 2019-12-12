@@ -1,4 +1,4 @@
-package net.nahknarmi.arch.model;
+package net.nahknarmi.arch.domain.c4;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import static java.util.Collections.emptyList;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4Person implements Relatable {
+public class C4SoftwareSystem implements Relatable {
     @NonNull
     private String name;
     @NonNull

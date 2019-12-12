@@ -4,7 +4,11 @@ import com.structurizr.Workspace;
 import com.structurizr.model.Model;
 import com.structurizr.model.Person;
 import com.structurizr.model.SoftwareSystem;
-import net.nahknarmi.arch.model.*;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Person;
+import net.nahknarmi.arch.domain.c4.C4Relationship;
+import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 
 import static java.util.Optional.ofNullable;
 
@@ -77,22 +81,18 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         fromSystem.uses(toSystem, "uses");
     }
 
-
     private void personUses(Model model, String toName, Person fromPerson) {
         SoftwareSystem toSystem = findSoftwareSystem(model, toName);
-
         fromPerson.uses(toSystem, "uses");
     }
 
     private void personDelivers(Model model, String fromName, String toName, Person fromPerson) {
         Person deliversTo = findPerson(model, fromName, toName);
-
         fromPerson.delivers(deliversTo, "delivers");
     }
 
     private void personInteractsWith(Model model, String fromName, String toName, Person fromPerson) {
         Person interactsWith = findPerson(model, fromName, toName);
-
         fromPerson.interactsWith(interactsWith, "interacts with");
     }
 

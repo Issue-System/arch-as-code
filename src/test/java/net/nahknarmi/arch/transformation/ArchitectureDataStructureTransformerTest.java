@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.DecisionStatus;
-import net.nahknarmi.arch.model.*;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.ImportantTechnicalDecision;
+import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Person;
+import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 import org.junit.Test;
 
 import java.io.File;

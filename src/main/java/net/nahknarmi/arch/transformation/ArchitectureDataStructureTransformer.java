@@ -1,7 +1,7 @@
 package net.nahknarmi.arch.transformation;
 
 import com.structurizr.Workspace;
-import net.nahknarmi.arch.model.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.transformation.enhancer.WorkspaceEnhancer;
 
 import java.util.List;

@@ -20,7 +20,7 @@ jobs:
         STRUCTURIZR_API_KEY: ${{ secrets.TEST_STRUCTURIZR_API_KEY }}
         STRUCTURIZR_API_SECRET: ${{ secrets.TEST_STRUCTURIZR_API_SECRET }}
 
-  - name: Extract branch name
+    - name: Extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch

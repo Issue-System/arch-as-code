@@ -1,6 +1,6 @@
 id: 49328
 name: "arch-as-code"
-description: "Arch as code project is to manage product architecture as code."
+description: "Arch as code allows you to manage product architecture as code."
 businessUnit: "DevFactory"
 decisions:
   - id: "1"

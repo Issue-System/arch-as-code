@@ -14,6 +14,6 @@ chmod +x /tmp/test-reporter
 
 ./gradlew jacocoTestReport
 
-JACOCO_SOURCE_PATH=src/main/java /tmp/test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
+JACOCO_SOURCE_PATH=src/main/java /tmp/test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco -d
 
-/tmp/test-reporter upload-coverage -r 3981b00132185321e3e9764462878f8da1152dd73246f8e04a4cb4b0dcfaba73
+/tmp/test-reporter upload-coverage -r 3981b00132185321e3e9764462878f8da1152dd73246f8e04a4cb4b0dcfaba73 -d

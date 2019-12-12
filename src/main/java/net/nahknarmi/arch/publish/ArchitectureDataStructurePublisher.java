@@ -6,6 +6,7 @@ import net.nahknarmi.arch.adapter.StructurizrAdapter;
 import net.nahknarmi.arch.model.ArchitectureDataStructure;
 import net.nahknarmi.arch.model.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
+import net.nahknarmi.arch.transformation.TransformerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class ArchitectureDataStructurePublisher {
 
     public static ArchitectureDataStructurePublisher create(File productDocumentationRoot) {
         ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader();
-        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(productDocumentationRoot);
+        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productDocumentationRoot);
         StructurizrAdapter adapter = new StructurizrAdapter();
 
         return new ArchitectureDataStructurePublisher(productDocumentationRoot, importer, transformer, adapter);

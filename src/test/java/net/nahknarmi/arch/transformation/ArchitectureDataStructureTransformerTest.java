@@ -28,7 +28,7 @@ public class ArchitectureDataStructureTransformerTest {
                 new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION, emptyList(), buildModel());
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
-        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(documentationRoot);
+        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
@@ -80,7 +80,7 @@ public class ArchitectureDataStructureTransformerTest {
                         ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")), buildModel());
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
-        ArchitectureDataStructureTransformer transformer = new ArchitectureDataStructureTransformer(documentationRoot);
+        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         ArrayList<Decision> decisions = new ArrayList<>(workspace.getDocumentation().getDecisions());

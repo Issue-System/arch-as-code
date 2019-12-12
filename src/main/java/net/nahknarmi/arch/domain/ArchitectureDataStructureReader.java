@@ -14,6 +14,7 @@ public class ArchitectureDataStructureReader {
     public ArchitectureDataStructure load(File manifest) throws FileNotFoundException {
         checkNotNull(manifest, "Manifest must not be null.");
         checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
+
         return new Yaml().loadAs(new FileInputStream(manifest), ArchitectureDataStructure.class);
     }
 }

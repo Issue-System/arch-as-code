@@ -11,6 +11,7 @@ import net.nahknarmi.arch.domain.c4.C4Relationship;
 import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 
 import static java.util.Optional.ofNullable;
+import static net.nahknarmi.arch.domain.c4.C4Model.NONE;
 
 public class ModelEnhancer implements WorkspaceEnhancer {
 
@@ -39,11 +40,15 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private void addSystems(Model model, C4Model dataStructureModel) {
-        dataStructureModel.getSystems().forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
+        ofNullable(dataStructureModel)
+                .orElse(NONE).getSystems()
+                .forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
     }
 
     private void addPersons(Model model, C4Model dataStructureModel) {
-        dataStructureModel.getPersons().forEach(p -> model.addPerson(p.getName(), p.getDescription()));
+        ofNullable(dataStructureModel)
+                .orElse(NONE).getPersons()
+                .forEach(p -> model.addPerson(p.getName(), p.getDescription()));
     }
 
     private void processPerson(Model model, C4Relationship r, String fromName, String toName, String description) {

@@ -12,7 +12,7 @@ decisions:
     date: 2019-12-11
     title: "No two way sync"
     status: Proposed
-    content: "## Context\nModifying the json version of Workspace is a poor experience.\n\n## Decision\nWe will treat yml architecture data structure as the 'source' to generate and publish the Structurizr workplace 'artificat'. Structurizr Cloud Service will continue to persit state and provide a read-only view.\n\n## Consequences\nWe will not checkin any workspace json files. We will not provide 2 way sync. We will not use the revision numbers in Structurizr, rather relying on git for versioning and tagging."
+    content: "## Context\nStructurizr is a flexible service that allows your to both pull and push product architectures.\n\n## Decision\nFor a more simplified and consistent workflow, we want information to flow in one direction-- from our source code to the structurizr api.  This will force everyone to work locally and follow a standard review process via GitHub pull requests instead publishing directly to Structurizr.\n\n## Consequence\nOur workflow will ensure that quality bars and proper reviews are met in addition to providing a more consistent, at the cost of a more restricted process.\n"
 
 model:
   persons:

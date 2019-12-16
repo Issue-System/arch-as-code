@@ -42,7 +42,10 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     private void addSystems(Model model, C4Model dataStructureModel) {
         ofNullable(dataStructureModel)
                 .orElse(NONE).getSystems()
-                .forEach(s -> model.addSoftwareSystem(s.getName(), s.getDescription()));
+                .forEach(s -> {
+                    SoftwareSystem softwareSystem = model.addSoftwareSystem(s.getName(), s.getDescription());
+                    s.getContainers().forEach(x -> softwareSystem.addContainer(x.getName(), x.getDescription(), x.getTechnology()));
+                });
     }
 
     private void addPersons(Model model, C4Model dataStructureModel) {

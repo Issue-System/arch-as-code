@@ -39,3 +39,10 @@ model:
           with: "DevSpaces Backend"
     - name: "DevSpaces Backend"
       description: "Restful API providing capabilities for interacting with a DevSpace"
+      containers:
+        - name: "DevSpaces Web Application"
+          description: "Manage dev spaces"
+          technology: "Angular"
+        - name: "DevSpaces API"
+          description: "API to programmatically create/manage dev spaces"
+          technology: "SpringBoot"

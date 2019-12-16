@@ -22,7 +22,7 @@ public class StructurizrAdapter {
     /**
      * It will use following order to determine which workspace id to use:
      *  - from environment variable
-     *  - from ./arch-as-code/struturizr/.credentials
+     *  - from ./.arch-as-code/structurizr/credentials.json
      *  - from workspace configured in passed in workspace
      * @param workspace
      * @throws StructurizrClientException

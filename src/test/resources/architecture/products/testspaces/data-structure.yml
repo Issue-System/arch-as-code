@@ -43,6 +43,10 @@ model:
         - name: "DevSpaces Web Application"
           description: "Manage dev spaces"
           technology: "Angular"
+          relationships:
+            - name: "USES"
+              with: "DevSpaces API"
+              description: "Frontend queries API"
         - name: "DevSpaces API"
           description: "API to programmatically create/manage dev spaces"
           technology: "SpringBoot"

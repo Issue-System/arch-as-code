@@ -11,6 +11,8 @@ public class SystemContextViewEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         ViewSet viewSet = workspace.getViews();
 
+
+
         workspace.getModel().getSoftwareSystems().stream().findFirst().ifPresent(ss -> {
             SystemContextView context = viewSet.createSystemContextView(ss, ss.getName() + "-system-context", ss.getName() + " System Diagram");
             context.addAllSoftwareSystems();

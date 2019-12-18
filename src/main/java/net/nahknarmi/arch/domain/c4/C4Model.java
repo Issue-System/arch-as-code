@@ -21,6 +21,7 @@ public class C4Model {
     private List<C4Person> persons = emptyList();
     @NonNull
     private List<C4SoftwareSystem> systems = emptyList();
+    private C4View views;
 
     public List<C4Relationship> relationships() {
         return fromRelationships(Stream.concat(systems.stream(), this.persons.stream()));

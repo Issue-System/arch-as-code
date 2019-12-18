@@ -8,7 +8,6 @@ import java.io.File;
 public abstract class TransformerFactory {
 
     public static ArchitectureDataStructureTransformer create(File documentRoot) {
-        //Ensure you preserve the order of these enhancers
         return new ArchitectureDataStructureTransformer(
                 ImmutableList.of(
                         new DocumentationEnhancer(documentRoot),

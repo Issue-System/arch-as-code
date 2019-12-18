@@ -18,14 +18,6 @@ model:
   persons:
     - name: "Developer"
       description: "Developer building software"
-      relationships:
-        - name: "USES"
-          with: "GitHub"
-        - name: "USES"
-          with: "DevSpaces CLI"
-        - name: "INTERACTS_WITH"
-          with: "SaasOps"
-
     - name: "SaasOps"
       description: "SaasOps operating system"
 
@@ -34,19 +26,64 @@ model:
       description: "Hosts code and used for identity management"
     - name: "DevSpaces CLI"
       description: "Command Line Interface for interacting with DevSpaces Backend"
-      relationships:
-        - name: "USES"
-          with: "DevSpaces Backend"
     - name: "DevSpaces Backend"
       description: "Restful API providing capabilities for interacting with a DevSpace"
       containers:
         - name: "DevSpaces Web Application"
           description: "Manage dev spaces"
           technology: "Angular"
-          relationships:
-            - name: "USES"
-              with: "DevSpaces API"
-              description: "Frontend queries API"
         - name: "DevSpaces API"
           description: "API to programmatically create/manage dev spaces"
           technology: "SpringBoot"
+
+  views:
+    systemView:
+      relationships:
+        # Person relationships
+        - name: "Developer"
+          action: "USES"
+          with: "GitHub"
+          description: "as a version control system"
+        - name: "Developer"
+          action: "USES"
+          with: "DevSpaces CLI"
+          description: "to create dev spaces"
+        - name: "Developer"
+          action: "INTERACTS_WITH"
+          with: "SaasOps"
+          description: "inter-team communicatoin"
+
+        # System relationships
+        - name: "DevSpaces CLI"
+          action: "USES"
+          with: "DevSpaces Backend"
+          description: "cli queries backend"
+    containerView:
+      containers:
+        - name: "DevSpaces Web Application"
+          system: "DevSpaces Backend"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub"
+              description: "pushes code changes"
+            - name: "Developer"
+              action: "USES"
+              with: "DevSpaces CLI"
+              description: "creates and manages dev spaces"
+            - name: "SaasOps"
+              action: "USES"
+              with: "GitHub"
+              description: "pushes code changes"
+            - name: "GitHub"
+              action: "USES"
+              with: "DevSpaces CLI"
+              description: "start/stop dev spaces during ci"
+            - name: "DevSpaces Web Application"
+              action: "USES"
+              with: "DevSpaces API"
+              description: "Frontend queries API"
+            - name: "DevSpaces CLI"
+              action: "USES"
+              with: "DevSpaces API"
+              description: "to manipulate dev spaces"

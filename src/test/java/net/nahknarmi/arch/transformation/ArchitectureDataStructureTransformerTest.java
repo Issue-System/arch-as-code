@@ -98,7 +98,14 @@ public class ArchitectureDataStructureTransformerTest {
         return new C4Model(
                 ImmutableList.of(new C4Person("Foo", "Bar", emptyList())),
                 ImmutableList.of(new C4SoftwareSystem("J2EE Server", "Application server", emptyList(), emptyList())),
-                new C4View()
+                buildView()
+        );
+    }
+
+    private C4View buildView() {
+        return new C4View(
+                null,
+                null
         );
     }
 

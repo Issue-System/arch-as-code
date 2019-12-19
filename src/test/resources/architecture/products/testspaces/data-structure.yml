@@ -28,10 +28,10 @@ model:
 
   systems:
     - name: "XO Chat"
-      description: "realtime team communication"
+      description: "Realtime team communication"
 
     - name: "Trilogy Google G Suite"
-      description: "team collaboration via sheets, docs and presentations"
+      description: "Team collaboration via sheets, docs and presentations"
 
     - name: "GitHub"
       description: "Hosts code and used for identity management"
@@ -50,7 +50,7 @@ model:
           technology: "Angular"
         - name: "DevSpaces API"
           description: "API to programmatically create/manage dev spaces"
-          technology: "SpringBoot"
+          technology: "Spring Boot"
 
   views:
     systemView:

@@ -48,17 +48,14 @@ public class ArchitectureDataStructureReaderTest {
         //it should have persons
         List<C4Person> persons = model.getPersons();
 
-        assertThat(persons.size(), equalTo(2));
+        assertThat(persons.size(), equalTo(3));
         C4Person person = (C4Person) persons.get(0);
         assertThat(person, notNullValue());
         assertThat(person.getName(), is(equalTo("Developer")));
         assertThat(person.getDescription(), is(equalTo("Developer building software")));
 
         //it should have systems
-        assertThat(model.getSystems().size(), is(equalTo(3)));
-
-        //it should have relationships
-        assertThat(model.relationships().size(), is(equalTo(4)));
+        assertThat(model.getSystems().size(), is(equalTo(4)));
     }
 
     private LocalDate decisionDate(ImportantTechnicalDecision decision) {

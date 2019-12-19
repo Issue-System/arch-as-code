@@ -15,26 +15,28 @@ public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         ViewSet viewSet = workspace.getViews();
 
-        dataStructure.getModel().getViews().getContainerView().getContainers().stream().forEach(c -> {
-            String system = c.getSystem();
-            SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName(system);
+        if (dataStructure.getModel().getViews().getContainerView() != null) {
+            dataStructure.getModel().getViews().getContainerView().getContainers().stream().forEach(c -> {
+                String system = c.getSystem();
+                SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName(system);
 
-            Container container = softwareSystem.getContainerWithName(c.getName());
-            // TODO: Fix missing description
-            ContainerView context = viewSet.createContainerView(softwareSystem, c.getName(), "Missing Description");
+                Container container = softwareSystem.getContainerWithName(c.getName());
+                // TODO: Fix missing description
+                ContainerView context = viewSet.createContainerView(softwareSystem, c.getName(), "Missing Description");
 
-            c.getRelationships().stream().forEach(r -> {
-                String description = r.getDescription();
-                Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
-                Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());
+                c.getRelationships().stream().forEach(r -> {
+                    String description = r.getDescription();
+                    Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
+                    Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());
 
-                // TODO: Currently only Person.uses & Container.uses interaction type supported
-                addRelationshipToContext(context, fromElement, toElement, description);
+                    // TODO: Currently only Person.uses & Container.uses interaction type supported
+                    addRelationshipToContext(context, fromElement, toElement, description);
+                });
+
+                context.addNearestNeighbours(container);
+                context.setAutomaticLayout(true);
             });
-
-            context.addNearestNeighbours(container);
-            context.setAutomaticLayout(true);
-        });
+        }
     }
 
 

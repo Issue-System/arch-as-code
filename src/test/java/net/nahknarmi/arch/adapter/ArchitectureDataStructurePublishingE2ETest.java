@@ -11,6 +11,7 @@ import java.io.IOException;
 import static net.nahknarmi.arch.TestHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
 
 public class ArchitectureDataStructurePublishingE2ETest {
 
@@ -28,8 +29,32 @@ public class ArchitectureDataStructurePublishingE2ETest {
         Workspace workspace = adapter.load(TEST_WORKSPACE_ID);
         assertThat(workspace.getDocumentation().getSections(), hasSize(2));
         assertThat(workspace.getDocumentation().getDecisions(), hasSize(2));
-        assertThat(workspace.getModel().getSoftwareSystems(), hasSize(3));
-        assertThat(workspace.getModel().getPeople(), hasSize(2));
-        assertThat(workspace.getModel().getRelationships(), hasSize(4));
+        assertThat(workspace.getModel().getSoftwareSystems(), hasSize(4));
+        assertThat(workspace.getModel().getPeople(), hasSize(3));
+        assertEquals(getTotalContainerCount(workspace), 4);
+        assertEquals(getTotalComponentCount(workspace), 0);
+        assertThat(workspace.getModel().getRelationships(), hasSize(15));
+    }
+
+    private int getTotalComponentCount(Workspace workspace) {
+        return workspace
+                .getModel()
+                .getSoftwareSystems()
+                .stream()
+                .map(s -> s.getContainers()
+                        .stream()
+                        .map(c -> c.getComponents().size())
+                        .reduce(0, Integer::sum)
+                )
+                .reduce(0, Integer::sum);
+    }
+
+    private int getTotalContainerCount(Workspace workspace) {
+        return workspace
+                .getModel()
+                .getSoftwareSystems()
+                .stream()
+                .map(s -> s.getContainers().size())
+                .reduce(0, Integer::sum);
     }
 }

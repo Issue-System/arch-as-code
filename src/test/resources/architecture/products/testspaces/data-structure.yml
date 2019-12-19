@@ -14,28 +14,128 @@ decisions:
     title: "Kubernetes as the container management platform"
     status: Accepted
     content: "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences."
+
 model:
   persons:
     - name: "Developer"
       description: "Developer building software"
-      relationships:
-        - name: "USES"
-          with: "GitHub"
-        - name: "USES"
-          with: "DevSpaces CLI"
-        - name: "INTERACTS_WITH"
-          with: "SaasOps"
 
     - name: "SaasOps"
       description: "SaasOps operating system"
 
+    - name: "PCA"
+      description: "Product Chief Architect"
+
   systems:
+    - name: "XO Chat"
+      description: "Realtime team communication"
+
+    - name: "Trilogy Google G Suite"
+      description: "Team collaboration via sheets, docs and presentations"
+
     - name: "GitHub"
       description: "Hosts code and used for identity management"
-    - name: "DevSpaces CLI"
-      description: "Command Line Interface for interacting with DevSpaces Backend"
-      relationships:
-        - name: "USES"
-          with: "DevSpaces Backend"
-    - name: "DevSpaces Backend"
-      description: "Restful API providing capabilities for interacting with a DevSpace"
+
+    - name: "DevSpaces"
+      description: "allows developers to collaborate"
+      containers:
+        - name: "DevSpaces CLI"
+          description: "Command Line Interface for interacting with DevSpaces Backend"
+          technology: "C++"
+        - name: "DevSpaces Backend"
+          description: "Restful API providing capabilities for interacting with a DevSpace"
+          technology: "Spring Boot"
+        - name: "DevSpaces Web Application"
+          description: "Manage dev spaces"
+          technology: "Angular"
+        - name: "DevSpaces API"
+          description: "API to programmatically create/manage dev spaces"
+          technology: "Spring Boot"
+
+  views:
+    systemView:
+      systems:
+        - name: "DevSpaces"
+          description: "Internal Trilogy Users view of DevSpaces system"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub"
+              description: "as a version control system"
+
+            - name: "SaasOps"
+              action: "USES"
+              with: "GitHub"
+              description: "as a version control system"
+
+            - name: "Developer"
+              action: "USES"
+              with: "DevSpaces"
+              description: "to devolop software"
+
+            - name: "SaasOps"
+              action: "USES"
+              with: "DevSpaces"
+              description: "to manage cluster"
+
+        - name: "Trilogy Google G Suite"
+          relationships:
+            - name: "PCA"
+              action: "USES"
+              with: "XO Chat"
+              description: "to communicate with team"
+
+            - name: "Developer"
+              action: "USES"
+              with: "DevSpaces"
+              description: "to create dev spaces"
+
+            - name: "Developer"
+              action: "USES"
+              with: "Trilogy Google G Suite"
+              description: "inter-team collaboration"
+
+            - name: "PCA"
+              action: "USES"
+              with: "Trilogy Google G Suite"
+              description: "inter-team collaboration"
+
+            - name: "SaasOps"
+              action: "USES"
+              with: "Trilogy Google G Suite"
+              description: "inter-team collaboration"
+
+    containerView:
+      containers:
+        - name: "DevSpaces Container"
+          system: "DevSpaces"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub"
+              description: "pushes code changes"
+
+            - name: "Developer"
+              action: "USES"
+              with: "DevSpaces CLI"
+              description: "creates and manages dev spaces"
+
+            - name: "SaasOps"
+              action: "USES"
+              with: "DevSpaces Web Application"
+              description: "to manage instances"
+
+            - name: "DevSpaces Web Application"
+              action: "USES"
+              with: "DevSpaces Backend"
+              description: "Frontend queries backend"
+
+            - name: "DevSpaces CLI"
+              action: "USES"
+              with: "DevSpaces API"
+              description: "to manipulate dev spaces"
+
+            - name: "DevSpaces Backend"
+              action: "USES"
+              with: "DevSpaces CLI"
+              description: "to manipulate dev spaces"

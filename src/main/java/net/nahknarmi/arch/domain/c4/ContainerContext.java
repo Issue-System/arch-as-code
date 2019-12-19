@@ -7,18 +7,14 @@ import lombok.NonNull;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4Model {
-    public static final C4Model NONE = new C4Model();
-
+public class ContainerContext {
     @NonNull
-    private List<C4Person> persons = emptyList();
+    private String name;
     @NonNull
-    private List<C4SoftwareSystem> systems = emptyList();
+    private String system;
     @NonNull
-    private C4View views;
+    private List<RelationshipPair> relationships;
 }

@@ -9,6 +9,7 @@ import net.nahknarmi.arch.domain.ImportantTechnicalDecision;
 import net.nahknarmi.arch.domain.c4.C4Model;
 import net.nahknarmi.arch.domain.c4.C4Person;
 import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
+import net.nahknarmi.arch.domain.c4.C4View;
 import org.junit.Test;
 
 import java.io.File;
@@ -96,7 +97,16 @@ public class ArchitectureDataStructureTransformerTest {
     private C4Model buildModel() {
         return new C4Model(
                 ImmutableList.of(new C4Person("Foo", "Bar", emptyList())),
-                ImmutableList.of(new C4SoftwareSystem("J2EE Server", "Application server", emptyList())));
+                ImmutableList.of(new C4SoftwareSystem("J2EE Server", "Application server", emptyList(), emptyList())),
+                buildView()
+        );
+    }
+
+    private C4View buildView() {
+        return new C4View(
+                null,
+                null
+        );
     }
 
     //handle id being absent, name, description.

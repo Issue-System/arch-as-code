@@ -12,13 +12,18 @@ import static java.util.Collections.emptyList;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4Model {
-    public static final C4Model NONE = new C4Model();
+public class C4Container implements Relatable {
+    @NonNull
+    private String name;
+    @NonNull
+    private String description;
+    @NonNull
+    private String technology;
 
-    @NonNull
-    private List<C4Person> persons = emptyList();
-    @NonNull
-    private List<C4SoftwareSystem> systems = emptyList();
-    @NonNull
-    private C4View views;
+    private List<RelationshipPair> relationships = emptyList();
+
+    @Override
+    public List<RelationshipPair> relations() {
+        return relationships;
+    }
 }

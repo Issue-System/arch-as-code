@@ -10,7 +10,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4SystemView {
+public class SystemContext {
     @NonNull
-    private List<SystemContext> systems;
+    private String name;
+    @NonNull
+    private String description;
+    @NonNull
+    private List<RelationshipPair> relationships;
 }

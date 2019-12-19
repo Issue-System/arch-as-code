@@ -21,6 +21,7 @@ public class C4Model {
     private List<C4Person> persons = emptyList();
     @NonNull
     private List<C4SoftwareSystem> systems = emptyList();
+    @NonNull
     private C4View views;
 
     public List<C4Relationship> relationships() {

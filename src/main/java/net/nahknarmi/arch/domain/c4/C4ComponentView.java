@@ -6,17 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContainerContext {
+public class C4ComponentView {
     @NonNull
-    private String name;
-    @NonNull
-    private String system;
-    @NonNull
-    private String description;
-    @NonNull
-    private List<RelationshipPair> relationships;
+    private List<ComponentContext> components;
 }

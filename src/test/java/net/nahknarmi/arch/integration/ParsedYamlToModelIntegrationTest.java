@@ -1,10 +1,7 @@
 package net.nahknarmi.arch.integration;
 
 import com.structurizr.Workspace;
-import com.structurizr.model.Container;
-import com.structurizr.model.Person;
-import com.structurizr.model.Relationship;
-import com.structurizr.model.SoftwareSystem;
+import com.structurizr.model.*;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
@@ -185,13 +182,102 @@ public class ParsedYamlToModelIntegrationTest {
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
         Container container = system.getContainerWithName(containerName);
+        Set<Component> components = container.getComponents();
+        List<String> componentNames = components.stream().map(c -> c.getName()).collect(Collectors.toList());
 
         Set<Relationship> relationships = container.getRelationships();
 
         assertThat(relationships, hasSize(0));
 
+        assertThat(components, hasSize(4));
+        assertTrue(componentNames.contains("Sign In Controller"));
+        assertTrue(componentNames.contains("Security Component"));
+        assertTrue(componentNames.contains("Reset Password Controller"));
+        assertTrue(componentNames.contains("E-mail component"));
+
         assertEquals(container.getDescription(), "API to programmatically create/manage dev spaces");
         assertEquals(container.getTechnology(), "Spring Boot");
+    }
+
+    @Test
+    public void should_build_component_devspaces_api_signing_controller() throws FileNotFoundException {
+        String systemName = "DevSpaces";
+        String containerName = "DevSpaces API";
+        String componentName = "Sign In Controller";
+        Workspace workspace = getWorkspace();
+
+        SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
+        Container container = system.getContainerWithName(containerName);
+        Component component = container.getComponentWithName(componentName);
+
+        Set<Relationship> relationships = component.getRelationships();
+        List<String> relationshipNames = relationships.stream().map(r -> r.getDestination().getName()).collect(Collectors.toList());
+
+        assertThat(relationships, hasSize(1));
+        assertTrue(relationshipNames.contains("Security Component"));
+
+        assertEquals(component.getDescription(), "Allows users to sign in");
+        assertEquals(component.getTechnology(), "Spring MVC Rest Controller");
+    }
+
+    @Test
+    public void should_build_component_devspaces_api_security_component() throws FileNotFoundException {
+        String systemName = "DevSpaces";
+        String containerName = "DevSpaces API";
+        String componentName = "Security Component";
+        Workspace workspace = getWorkspace();
+
+        SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
+        Container container = system.getContainerWithName(containerName);
+        Component component = container.getComponentWithName(componentName);
+
+        Set<Relationship> relationships = component.getRelationships();
+
+        assertThat(relationships, hasSize(0));
+
+        assertEquals(component.getDescription(), "Provides functionality related to signing in, changing passwords, permissions, etc.");
+        assertEquals(component.getTechnology(), "Spring Bean");
+    }
+
+    @Test
+    public void should_build_component_devspaces_api_reset_password_controller() throws FileNotFoundException {
+        String systemName = "DevSpaces";
+        String containerName = "DevSpaces API";
+        String componentName = "Reset Password Controller";
+        Workspace workspace = getWorkspace();
+
+        SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
+        Container container = system.getContainerWithName(containerName);
+        Component component = container.getComponentWithName(componentName);
+
+        Set<Relationship> relationships = component.getRelationships();
+        List<String> relationshipNames = relationships.stream().map(r -> r.getDestination().getName()).collect(Collectors.toList());
+
+        assertThat(relationships, hasSize(2));
+        assertTrue(relationshipNames.contains("Security Component"));
+        assertTrue(relationshipNames.contains("E-mail component"));
+
+        assertEquals(component.getDescription(), "Allows users to reset their passwords");
+        assertEquals(component.getTechnology(), "Spring MVC Rest Controller");
+    }
+
+    @Test
+    public void should_build_component_devspaces_api_email_component() throws FileNotFoundException {
+        String systemName = "DevSpaces";
+        String containerName = "DevSpaces API";
+        String componentName = "E-mail component";
+        Workspace workspace = getWorkspace();
+
+        SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
+        Container container = system.getContainerWithName(containerName);
+        Component component = container.getComponentWithName(componentName);
+
+        Set<Relationship> relationships = component.getRelationships();
+
+        assertThat(relationships, hasSize(0));
+
+        assertEquals(component.getDescription(), "Sends emails to users");
+        assertEquals(component.getTechnology(), "Spring MVC Rest Controller");
     }
 
     private Workspace getWorkspace() throws FileNotFoundException {

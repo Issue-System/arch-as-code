@@ -5,8 +5,6 @@ import com.structurizr.model.*;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.*;
 
-import java.util.Objects;
-
 import static java.util.Optional.ofNullable;
 import static net.nahknarmi.arch.domain.c4.C4Model.NONE;
 
@@ -17,6 +15,13 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         C4Model dataStructureModel = dataStructure.getModel();
         addPersons(model, dataStructureModel);
         addSystems(model, dataStructureModel);
+    }
+
+    private void addPersons(Model model, C4Model dataStructureModel) {
+        ofNullable(dataStructureModel)
+                .orElse(NONE)
+                .getPersons()
+                .forEach(p -> model.addPerson(p.getName(), p.getDescription()));
     }
 
     private void addSystems(Model model, C4Model dataStructureModel) {
@@ -35,13 +40,16 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private void addContainer(SoftwareSystem softwareSystem, C4Container c) {
-        softwareSystem.addContainer(c.getName(), c.getDescription(), c.getTechnology());
+        String containerName = c.getName();
+        softwareSystem.addContainer(containerName, c.getDescription(), c.getTechnology());
+        Container container = softwareSystem.getContainerWithName(containerName);
+
+        c.getComponents().forEach(comp -> {
+            addComponent(container, comp);
+        });
     }
 
-    private void addPersons(Model model, C4Model dataStructureModel) {
-        ofNullable(dataStructureModel)
-                .orElse(NONE)
-                .getPersons()
-                .forEach(p -> model.addPerson(p.getName(), p.getDescription()));
+    private void addComponent(Container container, C4Component c) {
+        container.addComponent(c.getName(), c.getDescription(), c.getTechnology());
     }
 }

@@ -105,6 +105,7 @@ public class ArchitectureDataStructureTransformerTest {
     private C4View buildView() {
         return new C4View(
                 null,
+                null,
                 null
         );
     }

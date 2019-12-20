@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class C4View {
     private C4SystemView systemView;
     private C4ContainerView containerView;
+    private C4ComponentView componentView;
 }

@@ -16,6 +16,5 @@ public class RelationshipPair {
     private String action;
     @NonNull
     private String with;
-    @NonNull
     private String description;
 }

@@ -18,71 +18,130 @@ model:
   persons:
     - name: "Developer"
       description: "Developer building software"
-      relationships:
-        - name: "USES"
-          with: "GitHub"
-          description: "Raise Pull Request to update architecture"
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Read"
+
     - name: "Product Chief Architect"
       description: "Designs the software"
-      relationships:
-        - name: "USES"
-          with: "GitHub"
-          description: "Raise Pull Request to update architecture"
-        - name: "USES"
-          with: "GitHub"
-          description: "Reviews changes to architecture"
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Reads"
+
     - name: "Technical Product Manager"
       description: "Makes Important Technical Decisions"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Reads"
+
     - name: "Engineering Architect"
       description: "Make Architecture Updates"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Reads"
-        - name: "USES"
-          with: "GitHub"
-          description: "Raise Pull Request to update architecture"
+
     - name: "QA"
       description: "Test the product"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Reads"
+
     - name: "VP of Engineering"
       description: "Review and understand product"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service Web Interface"
-          description: "Reads"
 
   systems:
     - name: "GitHub"
       description: "Hosts code and used for identity management"
-      relationships:
-        - name: "USES"
-          with: "GitHub Actions"
-          description: "Triggers continuous integration on"
-    - name: "Structurizr Cloud Service Web Interface"
-      description: "Web Interface managing Structurizr Workspaces"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service API"
-          description: "Reads from and writes to"
-    - name: "Structurizr Cloud Service API"
-      description: "API for managing Structurizr Workspaces"
-    - name: "GitHub Actions"
-      description: "Continuous Integration & Continuous Deployment of Architecture Artificats"
-      relationships:
-        - name: "USES"
-          with: "Structurizr Cloud Service API"
-          description: "Publishes change to"
+      containers:
+        - name: "GitHub Actions"
+          description: "Continuous Integration & Continuous Deployment of Architecture Artificats"
+
+        - name: "GitHub VCS"
+          description: "Hosted Git server"
+
+    - name: "Structurizr"
+      description: "Software Architecture Visualizationa and Workspace Hosting"
+      containers:
+        - name: "Structurizr Cloud Service Web Interface"
+          description: "Web Interface managing Structurizr Workspaces"
+
+        - name: "Structurizr Cloud Service API"
+          description: "API for managing Structurizr Workspaces"
+
+
+  views:
+    systemView:
+      systems:
+        - name: "Structurizr"
+          description: "Structurizr is used for Product Architecture visualization, storage and management"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+            - name: "Product Chief Architect"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+            - name: "Technical Product Manager"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+            - name: "Engineering Architect"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+            - name: "QA"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+            - name: "VP of Engineering"
+              action: "USES"
+              with: "Structurizr"
+              description: "Read Product Architecture"
+
+        - name: "GitHub"
+          description: "GitHub is used as a hosted version control system"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub"
+              description: "Read, commit and collaboration on source code"
+
+            - name: "Product Chief Architect"
+              action: "USES"
+              with: "GitHub"
+              description: "Read, commit and collaboration on source code"
+
+            - name: "Engineering Architect"
+              action: "USES"
+              with: "GitHub"
+              description: "Read, commit and collaboration on source code"
+
+    containerView:
+      containers:
+        - name: "GitHub Container"
+          system: "GitHub"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub VCS"
+              description: "To store code"
+
+            - name: "Developer"
+              action: "USES"
+              with: "GitHub Actions"
+              description: "To run CI pipeline"
+
+            - name: "GitHub VCS"
+              action: "USES"
+              with: "GitHub Actions"
+              description: "To start CI pipeline on code merge"
+
+        - name: "Structurizr Container"
+          system: "Structurizr"
+          relationships:
+            - name: "Developer"
+              action: "USES"
+              with: "Structurizr Cloud Service Web Interface"
+              description: "Read current Product Architecture"
+
+            - name: "Engineering Architect"
+              action: "USES"
+              with: "Structurizr Cloud Service Web Interface"
+              description: "Read and modify Product Architecture"
+
+            - name: "Structurizr Cloud Service Web Interface"
+              action: "USES"
+              with: "Structurizr Cloud Service API"
+              description: "To query, update and store Product Architecture"

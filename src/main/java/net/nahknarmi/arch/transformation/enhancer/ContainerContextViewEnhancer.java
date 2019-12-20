@@ -21,15 +21,13 @@ public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
                 SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName(system);
 
                 Container container = softwareSystem.getContainerWithName(c.getName());
-                // TODO: Fix missing description
-                ContainerView context = viewSet.createContainerView(softwareSystem, c.getName(), "Missing Description");
+                ContainerView context = viewSet.createContainerView(softwareSystem, c.getName(), c.getDescription());
 
                 c.getRelationships().stream().forEach(r -> {
                     String description = r.getDescription();
                     Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
                     Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());
 
-                    // TODO: Currently only Person.uses & Container.uses interaction type supported
                     addRelationshipToContext(context, fromElement, toElement, description);
                 });
 
@@ -41,21 +39,40 @@ public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
 
 
     private void addRelationshipToContext(ContainerView context, Element fromElement, Element toElement, String description) {
-        // TODO: Clean up
+        // TODO: Clean up, currently only Person.uses & Container.uses interaction type supported
         if (fromElement instanceof Person) {
             if (toElement instanceof SoftwareSystem) {
-                ((Person) fromElement).uses((SoftwareSystem) toElement, description);
+                Person fromPerson = (Person) fromElement;
+                SoftwareSystem toSystem = (SoftwareSystem) toElement;
+
+                fromPerson.uses(toSystem, description);
+                context.add(fromPerson);
+                context.add(toSystem);
             } else {
-                ((Person) fromElement).uses((Container) toElement, description);
+                Person fromPerson = (Person) fromElement;
+                Container toContainer = (Container) toElement;
+
+                fromPerson.uses(toContainer, description);
+                context.add(fromPerson);
+                context.add(toContainer);
             }
-            context.add((Person) fromElement);
         } else if (fromElement instanceof Container) {
             if (toElement instanceof SoftwareSystem) {
-                ((Container) fromElement).uses((SoftwareSystem) toElement, description);
+                Container fromContainer = (Container) fromElement;
+                SoftwareSystem toSystem = (SoftwareSystem) toElement;
+
+                fromContainer.uses(toSystem, description);
+                context.add(fromContainer);
+                context.add(toSystem);
             } else {
-                ((Container) fromElement).uses((Container) toElement, description);
+                Container fromContainer = (Container) fromElement;
+                Container toContainer = (Container) toElement;
+
+                fromContainer.uses(toContainer, description);
+                context.add(fromContainer);
+                context.add(toContainer);
+
             }
-            context.add((Container) fromElement);
         }
     }
 }

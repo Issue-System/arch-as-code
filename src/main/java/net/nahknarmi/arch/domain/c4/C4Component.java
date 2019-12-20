@@ -5,18 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContainerContext {
+public class C4Component {
     @NonNull
     private String name;
     @NonNull
-    private String system;
-    @NonNull
     private String description;
     @NonNull
-    private List<RelationshipPair> relationships;
+    private String technology;
 }

@@ -51,6 +51,23 @@ model:
         - name: "DevSpaces API"
           description: "API to programmatically create/manage dev spaces"
           technology: "Spring Boot"
+          components:
+            - name: "Sign In Controller"
+              description: "Allows users to sign in"
+              technology: "Spring MVC Rest Controller"
+
+            - name: "Security Component"
+              description: "Provides functionality related to signing in, changing passwords, permissions, etc."
+              technology: "Spring Bean"
+
+            - name: "Reset Password Controller"
+              description: "Allows users to reset their passwords"
+              technology: "Spring MVC Rest Controller"
+
+            - name: "E-mail component"
+              description: "Sends emails to users"
+              technology: "Spring MVC Rest Controller"
+
 
   views:
     systemView:
@@ -108,6 +125,7 @@ model:
     containerView:
       containers:
         - name: "DevSpaces Container"
+          description: "DevSpaces Container"
           system: "DevSpaces"
           relationships:
             - name: "Developer"
@@ -139,3 +157,21 @@ model:
               action: "USES"
               with: "DevSpaces CLI"
               description: "to manipulate dev spaces"
+
+    componentView:
+      components:
+        - name: "DevSpaces API Components"
+          container: "DevSpaces API"
+          description: "DevSpaces API Components"
+          relationships:
+            - name: "Sign In Controller"
+              action: "USES"
+              with: "Security Component"
+
+            - name: "Reset Password Controller"
+              action: "USES"
+              with: "Security Component"
+
+            - name: "Reset Password Controller"
+              action: "USES"
+              with: "E-mail component"

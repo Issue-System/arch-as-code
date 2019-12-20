@@ -17,9 +17,8 @@ public class C4Container implements Relatable {
     private String name;
     @NonNull
     private String description;
-    @NonNull
     private String technology;
-
+    private List<C4Component> components = emptyList();
     private List<RelationshipPair> relationships = emptyList();
 
     @Override

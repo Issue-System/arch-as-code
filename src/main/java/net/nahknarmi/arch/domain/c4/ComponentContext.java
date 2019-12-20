@@ -10,11 +10,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContainerContext {
+public class ComponentContext {
     @NonNull
     private String name;
     @NonNull
-    private String system;
+    private String container;
     @NonNull
     private String description;
     @NonNull

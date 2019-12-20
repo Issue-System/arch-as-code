@@ -24,7 +24,6 @@ public class SystemContextViewEnhancer implements WorkspaceEnhancer {
                     Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
                     Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());
 
-                    // TODO: Currently only Person.uses interaction type supported
                     addRelationshipToContext(context, fromElement, toElement, description);
                 });
 
@@ -34,12 +33,14 @@ public class SystemContextViewEnhancer implements WorkspaceEnhancer {
     }
 
     private void addRelationshipToContext(SystemContextView context, Element fromElement, Element toElement, String description) {
-        // TODO: Clean up
+        // TODO: Clean up, currently only Person.uses interaction type supported
         if (fromElement instanceof Person) {
-            ((Person) fromElement).uses((SoftwareSystem) toElement, description);
-            context.add((Person) fromElement);
-        } else if (toElement instanceof SoftwareSystem) {
-            context.add((SoftwareSystem) toElement);
+            Person fromPerson = (Person) fromElement;
+            SoftwareSystem toSystem = (SoftwareSystem) toElement;
+
+            fromPerson.uses(toSystem, description);
+            context.add(fromPerson);
+            context.add(toSystem);
         }
     }
 }

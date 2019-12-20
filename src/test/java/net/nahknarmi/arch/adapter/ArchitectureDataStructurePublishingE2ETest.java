@@ -32,8 +32,8 @@ public class ArchitectureDataStructurePublishingE2ETest {
         assertThat(workspace.getModel().getSoftwareSystems(), hasSize(4));
         assertThat(workspace.getModel().getPeople(), hasSize(3));
         assertEquals(getTotalContainerCount(workspace), 4);
-        assertEquals(getTotalComponentCount(workspace), 0);
-        assertThat(workspace.getModel().getRelationships(), hasSize(15));
+        assertEquals(getTotalComponentCount(workspace), 4);
+        assertThat(workspace.getModel().getRelationships(), hasSize(18));
     }
 
     private int getTotalComponentCount(Workspace workspace) {

@@ -14,9 +14,9 @@ decisions:
     status: Accepted
     content: "## Context\nStructurizr is a flexible service that allows your to both pull and push product architectures.\n\n## Decision\nFor a more simplified and consistent workflow, we want information to flow in one direction-- from our source code to the structurizr api.  This will force everyone to work locally and follow a standard review process via GitHub pull requests instead publishing directly to Structurizr.\n\n## Consequence\nOur workflow will ensure that quality bars and proper reviews are met in addition to providing a more consistent, at the cost of a more restricted process.\n"
   - id: "3"
-    date: 2020-1-1
+    date: 2020-01-01
     title: "No cyclical dependencies"
-    status: Proposed
+    status: Accepted
     content: "## Context\nProposed change\n"
 
 model:
@@ -38,6 +38,9 @@ model:
 
     - name: "VP of Engineering"
       description: "Review and understand product"
+
+    - name: "Consultant"
+      description: "ThoughtWorks"
 
   systems:
     - name: "GitHub"
@@ -94,6 +97,12 @@ model:
               action: "USES"
               with: "Structurizr"
               description: "Read Product Architecture"
+
+            - name: "Consultant"
+              action: "USES"
+              with: "GitHub"
+              description: "Read, commit and collaboration on source code"
+
 
         - name: "GitHub"
           description: "GitHub is used as a hosted version control system"

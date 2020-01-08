@@ -1,15 +1,26 @@
 package net.nahknarmi.arch;
 
 import net.nahknarmi.arch.publish.ArchitectureDataStructurePublisher;
+import picocli.CommandLine;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 public class Bootstrap {
-    private static final String PRODUCT_DOCUMENTATION_ROOT = "./documentation/products/";
-    private static final String PRODUCT_NAME = "arch-as-code";
 
-    public static void main(String[] args) throws Exception {
-        File root = new File(PRODUCT_DOCUMENTATION_ROOT);
-        ArchitectureDataStructurePublisher.create(root).publish(PRODUCT_NAME);
+    public static void main(String[] args) {
+        new CommandLine(new Cli()).execute(args);
+    }
+
+    @CommandLine.Command(name = "arc", description = "Architecture as code")
+    static class Cli implements Callable<Integer> {
+        @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_DOCUMENTATION_PATH", description = "Product documentation root where data-structure.yml is located.")
+        private File productDocumentationRoot;
+
+        @Override
+        public Integer call() throws Exception {
+            ArchitectureDataStructurePublisher.create(productDocumentationRoot).publish();
+            return 0;
+        }
     }
 }

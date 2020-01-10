@@ -39,6 +39,14 @@ By default the documentation is store under `documentation/products/`.
 ./gradlew run
 ```
 
+## Install Prebuilt Binary
+
+```bash
+brew tap nahknarmi/arch-as-code https://github.com/nahknarmi/arch-as-code.git
+
+brew install nahknarmi/arch-as-code/arch-as-code
+```
+
 ## Continuous Integration & Continuous Deployment
 
 Continuous integration is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon).

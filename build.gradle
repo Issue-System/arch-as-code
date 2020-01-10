@@ -22,6 +22,9 @@ apply plugin: 'application'
 //See https://www.baeldung.com/lombok-ide for how to configure intellij to work with lombok
 apply plugin: "io.freefair.lombok"
 apply plugin: 'jacoco'
+apply plugin: 'distribution'
+
+
 
 
 mainClassName = 'net.nahknarmi.arch.Bootstrap'
@@ -82,3 +85,10 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestCoverageVerification
+
+plugins.withType(DistributionPlugin) {
+    distTar {
+        compression = Compression.GZIP
+        extension = 'tar.gz'
+    }
+}

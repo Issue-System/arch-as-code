@@ -5,7 +5,7 @@ class ArchAsCode < Formula
   desc "Architecture as Code"
   homepage "https://tbd.io"
   url "https://github.com/nahknarmi/arch-as-code/releases/download/1.0.0/arch-as-code-1.0.tar.gz"
-  sha256 "0fd11d35d307e4a28c2a68c5ac4e10418ede36a44a4ff8e344c0b2cae012bbbd"
+  sha256 "7938d2eae38745d07f604e940614a9b48081b4b4609ccdf886edd948c8465bba"
 
   depends_on :java => "1.8+"
   bottle :unneeded

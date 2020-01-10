@@ -17,7 +17,6 @@ import static net.nahknarmi.arch.domain.c4.C4Model.NONE;
 @NoArgsConstructor
 public class ArchitectureDataStructure {
     @NonNull private String name;
-    @NonNull private Long id;
     @NonNull private String businessUnit;
     @NonNull private String description;
     @NonNull private List<ImportantTechnicalDecision> decisions = ImmutableList.of();

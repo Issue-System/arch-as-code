@@ -17,7 +17,9 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
     @Override
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         try {
-            new AutomaticDocumentationTemplate(workspace).addSections(documentationPath());
+            if (documentationPath().exists()) {
+                new AutomaticDocumentationTemplate(workspace).addSections(documentationPath());
+            }
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Unable to add documentation - %s", dataStructure), e);
         }

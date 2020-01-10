@@ -13,7 +13,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static net.nahknarmi.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
-import static net.nahknarmi.arch.TestHelper.TEST_WORKSPACE_ID;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +28,6 @@ public class ArchitectureDataStructureReaderTest {
 
         assertNotNull(dataStructure);
         assertThat(dataStructure.getName(), is(equalTo(PRODUCT_NAME)));
-        assertThat(dataStructure.getId(), is(equalTo(TEST_WORKSPACE_ID)));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("DevFactory")));
         assertThat(dataStructure.getDescription(), is(equalTo("TestSpaces is a tool!")));
 

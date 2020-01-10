@@ -8,6 +8,7 @@ import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.ContainerView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.c4.C4Model;
 import net.nahknarmi.arch.transformation.TransformationHelper;
 
 public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
@@ -15,15 +16,20 @@ public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         ViewSet viewSet = workspace.getViews();
 
+        if (dataStructure.getModel().equals(C4Model.NONE)) {
+            return;
+        }
+
         if (dataStructure.getModel().getViews().getContainerView() != null) {
-            dataStructure.getModel().getViews().getContainerView().getContainers().stream().forEach(c -> {
+            dataStructure.getModel().getViews().getContainerView().getContainers().forEach(c -> {
                 String system = c.getSystem();
                 SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName(system);
 
+                //TODO: Deal with softwareSystem potentially being null
                 Container container = softwareSystem.getContainerWithName(c.getName());
                 ContainerView context = viewSet.createContainerView(softwareSystem, c.getName(), c.getDescription());
 
-                c.getRelationships().stream().forEach(r -> {
+                c.getRelationships().forEach(r -> {
                     String description = r.getDescription();
                     Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
                     Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());
@@ -31,6 +37,7 @@ public class ContainerContextViewEnhancer implements WorkspaceEnhancer {
                     addRelationshipToContext(context, fromElement, toElement, description);
                 });
 
+                //TODO: deal with container potentially being null
                 context.addNearestNeighbours(container);
                 context.setAutomaticLayout(true);
             });

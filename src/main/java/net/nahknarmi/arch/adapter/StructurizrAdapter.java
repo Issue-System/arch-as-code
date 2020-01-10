@@ -5,14 +5,18 @@ import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
 
-import java.io.*;
+import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Optional.empty;
+import static net.nahknarmi.arch.adapter.Credentials.credentialsAsStream;
 
 public class StructurizrAdapter {
+    private final WorkspaceIdFinder workspaceIdFinder;
+
+    public StructurizrAdapter(WorkspaceIdFinder workspaceIdFinder) {
+        this.workspaceIdFinder = workspaceIdFinder;
+    }
 
     public Workspace load(long workspaceId) throws StructurizrClientException {
         StructurizrClient buildClient = buildClient();
@@ -29,7 +33,7 @@ public class StructurizrAdapter {
      */
     public void publish(Workspace workspace) throws StructurizrClientException {
         checkNotNull(workspace, "Workspace must not be null!");
-        Long workspaceId = workspaceId().orElse(workspace.getId());
+        Long workspaceId = workspaceIdFinder.workspaceId().orElse(workspace.getId());
 
         buildClient().putWorkspace(workspaceId, workspace);
     }
@@ -53,28 +57,5 @@ public class StructurizrAdapter {
         structurizrClient.setWorkspaceArchiveLocation(null);
 
         return structurizrClient;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Optional<Long> workspaceId() {
-        String workspaceId = System.getenv().get("STRUCTURIZR_WORKSPACE_ID");
-        if (workspaceId != null) {
-            return Optional.of(Long.parseLong(workspaceId));
-        } else if (credentialsAsStream().isPresent()) {
-            InputStreamReader reader =
-                    new InputStreamReader(credentialsAsStream().get());
-            Map<String, String> map = new Gson().fromJson(reader, Map.class);
-            return Optional.of(Long.parseLong(map.get("workspace_id")));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    private Optional<InputStream> credentialsAsStream() {
-        try {
-            return Optional.of(new FileInputStream(new File("./.arch-as-code/structurizr/credentials.json")));
-        } catch (FileNotFoundException e) {
-            return empty();
-        }
     }
 }

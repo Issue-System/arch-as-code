@@ -21,12 +21,13 @@ public class ArchitectureDataStructurePublishingE2ETest {
         //given
         File documentationRoot =
                 new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        WorkspaceIdFinder workspaceIdFinder = new WorkspaceIdFinder();
 
         //when
         ArchitectureDataStructurePublisher.create(documentationRoot).publish();
 
         //then
-        StructurizrAdapter adapter = new StructurizrAdapter();
+        StructurizrAdapter adapter = new StructurizrAdapter(workspaceIdFinder);
         Workspace workspace = adapter.load(TEST_WORKSPACE_ID);
         assertThat(workspace.getDocumentation().getSections(), hasSize(2));
         assertThat(workspace.getDocumentation().getDecisions(), hasSize(2));

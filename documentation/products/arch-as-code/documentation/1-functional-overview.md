@@ -12,5 +12,4 @@ Specifically we are making use of the [Structurizr](https://structurizr.com/) to
 1. TPMs should also be reading product architecture.
 1. Feature Architecuts should also be reading product architecture.
 1. Feature Architecuts should also be updating as part of new P1 specs product architecture.
-1. Lorem Ipsum Dolor
-1. Lorem lorem Ipsum Dolor?
+1. Lorem Ipsum

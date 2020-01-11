@@ -14,20 +14,27 @@ Specifically we are making use of the [Structurizr](https://structurizr.com/) to
 
 # Getting Started 
 
-1. You can install arch-as-code cli tool using [brew](https://brew.sh/):
+## 1. Install arch-as-code cli tool 
+
+### Mac OSX & Linux
 
 ```bash
-brew tap nahknarmi/arch-as-code https://github.com/nahknarmi/arch-as-code.git
+mkdir -p ~/arch-as-code && curl -s https://api.github.com/repos/nahknarmi/arch-as-code/releases/latest | grep "browser_download_url" | cut -d : -f 2,3 | tr -d \" | xargs curl -L | tar --strip-components 1 -x -C ~/arch-as-code
 
-brew install nahknarmi/arch-as-code/arch-as-code
+export PATH=$PATH:~/arch-as-code/bin
 ```
 
-2. Go to Structurizr [dashboard](https://structurizr.com/dashboard) to find:
-- Workspace id
-- Workspace api key
-- Workspace api secret
+### Windows
 
-Export the above details as environment variables.
+Download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
+
+
+## 2. Export Structurizr Workspace details [dashboard](https://structurizr.com/dashboard):
+
+Export the above details as environment variables:
+1. Workspace id
+1. Workspace api key
+1. Workspace api secret
 
 ```
 export STRUCTURIZR_WORKSPACE_ID=<WORKSPACE_ID>
@@ -37,7 +44,7 @@ export STRUCTURIZR_API_KEY=<WORKSPACE_API_KEY>
 export STRUCTURIZR_API_SECRET=<WORKSPACE_API_SECRET>
 ```
 
-3. Publish sample architecture docs to Structurizr
+## 3. Publish sample architecture docs to Structurizr
 ```
 git clone https://github.com/nahknarmi/arch-as-code.git
 

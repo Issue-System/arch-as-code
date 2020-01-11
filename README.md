@@ -12,6 +12,55 @@ By following this approach we will be able to **manage our architecture document
 
 Specifically we are making use of the [Structurizr](https://structurizr.com/) tool by Simon Brown as the basis for structuring and storing our architecture models, decisions, views and documentation.
 
+# Getting Started 
+
+## 1. Install arch-as-code 
+
+### Mac OSX & Linux
+
+```bash
+mkdir -p ~/arch-as-code && curl -s https://api.github.com/repos/nahknarmi/arch-as-code/releases/latest | grep "browser_download_url" | cut -d : -f 2,3 | tr -d \" | xargs curl -L | tar --strip-components 1 -x -C ~/arch-as-code
+
+export PATH=$PATH:~/arch-as-code/bin
+
+arch-as-code --help
+```
+
+### Windows
+
+Download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
+
+
+## 2. Export Structurizr Workspace details
+
+Export below Structurizr workspace details (available from [dashboard]([dashboard](https://structurizr.com/dashboard))) as environment variables:
+1. Workspace id
+1. Workspace api key
+1. Workspace api secret
+
+```
+export STRUCTURIZR_WORKSPACE_ID=<WORKSPACE_ID>
+
+export STRUCTURIZR_API_KEY=<WORKSPACE_API_KEY>
+
+export STRUCTURIZR_API_SECRET=<WORKSPACE_API_SECRET>
+```
+
+## 3. Publish changes to Structurizr
+```
+git clone https://github.com/nahknarmi/arch-as-code.git
+
+cd arch-as-code
+
+arch-as-code samples/markdown
+```
+
+## 4. View your changes on Structurizr
+,
+Go to [https://structurizr.com/workspace/<YOUR_WORKSPACE_ID>] to view changes you've made.
+
+# Development
+
 ## Build Pre-requisites
 - Java 1.8 or greater.
 - Create [Structurizr](https://structurizr.com/) credentials file under `.arch-as-code/structurizr/credentials.json`. 
@@ -26,25 +75,6 @@ Tests operate against a "test" Structurizr workspace.
 
 ```bash
 ./gradlew build
-```
-
-
-## Publish Artifacts
-
-Publishes documentation to "production" Structurizr workspace. 
-
-By default the documentation is store under `documentation/products/`.
-
-```bash
-./gradlew run
-```
-
-## Install Prebuilt Binary
-
-```bash
-brew tap nahknarmi/arch-as-code https://github.com/nahknarmi/arch-as-code.git
-
-brew install nahknarmi/arch-as-code/arch-as-code
 ```
 
 ## Continuous Integration & Continuous Deployment

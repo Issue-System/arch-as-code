@@ -7,6 +7,7 @@ import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.c4.C4Model;
 import net.nahknarmi.arch.transformation.TransformationHelper;
 
 public class SystemContextViewEnhancer implements WorkspaceEnhancer {
@@ -14,12 +15,18 @@ public class SystemContextViewEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         ViewSet viewSet = workspace.getViews();
 
+        if (dataStructure.getModel().equals(C4Model.NONE)) {
+            return;
+        }
+
         if (dataStructure.getModel().getViews().getSystemView() != null) {
-            dataStructure.getModel().getViews().getSystemView().getSystems().stream().forEach(s -> {
+            dataStructure.getModel().getViews().getSystemView().getSystems().forEach(s -> {
                 SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName(s.getName());
+
+                //TODO: deal with softwareSystem potentially being null!!
                 SystemContextView context = viewSet.createSystemContextView(softwareSystem, s.getName(), s.getDescription());
 
-                s.getRelationships().stream().forEach(r -> {
+                s.getRelationships().forEach(r -> {
                     String description = r.getDescription();
                     Element fromElement = TransformationHelper.getElementWithName(workspace, r.getName());
                     Element toElement = TransformationHelper.getElementWithName(workspace, r.getWith());

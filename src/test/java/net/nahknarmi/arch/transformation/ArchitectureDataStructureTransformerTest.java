@@ -20,24 +20,23 @@ import java.util.Date;
 import static java.util.Collections.emptyList;
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 public class ArchitectureDataStructureTransformerTest {
     private static final String PRODUCT_NAME = "testspaces";
     private static final String PRODUCT_DESCRIPTION = "DevSpaces is a tool";
 
     @Test
-    public void should_transform_architecture_yaml_to_structurizr_workspace() throws IOException {
+    public void should_transform_architecture_yaml_to_structurizr_workspace() {
         ArchitectureDataStructure dataStructure =
-                new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION, emptyList(), buildModel());
+                new ArchitectureDataStructure(PRODUCT_NAME, "DevFactory", PRODUCT_DESCRIPTION, emptyList(), buildModel());
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         assertNotNull(workspace);
-        assertThat(workspace.getId(), equalTo(1L));
         assertThat(workspace.getName(), equalTo(PRODUCT_NAME));
         assertThat(workspace.getDescription(), equalTo(PRODUCT_DESCRIPTION));
         assertThat(workspace.getDocumentation().getSections().size(), equalTo(2));
@@ -79,9 +78,9 @@ public class ArchitectureDataStructureTransformerTest {
         checkStatus(decisionStatus, decisionStatus.name());
     }
 
-    private void checkStatus(DecisionStatus decisionStatus, String statusString) throws IOException {
+    private void checkStatus(DecisionStatus decisionStatus, String statusString) {
         ArchitectureDataStructure dataStructure =
-                new ArchitectureDataStructure(PRODUCT_NAME, 1L, "DevFactory", PRODUCT_DESCRIPTION,
+                new ArchitectureDataStructure(PRODUCT_NAME, "DevFactory", PRODUCT_DESCRIPTION,
                         ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")), buildModel());
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());

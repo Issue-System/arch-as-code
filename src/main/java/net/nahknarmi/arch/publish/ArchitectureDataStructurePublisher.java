@@ -3,6 +3,7 @@ package net.nahknarmi.arch.publish;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
 import net.nahknarmi.arch.adapter.StructurizrAdapter;
+import net.nahknarmi.arch.adapter.WorkspaceIdFinder;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
@@ -39,7 +40,8 @@ public class ArchitectureDataStructurePublisher {
     public static ArchitectureDataStructurePublisher create(File productDocumentationRoot) {
         ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader();
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productDocumentationRoot);
-        StructurizrAdapter adapter = new StructurizrAdapter();
+        WorkspaceIdFinder workspaceIdFinder = new WorkspaceIdFinder();
+        StructurizrAdapter adapter = new StructurizrAdapter(workspaceIdFinder);
 
         return new ArchitectureDataStructurePublisher(productDocumentationRoot, importer, transformer, adapter);
     }

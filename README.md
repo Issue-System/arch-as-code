@@ -46,7 +46,7 @@ export STRUCTURIZR_API_KEY=<WORKSPACE_API_KEY>
 export STRUCTURIZR_API_SECRET=<WORKSPACE_API_SECRET>
 ```
 
-## 3. Publish sample architecture docs to Structurizr
+## 3. Publish changes to Structurizr
 ```
 git clone https://github.com/nahknarmi/arch-as-code.git
 
@@ -54,6 +54,10 @@ cd arch-as-code
 
 arch-as-code samples/markdown
 ```
+
+## 4. View your changes on Structurizr
+,
+Go to https://structurizr.com/workspace/<YOUR_WORKSPACE_ID> to view changes you've made.
 
 # Development
 

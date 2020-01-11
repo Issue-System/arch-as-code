@@ -12,6 +12,42 @@ By following this approach we will be able to **manage our architecture document
 
 Specifically we are making use of the [Structurizr](https://structurizr.com/) tool by Simon Brown as the basis for structuring and storing our architecture models, decisions, views and documentation.
 
+# Getting Started 
+
+1. You can install arch-as-code cli tool using [brew](https://brew.sh/):
+
+```bash
+brew tap nahknarmi/arch-as-code https://github.com/nahknarmi/arch-as-code.git
+
+brew install nahknarmi/arch-as-code/arch-as-code
+```
+
+2. Go to Structurizr [dashboard](https://structurizr.com/dashboard) to find:
+- Workspace id
+- Workspace api key
+- Workspace api secret
+
+Export the above details as environment variables.
+
+```
+export STRUCTURIZR_WORKSPACE_ID=<WORKSPACE_ID>
+
+export STRUCTURIZR_API_KEY=<WORKSPACE_API_KEY>
+
+export STRUCTURIZR_API_SECRET=<WORKSPACE_API_SECRET>
+```
+
+3. Publish sample architecture docs to Structurizr
+```
+git clone https://github.com/nahknarmi/arch-as-code.git
+
+cd arch-as-code
+
+arch-as-code samples/markdown
+```
+
+# Development
+
 ## Build Pre-requisites
 - Java 1.8 or greater.
 - Create [Structurizr](https://structurizr.com/) credentials file under `.arch-as-code/structurizr/credentials.json`. 
@@ -26,35 +62,6 @@ Tests operate against a "test" Structurizr workspace.
 
 ```bash
 ./gradlew build
-```
-
-
-## Publish Artifacts
-
-Publishes documentation to "production" Structurizr workspace. 
-
-By default the documentation is store under `documentation/products/`.
-
-```bash
-./gradlew run
-```
-
-## Install Prebuilt Binary
-
-```bash
-brew tap nahknarmi/arch-as-code https://github.com/nahknarmi/arch-as-code.git
-
-brew install nahknarmi/arch-as-code/arch-as-code
-```
-
-## Getting Started 
-
-```
-mkdir architecture-as-code
-
-
-
-
 ```
 
 ## Continuous Integration & Continuous Deployment

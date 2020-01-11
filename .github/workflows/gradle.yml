@@ -15,7 +15,7 @@ jobs:
         java-version: 1.8
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build --debug
       env: # Or as an environment variable
         STRUCTURIZR_API_KEY: ${{ secrets.TEST_STRUCTURIZR_API_KEY }}
         STRUCTURIZR_API_SECRET: ${{ secrets.TEST_STRUCTURIZR_API_SECRET }}

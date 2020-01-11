@@ -31,9 +31,9 @@ arch-as-code --help
 Download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
 
 
-## 2. Export Structurizr Workspace details [dashboard](https://structurizr.com/dashboard):
+## 2. Export Structurizr Workspace details
 
-Export the above details as environment variables:
+Export below Structurizr workspace details (available from [dashboard]([dashboard](https://structurizr.com/dashboard))) as environment variables:
 1. Workspace id
 1. Workspace api key
 1. Workspace api secret

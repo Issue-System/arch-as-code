@@ -14,7 +14,7 @@ Specifically we are making use of the [Structurizr](https://structurizr.com/) to
 
 # Getting Started 
 
-## 1. Install arch-as-code cli tool 
+## 1. Install arch-as-code 
 
 ### Mac OSX & Linux
 

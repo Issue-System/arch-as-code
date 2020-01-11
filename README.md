@@ -57,7 +57,7 @@ arch-as-code samples/markdown
 
 ## 4. View your changes on Structurizr
 ,
-Go to https://structurizr.com/workspace/<YOUR_WORKSPACE_ID> to view changes you've made.
+Go to [https://structurizr.com/workspace/<YOUR_WORKSPACE_ID>] to view changes you've made.
 
 # Development
 

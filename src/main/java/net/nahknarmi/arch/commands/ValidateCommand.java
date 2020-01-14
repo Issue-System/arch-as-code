@@ -15,18 +15,32 @@ import static com.google.common.base.Preconditions.checkArgument;
 @CommandLine.Command(name = "validate", description = "Validate product architecture yaml")
 public class ValidateCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_DOCUMENTATION_PATH", description = "Product documentation root where data-structure.yml is located.")
-    private File productDocumentationRoot;
+    File productDocumentationRoot;
+    private final String manifestFileName;
+
+    // Only for testing purposes
+    public ValidateCommand(File productDocumentationRoot, String manifestFileName) {
+        this.productDocumentationRoot = productDocumentationRoot;
+        this.manifestFileName = manifestFileName;
+    }
+
+    // For production
+    public ValidateCommand() {
+        this.manifestFileName = "data-structure.yml";
+    }
+
 
     @Override
     public Integer call() throws FileNotFoundException {
-        checkArgument(productDocumentationRoot.exists(), "Product documentation root does not exist.");
-        checkArgument(productDocumentationRoot.isDirectory(), "Product documentation root does not exist.");
+        File manifestFile = new File(productDocumentationRoot.getAbsolutePath() + File.separator + manifestFileName);
+        checkArgument(manifestFile.exists(), "Product Architecture data-structure.yml file does not exist.");
 
-        Set<ValidationMessage> messageSet = new ArchitectureDataStructureSchemaValidator().validate(new FileInputStream(productDocumentationRoot));
+        Set<ValidationMessage> messageSet = new ArchitectureDataStructureSchemaValidator().validate(new FileInputStream(manifestFile));
 
         if (messageSet.isEmpty()) {
-            System.out.println("Valid yaml");
+            System.out.println(manifestFileName + " is valid.");
         } else {
+            System.out.println(manifestFileName + " is invalid.");
             messageSet.forEach(x -> System.err.println(x.getMessage()));
             return 1;
         }

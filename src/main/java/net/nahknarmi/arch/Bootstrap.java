@@ -1,5 +1,6 @@
 package net.nahknarmi.arch;
 
+import net.nahknarmi.arch.commands.InitializeCommand;
 import net.nahknarmi.arch.commands.ParentCommand;
 import net.nahknarmi.arch.commands.PublishCommand;
 import net.nahknarmi.arch.commands.ValidateCommand;
@@ -11,6 +12,7 @@ public class Bootstrap {
         int exitCode = new CommandLine(new ParentCommand())
                 .addSubcommand(new PublishCommand())
                 .addSubcommand(new ValidateCommand())
+                .addSubcommand(new InitializeCommand())
                 .execute(args);
         System.exit(exitCode);
     }

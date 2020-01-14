@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;

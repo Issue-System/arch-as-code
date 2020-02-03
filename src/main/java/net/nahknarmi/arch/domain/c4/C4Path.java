@@ -42,7 +42,7 @@ public class C4Path {
         if (this.matcher == null) {
             this.matcher = pattern.matcher(this.path);
             boolean found = matcher.find();
-            checkArgument(found, "Path does not match expected pattern.");
+            checkArgument(found, String.format("Path does not match expected pattern. (%s)", this.path));
         }
         return this.matcher;
     }
@@ -109,5 +109,12 @@ public class C4Path {
         }
 
         return empty();
+    }
+
+    @Override
+    public String toString() {
+        return "C4Path{" +
+                "path='" + path + '\'' +
+                '}';
     }
 }

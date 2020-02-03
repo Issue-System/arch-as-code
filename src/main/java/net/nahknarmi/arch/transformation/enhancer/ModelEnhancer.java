@@ -7,6 +7,8 @@ import net.nahknarmi.arch.domain.c4.*;
 import net.nahknarmi.arch.generator.PathIdGenerator;
 import net.nahknarmi.arch.transformation.LocationTransformer;
 
+import java.util.Optional;
+
 import static java.util.Optional.ofNullable;
 import static net.nahknarmi.arch.domain.c4.C4Model.NONE;
 
@@ -68,7 +70,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addComponent(Model model, C4Component c) {
         String systemName = c.getPath().getSystemName();
-        String containerName = c.getPath().getContainerName().orElseThrow(() -> new IllegalStateException("Workspace Id not found!"));
+        String containerName = c.getPath().getContainerName().orElseThrow(() -> new IllegalStateException("Container name not found on " + c.getPath()));
         SoftwareSystem softwareSystem = model.getSoftwareSystemWithName(systemName);
         Container container = softwareSystem.getContainerWithName(containerName);
 
@@ -144,7 +146,12 @@ public class ModelEnhancer implements WorkspaceEnhancer {
                         C4Type typeDestination = r.getWith().getType();
 
                         if (r.getAction() == C4Action.USES) {
-                            SoftwareSystem systemDestination = workspaceModel.getSoftwareSystemWithName(r.getWith().getSystemName());
+                            String systemName = r.getWith().getSystemName();
+                            if (systemName == null) {
+                                System.err.println("fooo");
+                            }
+
+                            SoftwareSystem systemDestination = workspaceModel.getSoftwareSystemWithName(systemName);
 
                             switch (typeDestination) {
                                 case system: {
@@ -212,7 +219,13 @@ public class ModelEnhancer implements WorkspaceEnhancer {
                                     String componentName = r.getWith().getComponentName().orElseThrow(() -> new IllegalStateException("Workspace ID is missing!"));
                                     Container containerDestination = systemDestination.getContainerWithName(containerName);
                                     Component componentDestination = containerDestination.getComponentWithName(componentName);
-                                    container.uses(componentDestination, description, technology);
+
+                                    if (componentDestination == null) {
+                                        System.err.println("Hanging reference - " + componentName);
+                                    } else {
+                                        container.uses(componentDestination, description, technology);
+                                    }
+
                                     break;
                                 }
                                 default:
@@ -260,8 +273,14 @@ public class ModelEnhancer implements WorkspaceEnhancer {
                                 }
                                 case component: {
                                     Container containerDestination = systemDestination.getContainerWithName(r.getWith().getContainerName().orElseThrow(() -> new IllegalStateException("Workspace ID is missing!")));
-                                    Component componentDestination = containerDestination.getComponentWithName(r.getWith().getComponentName().orElseThrow(() -> new IllegalStateException("Workspace ID is missing!")));
-                                    component.uses(componentDestination, description, technology);
+                                    Optional<String> componentName = r.getWith().getComponentName();
+                                    Component componentDestination = containerDestination.getComponentWithName(componentName.orElseThrow(() -> new IllegalStateException("Workspace ID is missing!")));
+                                    if (componentDestination == null) {
+                                        System.err.println("Hanging reference " + componentName);
+                                    } else {
+                                        component.uses(componentDestination, description, technology);
+                                    }
+
                                     break;
                                 }
                                 default:

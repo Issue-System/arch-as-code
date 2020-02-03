@@ -10,6 +10,7 @@ import net.nahknarmi.arch.domain.c4.*;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class ImportCommand implements Callable<Integer> {
                                 .stream()
                                 .map(co -> {
                                     C4Path c4Path = new C4Path("c4://" + s.getName() + "/" + c.getName() + "/" + co.getName());
-                                    List<C4Tag> tags = emptyList();
+                                    List<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = emptyList();
                                     return new C4Component(c4Path, co.getTechnology(), co.getDescription(), tags, relationships);
                                 })
@@ -76,7 +77,7 @@ public class ImportCommand implements Callable<Integer> {
                 .stream()
                 .flatMap(s -> s.getContainers().stream().map(c -> {
                     List<C4Relationship> relationships = emptyList();
-                    List<C4Tag> tags = emptyList();
+                    List<C4Tag> tags = convertTags(c.getTags());
 
                     return new C4Container(new C4Path("c4://" + s.getName() + "/" + c.getName()), c.getTechnology(), c.getDescription(), tags, relationships);
                 }))
@@ -90,7 +91,7 @@ public class ImportCommand implements Callable<Integer> {
                 .stream()
                 .map(x -> {
                     List<C4Relationship> relationships = emptyList();
-                    List<C4Tag> tags = emptyList();
+                    List<C4Tag> tags = convertTags(x.getTags());
                     return new C4SoftwareSystem(new C4Path("c4://" + x.getName()), x.getDescription(), convertLocation(x.getLocation()), tags, relationships);
                 })
                 .collect(Collectors.toList());
@@ -104,7 +105,7 @@ public class ImportCommand implements Callable<Integer> {
                 .stream()
                 .map(x -> {
                     List<C4Relationship> relationships = emptyList();
-                    List<C4Tag> tags = emptyList();
+                    List<C4Tag> tags = convertTags(x.getTags());
                     return new C4Person(new C4Path("@" + x.getName()), x.getDescription(), convertLocation(x.getLocation()), tags, relationships);
                 })
                 .collect(Collectors.toList());
@@ -119,5 +120,9 @@ public class ImportCommand implements Callable<Integer> {
         architectureDataStructure.setName(workspace.getName());
         architectureDataStructure.setBusinessUnit(workspace.getModel().getEnterprise().getName());
         architectureDataStructure.setDescription(workspace.getDescription());
+    }
+
+    private List<C4Tag> convertTags(String tags) {
+        return Arrays.stream(tags.split(",")).map(C4Tag::new).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.domain.c4;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,7 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, Locatable {
 
     private C4Location location;
 
+    @JsonIgnore
     public String getName() {
         return path.getSystemName();
     }

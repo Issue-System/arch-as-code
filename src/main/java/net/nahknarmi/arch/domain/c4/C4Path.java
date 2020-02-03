@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.domain.c4;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class C4Path {
     private static final String regex = "(c4:\\/\\/|\\@)([\\w\\s\\-]+)\\/?([\\w\\s\\-]+)?\\/?([\\w\\s\\-]+)?";
     private static final Pattern pattern = Pattern.compile(regex);
 
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Matcher matcher;
@@ -45,12 +47,14 @@ public class C4Path {
         return this.matcher;
     }
 
+    @JsonIgnore
     public String getName() {
         return Arrays.stream(path.split("(/|//|\\@)"))
                 .reduce((first, second) -> second)
                 .orElse(null);
     }
 
+    @JsonIgnore
     public C4Type getType() {
         if (this.getPersonName() != null) {
             return C4Type.person;
@@ -71,6 +75,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public String getPersonName() {
         if (this.path.startsWith(PERSON_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
@@ -79,6 +84,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public String getSystemName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
@@ -87,6 +93,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public Optional<String> getContainerName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(CONTAINER_GROUP_NUMBER));
@@ -95,6 +102,7 @@ public class C4Path {
         return empty();
     }
 
+    @JsonIgnore
     public Optional<String> getComponentName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(COMPONENT_GROUP_NUMBER));

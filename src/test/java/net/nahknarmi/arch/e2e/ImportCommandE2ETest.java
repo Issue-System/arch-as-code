@@ -1,0 +1,23 @@
+package net.nahknarmi.arch.e2e;
+
+import net.nahknarmi.arch.commands.ImportCommand;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+public class ImportCommandE2ETest {
+
+
+    @Test
+    public void import_project() throws Exception {
+        File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
+        ImportCommand importCommand = new ImportCommand(workspacePath);
+
+        Integer statusCode = importCommand.call();
+
+        assertThat(statusCode, equalTo(0));
+    }
+}

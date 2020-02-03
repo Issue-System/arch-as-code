@@ -111,4 +111,7 @@ public class ArchitectureDataStructureTransformerTest {
                 emptyList()
         );
     }
+
+    //handle id being absent, name, description.
+
 }

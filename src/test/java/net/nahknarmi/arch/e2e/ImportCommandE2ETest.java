@@ -10,9 +10,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class ImportCommandE2ETest {
 
-
     @Test
-    public void import_project() throws Exception {
+    public void import_workspace() throws Exception {
         File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
         ImportCommand importCommand = new ImportCommand(workspacePath);
 

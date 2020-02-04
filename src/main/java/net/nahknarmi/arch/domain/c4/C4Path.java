@@ -1,6 +1,8 @@
 package net.nahknarmi.arch.domain.c4;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.structurizr.model.Element;
+import com.structurizr.model.Person;
 import lombok.*;
 
 import java.util.Arrays;
@@ -45,6 +47,22 @@ public class C4Path {
             checkArgument(found, String.format("Path does not match expected pattern. (%s)", this.path));
         }
         return this.matcher;
+    }
+
+    public static C4Path buildPath(Element element) {
+        if (element.getParent() == null) {
+            String prefix = "c4://";
+            if (element instanceof Person) {
+                prefix = "@";
+            }
+
+            String path = prefix + element.getName().replaceAll("/", "-");
+            return new C4Path(path);
+        }
+
+        @NonNull String c4Path = buildPath(element.getParent()).getPath();
+        String fullPath = c4Path + "/" + element.getName().replaceAll("/", "-");
+        return new C4Path(fullPath);
     }
 
     @JsonIgnore

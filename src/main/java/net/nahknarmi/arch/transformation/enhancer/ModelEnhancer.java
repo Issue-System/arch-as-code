@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.model.*;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.*;
+import net.nahknarmi.arch.generator.PathIdGenerator;
 import net.nahknarmi.arch.transformation.LocationTransformer;
 
 import static java.util.Optional.ofNullable;
@@ -14,6 +15,8 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         Model workspaceModel = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
+
+        workspaceModel.setIdGenerator(new PathIdGenerator(dataStructureModel));
 
         addPeople(workspaceModel, dataStructureModel);
         addSystems(workspaceModel, dataStructureModel);

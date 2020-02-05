@@ -1,8 +1,8 @@
 package net.nahknarmi.arch.validation;
 
 import com.networknt.schema.ValidationMessage;
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.schema.ArchitectureDataStructureSchemaValidator;
 
 import java.io.File;

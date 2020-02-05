@@ -97,8 +97,8 @@ public class ArchitectureDataStructureTransformerTest {
 
     private C4Model buildModel() {
         return new C4Model(
-                ImmutableList.of(new C4Person(new C4Path("@person"), "Foo", "Bar", emptyList(), emptyList(), null)),
-                ImmutableList.of(new C4SoftwareSystem(new C4Path("c4://sys"), "J2EE Server", "Server", emptyList(), emptyList(), C4Location.INTERNAL)),
+                ImmutableList.of(C4Person.builder().path(new C4Path("@person")).description("Foo").relationships(emptyList()).tags(emptyList()).build()),
+                ImmutableList.of(C4SoftwareSystem.builder().path(new C4Path("c4://sys")).location(C4Location.INTERNAL).build()),
                 emptyList(),
                 emptyList()
         );

@@ -1,29 +1,21 @@
 package net.nahknarmi.arch.domain.c4;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class C4Person extends BaseEntity implements Entity, Locatable {
+    private C4Location location;
 
-    public C4Person(C4Path path, String technology, String description, List<C4Tag> tags, List<C4Relationship> relationships) {
-        this(path, technology, description, tags, relationships, C4Location.UNSPECIFIED);
-    }
-
-    public C4Person(C4Path path, String technology, String description, List<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
+    @Builder
+    public C4Person(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships, C4Location location) {
         super(path, technology, description, tags, relationships);
         this.location = location;
     }
-
-    private C4Location location;
 
     @JsonIgnore
     public String getName() {

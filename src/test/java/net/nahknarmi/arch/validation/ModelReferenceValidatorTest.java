@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -53,7 +52,7 @@ public class ModelReferenceValidatorTest {
     }
 
     private C4Person buildPeople(C4Path relationshipWith) {
-        return new C4Person(new C4Path("@bob"), "person", "desc", emptyList(), of(new C4Relationship(C4Action.DELIVERS, relationshipWith, "bazz", "desc")), C4Location.UNSPECIFIED);
+        return C4Person.builder().path(new C4Path("@bob")).description("person").location(C4Location.EXTERNAL).relationships(of(new C4Relationship(C4Action.DELIVERS, relationshipWith, "bazz", "desc"))).build();
     }
 
     @Test

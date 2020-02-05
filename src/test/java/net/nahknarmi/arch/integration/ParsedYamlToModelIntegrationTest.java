@@ -2,8 +2,8 @@ package net.nahknarmi.arch.integration;
 
 import com.structurizr.Workspace;
 import com.structurizr.model.*;
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import net.nahknarmi.arch.transformation.TransformerFactory;
 import org.junit.Test;

@@ -4,8 +4,8 @@ import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
 import net.nahknarmi.arch.adapter.StructurizrAdapter;
 import net.nahknarmi.arch.adapter.WorkspaceIdFinder;
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import net.nahknarmi.arch.transformation.TransformerFactory;
 

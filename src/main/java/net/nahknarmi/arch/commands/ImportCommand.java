@@ -1,11 +1,14 @@
 package net.nahknarmi.arch.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.structurizr.Workspace;
 import com.structurizr.util.WorkspaceUtils;
 import net.nahknarmi.arch.adapter.WorkspaceConverter;
+import net.nahknarmi.arch.adapter.out.C4PersonSerializer;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.c4.C4Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
@@ -34,7 +37,16 @@ public class ImportCommand implements Callable<Integer> {
         ArchitectureDataStructure dataStructure = new WorkspaceConverter().convert(workspace);
 
         File tempFile = File.createTempFile("arch-as-code", ".yml");
-        new ObjectMapper(new YAMLFactory()).writeValue(tempFile, dataStructure);
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new C4PersonSerializer(C4Person.class));
+        objectMapper.registerModule(module);
+
+        objectMapper.writeValue(tempFile, dataStructure);
+
+
+
         logger.info(String.format("Architecture data structure written to - %s", tempFile.getAbsolutePath()));
 
         return new PublishCommand(tempFile.getParentFile(), tempFile.getName()).call();

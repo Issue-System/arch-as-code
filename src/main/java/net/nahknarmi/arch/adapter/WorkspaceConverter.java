@@ -102,7 +102,13 @@ public class WorkspaceConverter {
 
                                     List<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(co, co.getRelationships());
-                                    return new C4Component(c4Path, co.getTechnology(), co.getDescription(), tags, relationships);
+                                    return C4Component.builder()
+                                            .path(c4Path)
+                                            .technology(co.toString())
+                                            .description(co.getDescription())
+                                            .tags(tags)
+                                            .relationships(relationships)
+                                            .build();
                                 })
 
                         )
@@ -132,7 +138,8 @@ public class WorkspaceConverter {
                     List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
                     List<C4Tag> tags = convertTags(x.getTags());
                     C4Path path = buildPath(x);
-                    return new C4SoftwareSystem(path, x.getDescription(), convertLocation(x.getLocation()), tags, relationships);
+
+                    return C4SoftwareSystem.builder().path(path).description(x.getDescription()).location(convertLocation(x.getLocation())).tags(tags).relationships(relationships).build();
                 })
                 .collect(toList());
     }
@@ -145,7 +152,14 @@ public class WorkspaceConverter {
                     List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
                     List<C4Tag> tags = convertTags(x.getTags());
                     C4Path path = buildPath(x);
-                    return new C4Person(path, x.getDescription(), convertLocation(x.getLocation()), tags, relationships);
+
+                    return C4Person.builder()
+                            .path(path)
+                            .description(x.getDescription())
+                            .location(convertLocation(x.getLocation()))
+                            .tags(tags)
+                            .relationships(relationships)
+                            .build();
                 })
                 .collect(toList());
     }

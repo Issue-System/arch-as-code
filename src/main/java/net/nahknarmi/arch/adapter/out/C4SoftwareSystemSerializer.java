@@ -2,17 +2,17 @@ package net.nahknarmi.arch.adapter.out;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import net.nahknarmi.arch.domain.c4.C4Person;
+import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 
 import java.io.IOException;
 
-public class C4PersonSerializer extends C4BaseEntitySerializer<C4Person> {
-    public C4PersonSerializer(Class<C4Person> t) {
+public class C4SoftwareSystemSerializer extends C4BaseEntitySerializer<C4SoftwareSystem> {
+    public C4SoftwareSystemSerializer(Class<C4SoftwareSystem> t) {
         super(t);
     }
 
     @Override
-    public void serialize(C4Person value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(C4SoftwareSystem value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
         baseEntityWrite(value, gen);

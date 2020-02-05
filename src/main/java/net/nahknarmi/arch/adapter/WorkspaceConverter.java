@@ -125,7 +125,7 @@ public class WorkspaceConverter {
                     List<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
-                    return new C4Container(path, c.getTechnology(), c.getDescription(), tags, relationships);
+                    return C4Container.builder().path(path).technology(c.getTechnology()).description(c.getDescription()).tags(tags).relationships(relationships).build();
                 }))
                 .collect(toList());
     }

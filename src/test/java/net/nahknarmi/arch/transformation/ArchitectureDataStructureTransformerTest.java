@@ -6,7 +6,10 @@ import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.DecisionStatus;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.ImportantTechnicalDecision;
-import net.nahknarmi.arch.domain.c4.*;
+import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Path;
+import net.nahknarmi.arch.domain.c4.C4Person;
+import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 import net.nahknarmi.arch.domain.c4.view.C4ViewContainer;
 import org.junit.Test;
 
@@ -17,6 +20,7 @@ import java.util.Date;
 
 import static java.util.Collections.emptyList;
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
+import static net.nahknarmi.arch.domain.c4.C4Location.INTERNAL;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -70,11 +74,11 @@ public class ArchitectureDataStructureTransformerTest {
     }
 
     @Test
-    public void should_tranform_decision_status_to_default() throws IOException {
+    public void should_tranform_decision_status_to_default() {
         checkStatus(DecisionStatus.Proposed, "Something invalid");
     }
 
-    private void checkStatus(DecisionStatus decisionStatus) throws IOException {
+    private void checkStatus(DecisionStatus decisionStatus) {
         checkStatus(decisionStatus, decisionStatus.name());
     }
 
@@ -96,9 +100,10 @@ public class ArchitectureDataStructureTransformerTest {
     }
 
     private C4Model buildModel() {
+
         return new C4Model(
                 ImmutableList.of(C4Person.builder().path(new C4Path("@person")).description("Foo").relationships(emptyList()).tags(emptyList()).build()),
-                ImmutableList.of(C4SoftwareSystem.builder().path(new C4Path("c4://sys")).location(C4Location.INTERNAL).build()),
+                ImmutableList.of(C4SoftwareSystem.builder().path(new C4Path("c4://sys")).description("sys").location(INTERNAL).tags(emptyList()).relationships(emptyList()).build()),
                 emptyList(),
                 emptyList()
         );

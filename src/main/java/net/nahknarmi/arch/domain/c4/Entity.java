@@ -7,8 +7,6 @@ public interface Entity extends Relatable, Tagable {
 
     C4Path getPath();
 
-    String getTechnology();
-
     List<C4Tag> getTags();
 
     List<C4Relationship> getRelationships();

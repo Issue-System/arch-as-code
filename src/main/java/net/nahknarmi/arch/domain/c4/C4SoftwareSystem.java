@@ -8,13 +8,16 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class C4SoftwareSystem extends BaseEntity implements Entity, Locatable {
     private C4Location location;
 
+    C4SoftwareSystem() {
+        super();
+    }
+
     @Builder
-    public C4SoftwareSystem(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships, C4Location location) {
-        super(path, technology, description, tags, relationships);
+    C4SoftwareSystem(@NonNull C4Path path, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships, C4Location location) {
+        super(path, description, tags, relationships);
         this.location = location;
     }
 

@@ -9,10 +9,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class C4Component extends BaseEntity implements Entity {
+    @NonNull
+    protected String technology;
+
+    C4Component() {
+        super();
+    }
 
     @Builder
-    public C4Component(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships) {
-        super(path, technology, description, tags, relationships);
+    C4Component(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships) {
+        super(path, description, tags, relationships);
+        this.technology = technology;
     }
 
     @JsonIgnore

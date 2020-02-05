@@ -36,7 +36,7 @@ public class ValidateCommand implements Callable<Integer> {
         if (messageSet.isEmpty()) {
             logger.info(manifestFileName + " is valid.");
         } else {
-            logger.error(manifestFileName + " is invalid.");
+            logger.error(String.format("%s is invalid. (%d)", manifestFileName, messageSet.size()));
             messageSet.forEach(logger::error);
         }
 

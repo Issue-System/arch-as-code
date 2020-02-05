@@ -1,5 +1,8 @@
 package net.nahknarmi.arch.domain.c4;
 
+import com.structurizr.Workspace;
+import com.structurizr.model.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -9,10 +12,65 @@ import static org.hamcrest.Matchers.equalTo;
 
 
 public class C4PathTest {
+    private Workspace workspace;
+
+    @Before
+    public void setUp() {
+        workspace = new Workspace("foo", "blah");
+    }
+
+    @Test
+    public void buildPath_for_system() {
+        SoftwareSystem element = buildSoftwareSystem();
+        buildPath(element, C4Type.system, "c4://system");
+    }
+
+    @Test
+    public void buildPath_for_person() {
+        Person element = workspace.getModel().addPerson("person", "bar");
+        buildPath(element, C4Type.person, "@person");
+    }
+
+    @Test
+    public void buildPath_for_container() {
+        Container container = buildContainer();
+        buildPath(container, C4Type.container, "c4://system/container");
+    }
+
+    @Test
+    public void buildPath_for_component() {
+        Component component = buildComponent("component");
+        buildPath(component, C4Type.component, "c4://system/container/component");
+    }
+
+    @Test
+    public void buildPath_for_component_with_slash() {
+        Component component = buildComponent("component/abc");
+        buildPath(component, C4Type.component, "c4://system/container/component-abc");
+    }
+
+    private Component buildComponent(String name) {
+        Container container = buildContainer();
+        return container.addComponent(name, "bar");
+    }
+
+    private Container buildContainer() {
+        SoftwareSystem softwareSystem = buildSoftwareSystem();
+        return softwareSystem.addContainer("container", "bar", "bazz");
+    }
+
+    private SoftwareSystem buildSoftwareSystem() {
+        return workspace.getModel().addSoftwareSystem("system", "bar");
+    }
+
+    private void buildPath(Element element, C4Type expectedType, String expectedPath) {
+        C4Path path = C4Path.buildPath(element);
+        assertThat(path.getType(), equalTo(expectedType));
+        assertThat(path.getPath(), equalTo(expectedPath));
+    }
 
     @Test
     public void person() {
-
         C4Path path = new C4Path("@PCA");
 
         assertThat(path.getName(), equalTo("PCA"));

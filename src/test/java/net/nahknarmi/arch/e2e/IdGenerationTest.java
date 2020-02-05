@@ -1,8 +1,8 @@
 package net.nahknarmi.arch.e2e;
 
 import com.structurizr.Workspace;
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.c4.Entity;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import net.nahknarmi.arch.transformation.TransformerFactory;

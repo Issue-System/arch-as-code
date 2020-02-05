@@ -1,6 +1,7 @@
 package net.nahknarmi.arch.domain;
 
 
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.c4.C4Model;
 import net.nahknarmi.arch.domain.c4.C4Person;
 import org.junit.Test;

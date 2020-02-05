@@ -1,5 +1,8 @@
 package net.nahknarmi.arch.domain.c4;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.structurizr.model.Element;
+import com.structurizr.model.Person;
 import lombok.*;
 
 import java.util.Arrays;
@@ -24,6 +27,7 @@ public class C4Path {
     private static final String regex = "(c4:\\/\\/|\\@)([\\w\\s\\-]+)\\/?([\\w\\s\\-]+)?\\/?([\\w\\s\\-]+)?";
     private static final Pattern pattern = Pattern.compile(regex);
 
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Matcher matcher;
@@ -40,17 +44,35 @@ public class C4Path {
         if (this.matcher == null) {
             this.matcher = pattern.matcher(this.path);
             boolean found = matcher.find();
-            checkArgument(found, "Path does not match expected pattern.");
+            checkArgument(found, String.format("Path does not match expected pattern. (%s)", this.path));
         }
         return this.matcher;
     }
 
+    public static C4Path buildPath(Element element) {
+        if (element.getParent() == null) {
+            String prefix = "c4://";
+            if (element instanceof Person) {
+                prefix = "@";
+            }
+
+            String path = prefix + element.getName().replaceAll("/", "-");
+            return new C4Path(path);
+        }
+
+        @NonNull String c4Path = buildPath(element.getParent()).getPath();
+        String fullPath = c4Path + "/" + element.getName().replaceAll("/", "-");
+        return new C4Path(fullPath);
+    }
+
+    @JsonIgnore
     public String getName() {
         return Arrays.stream(path.split("(/|//|\\@)"))
                 .reduce((first, second) -> second)
                 .orElse(null);
     }
 
+    @JsonIgnore
     public C4Type getType() {
         if (this.getPersonName() != null) {
             return C4Type.person;
@@ -71,6 +93,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public String getPersonName() {
         if (this.path.startsWith(PERSON_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
@@ -79,6 +102,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public String getSystemName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
@@ -87,6 +111,7 @@ public class C4Path {
         return null;
     }
 
+    @JsonIgnore
     public Optional<String> getContainerName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(CONTAINER_GROUP_NUMBER));
@@ -95,11 +120,19 @@ public class C4Path {
         return empty();
     }
 
+    @JsonIgnore
     public Optional<String> getComponentName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(COMPONENT_GROUP_NUMBER));
         }
 
         return empty();
+    }
+
+    @Override
+    public String toString() {
+        return "C4Path{" +
+                "path='" + path + '\'' +
+                '}';
     }
 }

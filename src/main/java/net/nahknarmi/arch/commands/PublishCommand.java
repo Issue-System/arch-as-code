@@ -28,7 +28,7 @@ public class PublishCommand implements Callable<Integer> {
     @Override
     public Integer call() throws IOException, StructurizrClientException {
         if (new ValidateCommand(productDocumentationRoot, manifestFileName).call() == 0) {
-            ArchitectureDataStructurePublisher.create(productDocumentationRoot).publish();
+            ArchitectureDataStructurePublisher.create(productDocumentationRoot, manifestFileName).publish();
             return 0;
         }
         return 1;

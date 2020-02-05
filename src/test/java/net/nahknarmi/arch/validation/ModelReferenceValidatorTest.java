@@ -53,7 +53,7 @@ public class ModelReferenceValidatorTest {
     }
 
     private C4Person buildPeople(C4Path relationshipWith) {
-        return new C4Person(new C4Path("@bob"), "person", "desc", emptyList(), of(new C4Relationship(C4Action.DELIVERS, relationshipWith, "bazz", "desc")), C4Location.UNSPECIFIED);
+        return C4Person.builder().path(new C4Path("@bob")).description("person").location(C4Location.EXTERNAL).relationships(of(new C4Relationship(C4Action.DELIVERS, relationshipWith, "bazz", "desc"))).tags(emptyList()).build();
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ModelReferenceValidatorTest {
     }
 
     private C4SoftwareSystem softwareSystem() {
-        return new C4SoftwareSystem(new C4Path("c4://OBP"), "core banking", "desc", of(), of(), C4Location.UNSPECIFIED);
+        return C4SoftwareSystem.builder().path(new C4Path("c4://OBP")).description("core banking").tags(emptyList()).relationships(emptyList()).build();
     }
 
 }

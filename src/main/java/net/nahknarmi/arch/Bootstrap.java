@@ -1,9 +1,6 @@
 package net.nahknarmi.arch;
 
-import net.nahknarmi.arch.commands.InitializeCommand;
-import net.nahknarmi.arch.commands.ParentCommand;
-import net.nahknarmi.arch.commands.PublishCommand;
-import net.nahknarmi.arch.commands.ValidateCommand;
+import net.nahknarmi.arch.commands.*;
 import picocli.CommandLine;
 
 public class Bootstrap {
@@ -13,6 +10,7 @@ public class Bootstrap {
                 .addSubcommand(new InitializeCommand())
                 .addSubcommand(new ValidateCommand())
                 .addSubcommand(new PublishCommand())
+                .addSubcommand(new ImportCommand())
                 .execute(args);
         System.exit(exitCode);
     }

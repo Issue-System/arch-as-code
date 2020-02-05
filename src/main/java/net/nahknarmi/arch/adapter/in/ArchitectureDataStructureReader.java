@@ -1,7 +1,8 @@
-package net.nahknarmi.arch.domain;
+package net.nahknarmi.arch.adapter.in;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;
 import java.io.FileInputStream;

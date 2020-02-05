@@ -16,8 +16,6 @@ public abstract class BaseEntity implements Entity {
     @NonNull
     protected C4Path path;
     @NonNull
-    protected String technology;
-    @NonNull
     protected String description;
     @NonNull
     protected List<C4Tag> tags = emptyList();

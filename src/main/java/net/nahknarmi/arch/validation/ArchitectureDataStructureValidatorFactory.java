@@ -1,7 +1,7 @@
 package net.nahknarmi.arch.validation;
 
 import com.google.common.collect.ImmutableList;
-import net.nahknarmi.arch.domain.ArchitectureDataStructureReader;
+import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.schema.ArchitectureDataStructureSchemaValidator;
 
 public abstract class ArchitectureDataStructureValidatorFactory {

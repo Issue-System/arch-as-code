@@ -26,7 +26,7 @@ public class ArchitectureDataStructurePublishingE2ETest {
         WorkspaceIdFinder workspaceIdFinder = new WorkspaceIdFinder();
 
         //when
-        ArchitectureDataStructurePublisher.create(documentationRoot).publish();
+        ArchitectureDataStructurePublisher.create(documentationRoot, "data-structure.yml").publish();
 
         //then
         StructurizrAdapter adapter = new StructurizrAdapter(workspaceIdFinder);

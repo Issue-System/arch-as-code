@@ -1,6 +1,7 @@
 package net.nahknarmi.arch.transformation.enhancer;
 
 import com.structurizr.Workspace;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import com.structurizr.model.SoftwareSystem;
@@ -13,6 +14,7 @@ import net.nahknarmi.arch.domain.c4.view.C4ComponentView;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView, C4ComponentView> {
@@ -33,7 +35,7 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
         SoftwareSystem softwareSystem = workspaceModel.getSoftwareSystemWithName(systemName);
         Container container = softwareSystem.getContainerWithName(containerName);
 
-        return viewSet.createComponentView(container, componentView.getName(), componentView.getDescription());
+        return viewSet.createComponentView(container, componentView.getName() + new Random().nextLong(), componentView.getDescription());
     }
 
     public Consumer<C4Path> addEntity(ModelMediator modelMediator, ComponentView view) {
@@ -50,7 +52,14 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
                     view.add(modelMediator.container(entityPath));
                     break;
                 case component:
-                    view.add(modelMediator.component(entityPath));
+                    Container container = view.getContainer();
+                    Component component = modelMediator.component(entityPath);
+
+                    if (component.getContainer().equals(container)) {
+                        view.add(component);
+                    } else {
+                        System.err.println("Only components belonging to " + container + " can be added to view (" + component + " not added.).");
+                    }
                     break;
                 default:
                     throw new IllegalStateException("Unsupported type " + entityPath.getType());

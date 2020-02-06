@@ -8,18 +8,20 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public class C4Container extends BaseEntity implements Entity {
+public class C4Container extends BaseEntity implements Entity, HasTechnology, HasUrl {
     @NonNull
     protected String technology;
+    protected String url;
 
     C4Container() {
         super();
     }
 
     @Builder
-    C4Container(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships) {
+    C4Container(@NonNull C4Path path, @NonNull String technology, @NonNull String description, @NonNull List<C4Tag> tags, @NonNull List<C4Relationship> relationships, String url) {
         super(path, description, tags, relationships);
         this.technology = technology;
+        this.url = url;
     }
 
     @JsonIgnore

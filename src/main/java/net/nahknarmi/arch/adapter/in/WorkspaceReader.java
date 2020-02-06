@@ -1,23 +1,28 @@
-package net.nahknarmi.arch.adapter;
+package net.nahknarmi.arch.adapter.in;
 
 import com.structurizr.Workspace;
 import com.structurizr.model.*;
+import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.StaticView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.*;
 import net.nahknarmi.arch.domain.c4.view.*;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static net.nahknarmi.arch.domain.c4.C4Action.*;
 import static net.nahknarmi.arch.domain.c4.C4Path.buildPath;
+import static net.nahknarmi.arch.domain.c4.C4Type.person;
 
-public class WorkspaceConverter {
+public class WorkspaceReader {
 
-    public ArchitectureDataStructure convert(Workspace workspace) {
+    public ArchitectureDataStructure load(File workspaceFile) throws Exception {
+        Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(workspaceFile);
         ArchitectureDataStructure architectureDataStructure = build(workspace);
         Model model = workspace.getModel();
 
@@ -46,6 +51,7 @@ public class WorkspaceConverter {
                     C4Path c4Path = buildPath(softwareSystem);
                     C4SystemView c4SystemView = new C4SystemView(c4Path);
                     mapCommonViewAttributes(x, c4SystemView);
+
 
                     return c4SystemView;
                 })
@@ -85,6 +91,7 @@ public class WorkspaceConverter {
     private void mapCommonViewAttributes(StaticView view, C4View c4View) {
         c4View.setName(view.getName());
         c4View.setDescription(view.getDescription());
+        c4View.setKey(view.getKey());
         List<C4Path> elements = view.getElements().stream().map(y -> buildPath(y.getElement())).collect(toList());
         c4View.setEntities(elements);
     }
@@ -108,6 +115,7 @@ public class WorkspaceConverter {
                                             .description(co.getDescription())
                                             .tags(tags)
                                             .relationships(relationships)
+                                            .url(co.getUrl())
                                             .build();
                                 })
 
@@ -125,7 +133,7 @@ public class WorkspaceConverter {
                     List<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
-                    return C4Container.builder().path(path).technology(c.getTechnology()).description(c.getDescription()).tags(tags).relationships(relationships).build();
+                    return C4Container.builder().path(path).technology(c.getTechnology()).description(c.getDescription()).tags(tags).relationships(relationships).url(c.getUrl()).build();
                 }))
                 .collect(toList());
     }
@@ -192,12 +200,12 @@ public class WorkspaceConverter {
 
     private C4Action convertAction(Element fromElement, C4Path destination) {
         C4Action action;
-        if (fromElement instanceof Person && destination.getType().equals(C4Type.person)){
-            action = C4Action.INTERACTS_WITH;
-        } else if (destination.getType().equals(C4Type.person)) {
-            action = C4Action.DELIVERS;
+        if (fromElement instanceof Person && destination.getType().equals(person)){
+            action = INTERACTS_WITH;
+        } else if (destination.getType().equals(person)) {
+            action = DELIVERS;
         } else {
-            action = C4Action.USES;
+            action = USES;
         }
         return action;
     }

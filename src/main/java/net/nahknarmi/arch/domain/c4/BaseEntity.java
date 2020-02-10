@@ -33,10 +33,10 @@ public abstract class BaseEntity implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof C4Container)) return false;
+        if (!(o instanceof BaseEntity)) return false;
         if (!super.equals(o)) return false;
 
-        C4Container that = (C4Container) o;
+        BaseEntity that = (BaseEntity) o;
 
         return getPath() != null ? getPath().equals(that.getPath()) : that.getPath() == null;
     }

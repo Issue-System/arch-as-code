@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static net.nahknarmi.arch.domain.c4.C4Action.*;
 import static net.nahknarmi.arch.domain.c4.C4Path.buildPath;
 import static net.nahknarmi.arch.domain.c4.C4Type.person;
@@ -27,10 +28,10 @@ public class WorkspaceReader {
         Model model = workspace.getModel();
 
         C4Model c4Model = new C4Model();
-        c4Model.setPeople(people(model));
-        c4Model.setSystems(softwareSystems(model));
-        c4Model.setContainers(containers(model));
-        c4Model.setComponents(components(model));
+        people(model).forEach(c4Model::addPerson);
+        softwareSystems(model).forEach(c4Model::addSoftwareSystem);
+        containers(model).forEach(c4Model::addContainer);
+        components(model).forEach(c4Model::addComponent);
         architectureDataStructure.setModel(c4Model);
 
         C4ViewContainer views = new C4ViewContainer();
@@ -96,7 +97,7 @@ public class WorkspaceReader {
         c4View.setEntities(elements);
     }
 
-    private List<C4Component> components(Model model) {
+    private Set<C4Component> components(Model model) {
         return model
                 .getSoftwareSystems()
                 .stream()
@@ -107,13 +108,14 @@ public class WorkspaceReader {
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
 
-                                    List<C4Tag> tags = convertTags(co.getTags());
+                                    Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(co, co.getRelationships());
                                     return C4Component.builder()
                                             .path(c4Path)
                                             .technology(co.toString())
                                             .description(co.getDescription())
                                             .tags(tags)
+                                            .name(co.getName())
                                             .relationships(relationships)
                                             .url(co.getUrl())
                                             .build();
@@ -121,44 +123,61 @@ public class WorkspaceReader {
 
                         )
 
-                ).collect(toList());
+                ).collect(toSet());
     }
 
-    private List<C4Container> containers(Model model) {
+    private Set<C4Container> containers(Model model) {
         return model
                 .getSoftwareSystems()
                 .stream()
                 .flatMap(s -> s.getContainers().stream().map(c -> {
                     List<C4Relationship> relationships = mapRelationships(c, c.getRelationships());
-                    List<C4Tag> tags = convertTags(c.getTags());
+                    Set<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
-                    return C4Container.builder().path(path).technology(c.getTechnology()).description(c.getDescription()).tags(tags).relationships(relationships).url(c.getUrl()).build();
+                    return C4Container
+                            .builder()
+                            .path(path)
+                            .technology(c.getTechnology())
+                            .description(c.getDescription())
+                            .tags(tags)
+                            .name(c.getName())
+                            .relationships(relationships)
+                            .url(c.getUrl())
+                            .build();
                 }))
-                .collect(toList());
+                .collect(toSet());
     }
 
-    private List<C4SoftwareSystem> softwareSystems(Model model) {
+    private Set<C4SoftwareSystem> softwareSystems(Model model) {
         return model
                 .getSoftwareSystems()
                 .stream()
                 .map(x -> {
                     List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
-                    List<C4Tag> tags = convertTags(x.getTags());
+                    Set<C4Tag> tags = convertTags(x.getTags());
                     C4Path path = buildPath(x);
 
-                    return C4SoftwareSystem.builder().path(path).description(x.getDescription()).location(convertLocation(x.getLocation())).tags(tags).relationships(relationships).build();
+                    return C4SoftwareSystem
+                            .builder()
+                            .path(path)
+                            .description(x.getDescription())
+                            .location(convertLocation(x.getLocation()))
+                            .tags(tags)
+                            .name(x.getName())
+                            .relationships(relationships)
+                            .build();
                 })
-                .collect(toList());
+                .collect(toSet());
     }
 
-    private List<C4Person> people(Model model) {
+    private Set<C4Person> people(Model model) {
         return model
                 .getPeople()
                 .stream()
                 .map(x -> {
                     List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
-                    List<C4Tag> tags = convertTags(x.getTags());
+                    Set<C4Tag> tags = convertTags(x.getTags());
                     C4Path path = buildPath(x);
 
                     return C4Person.builder()
@@ -166,10 +185,11 @@ public class WorkspaceReader {
                             .description(x.getDescription())
                             .location(convertLocation(x.getLocation()))
                             .tags(tags)
+                            .name(x.getName())
                             .relationships(relationships)
                             .build();
                 })
-                .collect(toList());
+                .collect(toSet());
     }
 
     private ArchitectureDataStructure build(Workspace workspace) {
@@ -184,8 +204,8 @@ public class WorkspaceReader {
         return C4Location.valueOf(location.name().toUpperCase());
     }
 
-    private List<C4Tag> convertTags(String tags) {
-        return Arrays.stream(tags.split(",")).map(C4Tag::new).collect(toList());
+    private Set<C4Tag> convertTags(String tags) {
+        return Arrays.stream(tags.split(",")).map(C4Tag::new).collect(toSet());
     }
 
     private List<C4Relationship> mapRelationships(Element fromElement, Set<Relationship> relationships) {
@@ -200,9 +220,9 @@ public class WorkspaceReader {
 
     private C4Action convertAction(Element fromElement, C4Path destination) {
         C4Action action;
-        if (fromElement instanceof Person && destination.getType().equals(person)){
+        if (fromElement instanceof Person && destination.type().equals(person)){
             action = INTERACTS_WITH;
-        } else if (destination.getType().equals(person)) {
+        } else if (destination.type().equals(person)) {
             action = DELIVERS;
         } else {
             action = USES;

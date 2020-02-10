@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
+import static net.nahknarmi.arch.domain.c4.C4Path.path;
 import static org.junit.Assert.assertEquals;
 
 public class IdGenerationTest {
@@ -21,9 +22,9 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getPeople().stream().forEach(p -> {
+        workspace.getModel().getPeople().forEach(p -> {
             String personId = p.getId();
-            Entity entity = dataStructure.getModel().getByPath(personId);
+            Entity entity = dataStructure.getModel().findByPath(path(personId));
             String pathString = entity.getPath().getPath();
 
             assertEquals(personId, pathString);
@@ -35,9 +36,9 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().stream().forEach(s -> {
+        workspace.getModel().getSoftwareSystems().forEach(s -> {
             String systemId = s.getId();
-            Entity entity = dataStructure.getModel().getByPath(systemId);
+            Entity entity = dataStructure.getModel().findByPath(path(systemId));
             String pathString = entity.getPath().getPath();
 
             assertEquals(systemId, pathString);
@@ -49,10 +50,10 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().stream().forEach(system -> {
-            system.getContainers().stream().forEach(cont -> {
+        workspace.getModel().getSoftwareSystems().forEach(system -> {
+            system.getContainers().forEach(cont -> {
                 String containerId = cont.getId();
-                Entity entity = dataStructure.getModel().getByPath(containerId);
+                Entity entity = dataStructure.getModel().findByPath(path(containerId));
                 String pathString = entity.getPath().getPath();
 
                 assertEquals(containerId, pathString);
@@ -65,11 +66,11 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().stream().forEach(system -> {
-            system.getContainers().stream().forEach(container -> {
-                container.getComponents().stream().forEach(comp -> {
+        workspace.getModel().getSoftwareSystems().forEach(system -> {
+            system.getContainers().forEach(container -> {
+                container.getComponents().forEach(comp -> {
                     String componentId = comp.getId();
-                    Entity entity = dataStructure.getModel().getByPath(componentId);
+                    Entity entity = dataStructure.getModel().findByPath(path(componentId));
                     String pathString = entity.getPath().getPath();
 
                     assertEquals(componentId, pathString);
@@ -81,11 +82,10 @@ public class IdGenerationTest {
     private ArchitectureDataStructure getDataStructure() throws IOException {
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);
-        return dataStructure;
+        return new ArchitectureDataStructureReader().load(manifestFile);
     }
 
-    private Workspace getWorkspace(ArchitectureDataStructure dataStructure) throws IOException {
+    private Workspace getWorkspace(ArchitectureDataStructure dataStructure) {
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         return transformer.toWorkSpace(dataStructure);

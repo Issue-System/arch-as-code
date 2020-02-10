@@ -12,11 +12,14 @@ import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.C4Path;
 import net.nahknarmi.arch.domain.c4.view.C4ComponentView;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView, C4ComponentView> {
+    private static Logger log = LoggerFactory.getLogger(ComponentContextViewEnhancer.class);
 
     @Override
     public List<C4ComponentView> getViews(ArchitectureDataStructure dataStructure) {
@@ -27,8 +30,8 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
     public ComponentView createView(Workspace workspace, C4ComponentView componentView) {
         ViewSet viewSet = workspace.getViews();
         @NonNull C4Path containerPath = componentView.getContainerPath();
-        String systemName = containerPath.getSystemName();
-        String containerName = containerPath.getContainerName()
+        String systemName = containerPath.systemName();
+        String containerName = containerPath.containerName()
                 .orElseThrow(() -> new IllegalStateException("Container name not found in path " + containerPath));
         Model workspaceModel = workspace.getModel();
         SoftwareSystem softwareSystem = workspaceModel.getSoftwareSystemWithName(systemName);
@@ -40,7 +43,7 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
     public Consumer<C4Path> addEntity(ModelMediator modelMediator, ComponentView view) {
         return entityPath -> {
 
-            switch (entityPath.getType()) {
+            switch (entityPath.type()) {
                 case person:
                     view.add(modelMediator.person(entityPath));
                     break;
@@ -57,11 +60,11 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
                     if (component.getContainer().equals(container)) {
                         view.add(component);
                     } else {
-                        System.err.println("Only components belonging to " + container + " can be added to view (" + component + " not added.).");
+                        log.warn("Only components belonging to " + container + " can be added to view (" + component + " not added.).");
                     }
                     break;
                 default:
-                    throw new IllegalStateException("Unsupported type " + entityPath.getType());
+                    throw new IllegalStateException("Unsupported type " + entityPath.type());
             }
         };
     }

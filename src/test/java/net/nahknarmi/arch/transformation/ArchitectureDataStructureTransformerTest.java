@@ -1,13 +1,13 @@
 package net.nahknarmi.arch.transformation;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.DecisionStatus;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.ImportantTechnicalDecision;
 import net.nahknarmi.arch.domain.c4.C4Model;
-import net.nahknarmi.arch.domain.c4.C4Path;
 import net.nahknarmi.arch.domain.c4.C4Person;
 import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
 import net.nahknarmi.arch.domain.c4.view.C4ViewContainer;
@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
 import static net.nahknarmi.arch.domain.c4.C4Location.INTERNAL;
+import static net.nahknarmi.arch.domain.c4.C4Path.path;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -32,9 +34,13 @@ public class ArchitectureDataStructureTransformerTest {
     @Test
     public void should_transform_architecture_yaml_to_structurizr_workspace() {
         ArchitectureDataStructure dataStructure =
-                new ArchitectureDataStructure(PRODUCT_NAME, "DevFactory", PRODUCT_DESCRIPTION, emptyList(),
-                        buildModel(),
-                        buildView());
+                ArchitectureDataStructure.builder()
+                        .name(PRODUCT_NAME)
+                        .businessUnit("DevFactory")
+                        .description(PRODUCT_DESCRIPTION)
+                        .model(buildModel())
+                        .views(buildView())
+                        .build();
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
@@ -84,10 +90,14 @@ public class ArchitectureDataStructureTransformerTest {
 
     private void checkStatus(DecisionStatus decisionStatus, String statusString) {
         ArchitectureDataStructure dataStructure =
-                new ArchitectureDataStructure(PRODUCT_NAME, "DevFactory", PRODUCT_DESCRIPTION,
-                        ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")),
-                        buildModel(),
-                        buildView());
+                ArchitectureDataStructure.builder()
+                        .name(PRODUCT_NAME)
+                        .businessUnit("DevFactory")
+                        .description(PRODUCT_DESCRIPTION)
+                        .model(buildModel())
+                        .views(buildView())
+                        .decisions(ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")))
+                        .build();
 
         File documentationRoot = new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
@@ -102,10 +112,10 @@ public class ArchitectureDataStructureTransformerTest {
     private C4Model buildModel() {
 
         return new C4Model(
-                ImmutableList.of(C4Person.builder().path(new C4Path("@person")).description("Foo").relationships(emptyList()).tags(emptyList()).build()),
-                ImmutableList.of(C4SoftwareSystem.builder().path(new C4Path("c4://sys")).description("sys").location(INTERNAL).tags(emptyList()).relationships(emptyList()).build()),
-                emptyList(),
-                emptyList()
+                ImmutableSet.of(C4Person.builder().path(path("@person")).description("Foo").relationships(emptyList()).tags(emptySet()).build()),
+                ImmutableSet.of(C4SoftwareSystem.builder().path(path("c4://sys")).description("sys").location(INTERNAL).tags(emptySet()).relationships(emptyList()).build()),
+                emptySet(),
+                emptySet()
         );
     }
 

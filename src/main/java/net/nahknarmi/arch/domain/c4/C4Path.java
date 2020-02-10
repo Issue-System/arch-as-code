@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
+@EqualsAndHashCode
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,9 +36,15 @@ public class C4Path {
     @NonNull
     private String path;
 
-    public C4Path(String path) {
+    C4Path(String path) {
         this.path = path;
         this.matcher = matcher();
+    }
+
+    public static C4Path path(String path) {
+        Matcher matcher = pattern.matcher(path);
+        checkArgument(matcher.matches(), String.format("Path does not match expected pattern. (%s)", path));
+        return new C4Path(path);
     }
 
     private Matcher matcher() {
@@ -65,36 +72,33 @@ public class C4Path {
         return new C4Path(fullPath);
     }
 
-    @JsonIgnore
-    public String getName() {
+    public String name() {
         return Arrays.stream(path.split("(/|//|\\@)"))
                 .reduce((first, second) -> second)
                 .orElse(null);
     }
 
-    @JsonIgnore
-    public C4Type getType() {
-        if (this.getPersonName() != null) {
+    public C4Type type() {
+        if (this.personName() != null) {
             return C4Type.person;
         }
 
-        if (this.getComponentName().isPresent()) {
+        if (this.componentName().isPresent()) {
             return C4Type.component;
         }
 
-        if (this.getContainerName().isPresent()) {
+        if (this.containerName().isPresent()) {
             return C4Type.container;
         }
 
-        if (this.getSystemName() != null) {
+        if (this.systemName() != null) {
             return C4Type.system;
         }
 
         return null;
     }
 
-    @JsonIgnore
-    public String getPersonName() {
+    public String personName() {
         if (this.path.startsWith(PERSON_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
         }
@@ -102,8 +106,7 @@ public class C4Path {
         return null;
     }
 
-    @JsonIgnore
-    public String getSystemName() {
+    public String systemName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
         }
@@ -111,8 +114,7 @@ public class C4Path {
         return null;
     }
 
-    @JsonIgnore
-    public Optional<String> getContainerName() {
+    public Optional<String> containerName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(CONTAINER_GROUP_NUMBER));
         }
@@ -120,13 +122,40 @@ public class C4Path {
         return empty();
     }
 
-    @JsonIgnore
-    public Optional<String> getComponentName() {
+    public Optional<String> componentName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
             return ofNullable(matcher().group(COMPONENT_GROUP_NUMBER));
         }
 
         return empty();
+    }
+
+    public C4Path containerPath() {
+        if (!containerName().isPresent()) {
+            throw new IllegalStateException("Container path does not exist on this path - " + this.getPath());
+        }
+        return new C4Path(systemPath().getPath() + "/" + containerName().get());
+    }
+
+    public C4Path componentPath() {
+        if (!componentName().isPresent()) {
+            throw new IllegalStateException("Component path does not exist on this path - " + this.getPath());
+        }
+        return new C4Path(containerPath().getPath() + "/" + componentName().get());
+    }
+
+    public C4Path systemPath() {
+        if (systemName() == null) {
+            throw new IllegalStateException("Accessing system path on non-system path - " + getPath());
+        }
+        return new C4Path("c4://" + systemName());
+    }
+
+    public C4Path personPath() {
+        if (personName() == null) {
+            throw new IllegalStateException("Accessing person path on non-person path - " + getPath());
+        }
+        return new C4Path("@" + personName());
     }
 
     @Override

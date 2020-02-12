@@ -48,12 +48,16 @@ Initialize arch-as-code using information available Structurizr workspace (avail
 ```
 mkdir -p <PATH_TO_STORE_ARCHITECTURE_DOCUMENTATION>
 
-arch-as-code init -i <WORKSPACE_ID> -k <WORKSPACE_API_KEY> -s <WORKSPACE_API_SECRET> <PATH_TO_STORE_ARCHITECTURE_DOCUMENTATION>
+cd <PATH_TO_STORE_ARCHITECTURE_DOCUMENTATION>
+
+arch-as-code init -i <WORKSPACE_ID> -k <WORKSPACE_API_KEY> -s <WORKSPACE_API_SECRET> .
 ```
 
 ## 3. Publish changes to Structurizr
 ```
-arch-as-code publish <PATH_TO_STORE_ARCHITECTURE_DOCUMENTATION>
+cd <PATH_TO_STORE_ARCHITECTURE_DOCUMENTATION>
+
+arch-as-code publish .
 ```
 
 ## 4. View your changes on Structurizr

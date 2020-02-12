@@ -26,8 +26,7 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
     @Override
     public ComponentView createView(Workspace workspace, C4ComponentView componentView) {
         ViewSet viewSet = workspace.getViews();
-        C4Path containerPath = componentView.getContainerPath();
-        Container container = (Container) workspace.getModel().getElement(containerPath.getPath());
+        Container container = new ModelMediator(workspace.getModel()).container(componentView.getContainerPath());
 
         return viewSet.createComponentView(container, componentView.getKey(), componentView.getDescription());
     }
@@ -49,6 +48,7 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
                     Container container = view.getContainer();
                     Component component = modelMediator.component(entityPath);
 
+                    //TODO: Find out why there are cases where input is broken
                     if (component.getContainer().equals(container)) {
                         view.add(component);
                     } else {

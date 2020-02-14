@@ -1,17 +1,17 @@
 package net.nahknarmi.arch.domain.c4;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import lombok.*;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 @Data
@@ -73,8 +73,12 @@ public class C4Model {
                 .flatMap(Collection::stream).collect(toSet());
     }
 
-    public List<C4Relationship> allRelationships() {
-        return allEntities().stream().flatMap(x -> x.getRelationships().stream()).collect(toList());
+    public Set<Tuple2<Entity, C4Relationship>> allRelationships() {
+        return allEntities().stream()
+                .flatMap(entity -> {
+                    return entity.getRelationships().stream()
+                            .map(r -> Tuple.of(entity, r));
+                }).collect(toSet());
     }
 
     public C4Person findPersonByName(String name) {
@@ -90,7 +94,7 @@ public class C4Model {
         checkNotNull(path);
         return allEntities()
                 .stream()
-                .filter(x -> x.getPath().equals(path))
+                .filter(x -> x.getPath().getPath().equals(path.getPath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
     }

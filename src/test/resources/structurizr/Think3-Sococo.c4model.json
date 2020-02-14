@@ -1323,7 +1323,7 @@
                             {
                                 "id": "98",
                                 "tags": "Element,Component,Internal,Cordova,Fork,SHARED_LIBRARY,SE7:SOCOCO,FA:SOCOCO-3295",
-                                "name": "sococo/audiotoggle",
+                                "name": "sococo-audiotoggle",
                                 "description": "Fork of Cordova plugin for switching between speaker and earpiece when playing audio.",
                                 "url": "https://github.com/sococo/audiotoggle.git",
                                 "relationships": [
@@ -1474,7 +1474,7 @@
                             {
                                 "id": "97",
                                 "tags": "Element,Component,Internal,Cordova,Fork,SHARED_LIBRARY,SE7:SOCOCO,FA:SOCOCO-3295",
-                                "name": "sococo/cordova-plugin-iosrtc",
+                                "name": "sococo-cordova-plugin-iosrtc",
                                 "description": "Fork of Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs.",
                                 "url": "https://github.com/sococo/cordova-plugin-iosrtc",
                                 "relationships": [

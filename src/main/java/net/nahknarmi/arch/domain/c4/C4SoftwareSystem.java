@@ -1,6 +1,5 @@
 package net.nahknarmi.arch.domain.c4;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.List;
@@ -20,8 +19,8 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
     private C4Location location;
 
     @Builder
-    C4SoftwareSystem(String name, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
-        super(path, description, tags, relationships, name);
+    C4SoftwareSystem(String id, String name, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
+        super(id, path, description, tags, relationships, name);
         this.location = Optional.ofNullable(location).orElse(UNSPECIFIED);
     }
 

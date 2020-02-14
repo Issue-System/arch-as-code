@@ -14,6 +14,7 @@ import static java.util.Optional.ofNullable;
 @Data
 @NoArgsConstructor
 public abstract class BaseEntity implements Entity {
+    protected String id;
     @NonNull
     protected C4Path path;
     @NonNull
@@ -22,7 +23,8 @@ public abstract class BaseEntity implements Entity {
     protected List<C4Relationship> relationships = emptyList();
     protected String name;
 
-    public BaseEntity(@NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, String name) {
+    public BaseEntity(String id, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, String name) {
+        this.id = id;
         this.path = path;
         this.description = description;
         this.tags = ofNullable(tags).orElse(emptySet());

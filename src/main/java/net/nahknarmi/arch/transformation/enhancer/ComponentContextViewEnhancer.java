@@ -6,7 +6,7 @@ import com.structurizr.model.Container;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.c4.C4Path;
+import net.nahknarmi.arch.domain.c4.*;
 import net.nahknarmi.arch.domain.c4.view.C4ComponentView;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
 import org.slf4j.Logger;
@@ -24,29 +24,35 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
     }
 
     @Override
-    public ComponentView createView(Workspace workspace, C4ComponentView componentView) {
+    public ComponentView createView(Workspace workspace, C4Model dataStructureModel, C4ComponentView componentView) {
         ViewSet viewSet = workspace.getViews();
-        Container container = new ModelMediator(workspace.getModel()).container(componentView.getContainerPath());
+        C4Container contWithId = (C4Container) dataStructureModel.findByPath(componentView.getContainerPath());
+        Container container = new ModelMediator(workspace.getModel()).container(contWithId.getPath());
 
         return viewSet.createComponentView(container, componentView.getKey(), componentView.getDescription());
     }
 
-    public Consumer<C4Path> addEntity(ModelMediator modelMediator, ComponentView view) {
+    public Consumer<C4Path> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ComponentView view) {
         return entityPath -> {
 
             switch (entityPath.type()) {
                 case person:
-                    view.add(modelMediator.person(entityPath));
+                    C4Person personWithId = (C4Person) dataStructureModel.findByPath(entityPath.personPath());
+                    view.add(modelMediator.person(personWithId.getPath()));
                     break;
                 case system:
-                    view.add(modelMediator.softwareSystem(entityPath));
+                    C4SoftwareSystem sysWithId = (C4SoftwareSystem) dataStructureModel.findByPath(entityPath.systemPath());
+                    view.add(modelMediator.softwareSystem(sysWithId.getPath()));
                     break;
                 case container:
-                    view.add(modelMediator.container(entityPath));
+                    C4Container contWithId = (C4Container) dataStructureModel.findByPath(entityPath.containerPath());
+                    view.add(modelMediator.container(contWithId.getPath()));
                     break;
                 case component:
                     Container container = view.getContainer();
-                    Component component = modelMediator.component(entityPath);
+                    C4Component compWithId = (C4Component) dataStructureModel.findByPath(entityPath.componentPath());
+
+                    Component component = modelMediator.component(compWithId.getPath());
 
                     //TODO: Find out why there are cases where input is broken
                     if (component.getContainer().equals(container)) {

@@ -1,9 +1,9 @@
 package net.nahknarmi.arch.e2e;
 
 import com.structurizr.Workspace;
+import com.structurizr.model.Element;
 import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
-import net.nahknarmi.arch.domain.c4.Entity;
 import net.nahknarmi.arch.transformation.ArchitectureDataStructureTransformer;
 import net.nahknarmi.arch.transformation.TransformerFactory;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
-import static net.nahknarmi.arch.domain.c4.C4Path.path;
 import static org.junit.Assert.assertEquals;
 
 public class IdGenerationTest {
@@ -22,12 +21,12 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getPeople().forEach(p -> {
+        dataStructure.getModel().getPeople().forEach(p -> {
             String personId = p.getId();
-            Entity entity = dataStructure.getModel().findByPath(path(personId));
-            String pathString = entity.getPath().getPath();
+            Element element = workspace.getModel().getElement(personId);
+            String elementId = element.getId();
 
-            assertEquals(personId, pathString);
+            assertEquals(personId, elementId);
         });
     }
 
@@ -36,12 +35,12 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().forEach(s -> {
+        dataStructure.getModel().getSystems().forEach(s -> {
             String systemId = s.getId();
-            Entity entity = dataStructure.getModel().findByPath(path(systemId));
-            String pathString = entity.getPath().getPath();
+            Element element = workspace.getModel().getElement(systemId);
+            String elementId = element.getId();
 
-            assertEquals(systemId, pathString);
+            assertEquals(systemId, elementId);
         });
     }
 
@@ -50,14 +49,12 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().forEach(system -> {
-            system.getContainers().forEach(cont -> {
-                String containerId = cont.getId();
-                Entity entity = dataStructure.getModel().findByPath(path(containerId));
-                String pathString = entity.getPath().getPath();
+        dataStructure.getModel().getContainers().forEach(cont -> {
+            String containerId = cont.getId();
+            Element element = workspace.getModel().getElement(containerId);
+            String elementId = element.getId();
 
-                assertEquals(containerId, pathString);
-            });
+            assertEquals(containerId, elementId);
         });
     }
 
@@ -66,16 +63,12 @@ public class IdGenerationTest {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
-        workspace.getModel().getSoftwareSystems().forEach(system -> {
-            system.getContainers().forEach(container -> {
-                container.getComponents().forEach(comp -> {
-                    String componentId = comp.getId();
-                    Entity entity = dataStructure.getModel().findByPath(path(componentId));
-                    String pathString = entity.getPath().getPath();
+        dataStructure.getModel().getComponents().forEach(comp -> {
+            String componentId = comp.getId();
+            Element element = workspace.getModel().getElement(componentId);
+            String elementId = element.getId();
 
-                    assertEquals(componentId, pathString);
-                });
-            });
+            assertEquals(componentId, elementId);
         });
     }
 

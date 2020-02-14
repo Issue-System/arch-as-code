@@ -111,6 +111,7 @@ public class WorkspaceReader {
                                     Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(co, co.getRelationships());
                                     return C4Component.builder()
+                                            .id(co.getId())
                                             .path(c4Path)
                                             .technology(co.toString())
                                             .description(co.getDescription())
@@ -135,8 +136,8 @@ public class WorkspaceReader {
                     Set<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
-                    return C4Container
-                            .builder()
+                    return C4Container.builder()
+                            .id(c.getId())
                             .path(path)
                             .technology(c.getTechnology())
                             .description(c.getDescription())
@@ -158,8 +159,8 @@ public class WorkspaceReader {
                     Set<C4Tag> tags = convertTags(x.getTags());
                     C4Path path = buildPath(x);
 
-                    return C4SoftwareSystem
-                            .builder()
+                    return C4SoftwareSystem.builder()
+                            .id(x.getId())
                             .path(path)
                             .description(x.getDescription())
                             .location(convertLocation(x.getLocation()))
@@ -181,6 +182,7 @@ public class WorkspaceReader {
                     C4Path path = buildPath(x);
 
                     return C4Person.builder()
+                            .id(x.getId())
                             .path(path)
                             .description(x.getDescription())
                             .location(convertLocation(x.getLocation()))
@@ -219,7 +221,7 @@ public class WorkspaceReader {
                 .map(r -> {
                     C4Path destination = buildPath(r.getDestination());
                     C4Action action = convertAction(fromElement, destination);
-                    return new C4Relationship(action, destination, r.getDescription(), r.getTechnology());
+                    return new C4Relationship(r.getId(), action, destination, r.getDescription(), r.getTechnology());
                 }).collect(toList());
     }
 

@@ -14,6 +14,7 @@ import static java.util.Optional.ofNullable;
 @Data
 @NoArgsConstructor
 public abstract class BaseEntity implements Entity {
+    @NonNull
     protected String id;
     @NonNull
     protected C4Path path;

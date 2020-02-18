@@ -4,22 +4,21 @@ import com.google.common.base.Preconditions;
 import com.structurizr.model.Element;
 import com.structurizr.model.IdGenerator;
 import com.structurizr.model.Relationship;
+import io.vavr.Tuple2;
 import lombok.NonNull;
 import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Relationship;
 import net.nahknarmi.arch.domain.c4.C4Type;
 import net.nahknarmi.arch.domain.c4.Entity;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class PathIdGenerator implements IdGenerator {
+public class NumericIdGenerator implements IdGenerator {
     private final C4Model dataStructureModel;
 
-    public PathIdGenerator(@NonNull C4Model dataStructureModel) {
+    public NumericIdGenerator(@NonNull C4Model dataStructureModel) {
         this.dataStructureModel = dataStructureModel;
     }
 
@@ -31,7 +30,7 @@ public class PathIdGenerator implements IdGenerator {
                 .allEntities()
                 .stream()
                 .filter(e -> e.getPath().type().equals(c4Type))
-                .filter(x -> x.name().equals(element.getName()))
+                .filter(e -> e.name().equals(element.getName()))
                 .filter(entity -> {
                     switch (c4Type) {
                         case container: {
@@ -67,7 +66,11 @@ public class PathIdGenerator implements IdGenerator {
             throw new IllegalStateException("More than 1 matching entity found for element " + element);
         }
 
-        return possibleEntities.get(0).getPath().getPath();
+        if (possibleEntities.isEmpty()) {
+            return null;
+        } else {
+            return possibleEntities.get(0).getId();
+        }
     }
 
     @Override
@@ -75,23 +78,28 @@ public class PathIdGenerator implements IdGenerator {
         Preconditions.checkNotNull(relationship.getSourceId(), relationship);
         Preconditions.checkNotNull(relationship.getDestinationId(), relationship);
 
-        String relationshipString = relationship.getSourceId() + relationship.getDestinationId() + relationship.getTechnology();
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        List<Tuple2<Entity, C4Relationship>> possibleRelationships = dataStructureModel
+                .allRelationships()
+                .stream()
+                .filter(t -> t._1.getId().equals(relationship.getSourceId()))
+                .filter(t -> {
+                    Entity entityWithID = dataStructureModel.findByPath(t._2.getWith());
+                    return entityWithID.getId().equals(relationship.getDestinationId());
+                })
+                .filter(t -> {
+                    if (relationship.getTechnology() != null) {
+                        return t._2.getTechnology().equals(relationship.getTechnology());
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(toList());
+
+        if (possibleRelationships.isEmpty()) {
             return null;
+        } else {
+            return possibleRelationships.get(0)._2.getId();
         }
-        byte[] hashInBytes = md.digest(relationshipString.getBytes(StandardCharsets.UTF_8));
-
-        // bytes to hex
-        StringBuilder sb = new StringBuilder();
-        for (byte b : hashInBytes) {
-            sb.append(String.format("%02x", b));
-        }
-
-        return sb.toString();
     }
 
     @Override

@@ -54,10 +54,10 @@ public class ArchitectureDataStructureTransformerTest {
         Model model = workspace.getModel();
         assertThat(model.getPeople().size(), equalTo(4));
         assertThat(model.getSoftwareSystems().size(), equalTo(5));
-        Container container = (Container) model.getElement("c4://DevSpaces/DevSpaces Web Application");
+        Container container = (Container) model.getElement("12"); // "c4://DevSpaces/DevSpaces Web Application"
         assertThat(container, notNullValue());
         assertThat(container.getUrl(), equalTo("https://devspaces.io"));
-        Component component = (Component) model.getElement("c4://DevSpaces/DevSpaces API/Sign In Controller");
+        Component component = (Component) model.getElement("38"); // "c4://DevSpaces/DevSpaces API/Sign In Controller"
         assertThat(component, notNullValue());
         assertThat(component.getUrl(), equalTo("https://devspaces.io/sign-in"));
     }
@@ -120,8 +120,8 @@ public class ArchitectureDataStructureTransformerTest {
     private C4Model buildModel() {
 
         return new C4Model(
-                ImmutableSet.of(C4Person.builder().path(path("@person")).description("Foo").relationships(emptyList()).tags(emptySet()).build()),
-                ImmutableSet.of(C4SoftwareSystem.builder().path(path("c4://sys")).description("sys").location(INTERNAL).tags(emptySet()).relationships(emptyList()).build()),
+                ImmutableSet.of(C4Person.builder().id("1").path(path("@person")).description("Foo").relationships(emptyList()).tags(emptySet()).build()),
+                ImmutableSet.of(C4SoftwareSystem.builder().id("2").path(path("c4://sys")).description("sys").location(INTERNAL).tags(emptySet()).relationships(emptyList()).build()),
                 emptySet(),
                 emptySet()
         );

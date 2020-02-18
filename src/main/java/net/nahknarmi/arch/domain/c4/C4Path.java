@@ -36,6 +36,7 @@ public class C4Path {
 
     @NonNull
     private String path;
+    private String id;
 
     C4Path(String path) {
         this.path = path;

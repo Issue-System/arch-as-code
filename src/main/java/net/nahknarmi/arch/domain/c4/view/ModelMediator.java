@@ -12,22 +12,22 @@ public class ModelMediator {
     }
 
     public Person person(C4Path path) {
-        String id = path.getPath();
+        String id = path.getId();
         return (Person) model.getElement(id);
     }
 
     public SoftwareSystem softwareSystem(C4Path path) {
-        String id = path.systemPath().getPath();
+        String id = path.getId();
         return (SoftwareSystem) model.getElement(id);
     }
 
     public Container container(C4Path path) {
-        String id = path.containerPath().getPath();
+        String id = path.getId();
         return (Container) model.getElement(id);
     }
 
     public Component component(C4Path path) {
-        String id = path.componentPath().getPath();
+        String id = path.getId();
         return (Component) model.getElement(id);
     }
 
@@ -35,6 +35,7 @@ public class ModelMediator {
     public SoftwareSystem addSoftwareSystem(C4SoftwareSystem softwareSystem) {
         Location location = LocationTransformer.c4LocationToLocation(softwareSystem.getLocation());
         SoftwareSystem result = this.model.addSoftwareSystem(location, softwareSystem.name(), softwareSystem.getDescription());
+        softwareSystem.getPath().setId(result.getId());
         result.addTags(getTags(softwareSystem));
         return result;
     }
@@ -42,21 +43,24 @@ public class ModelMediator {
     public Person addPerson(C4Person person) {
         Location location = LocationTransformer.c4LocationToLocation(person.getLocation());
         Person result = model.addPerson(location, person.name(), person.getDescription());
+        person.getPath().setId(result.getId());
         result.addTags(getTags(person));
         return result;
     }
 
-    public Container addContainer(C4Container container) {
-        SoftwareSystem softwareSystem = new ModelMediator(model).softwareSystem(container.getPath().systemPath());
+    public Container addContainer(C4SoftwareSystem system, C4Container container) {
+        SoftwareSystem softwareSystem = new ModelMediator(model).softwareSystem(system.getPath());
         Container result = softwareSystem.addContainer(container.name(), container.getDescription(), container.getTechnology());
+        container.getPath().setId(result.getId());
         result.addTags(getTags(container));
         result.setUrl(container.getUrl());
         return result;
     }
 
-    public Component addComponent(C4Component component) {
-        Container container = new ModelMediator(model).container(component.getPath().containerPath());
+    public Component addComponent(C4Container c4Container, C4Component component) {
+        Container container = new ModelMediator(model).container(c4Container.getPath());
         Component result = container.addComponent(component.name(), component.getDescription(), component.getTechnology());
+        component.getPath().setId(result.getId());
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
         return result;

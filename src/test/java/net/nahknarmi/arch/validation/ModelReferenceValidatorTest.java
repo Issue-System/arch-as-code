@@ -55,7 +55,7 @@ public class ModelReferenceValidatorTest {
     }
 
     private C4Person buildPeople(C4Path relationshipWith) {
-        return C4Person.builder().path(path("@bob")).description("person").location(C4Location.EXTERNAL).relationships(of(new C4Relationship(C4Action.DELIVERS, relationshipWith, "bazz", "desc"))).tags(emptySet()).build();
+        return C4Person.builder().path(path("@bob")).description("person").location(C4Location.EXTERNAL).relationships(of(new C4Relationship("100", C4Action.DELIVERS, relationshipWith, "bazz", "desc"))).tags(emptySet()).build();
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ModelReferenceValidatorTest {
 
         C4Model model = new C4Model();
         C4SoftwareSystem softwareSystem = softwareSystem();
-        softwareSystem.setRelationships(of(new C4Relationship(C4Action.DELIVERS, path("@bob"), "batch processing", "mainframe")));
+        softwareSystem.setRelationships(of(new C4Relationship("101", C4Action.DELIVERS, path("@bob"), "batch processing", "mainframe")));
         model.addSoftwareSystem(softwareSystem);
         dataStructure.setModel(model);
 

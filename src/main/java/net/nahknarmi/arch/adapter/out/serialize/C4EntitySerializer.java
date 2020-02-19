@@ -60,17 +60,17 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
     private void writeRelationships(T value, JsonGenerator gen) throws IOException {
         gen.writeFieldName("relationships");
         gen.writeStartArray();
-        value.getRelationships().forEach(x -> {
+        value.getRelationships().forEach(r -> {
             try {
-                @NonNull C4Path with = x.getWith();
-                @NonNull C4Action action = x.getAction();
+                @NonNull String with = r.getWith();
+                @NonNull C4Action action = r.getAction();
 
                 gen.writeStartObject();
-                gen.writeStringField("id", x.getId());
-                gen.writeStringField("with", with.getPath());
+                gen.writeStringField("id", r.getId());
+                gen.writeStringField("with", with);
                 gen.writeStringField("action", action.name());
-                gen.writeStringField("description", x.getDescription());
-                ofNullable(x.getTechnology()).ifPresent((t) -> wrappedWriteStringField(gen, "technology", t));
+                gen.writeStringField("description", r.getDescription());
+                ofNullable(r.getTechnology()).ifPresent((t) -> wrappedWriteStringField(gen, "technology", t));
                 gen.writeEndObject();
 
             } catch (IOException e) {

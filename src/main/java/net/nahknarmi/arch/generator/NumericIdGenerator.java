@@ -83,8 +83,8 @@ public class NumericIdGenerator implements IdGenerator {
                 .stream()
                 .filter(t -> t._1.getId().equals(relationship.getSourceId()))
                 .filter(t -> {
-                    Entity entityWithID = dataStructureModel.findByPath(t._2.getWith());
-                    return entityWithID.getId().equals(relationship.getDestinationId());
+                    @NonNull String entityId = t._2.getWith();
+                    return entityId.equals(relationship.getDestinationId());
                 })
                 .filter(t -> {
                     if (relationship.getTechnology() != null) {

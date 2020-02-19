@@ -31,6 +31,10 @@ public class C4Container extends BaseEntity implements Entity, HasTechnology, Ha
                         -> new IllegalStateException("Container name couldn't be extracted from " + path)));
     }
 
+    public C4Type getType() {
+        return C4Type.container;
+    }
+
     public static class C4ContainerBuilder {
         public C4ContainerBuilder path(C4Path path) {
             checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));

@@ -9,6 +9,8 @@ public interface Entity extends HasRelation, HasTag {
 
     String getDescription();
 
+    C4Type getType();
+
     C4Path getPath();
 
     List<C4Relationship> getRelationships();

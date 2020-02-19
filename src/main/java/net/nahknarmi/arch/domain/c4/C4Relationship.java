@@ -13,13 +13,13 @@ public class C4Relationship {
     @NonNull
     private C4Action action;
     @NonNull
-    private C4Path with;
+    private String with;
     @NonNull
     private String description;
     private String technology;
 
     @Builder
-    public C4Relationship(String id, @NonNull C4Action action, @NonNull C4Path with, @NonNull String description, String technology) {
+    public C4Relationship(String id, @NonNull C4Action action, @NonNull String with, @NonNull String description, String technology) {
         this.id = id;
         this.action = action;
         this.with = with;

@@ -30,7 +30,7 @@ public class ModelReferenceValidatorTest {
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructure();
 
         C4Model model = new C4Model();
-        model.addPerson(buildPeople(path("c4://acme/spa")));
+        model.addPerson(buildPeople("200"));
         dataStructure.setModel(model);
 
         List<String> validationList = new ModelReferenceValidator().validate(dataStructure);
@@ -46,7 +46,7 @@ public class ModelReferenceValidatorTest {
         C4SoftwareSystem coreBanking = softwareSystem();
         model.addSoftwareSystem(coreBanking);
 
-        model.addPerson(buildPeople(coreBanking.getPath()));
+        model.addPerson(buildPeople(coreBanking.getId()));
         dataStructure.setModel(model);
 
         List<String> validationList = new ModelReferenceValidator().validate(dataStructure);
@@ -54,8 +54,15 @@ public class ModelReferenceValidatorTest {
         assertThat(validationList, hasSize(0));
     }
 
-    private C4Person buildPeople(C4Path relationshipWith) {
-        return C4Person.builder().path(path("@bob")).description("person").location(C4Location.EXTERNAL).relationships(of(new C4Relationship("100", C4Action.DELIVERS, relationshipWith, "bazz", "desc"))).tags(emptySet()).build();
+    private C4Person buildPeople(String destinationId) {
+        return C4Person.builder()
+                .id("2")
+                .path(path("@bob"))
+                .description("person")
+                .location(C4Location.EXTERNAL)
+                .relationships(of(new C4Relationship("100", C4Action.USES, destinationId, "bazz", "desc")))
+                .tags(emptySet())
+                .build();
     }
 
     @Test
@@ -64,7 +71,8 @@ public class ModelReferenceValidatorTest {
 
         C4Model model = new C4Model();
         C4SoftwareSystem softwareSystem = softwareSystem();
-        softwareSystem.setRelationships(of(new C4Relationship("101", C4Action.DELIVERS, path("@bob"), "batch processing", "mainframe")));
+        String nonExistentPersonId = "2";
+        softwareSystem.setRelationships(of(new C4Relationship("101", C4Action.DELIVERS, nonExistentPersonId, "batch processing", "mainframe")));
         model.addSoftwareSystem(softwareSystem);
         dataStructure.setModel(model);
 
@@ -74,7 +82,13 @@ public class ModelReferenceValidatorTest {
     }
 
     private C4SoftwareSystem softwareSystem() {
-        return C4SoftwareSystem.builder().path(path("c4://OBP")).description("core banking").tags(emptySet()).relationships(emptyList()).build();
+        return C4SoftwareSystem.builder()
+                .id("1")
+                .path(path("c4://OBP"))
+                .description("core banking")
+                .tags(emptySet())
+                .relationships(emptyList())
+                .build();
     }
 
 }

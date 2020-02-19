@@ -11,9 +11,17 @@ public class ModelMediator {
         this.model = model;
     }
 
+    public Person person(String id) {
+        return (Person) model.getElement(id);
+    }
+
     public Person person(C4Path path) {
         String id = path.getId();
         return (Person) model.getElement(id);
+    }
+
+    public SoftwareSystem softwareSystem(String id) {
+        return (SoftwareSystem) model.getElement(id);
     }
 
     public SoftwareSystem softwareSystem(C4Path path) {
@@ -21,9 +29,17 @@ public class ModelMediator {
         return (SoftwareSystem) model.getElement(id);
     }
 
+    public Container container(String id) {
+        return (Container) model.getElement(id);
+    }
+
     public Container container(C4Path path) {
         String id = path.getId();
         return (Container) model.getElement(id);
+    }
+
+    public Component component(String id) {
+        return (Component) model.getElement(id);
     }
 
     public Component component(C4Path path) {

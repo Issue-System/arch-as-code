@@ -28,6 +28,10 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
         return ofNullable(name).orElse(path.systemName());
     }
 
+    public C4Type getType() {
+        return C4Type.system;
+    }
+
     public static class C4SoftwareSystemBuilder {
         public C4SoftwareSystemBuilder path(C4Path path) {
             checkArgument(C4Type.system.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));

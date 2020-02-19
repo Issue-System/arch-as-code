@@ -87,7 +87,7 @@ public class C4Model {
                 .stream()
                 .filter(x -> x.name().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Unable to find person with name - " + name));
+                .orElseThrow(() -> new IllegalStateException("Unable to find person with name: " + name));
     }
 
     public Entity findByPath(C4Path path) {
@@ -97,6 +97,15 @@ public class C4Model {
                 .filter(x -> x.getPath().getPath().equals(path.getPath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
+    }
+
+    public Entity findById(String id) {
+        checkNotNull(id);
+        return allEntities()
+                .stream()
+                .filter(e -> e.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
     }
 
     public Set<Entity> findWithTag(C4Tag tag) {

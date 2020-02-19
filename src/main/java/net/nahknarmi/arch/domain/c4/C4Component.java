@@ -28,6 +28,10 @@ public class C4Component extends BaseEntity implements Entity, HasTechnology, Ha
         return ofNullable(this.name).orElse(path.componentName().orElseThrow(() -> new IllegalStateException("Component name could not be derived.")));
     }
 
+    public C4Type getType() {
+        return C4Type.component;
+    }
+
     public static class C4ComponentBuilder {
         public C4ComponentBuilder path(C4Path path) {
             checkArgument(C4Type.component.equals(path.type()), format("Path %s is not valid for Component.", path));

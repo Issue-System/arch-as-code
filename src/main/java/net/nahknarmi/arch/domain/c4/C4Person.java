@@ -19,6 +19,10 @@ public class C4Person extends BaseEntity implements Entity, HasLocation {
         return ofNullable(this.name).orElse(path.personName());
     }
 
+    public C4Type getType() {
+        return C4Type.person;
+    }
+
     @Builder
     C4Person(String id, String name, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
         super(id, path, description, tags, relationships, name);

@@ -15,6 +15,7 @@ import static java.util.Optional.ofNullable;
 import static net.nahknarmi.arch.domain.c4.C4Action.DELIVERS;
 import static net.nahknarmi.arch.domain.c4.C4Action.INTERACTS_WITH;
 import static net.nahknarmi.arch.domain.c4.C4Model.NONE;
+import static net.nahknarmi.arch.domain.c4.C4Type.person;
 
 public class ModelEnhancer implements WorkspaceEnhancer {
 
@@ -94,53 +95,56 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private void addUsesRelationship(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
-        if (C4Action.USES.equals(r.getAction())) {
-            C4SoftwareSystem sysWithId = (C4SoftwareSystem) dataStructureModel.findByPath(r.getWith().systemPath());
-            SoftwareSystem systemDestination = modelMediator.softwareSystem(sysWithId.getPath());
+        if (r.getAction() == C4Action.USES) {
 
-            switch (r.getWith().type()) {
+            Entity destination = dataStructureModel.findById(r.getWith());
+            C4Type type = destination.getType();
+            switch (type) {
                 case system: {
+                    SoftwareSystem systemDestination = modelMediator.softwareSystem(r.getWith());
                     element.uses(systemDestination, r.getDescription(), r.getTechnology());
                     break;
                 }
                 case container: {
-                    C4Container contWithId = (C4Container) dataStructureModel.findByPath(r.getWith().containerPath());
-                    Container containerDestination = modelMediator.container(contWithId.getPath());
+                    Container containerDestination = modelMediator.container(destination.getId());
                     element.uses(containerDestination, r.getDescription(), r.getTechnology());
                     break;
                 }
                 case component: {
-                    C4Component compWithId = (C4Component) dataStructureModel.findByPath(r.getWith().componentPath());
-                    Component component = modelMediator.component(compWithId.getPath());
+                    Component component = modelMediator.component(destination.getId());
                     element.uses(component, r.getDescription(), r.getTechnology());
                     break;
                 }
                 default:
-                    throw new IllegalStateException("Unsupported type " + r.getWith().type());
+                    throw new IllegalStateException("Unsupported type " + type);
             }
         }
     }
 
     private void addDelivers(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
-        if (DELIVERS.equals(r.getAction())) {
-            if (!C4Type.person.equals(r.getWith().type())) {
-                throw new IllegalStateException("Action DELIVERS supported only with type person, not: " + r.getWith().type());
-            } else {
-                C4Person personWithId = (C4Person) dataStructureModel.findByPath(r.getWith().personPath());
-                Person person = modelMediator.person(personWithId.getPath());
+        if (r.getAction().equals(DELIVERS)) {
+            String destinationId = r.getWith();
+            C4Type type = dataStructureModel.findById(destinationId).getType();
+
+            if (type.equals(person)) {
+                Person person = modelMediator.person(destinationId);
                 element.delivers(person, r.getDescription(), r.getTechnology());
+            } else {
+                throw new IllegalStateException("Action DELIVERS supported only with type person, not: " + type);
             }
         }
     }
 
     private void addInteractsWith(ModelMediator modelMediator, C4Model dataStructureModel, Person person, C4Relationship r) {
-        if (INTERACTS_WITH.equals(r.getAction())) {
-            if (!C4Type.person.equals(r.getWith().type())) {
-                throw new IllegalStateException("Action INTERACTS_WITH supported only with type person, not: " + r.getWith().type());
-            } else {
-                C4Person personWithId = (C4Person) dataStructureModel.findByPath(r.getWith().personPath());
-                Person personDestination = modelMediator.person(personWithId.getPath());
+        if (r.getAction().equals(INTERACTS_WITH)) {
+            String destinationId = r.getWith();
+            C4Type type = dataStructureModel.findById(destinationId).getType();
+
+            if (type.equals(C4Type.person)) {
+                Person personDestination = modelMediator.person(destinationId);
                 person.interactsWith(personDestination, r.getDescription(), r.getTechnology());
+            } else {
+                throw new IllegalStateException("Action INTERACTS_WITH supported only with type person, not: " + type);
             }
         }
     }

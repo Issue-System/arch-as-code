@@ -27,27 +27,32 @@ model:
       relationships:
         - id: "17"
           action: USES
-          with: "c4://GitHub"
+#          with: "c4://GitHub"
+          with: "8"
           description: "as a version control system"
 
         - id: "18"
           action: USES
-          with: "c4://DevSpaces"
+#          with: "c4://DevSpaces"
+          with: "9"
           description: "to devolop software"
 
         - id: "19"
           action: USES
-          with: "c4://Trilogy Google G Suite"
+#          with: "c4://Trilogy Google G Suite"
+          with: "7"
           description: "inter-team collaboration"
 
         - id: "20"
           action: USES
-          with: "c4://DevSpaces/DevSpaces CLI"
+#          with: "c4://DevSpaces/DevSpaces CLI"
+          with: "10"
           description: "creates and manages dev spaces"
 
         - id: "21"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+#          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+          with: "38"
           description: "log in"
 
     - id: "2"
@@ -60,22 +65,26 @@ model:
       relationships:
         - id: "22"
           action: USES
-          with: "c4://GitHub"
+#          with: "c4://GitHub"
+          with: "8"
           description: "as a version control system"
 
         - id: "23"
           action: USES
-          with: "c4://DevSpaces"
+#          with: "c4://DevSpaces"
+          with: "9"
           description: "to manage cluster"
 
         - id: "24"
           action: USES
-          with: "c4://Trilogy Google G Suite"
+#          with: "c4://Trilogy Google G Suite"
+          with: "7"
           description: "inter-team collaboration"
 
         - id: "25"
           action: USES
-          with: "c4://DevSpaces/DevSpaces Web Application"
+#          with: "c4://DevSpaces/DevSpaces Web Application"
+          with: "12"
           description: "to manage instances"
 
     - id: "3"
@@ -86,17 +95,20 @@ model:
       relationships:
         - id: "26"
           action: USES
-          with: "c4://GitHub"
+#          with: "c4://GitHub"
+          with: "8"
           description: "as a version control system"
 
         - id: "27"
           action: USES
-          with: "c4://XO Chat"
+#          with: "c4://XO Chat"
+          with: "5"
           description: "to communicate with team"
 
         - id: "28"
           action: USES
-          with: "c4://Trilogy Google G Suite"
+#          with: "c4://Trilogy Google G Suite"
+          with: "7"
           description: "inter-team collaboration"
 
     - id: "4"
@@ -117,7 +129,8 @@ model:
       relationships:
         - id: "29"
           action: USES
-          with: "c4://DevSpaces/DevSpaces Backend"
+#          with: "c4://DevSpaces/DevSpaces Backend"
+          with: "11"
           description: "queries usage details to estimate monthly costs"
 
     - id: "7"
@@ -128,7 +141,8 @@ model:
       relationships:
         - id: "30"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+#          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+          with: "38"
           description: "SSO"
 
     - id: "8"
@@ -152,12 +166,14 @@ model:
       relationships:
         - id: "31"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API"
+#          with: "c4://DevSpaces/DevSpaces API"
+          with: "13"
           description: "to manipulate dev spaces"
 
         - id: "39"
           action: DELIVERS
-          with: "@SaasOps"
+#          with: "@SaasOps"
+          with: "2"
           description: "system-wide load monitoring reports"
 
     - id: "11"
@@ -169,7 +185,8 @@ model:
       relationships:
         - id: "32"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API"
+#          with: "c4://DevSpaces/DevSpaces API"
+          with: "13"
           description: "to manipulate dev spaces"
 
     - id: "12"
@@ -182,7 +199,8 @@ model:
       relationships:
         - id: "33"
           action: USES
-          with: "c4://DevSpaces/DevSpaces Backend"
+#          with: "c4://DevSpaces/DevSpaces Backend"
+          with: "11"
           description: "Frontend queries backend"
 
     - id: "13"
@@ -203,7 +221,8 @@ model:
       relationships:
         - id: "34"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API/Security Component"
+#          with: "c4://DevSpaces/DevSpaces API/Security Component"
+          with: "14"
           description: "Authorizes user"
 
 
@@ -216,7 +235,8 @@ model:
       relationships:
         - id: "35"
           action: DELIVERS
-          with: "@InfoSec"
+#          with: "@InfoSec"
+          with: "4"
           description: "Delivers report on multiple failed sign-on attempts"
 
     - id: "15"
@@ -228,12 +248,14 @@ model:
       relationships:
         - id: "36"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API/Security Component"
+#          with: "c4://DevSpaces/DevSpaces API/Security Component"
+          with: "14"
           description: "Authorizes user"
 
         - id: "37"
           action: USES
-          with: "c4://DevSpaces/DevSpaces API/E-mail Component"
+#          with: "c4://DevSpaces/DevSpaces API/E-mail Component"
+          with: "16"
           description: "sends new password"
 
     - id: "16"

@@ -18,7 +18,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static net.nahknarmi.arch.domain.c4.C4Action.*;
 import static net.nahknarmi.arch.domain.c4.C4Path.buildPath;
-import static net.nahknarmi.arch.domain.c4.C4Type.person;
 
 public class WorkspaceReader {
 
@@ -101,15 +100,15 @@ public class WorkspaceReader {
         return model
                 .getSoftwareSystems()
                 .stream()
-                .flatMap(s -> s.getContainers()
+                .flatMap(sys -> sys.getContainers()
                         .stream()
-                        .flatMap(c -> c.getComponents()
+                        .flatMap(cont -> cont.getComponents()
                                 .stream()
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
 
                                     Set<C4Tag> tags = convertTags(co.getTags());
-                                    List<C4Relationship> relationships = mapRelationships(co, co.getRelationships());
+                                    List<C4Relationship> relationships = mapRelationships(model, co, co.getRelationships());
                                     return C4Component.builder()
                                             .id(co.getId())
                                             .path(c4Path)
@@ -131,8 +130,8 @@ public class WorkspaceReader {
         return model
                 .getSoftwareSystems()
                 .stream()
-                .flatMap(s -> s.getContainers().stream().map(c -> {
-                    List<C4Relationship> relationships = mapRelationships(c, c.getRelationships());
+                .flatMap(sys -> sys.getContainers().stream().map(c -> {
+                    List<C4Relationship> relationships = mapRelationships(model, c, c.getRelationships());
                     Set<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
@@ -154,18 +153,18 @@ public class WorkspaceReader {
         return model
                 .getSoftwareSystems()
                 .stream()
-                .map(x -> {
-                    List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
-                    Set<C4Tag> tags = convertTags(x.getTags());
-                    C4Path path = buildPath(x);
+                .map(sys -> {
+                    List<C4Relationship> relationships = mapRelationships(model, sys, sys.getRelationships());
+                    Set<C4Tag> tags = convertTags(sys.getTags());
+                    C4Path path = buildPath(sys);
 
                     return C4SoftwareSystem.builder()
-                            .id(x.getId())
+                            .id(sys.getId())
                             .path(path)
-                            .description(x.getDescription())
-                            .location(convertLocation(x.getLocation()))
+                            .description(sys.getDescription())
+                            .location(convertLocation(sys.getLocation()))
                             .tags(tags)
-                            .name(x.getName())
+                            .name(sys.getName())
                             .relationships(relationships)
                             .build();
                 })
@@ -176,18 +175,18 @@ public class WorkspaceReader {
         return model
                 .getPeople()
                 .stream()
-                .map(x -> {
-                    List<C4Relationship> relationships = mapRelationships(x, x.getRelationships());
-                    Set<C4Tag> tags = convertTags(x.getTags());
-                    C4Path path = buildPath(x);
+                .map(p -> {
+                    List<C4Relationship> relationships = mapRelationships(model, p, p.getRelationships());
+                    Set<C4Tag> tags = convertTags(p.getTags());
+                    C4Path path = buildPath(p);
 
                     return C4Person.builder()
-                            .id(x.getId())
+                            .id(p.getId())
                             .path(path)
-                            .description(x.getDescription())
-                            .location(convertLocation(x.getLocation()))
+                            .description(p.getDescription())
+                            .location(convertLocation(p.getLocation()))
                             .tags(tags)
-                            .name(x.getName())
+                            .name(p.getName())
                             .relationships(relationships)
                             .build();
                 })
@@ -215,21 +214,22 @@ public class WorkspaceReader {
         return Arrays.stream(tags.split(",")).map(C4Tag::new).collect(toSet());
     }
 
-    private List<C4Relationship> mapRelationships(Element fromElement, Set<Relationship> relationships) {
+    private List<C4Relationship> mapRelationships(Model model, Element fromElement, Set<Relationship> relationships) {
         return relationships
                 .stream()
                 .map(r -> {
-                    C4Path destination = buildPath(r.getDestination());
-                    C4Action action = convertAction(fromElement, destination);
-                    return new C4Relationship(r.getId(), action, destination, r.getDescription(), r.getTechnology());
+                    String destinationId = r.getDestination().getId();
+                    Element element = model.getElement(destinationId);
+                    C4Action action = convertAction(fromElement, element);
+                    return new C4Relationship(r.getId(), action, destinationId, r.getDescription(), r.getTechnology());
                 }).collect(toList());
     }
 
-    private C4Action convertAction(Element fromElement, C4Path destination) {
+    private C4Action convertAction(Element source, Element destination) {
         C4Action action;
-        if (fromElement instanceof Person && destination.type().equals(person)) {
+        if (source instanceof Person && destination instanceof Person) {
             action = INTERACTS_WITH;
-        } else if (destination.type().equals(person)) {
+        } else if (destination instanceof Person) {
             action = DELIVERS;
         } else {
             action = USES;

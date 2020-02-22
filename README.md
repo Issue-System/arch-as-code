@@ -22,7 +22,7 @@ See Structurizr [getting started](https://structurizr.com/help/getting-started) 
 
 Arch as code required Java 8 or greater to be installed.
 
-You can download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
+You can download the latest tarball [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
 
 Alternatively you can run commands below for your respective OS.
 

@@ -86,7 +86,7 @@ Tests operate against a "test" Structurizr workspace.
 
 Continuous integration is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions).
 
-Continuous deployment (publishing documentation) is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions) (will change soon). 
+Continuous deployment (publishing documentation) is currently being done using [GitHub Actions](https://github.com/nahknarmi/arch-as-code/actions). 
 
 GitHub Actions configuration is captured under `.github/workflows/`
 

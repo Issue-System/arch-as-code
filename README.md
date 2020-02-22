@@ -20,7 +20,7 @@ See Structurizr [getting started](https://structurizr.com/help/getting-started) 
 
 ## 1. Install arch-as-code cli
 
-Arch as code required Java 8 or greater to be installed.
+Arch as code requires Java 8 or greater to be installed.
 
 You can download the latest tarball [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
 
@@ -79,7 +79,7 @@ Go to [https://structurizr.com/workspace/<YOUR_WORKSPACE_ID>] to view changes yo
 # Development
 
 ## Build Pre-requisites
-- Java 1.8 or greater.
+- Java 8 or greater.
 - Create [Structurizr](https://structurizr.com/) credentials file under `.arch-as-code/structurizr/credentials.json`. 
 You can find sample file under `src/main/resources/sample_credentials.json` and update with contents. 
 You can find workspaces specific keys from [https://structurizr.com/dashboard](https://structurizr.com/) 

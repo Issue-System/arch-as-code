@@ -20,7 +20,11 @@ See Structurizr [getting started](https://structurizr.com/help/getting-started) 
 
 ## 1. Install arch-as-code cli
 
-Arch as code required java 8 or greater to be installed.
+Arch as code required Java 8 or greater to be installed.
+
+You can download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
+
+Alternatively you can run commands below for your respective OS.
 
 ### Mac OSX & Linux
 
@@ -34,10 +38,18 @@ arch-as-code --help
 
 ### Windows
 
-Download the latest binary [here](https://github.com/nahknarmi/arch-as-code/releases/latest).
-
 ```powershell
-TBD
+$download_url = (Invoke-WebRequest "https://api.github.com/repos/nahknarmi/arch-as-code/releases/latest" | ConvertFrom-Json).assets.browser_download_url
+
+(New-Object System.Net.WebClient).DownloadFile($download_url, "$env:temp\arch-as-code.tar.gz")  
+
+New-Item -ItemType Directory -Force -Path $HOME\arch-as-code
+
+tar -xzv --strip-components 1 -f $env:temp\arch-as-code.tar.gz -C $HOME\arch-as-code\
+
+$Env:Path += ";$HOME\arch-as-code\bin"
+
+arch-as-code --help
 ```
 
 

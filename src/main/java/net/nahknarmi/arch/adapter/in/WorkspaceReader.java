@@ -29,16 +29,17 @@ public class WorkspaceReader {
         C4Model c4Model = new C4Model();
         people(model).forEach(c4Model::addPerson);
         softwareSystems(model).forEach(c4Model::addSoftwareSystem);
-        containers(model).forEach(c4Model::addContainer);
-        components(model).forEach(c4Model::addComponent);
+        containers(model, c4Model).forEach(c4Model::addContainer);
+        components(model, c4Model).forEach(c4Model::addComponent);
         architectureDataStructure.setModel(c4Model);
 
-        C4ViewContainer views = new C4ViewContainer();
-        ViewSet workspaceViews = workspace.getViews();
-        views.setSystemViews(systemViews(workspaceViews));
-        views.setContainerViews(containerViews(workspaceViews));
-        views.setComponentViews(componentViews(workspaceViews));
-        architectureDataStructure.setViews(views);
+        // Todo: Fix imported views
+//        C4ViewContainer views = new C4ViewContainer();
+//        ViewSet workspaceViews = workspace.getViews();
+//        views.setSystemViews(systemViews(workspaceViews));
+//        views.setContainerViews(containerViews(workspaceViews));
+//        views.setComponentViews(componentViews(workspaceViews));
+//        architectureDataStructure.setViews(views);
         return architectureDataStructure;
     }
 
@@ -46,12 +47,10 @@ public class WorkspaceReader {
         return views
                 .getSystemContextViews()
                 .stream()
-                .map(x -> {
-                    SoftwareSystem softwareSystem = x.getSoftwareSystem();
-                    C4Path c4Path = buildPath(softwareSystem);
-                    C4SystemView c4SystemView = new C4SystemView(c4Path);
-                    mapCommonViewAttributes(x, c4SystemView);
-
+                .map(systemContextView -> {
+                    SoftwareSystem softwareSystem = systemContextView.getSoftwareSystem();
+                    C4SystemView c4SystemView = new C4SystemView(softwareSystem.getId(), null);
+                    mapCommonViewAttributes(systemContextView, c4SystemView);
 
                     return c4SystemView;
                 })
@@ -62,11 +61,10 @@ public class WorkspaceReader {
         return views
                 .getContainerViews()
                 .stream()
-                .map(x -> {
-                    SoftwareSystem softwareSystem = x.getSoftwareSystem();
-                    C4Path c4Path = buildPath(softwareSystem);
-                    C4ContainerView view = new C4ContainerView(c4Path);
-                    mapCommonViewAttributes(x, view);
+                .map(containerView -> {
+                    SoftwareSystem softwareSystem = containerView.getSoftwareSystem();
+                    C4ContainerView view = new C4ContainerView(softwareSystem.getId(), null);
+                    mapCommonViewAttributes(containerView, view);
 
                     return view;
                 })
@@ -77,11 +75,10 @@ public class WorkspaceReader {
         return views
                 .getComponentViews()
                 .stream()
-                .map(x -> {
-                    Container container = x.getContainer();
-                    C4Path c4Path = buildPath(container);
-                    C4ComponentView view = new C4ComponentView(c4Path);
-                    mapCommonViewAttributes(x, view);
+                .map(componentView -> {
+                    Container container = componentView.getContainer();
+                    C4ComponentView view = new C4ComponentView(container.getId(), null);
+                    mapCommonViewAttributes(componentView, view);
 
                     return view;
                 })
@@ -92,11 +89,14 @@ public class WorkspaceReader {
         c4View.setName(view.getName());
         c4View.setDescription(view.getDescription());
         c4View.setKey(view.getKey());
-        List<C4Path> elements = view.getElements().stream().map(y -> buildPath(y.getElement())).collect(toList());
-        c4View.setEntities(elements);
+        List<C4ViewReference> elements = view.getElements().stream()
+                .map(e -> new C4ViewReference(e.getId(), null))
+                .collect(toList());
+
+        c4View.setReferences(elements);
     }
 
-    private Set<C4Component> components(Model model) {
+    private Set<C4Component> components(Model model, C4Model c4Model) {
         return model
                 .getSoftwareSystems()
                 .stream()
@@ -106,11 +106,14 @@ public class WorkspaceReader {
                                 .stream()
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
+//                                    C4Path containerPath = c4Path.containerPath();
+//                                    String containerId = c4Model.findByPath(containerPath).getId();
 
                                     Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(model, co, co.getRelationships());
                                     return C4Component.builder()
                                             .id(co.getId())
+                                            .containerId(cont.getId())
                                             .path(c4Path)
                                             .technology(co.toString())
                                             .description(co.getDescription())
@@ -126,7 +129,7 @@ public class WorkspaceReader {
                 ).collect(toSet());
     }
 
-    private Set<C4Container> containers(Model model) {
+    private Set<C4Container> containers(Model model, C4Model c4Model) {
         return model
                 .getSoftwareSystems()
                 .stream()
@@ -135,8 +138,11 @@ public class WorkspaceReader {
                     Set<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
+//                    C4Path systemPath = path.systemPath();
+//                    @NonNull String systemId = c4Model.findByPath(systemPath).getId();
                     return C4Container.builder()
                             .id(c.getId())
+                            .systemId(sys.getId())
                             .path(path)
                             .technology(c.getTechnology())
                             .description(c.getDescription())
@@ -221,7 +227,7 @@ public class WorkspaceReader {
                     String destinationId = r.getDestination().getId();
                     Element element = model.getElement(destinationId);
                     C4Action action = convertAction(fromElement, element);
-                    return new C4Relationship(r.getId(), action, destinationId, r.getDescription(), r.getTechnology());
+                    return new C4Relationship(r.getId(), null, action, null, destinationId, r.getDescription(), r.getTechnology());
                 }).collect(toList());
     }
 

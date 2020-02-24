@@ -34,8 +34,8 @@ public class C4Model {
     private Set<C4Component> components = new HashSet<>();
 
     public C4Model addPerson(C4Person person) {
-        checkArgument(!personWithNameExists(person), format("Person with name '%s' already exists.", person.name()));
-        checkArgument(!entityWithPathExists(person, people), format("Person with path '%s' already exists.", person));
+        checkArgument(!personWithNameExists(person), format("Person with name '%s' already exists.", person.getName()));
+        checkArgument(!entityWithIdExists(person, people), format("Person with path '%s' already exists.", person));
 
         people.add(person);
 
@@ -43,8 +43,8 @@ public class C4Model {
     }
 
     public C4Model addSoftwareSystem(C4SoftwareSystem softwareSystem) {
-        checkArgument(!systemWithNameExists(softwareSystem), format("Software System with name '%s' already exists.", softwareSystem.name()));
-        checkArgument(!entityWithPathExists(softwareSystem, systems), format("Software System given path '%s' already exists.", softwareSystem));
+        checkArgument(!systemWithNameExists(softwareSystem), format("Software System with name '%s' already exists.", softwareSystem.getName()));
+        checkArgument(!entityWithIdExists(softwareSystem, systems), format("Software System given path '%s' already exists.", softwareSystem));
 
         systems.add(softwareSystem);
 
@@ -85,7 +85,7 @@ public class C4Model {
         checkNotNull(name);
         return getPeople()
                 .stream()
-                .filter(x -> x.name().equals(name))
+                .filter(p -> p.getName().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Unable to find person with name: " + name));
     }
@@ -99,13 +99,59 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
     }
 
-    public Entity findById(String id) {
+    public Entity findEntityById(String id) {
         checkNotNull(id);
         return allEntities()
                 .stream()
                 .filter(e -> e.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
+    }
+
+    public Entity findEntityByAlias(String alias) {
+        checkNotNull(alias);
+        return allEntities()
+                .stream()
+                .filter(e -> e.getAlias().equals(alias))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find entity with alias: " + alias));
+    }
+
+    public Entity findEntityByRelationshipWith(C4Relationship relationship) {
+        checkNotNull(relationship);
+
+        Entity result;
+        if (relationship.getWithId() != null) {
+            result = findEntityById(relationship.getWithId());
+        } else if (relationship.getWithAlias() != null) {
+            result = findEntityByAlias(relationship.getWithAlias());
+        } else {
+            throw new IllegalStateException("Relationship is missing both withId and withAlias: " + relationship);
+        }
+
+        return result;
+    }
+
+    public C4Relationship findRelationshipById(String id) {
+        checkNotNull(id);
+        Tuple2<Entity, C4Relationship> foundTuple = allRelationships()
+                .stream()
+                .filter(t -> t._2().getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
+
+        return foundTuple._2();
+    }
+
+    public C4Relationship findRelationshipByAlias(String alias) {
+        checkNotNull(alias);
+        Tuple2<Entity, C4Relationship> foundTuple = allRelationships()
+                .stream()
+                .filter(t -> t._2().getAlias().equals(alias))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find relationship with alias: " + alias));
+
+        return foundTuple._2();
     }
 
     public Set<Entity> findWithTag(C4Tag tag) {
@@ -116,8 +162,8 @@ public class C4Model {
                 .collect(toSet());
     }
 
-    private <T extends Entity> boolean entityWithPathExists(T entity, Set<T> set) {
-        return set.stream().anyMatch(s -> s.getPath().equals(entity.getPath()));
+    private <T extends Entity> boolean entityWithIdExists(T entity, Set<T> set) {
+        return set.stream().anyMatch(e -> e.getId().equals(entity.getId()));
     }
 
     private boolean systemPathExists(C4Path path) {
@@ -129,10 +175,10 @@ public class C4Model {
     }
 
     private boolean personWithNameExists(C4Person person) {
-        return getPeople().stream().anyMatch(x -> x.name().equals(person.name()));
+        return getPeople().stream().anyMatch(p -> p.getName().equals(person.getName()));
     }
 
     private boolean systemWithNameExists(C4SoftwareSystem system) {
-        return getSystems().stream().anyMatch(x -> x.name().equals(system.name()));
+        return getSystems().stream().anyMatch(s -> s.getName().equals(system.getName()));
     }
 }

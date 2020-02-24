@@ -16,16 +16,18 @@ import static java.util.Optional.ofNullable;
 public abstract class BaseEntity implements Entity {
     @NonNull
     protected String id;
-    @NonNull
+    protected String alias;
     protected C4Path path;
+    @NonNull
+    protected String name;
     @NonNull
     protected String description;
     protected Set<C4Tag> tags = emptySet();
     protected List<C4Relationship> relationships = emptyList();
-    protected String name;
 
-    public BaseEntity(String id, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, String name) {
+    public BaseEntity(@NonNull String id, String alias, C4Path path, @NonNull String name, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships) {
         this.id = id;
+        this.alias = alias;
         this.path = path;
         this.description = description;
         this.tags = ofNullable(tags).orElse(emptySet());
@@ -48,6 +50,20 @@ public abstract class BaseEntity implements Entity {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (getPath() != null ? getPath().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public Entity getReferenced(C4Model dataStructureModel) {
+        Entity result;
+        if (id != null) {
+            result = dataStructureModel.findEntityById(id);
+        } else if (alias != null) {
+            result = dataStructureModel.findEntityByAlias(alias);
+        } else {
+            throw new IllegalStateException("Entity is missing id and alias: " + this);
+        }
+
         return result;
     }
 }

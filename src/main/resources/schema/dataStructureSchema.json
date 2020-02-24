@@ -68,14 +68,16 @@
               "type": "object",
               "required": [
                 "name",
-                "systemPath",
                 "description"
               ],
               "properties": {
                 "name": {
                   "type": "string"
                 },
-                "systemPath": {
+                "systemId": {
+                  "type": "string"
+                },
+                "systemAlias": {
                   "type": "string"
                 },
                 "description": {
@@ -89,16 +91,16 @@
                     }
                   ]
                 },
-                "entities": {
+                "references": {
                   "type": "array",
                   "items": [
                     {
                       "type": "object",
-                      "required": [
-                        "path"
-                      ],
                       "properties": {
-                        "path": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "alias": {
                           "type": "string"
                         }
                       }
@@ -116,14 +118,16 @@
               "type": "object",
               "required": [
                 "name",
-                "systemPath",
                 "description"
               ],
               "properties": {
                 "name": {
                   "type": "string"
                 },
-                "systemPath": {
+                "systemID": {
+                  "type": "string"
+                },
+                "systemAlias": {
                   "type": "string"
                 },
                 "description": {
@@ -137,16 +141,16 @@
                     }
                   ]
                 },
-                "entities": {
+                "references": {
                   "type": "array",
                   "items": [
                     {
                       "type": "object",
-                      "required": [
-                        "path"
-                      ],
                       "properties": {
-                        "path": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "alias": {
                           "type": "string"
                         }
                       }
@@ -164,14 +168,16 @@
               "type": "object",
               "required": [
                 "name",
-                "containerPath",
                 "description"
               ],
               "properties": {
                 "name": {
                   "type": "string"
                 },
-                "containerPath": {
+                "containerId": {
+                  "type": "string"
+                },
+                "containerAlias": {
                   "type": "string"
                 },
                 "description": {
@@ -185,16 +191,16 @@
                     }
                   ]
                 },
-                "entities": {
+                "references": {
                   "type": "array",
                   "items": [
                     {
                       "type": "object",
-                      "required": [
-                        "path"
-                      ],
                       "properties": {
-                        "path": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "alias": {
                           "type": "string"
                         }
                       }
@@ -219,11 +225,15 @@
           "items": [
             {
               "required": [
-                "path",
+                "id",
+                "name",
                 "description"
               ],
               "properties": {
-                "path": {
+                "id": {
+                  "type": "string"
+                },
+                "alias": {
                   "type": "string"
                 },
                 "name": {
@@ -246,10 +256,12 @@
                     {
                       "required": [
                         "action",
-                        "with",
                         "description"
                       ],
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "action": {
                           "type": "string",
                           "enum": [
@@ -257,7 +269,10 @@
                             "INTERACTS_WITH"
                           ]
                         },
-                        "with": {
+                        "withId": {
+                          "type": "string"
+                        },
+                        "withAlias": {
                           "type": "string"
                         },
                         "description": {
@@ -279,11 +294,15 @@
           "items": [
             {
               "required": [
-                "path",
+                "id",
+                "name",
                 "description"
               ],
               "properties": {
-                "path": {
+                "id": {
+                  "type": "string"
+                },
+                "alias": {
                   "type": "string"
                 },
                 "name": {
@@ -306,10 +325,12 @@
                     {
                       "required": [
                         "action",
-                        "with",
                         "description"
                       ],
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "action": {
                           "type": "string",
                           "enum": [
@@ -317,7 +338,10 @@
                             "DELIVERS"
                           ]
                         },
-                        "with": {
+                        "withId": {
+                          "type": "string"
+                        },
+                        "withAlias": {
                           "type": "string"
                         },
                         "description": {
@@ -339,11 +363,15 @@
           "items": [
             {
               "required": [
-                "path",
+                "id",
+                "name",
                 "description"
               ],
               "properties": {
-                "path": {
+                "id": {
+                  "type": "string"
+                },
+                "alias": {
                   "type": "string"
                 },
                 "name": {
@@ -372,10 +400,12 @@
                     {
                       "required": [
                         "action",
-                        "with",
                         "description"
                       ],
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "action": {
                           "type": "string",
                           "enum": [
@@ -383,7 +413,10 @@
                             "DELIVERS"
                           ]
                         },
-                        "with": {
+                        "withId": {
+                          "type": "string"
+                        },
+                        "withAlias": {
                           "type": "string"
                         },
                         "description": {
@@ -405,11 +438,15 @@
           "items": [
             {
               "required": [
-                "path",
+                "id",
+                "name",
                 "description"
               ],
               "properties": {
-                "path": {
+                "id": {
+                  "type": "string"
+                },
+                "alias": {
                   "type": "string"
                 },
                 "name": {
@@ -438,10 +475,12 @@
                     {
                       "required": [
                         "action",
-                        "with",
                         "description"
                       ],
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "action": {
                           "type": "string",
                           "enum": [
@@ -449,7 +488,10 @@
                             "DELIVERS"
                           ]
                         },
-                        "with": {
+                        "withId": {
+                          "type": "string"
+                        },
+                        "withAlias": {
                           "type": "string"
                         },
                         "description": {

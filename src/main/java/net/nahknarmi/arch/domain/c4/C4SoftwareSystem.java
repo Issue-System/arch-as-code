@@ -8,7 +8,6 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static net.nahknarmi.arch.domain.c4.C4Location.UNSPECIFIED;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,13 +18,9 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
     private C4Location location;
 
     @Builder
-    C4SoftwareSystem(String id, String name, @NonNull C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
-        super(id, path, description, tags, relationships, name);
+    C4SoftwareSystem(String id, String alias, String name, C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
+        super(id, alias, path, name, description, tags, relationships);
         this.location = Optional.ofNullable(location).orElse(UNSPECIFIED);
-    }
-
-    public String name() {
-        return ofNullable(name).orElse(path.systemName());
     }
 
     public C4Type getType() {

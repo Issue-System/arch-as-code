@@ -6,9 +6,8 @@ import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.C4Model;
-import net.nahknarmi.arch.domain.c4.C4Path;
-import net.nahknarmi.arch.domain.c4.C4Person;
 import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
+import net.nahknarmi.arch.domain.c4.Entity;
 import net.nahknarmi.arch.domain.c4.view.C4SystemView;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
 
@@ -23,26 +22,25 @@ public class SystemContextViewEnhancer extends BaseViewEnhancer<SystemContextVie
     }
 
     @Override
-    public SystemContextView createView(Workspace workspace, C4Model dataStructureModel, C4SystemView view) {
+    public SystemContextView createView(Workspace workspace, C4Model dataStructureModel, C4SystemView systemView) {
         ViewSet viewSet = workspace.getViews();
-        C4SoftwareSystem sysWithId = (C4SoftwareSystem) dataStructureModel.findByPath(view.getSystemPath());
-        SoftwareSystem softwareSystem = new ModelMediator(workspace.getModel()).softwareSystem(sysWithId.getPath());
-        return viewSet.createSystemContextView(softwareSystem, view.getKey(), view.getDescription());
+        C4SoftwareSystem sys = systemView.getReferenced(dataStructureModel);
+        SoftwareSystem softwareSystem = new ModelMediator(workspace.getModel()).softwareSystem(sys.getId());
+
+        return viewSet.createSystemContextView(softwareSystem, systemView.getKey(), systemView.getDescription());
     }
 
-    public Consumer<C4Path> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
-        return entityPath -> {
-            switch (entityPath.type()) {
+    public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
+        return entity -> {
+            switch (entity.getType()) {
                 case person:
-                    C4Person personWithId = (C4Person) dataStructureModel.findByPath(entityPath.personPath());
-                    view.add(modelMediator.person(personWithId.getPath()));
+                    view.add(modelMediator.person(entity.getId()));
                     break;
                 case system:
-                    C4SoftwareSystem sysWithId = (C4SoftwareSystem) dataStructureModel.findByPath(entityPath.systemPath());
-                    view.add(modelMediator.softwareSystem(sysWithId.getPath()));
+                    view.add(modelMediator.softwareSystem(entity.getId()));
                     break;
                 default:
-                    throw new IllegalStateException("Unsupported type " + entityPath.type());
+                    throw new IllegalStateException("Unsupported type " + entity.getType());
             }
         };
     }

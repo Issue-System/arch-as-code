@@ -70,13 +70,10 @@ public class SchemaValidationTest {
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),
                 containsInAnyOrder(
                         "$.views.systemViews[0].name: is missing but it is required",
-                        "$.views.systemViews[0].systemPath: is missing but it is required",
                         "$.views.systemViews[0].description: is missing but it is required",
                         "$.views.containerViews[0].name: is missing but it is required",
-                        "$.views.containerViews[0].systemPath: is missing but it is required",
                         "$.views.containerViews[0].description: is missing but it is required",
                         "$.views.componentViews[0].name: is missing but it is required",
-                        "$.views.componentViews[0].containerPath: is missing but it is required",
                         "$.views.componentViews[0].description: is missing but it is required"
                 ));
     }

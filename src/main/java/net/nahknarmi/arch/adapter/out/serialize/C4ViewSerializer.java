@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import net.nahknarmi.arch.domain.c4.view.C4View;
-import net.nahknarmi.arch.domain.c4.view.HasContainerPath;
-import net.nahknarmi.arch.domain.c4.view.HasSystemPath;
+import net.nahknarmi.arch.domain.c4.view.HasContainerReference;
+import net.nahknarmi.arch.domain.c4.view.HasSystemReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 
-import static java.util.Optional.ofNullable;
 import static net.nahknarmi.arch.adapter.out.serialize.C4EntitySerializer.wrappedWriteStringField;
 
 public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
@@ -26,8 +25,8 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
         gen.writeStartObject();
 
         baseViewSerialize(value, gen);
-        writeContainerPath(value, gen);
-        writeSystemPath(value, gen);
+        writeContainerIdentity(value, gen);
+        writeSystemIdentity(value, gen);
 
         gen.writeEndObject();
     }
@@ -43,9 +42,19 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
     private void writeReferences(T value, JsonGenerator gen) throws IOException {
         gen.writeFieldName("references");
         gen.writeStartArray();
-        value.getEntities().forEach(path -> {
+        value.getReferences().forEach(ref -> {
             try {
-                gen.writeString(path.getPath());
+                if (ref.getId() != null) {
+                    gen.writeStartObject();
+                    gen.writeStringField("id", ref.getId());
+                    gen.writeEndObject();
+                } else if (ref.getAlias() != null) {
+                    gen.writeStartObject();
+                    gen.writeStringField("alias", ref.getAlias());
+                    gen.writeEndObject();
+                } else {
+                    throw new IllegalStateException("Reference missing both id and alias: " + ref);
+                }
             } catch (IOException e) {
                 log.error("Failed to write references.", e);
                 throw new IllegalStateException("Failed to references.", e);
@@ -68,17 +77,27 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
         gen.writeEndArray();
     }
 
-    private void writeContainerPath(T value, JsonGenerator gen) {
-        if (value instanceof HasContainerPath) {
-            ofNullable(((HasContainerPath) value).getContainerPath())
-                    .ifPresent((x) -> wrappedWriteStringField(gen, "containerPath", x.getPath()));
+    private void writeContainerIdentity(T value, JsonGenerator gen) {
+        if (value instanceof HasContainerReference) {
+            if (((HasContainerReference) value).getContainerAlias() != null) {
+                wrappedWriteStringField(gen, "containerAlias", ((HasContainerReference) value).getContainerAlias());
+            } else if (((HasContainerReference) value).getContainerId() != null) {
+                wrappedWriteStringField(gen, "containerId", ((HasContainerReference) value).getContainerId());
+            } else {
+                throw new IllegalStateException("HasContainerReference missing both id and alias: " + value);
+            }
         }
     }
 
-    private void writeSystemPath(T value, JsonGenerator gen) {
-        if (value instanceof HasSystemPath) {
-            ofNullable(((HasSystemPath) value).getSystemPath())
-                    .ifPresent((x) -> wrappedWriteStringField(gen, "systemPath", x.getPath()));
+    private void writeSystemIdentity(T value, JsonGenerator gen) {
+        if (value instanceof HasSystemReference) {
+            if (((HasSystemReference) value).getSystemAlias() != null) {
+                wrappedWriteStringField(gen, "systemAlias", ((HasSystemReference) value).getSystemAlias());
+            } else if (((HasSystemReference) value).getSystemId() != null) {
+                wrappedWriteStringField(gen, "systemId", ((HasSystemReference) value).getSystemId());
+            } else {
+                throw new IllegalStateException("HasContainerReference missing both id and alias: " + value);
+            }
         }
     }
 }

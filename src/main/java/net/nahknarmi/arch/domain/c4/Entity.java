@@ -2,10 +2,12 @@ package net.nahknarmi.arch.domain.c4;
 
 import java.util.List;
 
-public interface Entity extends HasRelation, HasTag {
+public interface Entity extends HasRelation, HasTag, HasIdentity {
     String getId();
 
-    String name();
+    String getAlias();
+
+    String getName();
 
     String getDescription();
 

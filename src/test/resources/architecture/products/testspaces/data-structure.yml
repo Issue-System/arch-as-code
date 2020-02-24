@@ -17,7 +17,8 @@ decisions:
 model:
   people:
     - id: "1"
-      path: "@Developer"
+      alias: "@Developer"
+      name: "Developer"
       description: "Developer building software"
       location: INTERNAL
       tags:
@@ -27,36 +28,37 @@ model:
       relationships:
         - id: "17"
           action: USES
-#          with: "c4://GitHub"
-          with: "8"
+          withAlias: "c4://GitHub"
+          withId: "8"
           description: "as a version control system"
 
         - id: "18"
           action: USES
-#          with: "c4://DevSpaces"
-          with: "9"
+          withAlias: "c4://DevSpaces"
+          withId: "9"
           description: "to devolop software"
 
         - id: "19"
           action: USES
-#          with: "c4://Trilogy Google G Suite"
-          with: "7"
+          withAlias: "c4://Trilogy Google G Suite"
+          withId: "7"
           description: "inter-team collaboration"
 
         - id: "20"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces CLI"
-          with: "10"
+          withAlias: "c4://DevSpaces/DevSpaces CLI"
+          withId: "10"
           description: "creates and manages dev spaces"
 
         - id: "21"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
-          with: "38"
+          withAlias: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+          withId: "38"
           description: "log in"
 
     - id: "2"
-      path: "@SaasOps"
+      alias: "@SaasOps"
+      name: "SaasOps"
       description: "SaasOps operating system"
       tags:
         - "DevSpaces System View"
@@ -65,119 +67,132 @@ model:
       relationships:
         - id: "22"
           action: USES
-#          with: "c4://GitHub"
-          with: "8"
+          withAlias: "c4://GitHub"
+          withId: "8"
           description: "as a version control system"
 
         - id: "23"
           action: USES
-#          with: "c4://DevSpaces"
-          with: "9"
+          withAlias: "c4://DevSpaces"
+          withId: "9"
           description: "to manage cluster"
 
         - id: "24"
           action: USES
-#          with: "c4://Trilogy Google G Suite"
-          with: "7"
+          withAlias: "c4://Trilogy Google G Suite"
+          withId: "7"
           description: "inter-team collaboration"
 
         - id: "25"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces Web Application"
-          with: "12"
+          withAlias: "c4://DevSpaces/DevSpaces Web Application"
+          withId: "12"
           description: "to manage instances"
 
     - id: "3"
-      path: "@PCA"
+      alias: "@PCA"
+      name: "PCA"
       description: "Product Chief Architect"
       tags:
         - "Trilogy System View"
       relationships:
         - id: "26"
           action: USES
-#          with: "c4://GitHub"
-          with: "8"
+          withAlias: "c4://GitHub"
+          withId: "8"
           description: "as a version control system"
 
         - id: "27"
           action: USES
-#          with: "c4://XO Chat"
-          with: "5"
+          withAlias: "c4://XO Chat"
+          withId: "5"
           description: "to communicate with team"
 
         - id: "28"
           action: USES
-#          with: "c4://Trilogy Google G Suite"
-          with: "7"
+          withAlias: "c4://Trilogy Google G Suite"
+          withId: "7"
           description: "inter-team collaboration"
 
     - id: "4"
-      path: "@InfoSec"
+      alias: "@InfoSec"
+      name: "InfoSec"
       description: "Security and system defense"
 
   systems:
     - id: "5"
-      path: "c4://XO Chat"
+      alias: "c4://XO Chat"
+      name: "XO Chat"
       description: "Realtime team communication"
       tags:
         - "Trilogy System View"
 
     - id: "6"
-      path: "c4://SalesForce"
+      alias: "c4://SalesForce"
+      name: "SalesForce"
       description: "Book keeping"
       location: EXTERNAL
       relationships:
         - id: "29"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces Backend"
-          with: "11"
+          withAlias: "c4://DevSpaces/DevSpaces Backend"
+          withId: "11"
           description: "queries usage details to estimate monthly costs"
 
     - id: "7"
-      path: "c4://Trilogy Google G Suite"
+      alias: "c4://Trilogy Google G Suite"
+      name: "Trilogy Google G Suite"
       description: "Team collaboration via sheets, docs and presentations"
       tags:
         - "Trilogy System View"
       relationships:
         - id: "30"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API/Sign In Controller"
-          with: "38"
+          withAlias: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+          withId: "38"
           description: "SSO"
 
     - id: "8"
-      path: "c4://GitHub"
+      alias: "c4://GitHub"
+      name: "GitHub"
       description: "Hosts code and used for identity management"
       tags:
         - "DevSpaces System View"
         - "DevSpaces Container View"
 
     - id: "9"
-      path: "c4://DevSpaces"
+      alias: "c4://DevSpaces"
+      name: "DevSpaces"
       description: "allows developers to collaborate"
       tags:
         - "DevSpaces System View"
 
   containers:
     - id: "10"
-      path: "c4://DevSpaces/DevSpaces CLI"
+      alias: "c4://DevSpaces/DevSpaces CLI"
+      name: "DevSpaces/DevSpaces CLI"
+      systemAlias: "c4://DevSpaces"
       description: "Command Line Interface for interacting with DevSpaces Backend"
       technology: "C++"
+      tags:
+        - "DevSpaces Container View"
       relationships:
         - id: "31"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API"
-          with: "13"
+          withAlias: "c4://DevSpaces/DevSpaces API"
+          withId: "13"
           description: "to manipulate dev spaces"
 
         - id: "39"
           action: DELIVERS
-#          with: "@SaasOps"
-          with: "2"
+          withAlias: "@SaasOps"
+          withId: "2"
           description: "system-wide load monitoring reports"
 
     - id: "11"
-      path: "c4://DevSpaces/DevSpaces Backend"
+      alias: "c4://DevSpaces/DevSpaces Backend"
+      name: "DevSpaces/DevSpaces Backend"
+      systemAlias: "c4://DevSpaces"
       description: "Restful API providing capabilities for interacting with a DevSpace"
       technology: "Spring Boot"
       tags:
@@ -185,12 +200,15 @@ model:
       relationships:
         - id: "32"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API"
-          with: "13"
+          withAlias: "c4://DevSpaces/DevSpaces API"
+          withId: "13"
           description: "to manipulate dev spaces"
 
     - id: "12"
-      path: "c4://DevSpaces/DevSpaces Web Application"
+      alias: "c4://DevSpaces/DevSpaces Web Application"
+      name: "DevSpaces/DevSpaces Web Application"
+      systemAlias: "c4://DevSpaces"
+      systemId: "9"
       description: "Manage dev spaces"
       technology: "Angular"
       url: "https://devspaces.io"
@@ -199,12 +217,14 @@ model:
       relationships:
         - id: "33"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces Backend"
-          with: "11"
+          withAlias: "c4://DevSpaces/DevSpaces Backend"
+          withId: "11"
           description: "Frontend queries backend"
 
     - id: "13"
-      path: "c4://DevSpaces/DevSpaces API"
+      alias: "c4://DevSpaces/DevSpaces API"
+      name: "DevSpaces/DevSpaces API"
+      systemAlias: "c4://DevSpaces"
       description: "API to programmatically create/manage dev spaces"
       technology: "Spring Boot"
       tags:
@@ -212,7 +232,9 @@ model:
 
   components:
     - id: "38"
-      path: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+      alias: "c4://DevSpaces/DevSpaces API/Sign In Controller"
+      name: "DevSpaces/DevSpaces API/Sign In Controller"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
       description: "Allows users to sign in"
       technology: "Spring MVC Rest Controller"
       url: "https://devspaces.io/sign-in"
@@ -221,13 +243,15 @@ model:
       relationships:
         - id: "34"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API/Security Component"
-          with: "14"
+          withAlias: "c4://DevSpaces/DevSpaces API/Security Component"
+          withId: "14"
           description: "Authorizes user"
 
 
     - id: "14"
-      path: "c4://DevSpaces/DevSpaces API/Security Component"
+      alias: "c4://DevSpaces/DevSpaces API/Security Component"
+      name: "DevSpaces/DevSpaces API/Security Component"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
       description: "Provides functionality related to signing in, changing passwords, permissions, etc."
       technology: "Spring Bean"
       tags:
@@ -235,12 +259,14 @@ model:
       relationships:
         - id: "35"
           action: DELIVERS
-#          with: "@InfoSec"
-          with: "4"
+          withAlias: "@InfoSec"
+          withId: "4"
           description: "Delivers report on multiple failed sign-on attempts"
 
     - id: "15"
-      path: "c4://DevSpaces/DevSpaces API/Reset Password Controller"
+      alias: "c4://DevSpaces/DevSpaces API/Reset Password Controller"
+      name: "DevSpaces/DevSpaces API/Reset Password Controller"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
       description: "Allows users to reset their passwords"
       technology: "Spring MVC Rest Controller"
       tags:
@@ -248,18 +274,20 @@ model:
       relationships:
         - id: "36"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API/Security Component"
-          with: "14"
+          withAlias: "c4://DevSpaces/DevSpaces API/Security Component"
+          withId: "14"
           description: "Authorizes user"
 
         - id: "37"
           action: USES
-#          with: "c4://DevSpaces/DevSpaces API/E-mail Component"
-          with: "16"
+          withAlias: "c4://DevSpaces/DevSpaces API/E-mail Component"
+          withId: "16"
           description: "sends new password"
 
     - id: "16"
-      path: "c4://DevSpaces/DevSpaces API/E-mail Component"
+      alias: "c4://DevSpaces/DevSpaces API/E-mail Component"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
+      name: "DevSpaces/DevSpaces API/E-mail Component"
       description: "Sends emails to users"
       technology: "Spring MVC Rest Controller"
       tags:
@@ -268,33 +296,35 @@ model:
 views:
   systemViews:
     - name: "DevSpaces"
-      systemPath: "c4://DevSpaces"
+      systemId: "9"
+      systemAlias: "c4://DevSpaces"
       description: "Internal Trilogy users view of DevSpaces system"
       tags:
         - "DevSpaces System View"
       references:
-        - path: "@Developer"
-        - path: "@PCA"
-        - path: "c4://GitHub"
-        - path: "c4://Trilogy Google G Suite"
-        - path: "c4://SalesForce"
+        - alias: "@Developer"
+        - alias: "@PCA"
+        - alias: "c4://GitHub"
+        - alias: "c4://Trilogy Google G Suite"
+        - alias: "c4://SalesForce"
 
     - name: "Trilogy Google G Suite"
-      systemPath: "c4://Trilogy Google G Suite"
+      systemAlias: "c4://Trilogy Google G Suite"
       description: "Trilogy inter-team communication"
       tags:
         - "Trilogy System View"
 
   containerViews:
     - name: "DevSpaces API Container"
-      systemPath: "c4://DevSpaces"
+      systemAlias: "c4://DevSpaces"
       description: "DevSpaces Container"
       tags:
         - "DevSpaces Container View"
 
   componentViews:
     - name: "DevSpaces API Components"
-      containerPath: "c4://DevSpaces/DevSpaces API"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
+      containerId: "13"
       description: "DevSpaces API Components"
       tags:
         - "DevSpaces API Component View"

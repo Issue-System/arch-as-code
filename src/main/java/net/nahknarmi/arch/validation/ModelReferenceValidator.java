@@ -20,8 +20,8 @@ public class ModelReferenceValidator implements DataStructureValidator {
                 .stream()
                 .flatMap(e -> e.getRelationships()
                         .stream()
-                        .filter(r -> !allEntities.contains(r.getWith()))
-                        .map(p -> "Broken relationship between " + e.getPath() + " to " + p.getWith()))
+                        .filter(r -> !allEntities.contains(r.getWithId()))
+                        .map(p -> "Broken relationship between " + e.getPath() + " to " + p.getWithId()))
                 .collect(toList());
     }
 }

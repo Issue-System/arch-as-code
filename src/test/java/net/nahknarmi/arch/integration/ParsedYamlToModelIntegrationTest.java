@@ -39,9 +39,9 @@ public class ParsedYamlToModelIntegrationTest {
         assertThat(relationships, hasSize(5));
         assertTrue(relationshipNames.contains("GitHub"));
         assertTrue(relationshipNames.contains("DevSpaces"));
-        assertTrue(relationshipNames.contains("DevSpaces CLI"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces CLI"));
         assertTrue(relationshipNames.contains("Trilogy Google G Suite"));
-        assertTrue(relationshipNames.contains("Sign In Controller"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API/Sign In Controller"));
 
         assertEquals(person.getDescription(), "Developer building software");
         assertEquals(person.getLocation(), Location.Internal);
@@ -64,7 +64,7 @@ public class ParsedYamlToModelIntegrationTest {
         assertThat(relationships, hasSize(4));
         assertTrue(relationshipNames.contains("GitHub"));
         assertTrue(relationshipNames.contains("DevSpaces"));
-        assertTrue(relationshipNames.contains("DevSpaces Web Application"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces Web Application"));
         assertTrue(relationshipNames.contains("Trilogy Google G Suite"));
         assertEquals(person.getDescription(), "SaasOps operating system");
     }
@@ -133,7 +133,7 @@ public class ParsedYamlToModelIntegrationTest {
         assertTrue(tagSet.contains("Trilogy System View"));
 
         assertThat(relationships, hasSize(1));
-        assertTrue(relationshipNames.contains("Sign In Controller"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API/Sign In Controller"));
 
         assertThat(system.getContainers(), hasSize(0));
 
@@ -174,10 +174,10 @@ public class ParsedYamlToModelIntegrationTest {
         assertThat(relationships, hasSize(0));
 
         assertThat(containers, hasSize(4));
-        assertTrue(containerNames.contains("DevSpaces CLI"));
-        assertTrue(containerNames.contains("DevSpaces API"));
-        assertTrue(containerNames.contains("DevSpaces Backend"));
-        assertTrue(containerNames.contains("DevSpaces Web Application"));
+        assertTrue(containerNames.contains("DevSpaces/DevSpaces CLI"));
+        assertTrue(containerNames.contains("DevSpaces/DevSpaces API"));
+        assertTrue(containerNames.contains("DevSpaces/DevSpaces Backend"));
+        assertTrue(containerNames.contains("DevSpaces/DevSpaces Web Application"));
 
         assertEquals(system.getDescription(), "allows developers to collaborate");
     }
@@ -185,7 +185,7 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_container_devspaces_backend() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces Backend";
+        String containerName = "DevSpaces/DevSpaces Backend";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -198,7 +198,7 @@ public class ParsedYamlToModelIntegrationTest {
         List<String> relationshipNames = relationships.stream().map(r -> r.getDestination().getName()).collect(Collectors.toList());
 
         assertThat(relationships, hasSize(1));
-        assertTrue(relationshipNames.contains("DevSpaces API"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API"));
 
         assertEquals(container.getDescription(), "Restful API providing capabilities for interacting with a DevSpace");
         assertEquals(container.getTechnology(), "Spring Boot");
@@ -207,7 +207,7 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_container_devspaces_web_app() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces Web Application";
+        String containerName = "DevSpaces/DevSpaces Web Application";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -220,7 +220,7 @@ public class ParsedYamlToModelIntegrationTest {
         assertTrue(tagSet.contains("DevSpaces Container View"));
 
         assertThat(relationships, hasSize(1));
-        assertTrue(relationshipNames.contains("DevSpaces Backend"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces Backend"));
 
         assertEquals(container.getDescription(), "Manage dev spaces");
         assertEquals(container.getTechnology(), "Angular");
@@ -229,7 +229,7 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_container_devspaces_api() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces API";
+        String containerName = "DevSpaces/DevSpaces API";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -245,10 +245,10 @@ public class ParsedYamlToModelIntegrationTest {
         assertTrue(tagSet.contains("DevSpaces Container View"));
 
         assertThat(components, hasSize(4));
-        assertTrue(componentNames.contains("Sign In Controller"));
-        assertTrue(componentNames.contains("Security Component"));
-        assertTrue(componentNames.contains("Reset Password Controller"));
-        assertTrue(componentNames.contains("E-mail Component"));
+        assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Sign In Controller"));
+        assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Security Component"));
+        assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Reset Password Controller"));
+        assertTrue(componentNames.contains("DevSpaces/DevSpaces API/E-mail Component"));
 
         assertEquals(container.getDescription(), "API to programmatically create/manage dev spaces");
         assertEquals(container.getTechnology(), "Spring Boot");
@@ -257,8 +257,8 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_component_devspaces_api_sign_in_controller() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces API";
-        String componentName = "Sign In Controller";
+        String containerName = "DevSpaces/DevSpaces API";
+        String componentName = "DevSpaces/DevSpaces API/Sign In Controller";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -270,7 +270,7 @@ public class ParsedYamlToModelIntegrationTest {
         List<String> relationshipNames = relationships.stream().map(r -> r.getDestination().getName()).collect(Collectors.toList());
 
         assertThat(relationships, hasSize(1));
-        assertTrue(relationshipNames.contains("Security Component"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API/Security Component"));
 
         assertTrue(tagSet.contains("DevSpaces API Component View"));
 
@@ -281,8 +281,8 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_component_devspaces_api_security_component() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces API";
-        String componentName = "Security Component";
+        String containerName = "DevSpaces/DevSpaces API";
+        String componentName = "DevSpaces/DevSpaces API/Security Component";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -305,8 +305,8 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_component_devspaces_api_reset_password_controller() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces API";
-        String componentName = "Reset Password Controller";
+        String containerName = "DevSpaces/DevSpaces API";
+        String componentName = "DevSpaces/DevSpaces API/Reset Password Controller";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);
@@ -318,8 +318,8 @@ public class ParsedYamlToModelIntegrationTest {
         List<String> relationshipNames = relationships.stream().map(r -> r.getDestination().getName()).collect(Collectors.toList());
 
         assertThat(relationships, hasSize(2));
-        assertTrue(relationshipNames.contains("Security Component"));
-        assertTrue(relationshipNames.contains("E-mail Component"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API/Security Component"));
+        assertTrue(relationshipNames.contains("DevSpaces/DevSpaces API/E-mail Component"));
 
         assertTrue(tagSet.contains("DevSpaces API Component View"));
 
@@ -330,8 +330,8 @@ public class ParsedYamlToModelIntegrationTest {
     @Test
     public void should_build_component_devspaces_api_email_component() throws IOException {
         String systemName = "DevSpaces";
-        String containerName = "DevSpaces API";
-        String componentName = "E-mail Component";
+        String containerName = "DevSpaces/DevSpaces API";
+        String componentName = "DevSpaces/DevSpaces API/E-mail Component";
         Workspace workspace = getWorkspace();
 
         SoftwareSystem system = workspace.getModel().getSoftwareSystemWithName(systemName);

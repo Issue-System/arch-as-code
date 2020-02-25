@@ -5,9 +5,9 @@ import com.structurizr.view.View;
 import lombok.NonNull;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.C4Model;
-import net.nahknarmi.arch.domain.c4.C4Path;
 import net.nahknarmi.arch.domain.c4.Entity;
 import net.nahknarmi.arch.domain.c4.view.C4View;
+import net.nahknarmi.arch.domain.c4.view.C4ViewReference;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
 
 import java.util.List;
@@ -37,17 +37,29 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
 
     public abstract T createView(Workspace workspace, C4Model dataStructureModel, G c4View);
 
-    public abstract Consumer<C4Path> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
+    public abstract Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
 
     private void addEntities(ModelMediator modelMediator, C4Model dataStructureModel, T view, G c4View) {
-        c4View.getEntities().forEach(addEntity(modelMediator, dataStructureModel, view));
+        c4View.getReferences()
+                .stream()
+                .map(viewReference -> viewReferenceToEntity(dataStructureModel, viewReference))
+                .forEach(addEntity(modelMediator, dataStructureModel, view));
+    }
+
+    private Entity viewReferenceToEntity(C4Model dataStructureModel, C4ViewReference viewRef) {
+        if (viewRef.getId() != null) {
+            return dataStructureModel.findEntityById(viewRef.getId());
+        } else if (viewRef.getAlias() != null) {
+            return dataStructureModel.findEntityByAlias(viewRef.getAlias());
+        } else {
+            throw new IllegalStateException("View reference missing both id and alias: " + viewRef);
+        }
     }
 
     private void addTaggedEntities(ModelMediator modelMediator, ArchitectureDataStructure dataStructure, T context, G c4View) {
         c4View.getTags()
                 .forEach(tag -> dataStructure.getAllWithTag(tag)
                         .stream()
-                        .map(Entity::getPath)
                         .forEach(addEntity(modelMediator, dataStructure.getModel(), context)));
     }
 }

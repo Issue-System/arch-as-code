@@ -33,8 +33,9 @@ public class WorkspaceReaderTest {
         assertThat(dataStructure.getModel().getComponents(), hasSize(35));
         assertThat(dataStructure.getModel().allRelationships(), hasSize(160));
 
-        assertThat(dataStructure.getViews().getComponentViews(), hasSize(8));
-        assertThat(dataStructure.getViews().getContainerViews(), hasSize(9));
-        assertThat(dataStructure.getViews().getSystemViews(), hasSize(6));
+        // Todo: Views import disabled
+        assertThat(dataStructure.getViews().getComponentViews(), hasSize(0));
+        assertThat(dataStructure.getViews().getContainerViews(), hasSize(0));
+        assertThat(dataStructure.getViews().getSystemViews(), hasSize(0));
     }
 }

@@ -50,33 +50,29 @@ public class ModelMediator {
 
     public SoftwareSystem addSoftwareSystem(C4SoftwareSystem softwareSystem) {
         Location location = LocationTransformer.c4LocationToLocation(softwareSystem.getLocation());
-        SoftwareSystem result = this.model.addSoftwareSystem(location, softwareSystem.name(), softwareSystem.getDescription());
-        softwareSystem.getPath().setId(result.getId());
+        SoftwareSystem result = this.model.addSoftwareSystem(location, softwareSystem.getName(), softwareSystem.getDescription());
         result.addTags(getTags(softwareSystem));
         return result;
     }
 
     public Person addPerson(C4Person person) {
         Location location = LocationTransformer.c4LocationToLocation(person.getLocation());
-        Person result = model.addPerson(location, person.name(), person.getDescription());
-        person.getPath().setId(result.getId());
+        Person result = model.addPerson(location, person.getName(), person.getDescription());
         result.addTags(getTags(person));
         return result;
     }
 
     public Container addContainer(C4SoftwareSystem system, C4Container container) {
-        SoftwareSystem softwareSystem = new ModelMediator(model).softwareSystem(system.getPath());
-        Container result = softwareSystem.addContainer(container.name(), container.getDescription(), container.getTechnology());
-        container.getPath().setId(result.getId());
+        SoftwareSystem softwareSystem = new ModelMediator(model).softwareSystem(system.getId());
+        Container result = softwareSystem.addContainer(container.getName(), container.getDescription(), container.getTechnology());
         result.addTags(getTags(container));
         result.setUrl(container.getUrl());
         return result;
     }
 
     public Component addComponent(C4Container c4Container, C4Component component) {
-        Container container = new ModelMediator(model).container(c4Container.getPath());
-        Component result = container.addComponent(component.name(), component.getDescription(), component.getTechnology());
-        component.getPath().setId(result.getId());
+        Container container = new ModelMediator(model).container(c4Container.getId());
+        Component result = container.addComponent(component.getName(), component.getDescription(), component.getTechnology());
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
         return result;

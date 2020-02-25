@@ -5,10 +5,7 @@ import com.structurizr.model.IdGenerator;
 import com.structurizr.model.Relationship;
 import io.vavr.Tuple2;
 import lombok.NonNull;
-import net.nahknarmi.arch.domain.c4.C4Model;
-import net.nahknarmi.arch.domain.c4.C4Relationship;
-import net.nahknarmi.arch.domain.c4.C4Type;
-import net.nahknarmi.arch.domain.c4.Entity;
+import net.nahknarmi.arch.domain.c4.*;
 
 import java.util.List;
 
@@ -29,25 +26,50 @@ public class NumericIdGenerator implements IdGenerator {
         List<@NonNull Entity> possibleEntities = dataStructureModel
                 .allEntities()
                 .stream()
-                .filter(e -> e.getPath().type().equals(c4Type))
-                .filter(e -> e.name().equals(element.getName()))
+                .filter(e -> e.getType().equals(c4Type))
+                .filter(e -> e.getName().equals(element.getName()))
                 .filter(entity -> {
                     switch (c4Type) {
                         case container: {
-                            Element elementSystem = element.getParent();
-                            Entity entitySystem = dataStructureModel.findByPath(entity.getPath().systemPath());
+                            String systemName = element.getParent().getName();
+                            C4Container cont = (C4Container) entity;
 
-                            return elementSystem.getName().equals(entitySystem.name());
+                            if (cont.getSystemId() != null) {
+                                C4SoftwareSystem sys = (C4SoftwareSystem) dataStructureModel.findEntityById(cont.getSystemId());
+                                return sys.getName().equals(systemName);
+                            } else if (cont.getSystemAlias() != null) {
+                                C4SoftwareSystem sys = (C4SoftwareSystem) dataStructureModel.findEntityByAlias(cont.getSystemAlias());
+                                return sys.getName().equals(systemName);
+                            } else {
+                                throw new IllegalStateException("Container systemId and systemAlias are missing: " + cont);
+                            }
                         }
                         case component: {
-                            Element elementContainer = element.getParent();
-                            Element elementSystem = elementContainer.getParent();
+                            String containerName = element.getParent().getName();
+                            String systemName = element.getParent().getParent().getName();
+                            C4Component comp = (C4Component) entity;
 
-                            Entity entityContainer = dataStructureModel.findByPath(entity.getPath().containerPath());
-                            Entity entitySystem = dataStructureModel.findByPath(entity.getPath().systemPath());
 
-                            return elementSystem.getName().equals(entitySystem.name())
-                                    && elementContainer.getName().equals(entityContainer.name());
+                            C4Container cont;
+                            if (comp.getContainerId() != null) {
+                                cont = (C4Container) dataStructureModel.findEntityById(comp.getContainerId());
+                            } else if (comp.getContainerAlias() != null) {
+                                cont = (C4Container) dataStructureModel.findEntityByAlias(comp.getContainerAlias());
+                            } else {
+                                throw new IllegalStateException("Component containerId and containerAlias are missing: " + comp);
+                            }
+
+                            C4SoftwareSystem sys;
+                            if (cont.getSystemId() != null) {
+                                sys = (C4SoftwareSystem) dataStructureModel.findEntityById(cont.getSystemId());
+                            } else if (cont.getSystemAlias() != null) {
+                                sys = (C4SoftwareSystem) dataStructureModel.findEntityByAlias(cont.getSystemAlias());
+                            } else {
+                                throw new IllegalStateException("Container systemId and systemAlias are missing: " + cont);
+                            }
+
+                            return sys.getName().equals(systemName)
+                                    && cont.getName().equals(containerName);
                         }
                         case system:
                         case person:
@@ -66,11 +88,7 @@ public class NumericIdGenerator implements IdGenerator {
             throw new IllegalStateException("More than 1 matching entity found for element " + element);
         }
 
-        if (possibleEntities.isEmpty()) {
-            return null;
-        } else {
-            return possibleEntities.get(0).getId();
-        }
+        return possibleEntities.get(0).getId();
     }
 
     @Override
@@ -83,7 +101,7 @@ public class NumericIdGenerator implements IdGenerator {
                 .stream()
                 .filter(t -> t._1.getId().equals(relationship.getSourceId()))
                 .filter(t -> {
-                    @NonNull String entityId = t._2.getWith();
+                    String entityId = t._2.getWithId();
                     return entityId.equals(relationship.getDestinationId());
                 })
                 .filter(t -> {

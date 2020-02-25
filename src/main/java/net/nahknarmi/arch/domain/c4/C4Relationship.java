@@ -10,19 +10,22 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class C4Relationship {
     private String id;
+    private String alias;
     @NonNull
     private C4Action action;
-    @NonNull
-    private String with;
+    private String withAlias;
+    private String withId;
     @NonNull
     private String description;
     private String technology;
 
     @Builder
-    public C4Relationship(String id, @NonNull C4Action action, @NonNull String with, @NonNull String description, String technology) {
+    public C4Relationship(String id, String alias, @NonNull C4Action action, String withAlias, String withId, @NonNull String description, String technology) {
         this.id = id;
+        this.alias = alias;
         this.action = action;
-        this.with = with;
+        this.withAlias = withAlias;
+        this.withId = withId;
         this.description = description;
         this.technology = technology;
     }

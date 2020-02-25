@@ -27,7 +27,6 @@ import static java.util.Collections.emptySet;
 import static net.nahknarmi.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
 import static net.nahknarmi.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
 import static net.nahknarmi.arch.domain.c4.C4Location.INTERNAL;
-import static net.nahknarmi.arch.domain.c4.C4Path.path;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -120,8 +119,24 @@ public class ArchitectureDataStructureTransformerTest {
     private C4Model buildModel() {
 
         return new C4Model(
-                ImmutableSet.of(C4Person.builder().id("1").path(path("@person")).description("Foo").relationships(emptyList()).tags(emptySet()).build()),
-                ImmutableSet.of(C4SoftwareSystem.builder().id("2").path(path("c4://sys")).description("sys").location(INTERNAL).tags(emptySet()).relationships(emptyList()).build()),
+                ImmutableSet.of(
+                        C4Person.builder()
+                                .id("1")
+                                .alias("@person")
+                                .name("person")
+                                .description("Foo")
+                                .relationships(emptyList()).tags(emptySet()).build()
+                ),
+                ImmutableSet.of(
+                        C4SoftwareSystem.builder()
+                                .id("2")
+                                .alias("c4://sys")
+                                .name("sys")
+                                .description("sys")
+                                .location(INTERNAL)
+                                .tags(emptySet())
+                                .relationships(emptyList()).build()
+                ),
                 emptySet(),
                 emptySet()
         );

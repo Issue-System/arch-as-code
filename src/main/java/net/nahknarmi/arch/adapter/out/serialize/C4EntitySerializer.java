@@ -31,8 +31,8 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
 
     protected void baseEntityWrite(T value, JsonGenerator gen) throws IOException {
         gen.writeStringField("id", value.getId());
-        gen.writeStringField("name", value.name());
-        gen.writeStringField("path", value.getPath().getPath());
+        writeParentIdentity(value, gen);
+        gen.writeStringField("name", value.getName());
         gen.writeStringField("description", value.getDescription());
 
         writeTags(value, gen);
@@ -41,6 +41,25 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
         writeLocation(value, gen);
         writeUrl(value, gen);
         writeTechnology(value, gen);
+    }
+
+    private void writeParentIdentity(T value, JsonGenerator gen) throws IOException {
+        if (value instanceof C4Container) {
+            if (((C4Container) value).getSystemId() != null) {
+                gen.writeStringField("systemId", ((C4Container) value).getSystemId());
+            }
+            if (((C4Container) value).getSystemAlias() != null) {
+                gen.writeStringField("systemAlias", ((C4Container) value).getSystemAlias());
+            }
+        }
+        if (value instanceof C4Component) {
+            if (((C4Component) value).getContainerId() != null) {
+                gen.writeStringField("containerId", ((C4Component) value).getContainerId());
+            }
+            if (((C4Component) value).getContainerAlias() != null) {
+                gen.writeStringField("containerAlias", ((C4Component) value).getContainerAlias());
+            }
+        }
     }
 
     private void writeTags(T value, JsonGenerator gen) throws IOException {
@@ -62,12 +81,13 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
         gen.writeStartArray();
         value.getRelationships().forEach(r -> {
             try {
-                @NonNull String with = r.getWith();
+                @NonNull String with = r.getWithId();
                 @NonNull C4Action action = r.getAction();
 
                 gen.writeStartObject();
                 gen.writeStringField("id", r.getId());
-                gen.writeStringField("with", with);
+                ofNullable(r.getWithId()).ifPresent((t) -> wrappedWriteStringField(gen, "withId", t));
+                ofNullable(r.getWithAlias()).ifPresent((t) -> wrappedWriteStringField(gen, "withAlias", t));
                 gen.writeStringField("action", action.name());
                 gen.writeStringField("description", r.getDescription());
                 ofNullable(r.getTechnology()).ifPresent((t) -> wrappedWriteStringField(gen, "technology", t));

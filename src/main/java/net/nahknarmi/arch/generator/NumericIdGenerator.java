@@ -59,7 +59,6 @@ public class NumericIdGenerator implements IdGenerator {
                                 throw new IllegalStateException("Component containerId and containerAlias are missing: " + comp);
                             }
 
-
                             C4SoftwareSystem sys;
                             if (cont.getSystemId() != null) {
                                 sys = (C4SoftwareSystem) dataStructureModel.findEntityById(cont.getSystemId());

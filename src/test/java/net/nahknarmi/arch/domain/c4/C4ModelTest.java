@@ -1,6 +1,11 @@
 package net.nahknarmi.arch.domain.c4;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
+
+import static net.nahknarmi.arch.domain.c4.C4Path.path;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class C4ModelTest {
 
@@ -56,5 +61,139 @@ public class C4ModelTest {
         new C4Model()
                 .addSoftwareSystem(C4SoftwareSystem.builder().name("OBP").description("bar").id("1").build())
                 .addSoftwareSystem(C4SoftwareSystem.builder().name("OBP").description("bar").id("2").build());
+    }
+
+    @Test
+    public void find_by_path() {
+        C4Model c4Model = new C4Model()
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .path(path("c4://OBP"))
+                        .name("OBP")
+                        .description("bar")
+                        .id("1")
+                        .build());
+
+        assertThat(c4Model.findByPath(path("c4://OBP")).getId(), equalTo("1"));
+    }
+
+    @Test
+    public void find_by_id() {
+        C4Model c4Model = new C4Model()
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .path(path("c4://OBP"))
+                        .name("OBP")
+                        .description("bar")
+                        .id("1")
+                        .build());
+
+        assertThat(c4Model.findEntityById("1").getId(), equalTo("1"));
+    }
+
+    @Test
+    public void find_by_alias() {
+        C4Model c4Model = new C4Model()
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .path(path("c4://OBP"))
+                        .name("OBP")
+                        .alias("OBP")
+                        .description("bar")
+                        .id("1")
+                        .build());
+
+        assertThat(c4Model.findEntityByAlias("OBP").getId(), equalTo("1"));
+    }
+
+    @Test
+    public void find_person_by_name() {
+        C4Model c4Model = new C4Model()
+                .addPerson(C4Person.builder()
+                        .path(path("@bob"))
+                        .name("Bob")
+                        .alias("bobby")
+                        .description("bar")
+                        .id("1")
+                        .build());
+
+        assertThat(c4Model.findPersonByName("Bob").getId(), equalTo("1"));
+    }
+
+    @Test
+    public void find_relation_by_id() {
+        C4Model c4Model = new C4Model()
+                .addPerson(C4Person.builder()
+                        .path(path("@bob"))
+                        .name("Bob")
+                        .alias("bobby")
+                        .description("bar")
+                        .id("2")
+                        .build())
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .name("OBP")
+                        .description("bar")
+                        .id("1")
+                        .relationships(ImmutableList.of(C4Relationship.builder()
+                                .id("3")
+                                .alias("relation")
+                                .action(C4Action.DELIVERS)
+                                .withAlias("bobby")
+                                .description("desc")
+                                .build()))
+                        .build());
+
+        assertThat(c4Model.findRelationshipById("3").getId(), equalTo("3"));
+    }
+
+    @Test
+    public void find_relation_by_alias() {
+        C4Model c4Model = new C4Model()
+                .addPerson(C4Person.builder()
+                        .path(path("@bob"))
+                        .name("Bob")
+                        .alias("bobby")
+                        .description("bar")
+                        .id("2")
+                        .build())
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .name("OBP")
+                        .description("bar")
+                        .id("1")
+                        .relationships(ImmutableList.of(C4Relationship.builder()
+                                .id("3")
+                                .alias("relation")
+                                .action(C4Action.DELIVERS)
+                                .withAlias("bobby")
+                                .description("desc")
+                                .build()))
+                        .build());
+
+        assertThat(c4Model.findRelationshipByAlias("relation").getId(), equalTo("3"));
+    }
+
+    @Test
+    public void find_entity_by_relationship_with() {
+        C4Relationship relationship = C4Relationship.builder()
+                .id("3")
+                .alias("relation")
+                .action(C4Action.DELIVERS)
+                .withAlias("bobby")
+                .description("desc")
+                .build();
+
+        C4Model c4Model = new C4Model()
+                .addPerson(C4Person.builder()
+                        .path(path("@bob"))
+                        .name("Bob")
+                        .alias("bobby")
+                        .description("bar")
+                        .id("2")
+                        .build())
+                .addSoftwareSystem(C4SoftwareSystem.builder()
+                        .name("OBP")
+                        .description("bar")
+                        .id("1")
+                        .relationships(ImmutableList.of(relationship))
+                        .build());
+
+        assertThat(c4Model.findEntityByRelationshipWith(relationship).getId(), equalTo("2"));
     }
 }

@@ -14,11 +14,11 @@ import static java.util.Optional.ofNullable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class C4Container extends BaseEntity implements Entity, HasTechnology, HasUrl {
-    protected String systemId;
-    protected String systemAlias;
+    private String systemId;
+    private String systemAlias;
     @NonNull
-    protected String technology;
-    protected String url;
+    private String technology;
+    private String url;
 
 
     @Builder(toBuilder = true)

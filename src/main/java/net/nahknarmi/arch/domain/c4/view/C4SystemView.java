@@ -1,13 +1,9 @@
 package net.nahknarmi.arch.domain.c4.view;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import net.nahknarmi.arch.domain.c4.C4Model;
-import net.nahknarmi.arch.domain.c4.C4SoftwareSystem;
-import net.nahknarmi.arch.domain.c4.Entity;
-import net.nahknarmi.arch.domain.c4.HasIdentity;
+import lombok.*;
+import net.nahknarmi.arch.domain.c4.*;
+
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,6 +16,13 @@ public class C4SystemView extends C4View implements HasSystemReference, HasIdent
     @Override
     public String getId() {
         return systemId;
+    }
+
+    @Builder()
+    public C4SystemView(String key, @NonNull String name, @NonNull String description, List<C4Tag> tags, List<C4ViewReference> references, String systemId, String systemAlias) {
+        super(key, name, description, tags, references);
+        this.systemId = systemId;
+        this.systemAlias = systemAlias;
     }
 
     @Override

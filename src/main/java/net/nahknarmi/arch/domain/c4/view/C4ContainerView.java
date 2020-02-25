@@ -27,7 +27,6 @@ public class C4ContainerView extends C4View implements HasSystemReference, HasId
         return systemAlias;
     }
 
-    @Override
     public C4SoftwareSystem getReferenced(C4Model dataStructureModel) {
         Entity result;
         if (systemId != null) {

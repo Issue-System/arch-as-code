@@ -3,6 +3,8 @@ package net.nahknarmi.arch.domain.c4;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -37,33 +39,14 @@ public abstract class BaseEntity implements Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BaseEntity)) return false;
-        if (!super.equals(o)) return false;
-
-        BaseEntity that = (BaseEntity) o;
-
-        return getPath() != null ? getPath().equals(that.getPath()) : that.getPath() == null;
+        if (o.getClass() != getClass()) {
+            return false;
+        }
+        return new EqualsBuilder().append(this.getId(), ((BaseEntity) o).getId()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getPath() != null ? getPath().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public Entity getReferenced(C4Model dataStructureModel) {
-        Entity result;
-        if (id != null) {
-            result = dataStructureModel.findEntityById(id);
-        } else if (alias != null) {
-            result = dataStructureModel.findEntityByAlias(alias);
-        } else {
-            throw new IllegalStateException("Entity is missing id and alias: " + this);
-        }
-
-        return result;
+        return new HashCodeBuilder().append(getId()).toHashCode();
     }
 }

@@ -27,7 +27,6 @@ public class C4ComponentView extends C4View implements HasContainerReference, Ha
         return containerAlias;
     }
 
-    @Override
     public C4Container getReferenced(C4Model dataStructureModel) {
         Entity result;
         if (containerId != null) {

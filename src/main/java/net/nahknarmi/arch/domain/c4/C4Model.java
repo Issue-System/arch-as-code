@@ -112,7 +112,13 @@ public class C4Model {
         checkNotNull(alias);
         return allEntities()
                 .stream()
-                .filter(e -> e.getAlias().equals(alias))
+                .filter(e -> {
+                    if (e.getAlias() != null) {
+                        return e.getAlias().equals(alias);
+                    } else {
+                        return false;
+                    }
+                })
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with alias: " + alias));
     }

@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
-public class C4Relationship implements HasIdentity<C4Relationship> {
+public class C4Relationship {
     private String id;
     private String alias;
     @NonNull
@@ -28,19 +28,5 @@ public class C4Relationship implements HasIdentity<C4Relationship> {
         this.withId = withId;
         this.description = description;
         this.technology = technology;
-    }
-
-    @Override
-    public C4Relationship getReferenced(C4Model dataStructureModel) {
-        C4Relationship result;
-        if (id != null) {
-            result = dataStructureModel.findRelationshipById(id);
-        } else if (alias != null) {
-            result = dataStructureModel.findRelationshipByAlias(alias);
-        } else {
-            throw new IllegalStateException("Relationship is missing id and alias: " + this);
-        }
-
-        return result;
     }
 }

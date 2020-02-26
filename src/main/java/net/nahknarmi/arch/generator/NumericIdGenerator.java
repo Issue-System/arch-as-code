@@ -99,10 +99,10 @@ public class NumericIdGenerator implements IdGenerator {
         List<Tuple2<Entity, C4Relationship>> possibleRelationships = dataStructureModel
                 .allRelationships()
                 .stream()
-                .filter(t -> t._1.getId().equals(relationship.getSourceId()))
+                .filter(t -> t._1.getId().equals(relationship.getSource().getId()))
                 .filter(t -> {
-                    String entityId = t._2.getWithId();
-                    return entityId.equals(relationship.getDestinationId());
+                    String entityId =  dataStructureModel.findEntityByRelationshipWith(t._2).getId();
+                    return entityId.equals(relationship.getDestination().getId());
                 })
                 .filter(t -> {
                     if (relationship.getTechnology() != null) {

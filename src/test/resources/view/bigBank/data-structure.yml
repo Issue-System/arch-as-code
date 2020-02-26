@@ -3,179 +3,232 @@ description: "Structurizr example: https://structurizr.com/share/36141/diagrams"
 
 model:
   people:
-    - path: "@Personal Banking Customer"
+    - id: "1"
+      alias: "@Personal Banking Customer"
+      name: "Personal Banking Customer"
       description: "A customer of a the bank, with personal bank accounts."
       location: EXTERNAL
       tags:
         - "Internet Banking System SystemView"
         - "Internet Banking System ContainerView"
       relationships:
-        - action: USES
-          with: "c4://ATM"
+        - id: "19"
+          action: USES
+          withAlias: "c4://ATM"
           description: "Withdraws cash using"
 
-        - action: USES
-          with: "c4://Internet Banking System"
+        - id: "20"
+          action: USES
+          withAlias: "c4://Internet Banking System"
           description: "Views account balances, and makes payments using"
 
-        - action: INTERACTS_WITH
-          with: "@Customer Service Staff"
+        - id: "21"
+          action: INTERACTS_WITH
+          withAlias: "@Customer Service Staff"
           description: "Asks questions to"
           technology: "Telephone"
 
-        - action: USES
-          with: "c4://Internet Banking System/Single-Page Application"
+        - id: "22"
+          action: USES
+          withAlias: "c4://Internet Banking System/Single-Page Application"
           description: "Views account balances, and makes payments using"
 
-        - action: USES
-          with: "c4://Internet Banking System/Web Application"
+        - id: "23"
+          action: USES
+          withAlias: "c4://Internet Banking System/Web Application"
           description: "Visits bigbank.com"
           technology: "HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/Mobile App"
+        - id: "24"
+          action: USES
+          withAlias: "c4://Internet Banking System/Mobile App"
           description: "Views account balances, and makes payments using"
 
-    - path: "@Customer Service Staff"
+    - id: "2"
+      alias: "@Customer Service Staff"
+      name: "Customer Service Staff"
       description: "Customer service staff within the bank"
       relationships:
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "25"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Uses"
 
-    - path: "@Back Office Staff"
+    - id: "3"
+      alias: "@Back Office Staff"
+      name: "Back Office Staff"
       description: "Administration and support staff within the bank"
       relationships:
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "26"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Uses"
 
   systems:
-    - path: "c4://Mainframe Banking System"
+    - id: "4"
+      alias: "c4://Mainframe Banking System"
+      name: "Mainframe Banking System"
       description: "Stores all of the core banking information about customers, accounts, transactions, ect."
       tags:
         - "Internet Banking System SystemView"
         - "Internet Banking System ContainerView"
         - "Internet Banking System - Api Application ComponentView"
 
-    - path: "c4://ATM"
+    - id: "5"
+      alias: "c4://ATM"
+      name: "ATM"
       description: "Allows customers to withdraw cash"
       relationships:
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "27"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Uses"
 
-    - path: "c4://E-mail System"
+    - id: "6"
+      alias: "c4://E-mail System"
+      name: "E-mail System"
       description: "The internal Microsoft Exchange e-mail system"
       tags:
         - "Internet Banking System SystemView"
         - "Internet Banking System ContainerView"
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: DELIVERS
-          with: "@Personal Banking Customer"
+        - id: "28"
+          action: DELIVERS
+          withAlias: "@Personal Banking Customer"
           description: "Sends e-mail to"
 
-    - path: "c4://Internet Banking System"
+    - id: "7"
+      alias: "c4://Internet Banking System"
+      name: "Internet Banking System"
       description: "Allows customers to view information about their bank accounts, and make payments."
       tags:
         - "Internet Banking System SystemView"
       relationships:
-        - action: USES
-          with: "c4://E-mail System"
+        - id: "29"
+          action: USES
+          withAlias: "c4://E-mail System"
           description: "Sends e-mail using"
 
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "30"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Gets account information from, and makes payments using"
 
   containers:
-    - path: "c4://Internet Banking System/Web Application"
+    - id: "8"
+      systemAlias: "c4://Internet Banking System"
+      alias: "c4://Internet Banking System/Web Application"
+      name: "Internet Banking System/Web Application"
       description: "Delivers the static content and the Internet banking single page app"
       technology: "Java and Spring MVC"
       tags:
         - "Internet Banking System ContainerView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/Single-Page Application"
+        - id: "31"
+          action: USES
+          withAlias: "c4://Internet Banking System/Single-Page Application"
           description: "Provides all of the Internet Banking functionality to customers via their web browser."
 
-    - path: "c4://Internet Banking System/Single-Page Application"
+    - id: "9"
+      systemAlias: "c4://Internet Banking System"
+      alias: "c4://Internet Banking System/Single-Page Application"
+      name: "Internet Banking System/Single-Page Application"
       description: "Delivers the static content and the Internet banking single page app"
       technology: "Javascript and Angular"
       tags:
         - "Internet Banking System ContainerView"
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/API Application"
+        - id: "32"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Sign In Controller"
+        - id: "33"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Sign In Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Reset Password Controller"
+        - id: "34"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Reset Password Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+        - id: "35"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Accounts Summary Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-    - path: "c4://Internet Banking System/Mobile App"
+    - id: "10"
+      systemAlias: "c4://Internet Banking System"
+      alias: "c4://Internet Banking System/Mobile App"
+      name: "Internet Banking System/Mobile App"
       description: "Provides a limited subset of the Internet banking functionality to customers via their mobile device."
       technology: "Xamarin"
       tags:
         - "Internet Banking System ContainerView"
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/API Application"
+        - id: "36"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Sign In Controller"
+        - id: "37"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Sign In Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Reset Password Controller"
+        - id: "38"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Reset Password Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+        - id: "39"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Accounts Summary Controller"
           description: "Makes API call to"
           technology: "JSON/HTTPS"
 
-    - path: "c4://Internet Banking System/API Application"
+    - id: "11"
+      systemAlias: "c4://Internet Banking System"
+      alias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application"
       description: "Provides Internet banking functionality via a JSON/HTTPS API."
       technology: "Java and Spring MVC"
       tags:
         - "Internet Banking System ContainerView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/Database"
+        - id: "40"
+          action: USES
+          withAlias: "c4://Internet Banking System/Database"
           description: "Reads from and writes to"
           technology: "JDBC"
 
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "41"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Makes API Calls to"
           technology: "XML/HTTPS"
 
-        - action: USES
-          with: "c4://E-mail System"
+        - id: "42"
+          action: USES
+          withAlias: "c4://E-mail System"
           description: "Sends e-mail using"
           technology: "SMTP"
 
-    - path: "c4://Internet Banking System/Database"
+    - id: "12"
+      systemAlias: "c4://Internet Banking System"
+      alias: "c4://Internet Banking System/Database"
+      name: "Internet Banking System/Database"
       description: "Stores user registration information, hashed authentication credentials, access logs, etc."
       technology: "Oracle Database Schema"
       tags:
@@ -183,117 +236,141 @@ model:
         - "Internet Banking System - Api Application ComponentView"
 
   components:
-    - path: "c4://Internet Banking System/API Application/Sign In Controller"
+    - id: "13"
+      alias: "c4://Internet Banking System/API Application/Sign In Controller"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/Sign In Controller"
       description: "Allows users to sign in to the Internet Banking System."
       technology: "Spring MVC Rest Controller"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Security Component"
+        - id: "43"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Security Component"
           description: "Uses"
 
-    - path: "c4://Internet Banking System/API Application/Reset Password Controller"
+    - id: "14"
+      alias: "c4://Internet Banking System/API Application/Reset Password Controller"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/Reset Password Controller"
       description: "Allow users to reset their passwords with a single use URL."
       technology: "Spring MVC Rest Controller"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Security Component"
+        - id: "44"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Security Component"
           description: "Uses"
 
-        - action: USES
-          with: "c4://Internet Banking System/API Application/E-mail Component"
+        - id: "45"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/E-mail Component"
           description: "Uses"
 
-    - path: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+    - id: "15"
+      alias: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/Accounts Summary Controller"
       description: "Provides customers with a summary of their bank accounts."
       technology: "Spring MVC Rest Controller"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
+        - id: "46"
+          action: USES
+          withAlias: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
           description: "Uses"
 
-    - path: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
+    - id: "16"
+      alias: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/Mainframe Banking System Facade"
       description: "A facade onto the mainframe banking system"
       technology: "Spring Bean"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Mainframe Banking System"
+        - id: "47"
+          action: USES
+          withAlias: "c4://Mainframe Banking System"
           description: "Uses"
           technology: "XML/HTTPS"
 
-    - path: "c4://Internet Banking System/API Application/E-mail Component"
+    - id: "17"
+      alias: "c4://Internet Banking System/API Application/E-mail Component"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/E-mail Component"
       description: "Sends e-mails to users"
       technology: "Spring Bean"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://E-mail System"
+        - id: "48"
+          action: USES
+          withAlias: "c4://E-mail System"
           description: "Sends e-mail using"
 
-    - path: "c4://Internet Banking System/API Application/Security Component"
+    - id: "18"
+      alias: "c4://Internet Banking System/API Application/Security Component"
+      containerAlias: "c4://Internet Banking System/API Application"
+      name: "Internet Banking System/API Application/Security Component"
       description: "Provides functionality related to signing in, changing passwords,etc."
       technology: "Spring Bean"
       tags:
         - "Internet Banking System - Api Application ComponentView"
       relationships:
-        - action: USES
-          with: "c4://Internet Banking System/Database"
+        - id: "49"
+          action: USES
+          withAlias: "c4://Internet Banking System/Database"
           description: "Reads from and writes to"
           technology: "JDBC"
 
 views:
   systemViews:
     - name: "System Context diagram for Internet Banking System"
-      systemPath: "c4://Internet Banking System"
+      systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - System View"
-#        tags:
-#          - "Internet Banking System SystemView"
+      #        tags:
+      #          - "Internet Banking System SystemView"
       references:
-          - path: "@Personal Banking Customer"
-          - path: "c4://Internet Banking System"
-          - path: "c4://E-mail System"
-          - path: "c4://Mainframe Banking System"
-
+        - alias: "@Personal Banking Customer"
+        - alias: "c4://Internet Banking System"
+        - alias: "c4://E-mail System"
+        - alias: "c4://Mainframe Banking System"
 
   containerViews:
     - name: "Container diagram for Internet Banking System"
-      systemPath: "c4://Internet Banking System"
+      systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - Container View"
-#        tags:
-#          - "Internet Banking System ContainerView"
+      #        tags:
+      #          - "Internet Banking System ContainerView"
       references:
-        - path: "@Personal Banking Customer"
-        - path: "c4://Internet Banking System/Web Application"
-        - path: "c4://Internet Banking System/Single-Page Application"
-        - path: "c4://Internet Banking System/Mobile App"
-        - path: "c4://Internet Banking System/API Application"
-        - path: "c4://Internet Banking System/Database"
-        - path: "c4://E-mail System"
-        - path: "c4://Mainframe Banking System"
+        - alias: "@Personal Banking Customer"
+        - alias: "c4://Internet Banking System/Web Application"
+        - alias: "c4://Internet Banking System/Single-Page Application"
+        - alias: "c4://Internet Banking System/Mobile App"
+        - alias: "c4://Internet Banking System/API Application"
+        - alias: "c4://Internet Banking System/Database"
+        - alias: "c4://E-mail System"
+        - alias: "c4://Mainframe Banking System"
 
   componentViews:
     - name: "Component diagram for Internet Banking System - API Application"
-      containerPath: "c4://Internet Banking System/API Application"
+      containerAlias: "c4://Internet Banking System/API Application"
       description: "Internet Banking System : API Application - Component View"
-#        tags:
-#          - "Internet Banking System ComponentView"
+      #        tags:
+      #          - "Internet Banking System ComponentView"
       references:
-        - path: "c4://Internet Banking System/API Application/Sign In Controller"
-        - path: "c4://Internet Banking System/API Application/Reset Password Controller"
-        - path: "c4://Internet Banking System/API Application/Accounts Summary Controller"
-        - path: "c4://Internet Banking System/API Application/Security Component"
-        - path: "c4://Internet Banking System/API Application/E-mail Component"
-        - path: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
-        - path: "c4://Internet Banking System/Single-Page Application"
-        - path: "c4://Internet Banking System/Mobile App"
-        - path: "c4://Internet Banking System/Database"
-        - path: "c4://E-mail System"
-        - path: "c4://Mainframe Banking System"
+        - alias: "c4://Internet Banking System/API Application/Sign In Controller"
+        - alias: "c4://Internet Banking System/API Application/Reset Password Controller"
+        - alias: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+        - alias: "c4://Internet Banking System/API Application/Security Component"
+        - alias: "c4://Internet Banking System/API Application/E-mail Component"
+        - alias: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
+        - alias: "c4://Internet Banking System/Single-Page Application"
+        - alias: "c4://Internet Banking System/Mobile App"
+        - alias: "c4://Internet Banking System/Database"
+        - alias: "c4://E-mail System"
+        - alias: "c4://Mainframe Banking System"

@@ -5,6 +5,7 @@ import com.structurizr.model.Container;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
+import net.nahknarmi.arch.domain.c4.C4Component;
 import net.nahknarmi.arch.domain.c4.C4Container;
 import net.nahknarmi.arch.domain.c4.C4Model;
 import net.nahknarmi.arch.domain.c4.Entity;
@@ -43,8 +44,21 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
                     view.add(modelMediator.container(entity.getId()));
                     break;
                 case component:
-                    // TODO: Ensure this case is working properly
-                    view.add(modelMediator.component(entity.getId()));
+                    C4Component comp = (C4Component) entity;
+                    String containerId;
+                    if (comp.getContainerId() != null) {
+                        containerId = dataStructureModel.findEntityById(comp.getContainerId()).getId();
+                    } else if (comp.getContainerAlias() != null) {
+                        containerId = dataStructureModel.findEntityByAlias(comp.getContainerAlias()).getId();
+                    } else {
+                        throw new IllegalStateException("Component missing both containerID and containerAlias: " + comp);
+                    }
+
+                    if (view.getContainer().getId().equals(containerId)) {
+                        view.add(modelMediator.component(entity.getId()));
+                    } else {
+                        System.err.println(String.format("Component:\n %s\n is not a member of the\n %s\n container and cannot be added to it's view.", comp, view.getContainer()));
+                    }
                     break;
                 default:
                     throw new IllegalStateException("Unsupported type " + entity.getType());

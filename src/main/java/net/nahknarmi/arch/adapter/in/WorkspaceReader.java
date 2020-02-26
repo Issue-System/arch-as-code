@@ -33,13 +33,12 @@ public class WorkspaceReader {
         components(model, c4Model).forEach(c4Model::addComponent);
         architectureDataStructure.setModel(c4Model);
 
-        // Todo: Fix imported views
-//        C4ViewContainer views = new C4ViewContainer();
-//        ViewSet workspaceViews = workspace.getViews();
-//        views.setSystemViews(systemViews(workspaceViews));
-//        views.setContainerViews(containerViews(workspaceViews));
-//        views.setComponentViews(componentViews(workspaceViews));
-//        architectureDataStructure.setViews(views);
+        C4ViewContainer views = new C4ViewContainer();
+        ViewSet workspaceViews = workspace.getViews();
+        views.setSystemViews(systemViews(workspaceViews));
+        views.setContainerViews(containerViews(workspaceViews));
+        views.setComponentViews(componentViews(workspaceViews));
+        architectureDataStructure.setViews(views);
         return architectureDataStructure;
     }
 
@@ -86,6 +85,7 @@ public class WorkspaceReader {
     }
 
     private void mapCommonViewAttributes(StaticView view, C4View c4View) {
+        c4View.setKey(view.getKey());
         c4View.setName(view.getName());
         c4View.setDescription(view.getDescription());
         c4View.setKey(view.getKey());
@@ -106,8 +106,6 @@ public class WorkspaceReader {
                                 .stream()
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
-//                                    C4Path containerPath = c4Path.containerPath();
-//                                    String containerId = c4Model.findByPath(containerPath).getId();
 
                                     Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(model, co, co.getRelationships());
@@ -138,8 +136,6 @@ public class WorkspaceReader {
                     Set<C4Tag> tags = convertTags(c.getTags());
 
                     C4Path path = buildPath(c);
-//                    C4Path systemPath = path.systemPath();
-//                    @NonNull String systemId = c4Model.findByPath(systemPath).getId();
                     return C4Container.builder()
                             .id(c.getId())
                             .systemId(sys.getId())

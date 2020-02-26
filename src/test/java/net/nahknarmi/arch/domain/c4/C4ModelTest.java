@@ -1,6 +1,5 @@
 package net.nahknarmi.arch.domain.c4;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import static net.nahknarmi.arch.domain.c4.C4Path.path;
@@ -131,13 +130,13 @@ public class C4ModelTest {
                         .name("OBP")
                         .description("bar")
                         .id("1")
-                        .relationships(ImmutableList.of(C4Relationship.builder()
+                        .relationship(C4Relationship.builder()
                                 .id("3")
                                 .alias("relation")
                                 .action(C4Action.DELIVERS)
                                 .withAlias("bobby")
                                 .description("desc")
-                                .build()))
+                                .build())
                         .build());
 
         assertThat(c4Model.findRelationshipById("3").getId(), equalTo("3"));
@@ -157,13 +156,13 @@ public class C4ModelTest {
                         .name("OBP")
                         .description("bar")
                         .id("1")
-                        .relationships(ImmutableList.of(C4Relationship.builder()
+                        .relationship(C4Relationship.builder()
                                 .id("3")
                                 .alias("relation")
                                 .action(C4Action.DELIVERS)
                                 .withAlias("bobby")
                                 .description("desc")
-                                .build()))
+                                .build())
                         .build());
 
         assertThat(c4Model.findRelationshipByAlias("relation").getId(), equalTo("3"));
@@ -191,7 +190,7 @@ public class C4ModelTest {
                         .name("OBP")
                         .description("bar")
                         .id("1")
-                        .relationships(ImmutableList.of(relationship))
+                        .relationship(relationship)
                         .build());
 
         assertThat(c4Model.findEntityByRelationshipWith(relationship).getId(), equalTo("2"));

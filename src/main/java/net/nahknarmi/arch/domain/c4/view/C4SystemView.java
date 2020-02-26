@@ -13,16 +13,16 @@ public class C4SystemView extends C4View implements HasSystemReference, HasIdent
     private String systemId;
     private String systemAlias;
 
-    @Override
-    public String getId() {
-        return systemId;
-    }
-
-    @Builder()
-    public C4SystemView(String key, @NonNull String name, @NonNull String description, List<C4Tag> tags, List<C4ViewReference> references, String systemId, String systemAlias) {
+    @Builder
+    public C4SystemView(String key, @NonNull String name, @NonNull String description, @Singular List<C4Tag> tags, @Singular List<C4ViewReference> references, String systemId, String systemAlias) {
         super(key, name, description, tags, references);
         this.systemId = systemId;
         this.systemAlias = systemAlias;
+    }
+
+    @Override
+    public String getId() {
+        return systemId;
     }
 
     @Override

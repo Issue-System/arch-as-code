@@ -18,7 +18,7 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
     private C4Location location;
 
     @Builder
-    C4SoftwareSystem(String id, String alias, String name, C4Path path, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships, C4Location location) {
+    C4SoftwareSystem(String id, String alias, String name, C4Path path, @NonNull String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, C4Location location) {
         super(id, alias, path, name, description, tags, relationships);
         this.location = Optional.ofNullable(location).orElse(UNSPECIFIED);
     }

@@ -16,6 +16,7 @@ public class Bootstrap {
                     .addSubcommand(new ValidateCommand())
                     .addSubcommand(new PublishCommand())
                     .addSubcommand(new ImportCommand())
+                    .addSubcommand(new PreviewCommand())
                     .execute(args);
     }
 }

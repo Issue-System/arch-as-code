@@ -119,6 +119,16 @@ public class UserJourneyTest {
 
     @Test
     public void imports_exported_workspace_when_workspace_path_passed_to_import_command() {
+        init();
+        validate();
+
+        int exitCode = preview();
+
+        assertThat(exitCode, equalTo(0));
+    }
+
+    @Test
+    public void generates_view_images_locally_when_path_passed_to_preview_command() {
         int exitCode = importWorkspace();
 
         assertThat(exitCode, equalTo(0));
@@ -134,6 +144,13 @@ public class UserJourneyTest {
     private int validate() {
         return new Bootstrap().execute(new String[]{
                 "validate",
+                workspaceRoot
+        });
+    }
+
+    private int preview() {
+        return new Bootstrap().execute(new String[]{
+                "preview",
                 workspaceRoot
         });
     }

@@ -374,3 +374,38 @@ views:
         - alias: "c4://Internet Banking System/Database"
         - alias: "c4://E-mail System"
         - alias: "c4://Mainframe Banking System"
+
+  deploymentViews:
+    - name: "Development Deployment"
+      systemAlias: "c4://Internet Banking System"
+      description: "An example live deployment scenario for the Internet Banking System."
+      environment: "Developement"
+      deploymentNode:
+        id: "50"
+        name: "Developer Laptop"
+        description: "a developer laptop"
+        environment: "Developement"
+        technology: "Docker"
+        instances: 1
+        children:
+          - id: "51"
+            name: "Docker Container - Database Server"
+            description: "A Docker container."
+            environment: "Developement"
+            technology: "Docker"
+            instances: 1
+            children:
+              - id: "52"
+                name: "Database Server"
+                description: "a database server"
+                environment: "Development"
+                technology: "Oracle 12c"
+                instances: 1
+                containerInstances:
+                  - id: "53"
+                    environment: "development"
+                    containerAlias: "c4://Internet Banking System/Database"
+                    containerId: "12"
+                children: []
+            containerInstances: []
+        containerInstances: []

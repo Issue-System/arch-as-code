@@ -21,4 +21,6 @@ public class C4ViewContainer {
     private List<C4ContainerView> containerViews = emptyList();
     @NonNull
     private List<C4ComponentView> componentViews = emptyList();
+    @NonNull
+    private List<C4DeploymentView> deploymentViews = emptyList();
 }

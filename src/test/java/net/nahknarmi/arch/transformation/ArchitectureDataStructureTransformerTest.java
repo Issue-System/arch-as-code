@@ -146,6 +146,7 @@ public class ArchitectureDataStructureTransformerTest {
         return new C4ViewContainer(
                 emptyList(),
                 emptyList(),
+                emptyList(),
                 emptyList()
         );
     }

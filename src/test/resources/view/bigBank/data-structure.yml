@@ -385,7 +385,7 @@ views:
         name: "Developer Laptop"
         description: "a developer laptop"
         environment: "Developement"
-        technology: "Docker"
+        technology: "Microsoft Windows 10 or Apple macOS"
         instances: 1
         children:
           - id: "51"
@@ -406,6 +406,50 @@ views:
                     environment: "development"
                     containerAlias: "c4://Internet Banking System/Database"
                     containerId: "12"
-                children: []
-            containerInstances: []
-        containerInstances: []
+          - id: "54"
+            name: "Docker Container - Web Server"
+            description: "A Docker container."
+            environment: "Developement"
+            technology: "Docker"
+            instances: 1
+            children:
+              - id: "55"
+                name: "Apache Tomcat"
+                description: "An open source Java EE web server."
+                environment: "Development"
+                technology: "Apache Tomcat 8.x"
+                instances: 1
+                containerInstances:
+                  - id: "56"
+                    containerId: "11"
+                    containerAlias: "c4://Internet Banking System/API Application"
+                    environment: "Development"
+                    relationships:
+                      - id: "57"
+                        description: "Reads from and writes to"
+                        technology: "JDBC"
+                        containerInstanceId: "53"
+
+                  - id: "58"
+                    environment: "Development"
+                    containerId: "8"
+                    containerAlias: "c4://Internet Banking System/Web Application"
+                    relationships:
+                      - id: "57"
+                        description: "Delivers to the customer's web browser"
+                        containerInstanceId: "doesnt exist yet"
+
+              - id: "58"
+                name: "Web Browser"
+                environment: "Development"
+                technology: "Chrome, Firefox, Safari, or Edge"
+                instances: 1
+                containerInstances:
+                  - id: "59"
+                    containerAlias: "c4://Internet Banking System/Single-Page Application"
+                    environment: "Development"
+                    relationships:
+                      - id: "60"
+                        containerInstanceId: "53"
+                        description: "Makes API calls to"
+                        technology: "JSON/HTTPS"

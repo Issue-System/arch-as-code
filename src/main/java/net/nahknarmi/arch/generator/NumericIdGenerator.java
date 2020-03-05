@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.generator;
 
+import com.structurizr.model.ContainerInstance;
 import com.structurizr.model.Element;
 import com.structurizr.model.IdGenerator;
 import com.structurizr.model.Relationship;
@@ -22,6 +23,10 @@ public class NumericIdGenerator implements IdGenerator {
     @Override
     public String generateId(Element element) {
         C4Type c4Type = C4Type.from(element);
+
+        if (c4Type.equals(C4Type.containerInstance)) {
+            return makeContainerInstanceId(element);
+        }
 
         List<@NonNull Entity> possibleEntities = dataStructureModel
                 .allEntities()
@@ -73,6 +78,8 @@ public class NumericIdGenerator implements IdGenerator {
                         }
                         case system:
                         case person:
+                        case deploymentNode:
+                        case containerInstance:
                             return true;
                         default:
                             throw new IllegalStateException("Unsupported type " + c4Type);
@@ -91,6 +98,11 @@ public class NumericIdGenerator implements IdGenerator {
         return possibleEntities.get(0).getId();
     }
 
+    private String makeContainerInstanceId(Element element) {
+        String id = ((ContainerInstance) element).getContainer().getId() + "-" + ((ContainerInstance) element).getInstanceId();
+        return id;
+    }
+
     @Override
     public String generateId(Relationship relationship) {
         checkNotNull(relationship.getSourceId(), relationship);
@@ -101,7 +113,7 @@ public class NumericIdGenerator implements IdGenerator {
                 .stream()
                 .filter(t -> t._1.getId().equals(relationship.getSource().getId()))
                 .filter(t -> {
-                    String entityId =  dataStructureModel.findEntityByRelationshipWith(t._2).getId();
+                    String entityId = dataStructureModel.findEntityByRelationshipWith(t._2).getId();
                     return entityId.equals(relationship.getDestination().getId());
                 })
                 .filter(t -> {

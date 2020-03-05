@@ -1,4 +1,5 @@
 name: "Big Bank"
+businessUnit: "Finance"
 description: "Structurizr example: https://structurizr.com/share/36141/diagrams"
 
 model:
@@ -327,6 +328,80 @@ model:
           description: "Reads from and writes to"
           technology: "JDBC"
 
+  deploymentNodes:
+    - id: "50"
+      alias: "Developer Laptop"
+      name: "Developer Laptop"
+      description: "a developer laptop"
+      environment: "Developement"
+      technology: "Microsoft Windows 10 or Apple macOS"
+      instances: 1
+      children:
+        - id: "51"
+          name: "Docker Container - Database Server"
+          description: "A Docker container."
+          environment: "Developement"
+          technology: "Docker"
+          instances: 1
+          children:
+            - id: "52"
+              name: "Database Server"
+              description: "a database server"
+              environment: "Development"
+              technology: "Oracle 12c"
+              instances: 1
+              containerInstances:
+                - id: "53"
+                  containerReference:
+                    id: "12"
+                    alias: "c4://Internet Banking System/Database"
+                  environment: "development"
+
+        - id: "54"
+          name: "Docker Container - Web Server"
+          description: "A Docker container."
+          environment: "Developement"
+          technology: "Docker"
+          instances: 1
+          children:
+            - id: "55"
+              name: "Apache Tomcat"
+              description: "An open source Java EE web server."
+              environment: "Development"
+              technology: "Apache Tomcat 8.x"
+              instances: 1
+              containerInstances:
+                - id: "57"
+                  containerReference:
+                    id: "11"
+                    alias: "c4://Internet Banking System/API Application"
+                  environment: "Development"
+
+                - id: "58"
+                  containerReference:
+                    id: "8"
+                    alias: "c4://Internet Banking System/Web Application"
+                  environment: "Development"
+
+
+
+
+    - id: "59"
+      name: "Web Browser"
+      environment: "Development"
+      description: "Brower"
+      technology: "Chrome, Firefox, Safari, or Edge"
+      instances: 1
+      containerInstances:
+        - id: "60"
+          containerReference:
+            alias: "c4://Internet Banking System/Single-Page Application"
+          environment: "Development"
+#          relationships:
+#            - id: "61"
+#              containerInstanceId: "53"
+#              description: "Makes API calls to"
+#              technology: "JSON/HTTPS"
 views:
   systemViews:
     - name: "System Context diagram for Internet Banking System"
@@ -380,76 +455,5 @@ views:
       systemAlias: "c4://Internet Banking System"
       description: "An example live deployment scenario for the Internet Banking System."
       environment: "Developement"
-      deploymentNode:
-        id: "50"
-        name: "Developer Laptop"
-        description: "a developer laptop"
-        environment: "Developement"
-        technology: "Microsoft Windows 10 or Apple macOS"
-        instances: 1
-        children:
-          - id: "51"
-            name: "Docker Container - Database Server"
-            description: "A Docker container."
-            environment: "Developement"
-            technology: "Docker"
-            instances: 1
-            children:
-              - id: "52"
-                name: "Database Server"
-                description: "a database server"
-                environment: "Development"
-                technology: "Oracle 12c"
-                instances: 1
-                containerInstances:
-                  - id: "53"
-                    environment: "development"
-                    containerAlias: "c4://Internet Banking System/Database"
-                    containerId: "12"
-          - id: "54"
-            name: "Docker Container - Web Server"
-            description: "A Docker container."
-            environment: "Developement"
-            technology: "Docker"
-            instances: 1
-            children:
-              - id: "55"
-                name: "Apache Tomcat"
-                description: "An open source Java EE web server."
-                environment: "Development"
-                technology: "Apache Tomcat 8.x"
-                instances: 1
-                containerInstances:
-                  - id: "56"
-                    containerId: "11"
-                    containerAlias: "c4://Internet Banking System/API Application"
-                    environment: "Development"
-                    relationships:
-                      - id: "57"
-                        description: "Reads from and writes to"
-                        technology: "JDBC"
-                        containerInstanceId: "53"
-
-                  - id: "58"
-                    environment: "Development"
-                    containerId: "8"
-                    containerAlias: "c4://Internet Banking System/Web Application"
-                    relationships:
-                      - id: "57"
-                        description: "Delivers to the customer's web browser"
-                        containerInstanceId: "doesnt exist yet"
-
-              - id: "58"
-                name: "Web Browser"
-                environment: "Development"
-                technology: "Chrome, Firefox, Safari, or Edge"
-                instances: 1
-                containerInstances:
-                  - id: "59"
-                    containerAlias: "c4://Internet Banking System/Single-Page Application"
-                    environment: "Development"
-                    relationships:
-                      - id: "60"
-                        containerInstanceId: "53"
-                        description: "Makes API calls to"
-                        technology: "JSON/HTTPS"
+      references:
+        - alias: "Developer Laptop"

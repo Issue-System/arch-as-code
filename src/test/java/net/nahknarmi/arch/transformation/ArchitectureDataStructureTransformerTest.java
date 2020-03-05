@@ -138,6 +138,7 @@ public class ArchitectureDataStructureTransformerTest {
                                 .relationships(emptyList()).build()
                 ),
                 emptySet(),
+                emptySet(),
                 emptySet()
         );
     }

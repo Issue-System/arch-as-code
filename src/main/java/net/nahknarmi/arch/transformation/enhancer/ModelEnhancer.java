@@ -30,8 +30,8 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         addSystems(dataStructureModel, modelMediator);
         addContainers(dataStructureModel, modelMediator);
         addComponents(dataStructureModel, modelMediator);
-        addDeploymentNodes(dataStructureModel, modelMediator);
         addRelationships(dataStructureModel, modelMediator);
+        addDeploymentNodes(dataStructureModel, modelMediator);
     }
 
     private void addPeople(C4Model dataStructureModel, ModelMediator modelMediator) {

@@ -16,7 +16,6 @@ public class C4DeploymentNode extends BaseEntity implements Entity {
     private String technology;
     private String environment;
     private Integer instances;
-    private C4DeploymentNode parent;
     private List<C4DeploymentNode> children = new ArrayList<C4DeploymentNode>();
     private List<C4ContainerInstance> containerInstances = new ArrayList<C4ContainerInstance>();
 

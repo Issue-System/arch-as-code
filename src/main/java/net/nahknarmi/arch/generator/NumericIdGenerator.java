@@ -79,7 +79,6 @@ public class NumericIdGenerator implements IdGenerator {
                         case system:
                         case person:
                         case deploymentNode:
-                        case containerInstance:
                             return true;
                         default:
                             throw new IllegalStateException("Unsupported type " + c4Type);
@@ -105,8 +104,15 @@ public class NumericIdGenerator implements IdGenerator {
 
     @Override
     public String generateId(Relationship relationship) {
-        checkNotNull(relationship.getSourceId(), relationship);
-        checkNotNull(relationship.getDestinationId(), relationship);
+        String sourceId = relationship.getSourceId();
+        checkNotNull(sourceId, relationship);
+        String destinationId = relationship.getDestinationId();
+        checkNotNull(destinationId, relationship);
+
+        if (sourceId.contains("-") && destinationId.contains("-")) {
+            // containerInstance -> ContainerInstance relationship
+            return sourceId + "->" + destinationId;
+        }
 
         List<Tuple2<Entity, C4Relationship>> possibleRelationships = dataStructureModel
                 .allRelationships()
@@ -126,7 +132,7 @@ public class NumericIdGenerator implements IdGenerator {
                 .collect(toList());
 
         if (possibleRelationships.isEmpty()) {
-            return null;
+            throw new IllegalStateException("C4Relationship could not be found for relationship" + relationship);
         } else {
             return possibleRelationships.get(0)._2.getId();
         }

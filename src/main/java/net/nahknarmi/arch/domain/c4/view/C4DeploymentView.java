@@ -1,7 +1,8 @@
 package net.nahknarmi.arch.domain.c4.view;
 
 import lombok.*;
-import net.nahknarmi.arch.domain.c4.*;
+import net.nahknarmi.arch.domain.c4.C4Reference;
+import net.nahknarmi.arch.domain.c4.C4Tag;
 
 import java.util.Set;
 
@@ -9,43 +10,14 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4DeploymentView extends C4View implements HasSystemReference, HasIdentity<C4SoftwareSystem> {
-    private String systemId;
-    private String systemAlias;
+public class C4DeploymentView extends C4View {
+    private C4Reference system;
     private String environment;
-    private Set<C4Reference> references;
 
     @Builder
-    public C4DeploymentView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> references, String systemId, String systemAlias) {
+    public C4DeploymentView(String key, @NonNull String name, @NonNull String description, Set<C4Tag> tags, Set<C4Reference> references, C4Reference system, String environment) {
         super(key, name, description, tags, references);
-        this.systemId = systemId;
-        this.systemAlias = systemAlias;
-    }
-
-    @Override
-    public String getId() {
-        return systemId;
-    }
-
-    @Override
-    public String getAlias() {
-        return systemAlias;
-    }
-
-    public C4SoftwareSystem getReferenced(C4Model dataStructureModel) {
-        Entity result;
-        if (systemId != null) {
-            result = dataStructureModel.findEntityById(systemId);
-        } else if (systemAlias != null) {
-            result = dataStructureModel.findEntityByAlias(systemAlias);
-        } else {
-            throw new IllegalStateException("DeploymentView is missing id and alias: " + this);
-        }
-
-        if (result instanceof C4SoftwareSystem) {
-            return (C4SoftwareSystem) result;
-        } else {
-            throw new IllegalStateException("DeploymentView is not referencing a C4SoftwareSystem: " + result);
-        }
+        this.system = system;
+        this.environment = environment;
     }
 }

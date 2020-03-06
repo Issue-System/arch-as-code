@@ -1,8 +1,11 @@
 package net.nahknarmi.arch.integration;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.structurizr.Workspace;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ContainerView;
+import com.structurizr.view.DeploymentView;
 import com.structurizr.view.SystemContextView;
 import net.nahknarmi.arch.adapter.in.ArchitectureDataStructureReader;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
@@ -79,6 +82,26 @@ public class ParsedYamlToViewIntegrationTest {
                         "Internet Banking System/API Application/Mainframe Banking System Facade",
                         "Internet Banking System/API Application/E-mail Component",
                         "Internet Banking System/API Application/Security Component"
+                ));
+    }
+
+    @Test
+    public void deployment_view_test() throws IOException {
+        Workspace workspace = getWorkspace();
+        Collection<DeploymentView> deploymentViews = workspace.getViews().getDeploymentViews();
+        DeploymentView view = deploymentViews.stream().findFirst().get();
+
+        List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
+        Iterables.removeIf(elementNames, Predicates.isNull());
+
+        assertThat(view.getRelationships().size(), equalTo(3));
+        assertThat(elementNames,
+                containsInAnyOrder("Apache Tomcat",
+                        "Web Browser",
+                        "Developer Laptop",
+                        "Docker Container - Database Server",
+                        "Database Server",
+                        "Docker Container - Web Server"
                 ));
     }
 

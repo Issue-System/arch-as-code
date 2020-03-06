@@ -1,13 +1,20 @@
 package net.nahknarmi.arch.domain.c4;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class C4Reference {
     private String id;
     private String alias;
+
+    public C4Reference(String id, String alias) {
+        if (id == null && alias == null) {
+            throw new IllegalStateException("C4Reference has null for both id and alias attributes.");
+        }
+
+        this.id = id;
+        this.alias = alias;
+    }
 }

@@ -383,25 +383,18 @@ model:
                     alias: "c4://Internet Banking System/Web Application"
                   environment: "Development"
 
-
-
-
-    - id: "59"
-      name: "Web Browser"
-      environment: "Development"
-      description: "Brower"
-      technology: "Chrome, Firefox, Safari, or Edge"
-      instances: 1
-      containerInstances:
-        - id: "60"
-          containerReference:
-            alias: "c4://Internet Banking System/Single-Page Application"
+        - id: "59"
+          name: "Web Browser"
           environment: "Development"
-#          relationships:
-#            - id: "61"
-#              containerInstanceId: "53"
-#              description: "Makes API calls to"
-#              technology: "JSON/HTTPS"
+          description: "Brower"
+          technology: "Chrome, Firefox, Safari, or Edge"
+          instances: 1
+          containerInstances:
+            - id: "60"
+              containerReference:
+                alias: "c4://Internet Banking System/Single-Page Application"
+              environment: "Development"
+
 views:
   systemViews:
     - name: "System Context diagram for Internet Banking System"
@@ -419,8 +412,6 @@ views:
     - name: "Container diagram for Internet Banking System"
       systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - Container View"
-      #        tags:
-      #          - "Internet Banking System ContainerView"
       references:
         - alias: "@Personal Banking Customer"
         - alias: "c4://Internet Banking System/Web Application"
@@ -435,8 +426,6 @@ views:
     - name: "Component diagram for Internet Banking System - API Application"
       containerAlias: "c4://Internet Banking System/API Application"
       description: "Internet Banking System : API Application - Component View"
-      #        tags:
-      #          - "Internet Banking System ComponentView"
       references:
         - alias: "c4://Internet Banking System/API Application/Sign In Controller"
         - alias: "c4://Internet Banking System/API Application/Reset Password Controller"
@@ -451,9 +440,11 @@ views:
         - alias: "c4://Mainframe Banking System"
 
   deploymentViews:
-    - name: "Development Deployment"
-      systemAlias: "c4://Internet Banking System"
-      description: "An example live deployment scenario for the Internet Banking System."
-      environment: "Developement"
+    - key: "Laptop"
+      name: "Development Deployment"
+      system:
+        alias: "c4://Internet Banking System"
+      description: "An example development deployment scenario for the Internet Banking System."
+      environment: "Development"
       references:
         - alias: "Developer Laptop"

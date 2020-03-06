@@ -25,7 +25,7 @@ and documentation.
 ### 0. Create Structurizr account
 
 First you'll need to create a Structurizr account. You can do this by
-follow the Structurizr
+following the Structurizr
 [getting started](https://structurizr.com/help/getting-started) guide
 that describes how to setup a new account and get a **free** workspace.
 

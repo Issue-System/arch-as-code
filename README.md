@@ -31,7 +31,7 @@ that describes how to setup a new account and get a **free** workspace.
 
 ### 1. Install arch-as-code CLI
 
-Arch as code requires Java 8 or greater to be installed.
+Arch as code requires Java 11 or greater to be installed.
 
 You can download the latest arch-as-code tarball
 [here](https://github.com/trilogy-group/arch-as-code/releases/latest) or
@@ -117,7 +117,7 @@ workspace (https://structurizr.com/workspace/${WORKSPACE_ID}).
 
 ### Build Pre-requisites
 
-- Java 8 or greater.
+- JDK 11 or greater
 - Create [Structurizr](https://structurizr.com/) credentials file under
   `.arch-as-code/structurizr/credentials.json`. You can find sample file
   under `src/main/resources/sample_credentials.json` and update with

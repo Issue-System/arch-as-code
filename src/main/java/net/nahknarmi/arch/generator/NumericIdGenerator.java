@@ -123,10 +123,22 @@ public class NumericIdGenerator implements IdGenerator {
                     return entityId.equals(relationship.getDestination().getId());
                 })
                 .filter(t -> {
-                    if (relationship.getTechnology() != null) {
+                    if (relationship.getTechnology() == null && t._2.getTechnology() == null) {
+                        return true;
+                    }
+                    if (relationship.getTechnology() != null && t._2.getTechnology() != null) {
                         return t._2.getTechnology().equals(relationship.getTechnology());
                     } else {
+                        return false;
+                    }
+                }).filter(t -> {
+                    if (relationship.getDescription() == null && t._2.getDescription() == null) {
                         return true;
+                    }
+                    if (relationship.getDescription() != null && t._2.getDescription() != null) {
+                        return t._2.getDescription().equals(relationship.getDescription());
+                    } else {
+                        return false;
                     }
                 })
                 .collect(toList());

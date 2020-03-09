@@ -3,6 +3,7 @@ package net.nahknarmi.arch.transformation;
 import com.structurizr.model.Container;
 import com.structurizr.model.DeploymentNode;
 import com.structurizr.model.Model;
+import lombok.experimental.UtilityClass;
 import net.nahknarmi.arch.domain.c4.C4ContainerInstance;
 import net.nahknarmi.arch.domain.c4.C4DeploymentNode;
 import net.nahknarmi.arch.domain.c4.C4Model;
@@ -10,6 +11,7 @@ import net.nahknarmi.arch.domain.c4.C4Reference;
 
 import java.util.List;
 
+@UtilityClass
 public class DeploymentNodeTransformer {
     static public DeploymentNode convertToStructurizrDeploymentNode(Model model, C4Model dataStructureModel, C4DeploymentNode c4DeploymentNode) {
         DeploymentNode deploymentNode = model.addDeploymentNode(c4DeploymentNode.getName(), c4DeploymentNode.getDescription(), c4DeploymentNode.getTechnology(), c4DeploymentNode.getInstances());

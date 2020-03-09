@@ -507,6 +507,57 @@
               }
             }
           ]
+        },
+        "deploymentNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/deploymentNode"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "deploymentNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "technology": {
+          "type": "string"
+        },
+        "instances": {
+          "type": "integrer"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/deploymentNode"
+          }
+        },
+        "containerInstances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }

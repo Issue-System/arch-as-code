@@ -42,7 +42,6 @@ public class DeploymentViewEnhancer implements WorkspaceEnhancer {
         });
     }
 
-
     private DeploymentView createView(Workspace workspace, C4Model dataStructureModel, C4DeploymentView c4DeploymentView) {
         ViewSet viewSet = workspace.getViews();
         C4SoftwareSystem sys = (C4SoftwareSystem) dataStructureModel.findEntityByReference(c4DeploymentView.getSystem());

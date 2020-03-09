@@ -22,12 +22,11 @@ public abstract class BaseEntity implements Entity {
     protected C4Path path;
     @NonNull
     protected String name;
-    @NonNull
     protected String description;
     protected Set<C4Tag> tags = emptySet();
     protected List<C4Relationship> relationships = emptyList();
 
-    public BaseEntity(@NonNull String id, String alias, C4Path path, @NonNull String name, @NonNull String description, Set<C4Tag> tags, List<C4Relationship> relationships) {
+    public BaseEntity(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, Set<C4Tag> tags, List<C4Relationship> relationships) {
         this.id = id;
         this.alias = alias;
         this.path = path;

@@ -16,13 +16,12 @@ import static java.util.Optional.ofNullable;
 public class C4Container extends BaseEntity implements Entity, HasTechnology, HasUrl {
     private String systemId;
     private String systemAlias;
-    @NonNull
     private String technology;
     private String url;
 
 
     @Builder(toBuilder = true)
-    public C4Container(@NonNull String id, String alias, C4Path path, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, String systemId, String systemAlias, @NonNull String technology, String url) {
+    public C4Container(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, String systemId, String systemAlias,  String technology, String url) {
         super(id, alias, path, name, description, tags, relationships);
         this.systemId = systemId;
         this.systemAlias = systemAlias;

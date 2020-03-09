@@ -226,8 +226,7 @@
             {
               "required": [
                 "id",
-                "name",
-                "description"
+                "name"
               ],
               "properties": {
                 "id": {
@@ -295,8 +294,7 @@
             {
               "required": [
                 "id",
-                "name",
-                "description"
+                "name"
               ],
               "properties": {
                 "id": {
@@ -309,7 +307,10 @@
                   "type": "string"
                 },
                 "description": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "tags": {
                   "type": "array",
@@ -364,8 +365,7 @@
             {
               "required": [
                 "id",
-                "name",
-                "description"
+                "name"
               ],
               "properties": {
                 "id": {
@@ -381,7 +381,10 @@
                   "type": "string"
                 },
                 "description": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "technology": {
                   "type": "string"
@@ -439,8 +442,7 @@
             {
               "required": [
                 "id",
-                "name",
-                "description"
+                "name"
               ],
               "properties": {
                 "id": {

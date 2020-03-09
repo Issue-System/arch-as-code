@@ -89,9 +89,9 @@ public class WorkspaceReader {
         c4View.setName(view.getName());
         c4View.setDescription(view.getDescription());
         c4View.setKey(view.getKey());
-        List<C4ViewReference> elements = view.getElements().stream()
-                .map(e -> new C4ViewReference(e.getId(), null))
-                .collect(toList());
+        Set<C4Reference> elements = view.getElements().stream()
+                .map(e -> new C4Reference(e.getId(), null))
+                .collect(toSet());
 
         c4View.setReferences(elements);
     }

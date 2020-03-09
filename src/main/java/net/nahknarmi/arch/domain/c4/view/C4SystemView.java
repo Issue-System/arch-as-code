@@ -3,7 +3,7 @@ package net.nahknarmi.arch.domain.c4.view;
 import lombok.*;
 import net.nahknarmi.arch.domain.c4.*;
 
-import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,7 +14,7 @@ public class C4SystemView extends C4View implements HasSystemReference, HasIdent
     private String systemAlias;
 
     @Builder
-    public C4SystemView(String key, @NonNull String name, @NonNull String description, @Singular List<C4Tag> tags, @Singular List<C4ViewReference> references, String systemId, String systemAlias) {
+    public C4SystemView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> references, String systemId, String systemAlias) {
         super(key, name, description, tags, references);
         this.systemId = systemId;
         this.systemAlias = systemAlias;

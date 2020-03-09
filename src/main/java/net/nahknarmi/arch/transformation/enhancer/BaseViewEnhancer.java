@@ -5,9 +5,9 @@ import com.structurizr.view.View;
 import lombok.NonNull;
 import net.nahknarmi.arch.domain.ArchitectureDataStructure;
 import net.nahknarmi.arch.domain.c4.C4Model;
+import net.nahknarmi.arch.domain.c4.C4Reference;
 import net.nahknarmi.arch.domain.c4.Entity;
 import net.nahknarmi.arch.domain.c4.view.C4View;
-import net.nahknarmi.arch.domain.c4.view.C4ViewReference;
 import net.nahknarmi.arch.domain.c4.view.ModelMediator;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
                 .forEach(addEntity(modelMediator, dataStructureModel, view));
     }
 
-    private Entity viewReferenceToEntity(C4Model dataStructureModel, C4ViewReference viewRef) {
+    private Entity viewReferenceToEntity(C4Model dataStructureModel, C4Reference viewRef) {
         if (viewRef.getId() != null) {
             return dataStructureModel.findEntityById(viewRef.getId());
         } else if (viewRef.getAlias() != null) {

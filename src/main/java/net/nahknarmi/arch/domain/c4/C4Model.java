@@ -32,6 +32,9 @@ public class C4Model {
     @NonNull
     @Setter(AccessLevel.PROTECTED)
     private Set<C4Component> components = new HashSet<>();
+    @NonNull
+    @Setter(AccessLevel.PROTECTED)
+    private Set<C4DeploymentNode> deploymentNodes = new HashSet<>();
 
     public C4Model addPerson(C4Person person) {
         checkArgument(!personWithNameExists(person), format("Person with name '%s' already exists.", person.getName()));
@@ -68,8 +71,35 @@ public class C4Model {
         return this;
     }
 
+    public C4Model addDeploymentNode(C4DeploymentNode deploymentNode) {
+        checkArgument(!deploymentNodeWithNameExists(deploymentNode), format("DeploymentNode with name '%s' already exists.", deploymentNode.getName()));
+        deploymentNodes.add(deploymentNode);
+
+        return this;
+    }
+
+    public Set<C4DeploymentNode> getDeploymentNodesRecursively() {
+        Set<C4DeploymentNode> allNodes = new HashSet<>();
+
+        deploymentNodes.forEach(d -> {
+            allNodes.add(d);
+            addChildNodes(allNodes, d);
+        });
+
+        return allNodes;
+    }
+
+    private void addChildNodes(Set<C4DeploymentNode> set, C4DeploymentNode deploymentNode) {
+        if (deploymentNode.getChildren() != null) {
+            deploymentNode.getChildren().forEach(c -> {
+                set.add(c);
+                addChildNodes(set, c);
+            });
+        }
+    }
+
     public Set<Entity> allEntities() {
-        return Stream.of(getSystems(), getPeople(), getComponents(), getContainers())
+        return Stream.of(getSystems(), getPeople(), getComponents(), getContainers(), getDeploymentNodesRecursively())
                 .flatMap(Collection::stream).collect(toSet());
     }
 
@@ -97,6 +127,16 @@ public class C4Model {
                 .filter(x -> x.getPath().getPath().equals(path.getPath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
+    }
+
+    public Entity findEntityByReference(C4Reference reference) {
+        if (reference.getId() != null) {
+            return findEntityById(reference.getId());
+        } else if (reference.getAlias() != null) {
+            return findEntityByAlias(reference.getAlias());
+        } else {
+            throw new IllegalStateException("Reference is missing both id and alias: " + reference);
+        }
     }
 
     public Entity findEntityById(String id) {
@@ -186,5 +226,9 @@ public class C4Model {
 
     private boolean systemWithNameExists(C4SoftwareSystem system) {
         return getSystems().stream().anyMatch(s -> s.getName().equals(system.getName()));
+    }
+
+    private boolean deploymentNodeWithNameExists(C4DeploymentNode deploymentNode) {
+        return getDeploymentNodes().stream().anyMatch(d -> d.getName().equals(deploymentNode.getName()));
     }
 }

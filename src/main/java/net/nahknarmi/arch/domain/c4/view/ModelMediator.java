@@ -2,6 +2,7 @@ package net.nahknarmi.arch.domain.c4.view;
 
 import com.structurizr.model.*;
 import net.nahknarmi.arch.domain.c4.*;
+import net.nahknarmi.arch.transformation.DeploymentNodeTransformer;
 import net.nahknarmi.arch.transformation.LocationTransformer;
 
 public class ModelMediator {
@@ -76,6 +77,10 @@ public class ModelMediator {
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
         return result;
+    }
+
+    public DeploymentNode addDeploymentNode(C4Model dataStructureModel, C4DeploymentNode c4DeploymentNode) {
+        return DeploymentNodeTransformer.convertToStructurizrDeploymentNode(model, dataStructureModel, c4DeploymentNode);
     }
 
     private String[] getTags(HasTag t) {

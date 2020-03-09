@@ -195,4 +195,22 @@ public class C4ModelTest {
 
         assertThat(c4Model.findEntityByRelationshipWith(relationship).getId(), equalTo("2"));
     }
+
+    @Test
+    public void find_entity_by_reference() {
+        C4Model c4Model = new C4Model()
+                .addPerson(C4Person.builder()
+                        .path(path("@bob"))
+                        .name("Bob")
+                        .alias("bobby")
+                        .description("bar")
+                        .id("2")
+                        .build());
+
+        C4Reference idRef = new C4Reference("2", null);
+        C4Reference aliasRef = new C4Reference(null, "bobby");
+
+        assertThat(c4Model.findEntityByReference(idRef).getId(), equalTo("2"));
+        assertThat(c4Model.findEntityByReference(aliasRef).getId(), equalTo("2"));
+    }
 }

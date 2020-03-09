@@ -1,5 +1,6 @@
 package net.nahknarmi.arch.generator;
 
+import com.structurizr.model.ContainerInstance;
 import com.structurizr.model.Element;
 import com.structurizr.model.IdGenerator;
 import com.structurizr.model.Relationship;
@@ -22,6 +23,10 @@ public class NumericIdGenerator implements IdGenerator {
     @Override
     public String generateId(Element element) {
         C4Type c4Type = C4Type.from(element);
+
+        if (c4Type.equals(C4Type.containerInstance)) {
+            return makeContainerInstanceId(element);
+        }
 
         List<@NonNull Entity> possibleEntities = dataStructureModel
                 .allEntities()
@@ -73,6 +78,7 @@ public class NumericIdGenerator implements IdGenerator {
                         }
                         case system:
                         case person:
+                        case deploymentNode:
                             return true;
                         default:
                             throw new IllegalStateException("Unsupported type " + c4Type);
@@ -91,18 +97,30 @@ public class NumericIdGenerator implements IdGenerator {
         return possibleEntities.get(0).getId();
     }
 
+    private String makeContainerInstanceId(Element element) {
+        String id = ((ContainerInstance) element).getContainer().getId() + "-" + ((ContainerInstance) element).getInstanceId();
+        return id;
+    }
+
     @Override
     public String generateId(Relationship relationship) {
-        checkNotNull(relationship.getSourceId(), relationship);
-        checkNotNull(relationship.getDestinationId(), relationship);
+        String sourceId = relationship.getSourceId();
+        checkNotNull(sourceId, relationship);
+        String destinationId = relationship.getDestinationId();
+        checkNotNull(destinationId, relationship);
+
+        if (sourceId.contains("-") && destinationId.contains("-")) {
+            // containerInstance -> ContainerInstance relationship
+            return sourceId + "->" + destinationId;
+        }
 
         List<Tuple2<Entity, C4Relationship>> possibleRelationships = dataStructureModel
                 .allRelationships()
                 .stream()
-                .filter(t -> t._1.getId().equals(relationship.getSourceId()))
+                .filter(t -> t._1.getId().equals(relationship.getSource().getId()))
                 .filter(t -> {
-                    String entityId = t._2.getWithId();
-                    return entityId.equals(relationship.getDestinationId());
+                    String entityId = dataStructureModel.findEntityByRelationshipWith(t._2).getId();
+                    return entityId.equals(relationship.getDestination().getId());
                 })
                 .filter(t -> {
                     if (relationship.getTechnology() != null) {
@@ -114,7 +132,7 @@ public class NumericIdGenerator implements IdGenerator {
                 .collect(toList());
 
         if (possibleRelationships.isEmpty()) {
-            return null;
+            throw new IllegalStateException("C4Relationship could not be found for relationship" + relationship);
         } else {
             return possibleRelationships.get(0)._2.getId();
         }

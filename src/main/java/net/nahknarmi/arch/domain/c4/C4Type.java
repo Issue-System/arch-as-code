@@ -6,7 +6,9 @@ public enum C4Type {
     person,
     system,
     container,
-    component;
+    component,
+    deploymentNode,
+    containerInstance;
 
     public static C4Type from(Element element) {
         if (element instanceof Person) {
@@ -17,6 +19,10 @@ public enum C4Type {
             return container;
         } else if (element instanceof Component) {
             return component;
+        } else if (element instanceof DeploymentNode) {
+            return deploymentNode;
+        } else if (element instanceof ContainerInstance) {
+            return containerInstance;
         } else {
             throw new IllegalArgumentException("Unrecognized element type - " + element.getClass().getCanonicalName());
         }

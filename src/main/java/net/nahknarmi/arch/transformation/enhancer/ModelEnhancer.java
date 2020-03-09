@@ -31,6 +31,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         addContainers(dataStructureModel, modelMediator);
         addComponents(dataStructureModel, modelMediator);
         addRelationships(dataStructureModel, modelMediator);
+        addDeploymentNodes(dataStructureModel, modelMediator);
     }
 
     private void addPeople(C4Model dataStructureModel, ModelMediator modelMediator) {
@@ -58,6 +59,13 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         dataStructureModel.getComponents().forEach(comp -> {
             C4Container cont = getContainer(dataStructureModel, comp);
             modelMediator.addComponent(cont, comp);
+        });
+    }
+
+
+    private void addDeploymentNodes(C4Model dataStructureModel, ModelMediator modelMediator) {
+        dataStructureModel.getDeploymentNodes().forEach(dNode -> {
+            modelMediator.addDeploymentNode(dataStructureModel, dNode);
         });
     }
 

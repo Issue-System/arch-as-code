@@ -138,12 +138,14 @@ public class ArchitectureDataStructureTransformerTest {
                                 .relationships(emptyList()).build()
                 ),
                 emptySet(),
+                emptySet(),
                 emptySet()
         );
     }
 
     private C4ViewContainer buildView() {
         return new C4ViewContainer(
+                emptyList(),
                 emptyList(),
                 emptyList(),
                 emptyList()

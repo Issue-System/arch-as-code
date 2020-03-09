@@ -17,7 +17,8 @@ public abstract class TransformerFactory {
                         new SystemContextViewEnhancer(),
                         new ContainerContextViewEnhancer(),
                         new ComponentContextViewEnhancer(),
-                        new SystemLandscapeViewEnhancer()
+                        new SystemLandscapeViewEnhancer(),
+                        new DeploymentViewEnhancer()
                 ));
     }
 }

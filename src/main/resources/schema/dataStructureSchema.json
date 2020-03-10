@@ -542,7 +542,7 @@
           "type": "string"
         },
         "instances": {
-          "type": "integrer"
+          "type": "integer"
         },
         "children": {
           "type": "array",

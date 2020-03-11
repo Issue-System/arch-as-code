@@ -333,14 +333,14 @@ model:
       alias: "Developer Laptop"
       name: "Developer Laptop"
       description: "a developer laptop"
-      environment: "Developement"
+      environment: "Development"
       technology: "Microsoft Windows 10 or Apple macOS"
       instances: 1
       children:
         - id: "51"
           name: "Docker Container - Database Server"
           description: "A Docker container."
-          environment: "Developement"
+          environment: "Development"
           technology: "Docker"
           instances: 1
           children:
@@ -360,7 +360,7 @@ model:
         - id: "54"
           name: "Docker Container - Web Server"
           description: "A Docker container."
-          environment: "Developement"
+          environment: "Development"
           technology: "Docker"
           instances: 1
           children:

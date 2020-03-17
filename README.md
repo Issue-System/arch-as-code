@@ -135,6 +135,21 @@ Tests operate against a "test" Structurizr workspace.
 ./gradlew build
 ```
 
+### Run
+
+Runs Bootstrap.java. Equivalent to executing the binary of a release.
+
+```bash
+./gradlew run --args='-h'
+```
+
+For example, to initialize a workspace, run:
+
+```bash
+mkdir /tmp/temporaryWorkSpace
+./gradlew run --args="init -i ${WORKSPACE_ID} -k ${WORKSPACE_API_KEY} -s ${WORKSPACE_API_SECRET} /tmp/temporaryWorkSpace"
+```
+
 ## Continuous Integration & Continuous Deployment
 
 Continuous integration is currently being done using

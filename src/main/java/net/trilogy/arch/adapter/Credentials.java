@@ -1,5 +1,6 @@
 package net.trilogy.arch.adapter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import io.vavr.control.Try;
@@ -42,13 +43,13 @@ public abstract class Credentials {
 
         File credentialsFile = new File(configPath + File.separator + "credentials.json");
 
-        new ArchitectureDataStructureObjectMapper().writeValue(credentialsFile,
-                        ImmutableMap.of(
-                                "workspace_id", workspaceId,
-                                "api_key", apiKey,
-                                "api_secret", apiSecret
-                        )
-                );
+        new ObjectMapper().writeValue(credentialsFile,
+                ImmutableMap.of(
+                        "workspace_id", workspaceId,
+                        "api_key", apiKey,
+                        "api_secret", apiSecret
+                )
+        );
     }
 
     static Optional<FileInputStream> credentialsAsStream() {

@@ -113,7 +113,7 @@ public class WorkspaceReader {
                                             .id(co.getId())
                                             .containerId(cont.getId())
                                             .path(c4Path)
-                                            .technology(co.toString())
+                                            .technology(co.getTechnology())
                                             .description(co.getDescription())
                                             .tags(tags)
                                             .name(co.getName())

@@ -38,9 +38,7 @@ public class WorkspaceReaderTest {
         assertThat(component.getRelationships(), contains(
                 new C4Relationship("239", null, USES, null, "16", "Runs", "Chromium")
         ));
-
-        // TODO: This seems incorrect
-        assertThat(component.getTechnology(), is(equalTo("{220 | Ionic | Ionic native part for Android}")));
+        assertThat(component.getTechnology(), is(equalTo("Android")));
     }
 
     @Test

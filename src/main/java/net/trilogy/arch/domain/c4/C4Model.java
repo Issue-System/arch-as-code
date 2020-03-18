@@ -1,6 +1,5 @@
 package net.trilogy.arch.domain.c4;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import lombok.*;
@@ -79,7 +78,6 @@ public class C4Model {
         return this;
     }
 
-    @JsonIgnore
     public Set<C4DeploymentNode> getDeploymentNodesRecursively() {
         Set<C4DeploymentNode> allNodes = new HashSet<>();
 

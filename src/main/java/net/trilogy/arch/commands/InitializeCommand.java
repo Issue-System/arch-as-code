@@ -1,8 +1,6 @@
 package net.trilogy.arch.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import net.trilogy.arch.adapter.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,8 +64,7 @@ public class InitializeCommand implements Callable<Integer> {
 
         Path targetManifestPath = Paths.get(manifestFile.toURI());
 
-        new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
-                .writeValue(targetManifestPath.toFile(), dataStructure);
+        new ArchitectureDataStructureObjectMapper().writeValue(targetManifestPath.toFile(), dataStructure);
 
         logger.info(String.format("Manifest file written to - %s", manifestFile.getAbsolutePath()));
     }

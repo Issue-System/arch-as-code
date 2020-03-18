@@ -1,7 +1,6 @@
 package net.trilogy.arch.adapter.in;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import net.trilogy.arch.adapter.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;
@@ -18,8 +17,7 @@ public class ArchitectureDataStructureReader {
         checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
 
 
-        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-        return objectMapper.readValue(new FileInputStream(manifest), ArchitectureDataStructure.class);
+        return new ArchitectureDataStructureObjectMapper().readValue(new FileInputStream(manifest), ArchitectureDataStructure.class);
 
     }
 }

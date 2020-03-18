@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
 
@@ -38,6 +39,27 @@ public class InitializeCommandE2ETest {
         assertTrue(credentialsFile.isFile());
 
         //check that data-structure.yml file created
-        assertTrue(tempProductDirectory.resolve("data-structure.yml").toFile().exists());
+        File manifestFile = tempProductDirectory.resolve("data-structure.yml").toFile();
+        assertTrue(manifestFile.exists());
+        assertThat(Files.readAllLines(manifestFile.toPath()),
+                contains(
+                        "name: \"Hello World!!!\"",
+                        "businessUnit: \"DevFactory\"",
+                        "description: \"Architecture as code\"",
+                        "decisions: []",
+                        "model:",
+                        "  people: []",
+                        "  systems: []",
+                        "  containers: []",
+                        "  components: []",
+                        "  deploymentNodes: []",
+                        "views:",
+                        "  systemViews: []",
+                        "  containerViews: []",
+                        "  componentViews: []",
+                        "  deploymentViews: []"
+                )
+        );
     }
+
 }

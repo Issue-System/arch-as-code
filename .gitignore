@@ -6,6 +6,11 @@ build
 
 # Ignore IntelliJ
 .idea/
+# Ignore Eclipse
+.classpath
+.project
+.settings/
+bin/
 
 # Ignore credentials.json
 credentials.json

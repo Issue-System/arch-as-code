@@ -43,14 +43,13 @@ public abstract class Credentials {
 
         File credentialsFile = new File(configPath + File.separator + "credentials.json");
 
-        new ObjectMapper()
-                .writeValue(credentialsFile,
-                        ImmutableMap.of(
-                                "workspace_id", workspaceId,
-                                "api_key", apiKey,
-                                "api_secret", apiSecret
-                        )
-                );
+        new ObjectMapper().writeValue(credentialsFile,
+                ImmutableMap.of(
+                        "workspace_id", workspaceId,
+                        "api_key", apiKey,
+                        "api_secret", apiSecret
+                )
+        );
     }
 
     static Optional<FileInputStream> credentialsAsStream() {

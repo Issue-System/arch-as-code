@@ -1,11 +1,10 @@
 package net.trilogy.arch.schema;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.ValidationMessage;
+import net.trilogy.arch.adapter.ArchitectureDataStructureObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +34,6 @@ public class ArchitectureDataStructureSchemaValidator {
     }
 
     private JsonNode getYamlFromFile(InputStream manifestInputStream) throws IOException {
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        return mapper.readTree(manifestInputStream);
+        return new ArchitectureDataStructureObjectMapper().readTree(manifestInputStream);
     }
 }

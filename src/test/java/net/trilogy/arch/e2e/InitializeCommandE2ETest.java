@@ -29,19 +29,25 @@ public class InitializeCommandE2ETest {
     }
 
     @Test
-    public void initialize() throws Exception {
+    public void shouldInitializeCredentials() throws Exception {
         InitializeCommand command = new InitializeCommand("key", "secret", "1234", tempProductDirectory.toFile());
         assertThat(command.call(), equalTo(0));
 
-        //check that credentials.json file created
-        File credentialsFile = tempProductDirectory.resolve(".arch-as-code/structurizr/credentials.json").toFile();
-        assertTrue(credentialsFile.exists());
-        assertTrue(credentialsFile.isFile());
+        File file = tempProductDirectory.resolve(".arch-as-code/structurizr/credentials.json").toFile();
+        assertTrue(file.exists());
+        assertTrue(file.isFile());
+        assertThat(Files.readAllLines(file.toPath()),
+                contains("{\"workspace_id\":\"key\",\"api_key\":\"secret\",\"api_secret\":\"1234\"}"));
+    }
 
-        //check that data-structure.yml file created
-        File manifestFile = tempProductDirectory.resolve("data-structure.yml").toFile();
-        assertTrue(manifestFile.exists());
-        assertThat(Files.readAllLines(manifestFile.toPath()),
+    @Test
+    public void shouldInitializeDataStructureYamlFile() throws Exception {
+        InitializeCommand command = new InitializeCommand("key", "secret", "1234", tempProductDirectory.toFile());
+        assertThat(command.call(), equalTo(0));
+
+        File file = tempProductDirectory.resolve("data-structure.yml").toFile();
+        assertTrue(file.exists());
+        assertThat(Files.readAllLines(file.toPath()),
                 contains(
                         "name: \"Hello World!!!\"",
                         "businessUnit: \"DevFactory\"",

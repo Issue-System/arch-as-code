@@ -29,7 +29,7 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
 
     protected void baseViewSerialize(T value, JsonGenerator gen) throws IOException {
         gen.writeStringField("name", value.getName());
-        gen.writeStringField("key", value.getKey());
+
         writeSystemIdentity(value, gen);
         writeContainerIdentity(value, gen);
         gen.writeStringField("description", value.getDescription());
@@ -78,24 +78,33 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
 
     private void writeContainerIdentity(T value, JsonGenerator gen) {
         if (value instanceof HasContainerReference) {
-            if (((HasContainerReference) value).getContainerAlias() != null) {
-                C4EntitySerializer.wrappedWriteStringField(gen, "containerAlias", ((HasContainerReference) value).getContainerAlias());
-            } else if (((HasContainerReference) value).getContainerId() != null) {
-                C4EntitySerializer.wrappedWriteStringField(gen, "containerId", ((HasContainerReference) value).getContainerId());
-            } else {
+            boolean hasContainerAlias = ((HasContainerReference) value).getContainerAlias() != null;
+            boolean hasContainerId = ((HasContainerReference) value).getContainerId() != null;
+            if (!hasContainerAlias && !hasContainerId) {
                 throw new IllegalStateException("HasContainerReference missing both id and alias: " + value);
             }
+            if (hasContainerAlias) {
+                C4EntitySerializer.wrappedWriteStringField(gen, "containerAlias", ((HasContainerReference) value).getContainerAlias());
+            }
+            if (hasContainerId) {
+                C4EntitySerializer.wrappedWriteStringField(gen, "containerId", ((HasContainerReference) value).getContainerId());
+            }
         }
+
     }
 
     private void writeSystemIdentity(T value, JsonGenerator gen) {
         if (value instanceof HasSystemReference) {
-            if (((HasSystemReference) value).getSystemAlias() != null) {
-                C4EntitySerializer.wrappedWriteStringField(gen, "systemAlias", ((HasSystemReference) value).getSystemAlias());
-            } else if (((HasSystemReference) value).getSystemId() != null) {
-                C4EntitySerializer.wrappedWriteStringField(gen, "systemId", ((HasSystemReference) value).getSystemId());
-            } else {
+            boolean hasSystemAlias = ((HasSystemReference) value).getSystemAlias() != null;
+            boolean hasSystemId = ((HasSystemReference) value).getSystemId() != null;
+            if (!hasSystemAlias && !hasSystemId) {
                 throw new IllegalStateException("HasContainerReference missing both id and alias: " + value);
+            }
+            if (hasSystemAlias) {
+                C4EntitySerializer.wrappedWriteStringField(gen, "systemAlias", ((HasSystemReference) value).getSystemAlias());
+            }
+            if (hasSystemId) {
+                C4EntitySerializer.wrappedWriteStringField(gen, "systemId", ((HasSystemReference) value).getSystemId());
             }
         }
     }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import net.trilogy.arch.adapter.out.serialize.C4EntitySerializer;
 import net.trilogy.arch.adapter.out.serialize.C4ViewSerializer;
+import net.trilogy.arch.adapter.out.serialize.DateSerializer;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4Person;
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -55,7 +57,8 @@ public class ArchitectureDataStructureObjectMapper {
                 .addSerializer(new C4EntitySerializer<>(C4Component.class))
                 .addSerializer(new C4ViewSerializer<>(C4ContainerView.class))
                 .addSerializer(new C4ViewSerializer<>(C4ComponentView.class))
-                .addSerializer(new C4ViewSerializer<>(C4SystemView.class));
+                .addSerializer(new C4ViewSerializer<>(C4SystemView.class))
+                .addSerializer(new DateSerializer(Date.class));
         return module;
     }
 }

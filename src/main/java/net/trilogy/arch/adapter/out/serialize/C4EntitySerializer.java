@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -30,6 +31,7 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
 
     protected void baseEntityWrite(T value, JsonGenerator gen) throws IOException {
         gen.writeStringField("id", value.getId());
+        writeAlias(value, gen);
         writeParentIdentity(value, gen);
         gen.writeStringField("name", value.getName());
         gen.writeStringField("description", value.getDescription());
@@ -40,6 +42,11 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
         writeLocation(value, gen);
         writeUrl(value, gen);
         writeTechnology(value, gen);
+    }
+
+    private void writeAlias(T value, JsonGenerator gen) throws IOException {
+        ofNullable(value.getAlias())
+                .ifPresent(alias -> wrappedWriteStringField(gen, "alias", alias));
     }
 
     private void writeParentIdentity(T value, JsonGenerator gen) throws IOException {
@@ -125,7 +132,10 @@ public class C4EntitySerializer<T extends BaseEntity> extends StdSerializer<T> {
 
     private void writeLocation(T value, JsonGenerator gen) throws IOException {
         if (value instanceof HasLocation) {
-            gen.writeStringField("location", ofNullable(((HasLocation) value).getLocation()).orElse(C4Location.UNSPECIFIED).name());
+            Optional<String> location = ofNullable(((HasLocation) value).getLocation()).map(Enum::name);
+            if (location.isPresent()) {
+                gen.writeStringField("location", location.get());
+            }
         }
     }
 }

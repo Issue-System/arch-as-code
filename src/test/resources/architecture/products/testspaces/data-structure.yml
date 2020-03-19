@@ -296,6 +296,7 @@ model:
 views:
   systemViews:
     - name: "DevSpaces"
+      key: "ManualKey-DevSpaces-Internal Trilogy users view of DevSpaces system"
       systemId: "9"
       systemAlias: "c4://DevSpaces"
       description: "Internal Trilogy users view of DevSpaces system"

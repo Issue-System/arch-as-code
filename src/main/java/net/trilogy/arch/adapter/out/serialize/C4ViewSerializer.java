@@ -29,6 +29,7 @@ public class C4ViewSerializer<T extends C4View> extends StdSerializer<T> {
 
     protected void baseViewSerialize(T value, JsonGenerator gen) throws IOException {
         gen.writeStringField("name", value.getName());
+        gen.writeStringField("key", value.getKey());
 
         writeSystemIdentity(value, gen);
         writeContainerIdentity(value, gen);

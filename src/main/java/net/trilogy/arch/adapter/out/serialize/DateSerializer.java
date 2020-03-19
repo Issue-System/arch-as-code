@@ -1,0 +1,30 @@
+package net.trilogy.arch.adapter.out.serialize;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class DateSerializer extends StdSerializer<Date> {
+    private static final Log log = LogFactory.getLog(C4ViewSerializer.class);
+
+    public DateSerializer(Class<Date> t) {
+        super(t);
+    }
+
+    @Override
+    public void serialize(Date value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String formattedDate = dateFormat.format(value);
+
+        gen.writeString(formattedDate);
+    }
+}

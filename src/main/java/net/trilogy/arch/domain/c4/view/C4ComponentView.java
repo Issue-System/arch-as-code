@@ -1,13 +1,9 @@
 package net.trilogy.arch.domain.c4.view;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import net.trilogy.arch.domain.c4.C4Container;
-import net.trilogy.arch.domain.c4.C4Model;
-import net.trilogy.arch.domain.c4.Entity;
-import net.trilogy.arch.domain.c4.HasIdentity;
+import lombok.*;
+import net.trilogy.arch.domain.c4.*;
+
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,6 +12,13 @@ import net.trilogy.arch.domain.c4.HasIdentity;
 public class C4ComponentView extends C4View implements HasContainerReference, HasIdentity<C4Container> {
     private String containerId;
     private String containerAlias;
+
+    @Builder
+    public C4ComponentView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> references, String containerId, String containerAlias) {
+        super(key, name, description, tags, references);
+        this.containerId = containerId;
+        this.containerAlias = containerAlias;
+    }
 
     @Override
     public String getId() {

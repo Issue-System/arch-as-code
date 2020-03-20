@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static java.util.stream.Collectors.toList;
-import static net.trilogy.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
+import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,7 +23,8 @@ public class ArchitectureDataStructureWriterTest {
 
     @Test
     public void shouldWriteHumanReadableDates() throws IOException {
-        File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
+        // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
+        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
@@ -33,7 +34,8 @@ public class ArchitectureDataStructureWriterTest {
 
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws IOException {
-        File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
+        // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
+        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
@@ -43,9 +45,8 @@ public class ArchitectureDataStructureWriterTest {
 
     @SneakyThrows
     public void parseDateAsIsoOrThrow(String str) {
-        TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(tz);
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         df.parse(str);
     }
 

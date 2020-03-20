@@ -14,7 +14,7 @@ public class ValidateCommandE2ETest {
 
     @Test
     public void validate() throws Exception {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         ValidateCommand validateCommand = new ValidateCommand(documentationRoot, "data-structure.yml");
 
         Integer statusCode = validateCommand.call();
@@ -24,7 +24,7 @@ public class ValidateCommandE2ETest {
 
     @Test
     public void validate_missing_metadata() throws Exception {
-        File file = new File(getClass().getResource(TestHelper.TEST_VALIDATION_ROOT_PATH).getPath());
+        File file = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VALIDATION).getPath());
         ValidateCommand validateCommand = new ValidateCommand(file, "missingMetadata.yml");
 
         Integer statusCode = validateCommand.call();

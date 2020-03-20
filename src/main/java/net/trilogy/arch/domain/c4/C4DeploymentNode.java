@@ -1,12 +1,10 @@
 package net.trilogy.arch.domain.c4;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -18,6 +16,27 @@ public class C4DeploymentNode extends BaseEntity implements Entity {
     private Integer instances;
     private List<C4DeploymentNode> children = new ArrayList<>();
     private List<C4ContainerInstance> containerInstances = new ArrayList<>();
+
+    @Builder
+    C4DeploymentNode(String id,
+                     String alias,
+                     String name,
+                     C4Path path,
+                     String description,
+                     @Singular Set<C4Tag> tags,
+                     @Singular List<C4Relationship> relationships,
+                     String technology,
+                     String environment,
+                     Integer instances,
+                     List<C4DeploymentNode> children,
+                     List<C4ContainerInstance> containerInstances) {
+        super(id, alias, path, name, description, tags, relationships);
+        this.technology = technology;
+        this.environment = environment;
+        this.instances = instances;
+        this.children = children;
+        this.containerInstances = containerInstances;
+    }
 
     public C4Type getType() {
         return C4Type.deploymentNode;

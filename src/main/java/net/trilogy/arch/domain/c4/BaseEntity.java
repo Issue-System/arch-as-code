@@ -35,17 +35,4 @@ public abstract class BaseEntity implements Entity {
         this.relationships = ofNullable(relationships).orElse(emptyList());
         this.name = name;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o.getClass() != getClass()) {
-            return false;
-        }
-        return new EqualsBuilder().append(this.getId(), ((BaseEntity) o).getId()).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(getId()).toHashCode();
-    }
 }

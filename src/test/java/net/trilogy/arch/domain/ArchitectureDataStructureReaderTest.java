@@ -17,8 +17,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 
-import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS;
-import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_VIEWS;
+import static net.trilogy.arch.TestHelper.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,12 +25,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ArchitectureDataStructureReaderTest {
 
-    private final File fileForViews = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
-    private final File fileForEverythingExceptViews = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS).getPath());
-
     @Test
     public void shouldReadMetaData() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_METADATA).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getName(), is(equalTo("TestSpaces")));
         assertThat(data.getBusinessUnit(), is(equalTo("DevFactory")));
@@ -40,7 +37,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadDecisions() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_DECISIONS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getDecisions().size(), is(equalTo(2)));
 
@@ -55,7 +53,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadPeople() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_PEOPLE).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getModel().getPeople().size(), equalTo(4));
 
@@ -81,7 +80,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadSystems() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getModel().getSystems().size(), is(equalTo(5)));
 
@@ -104,7 +104,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadContainers() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getModel().getComponents().size(), is(equalTo(4)));
 
@@ -130,7 +131,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadComponents() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForEverythingExceptViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getModel().getComponents().size(), is(equalTo(4)));
 
@@ -154,8 +156,50 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
+    public void shouldReadDeploymentNodes() throws IOException {
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
+
+        assertThat(data.getModel().getDeploymentNodes().size(), is(equalTo(1)));
+        assertThat(data.getModel().getDeploymentNodesRecursively().size(), is(equalTo(6)));
+
+        var actual = (C4DeploymentNode) data.getModel().findEntityById("51");
+
+        var expected = C4DeploymentNode.builder()
+                .alias(null)
+                .name("Docker Container - Database Server")
+                .children(List.of(
+                        C4DeploymentNode.builder()
+                                .id("52")
+                                .name("Database Server")
+                                .description("a database server")
+                                .environment("Development")
+                                .technology("Oracle 12c")
+                                .instances(1)
+                                .containerInstances(List.of(
+                                        new C4ContainerInstance("53", "development", new C4Reference("12", "c4://Internet Banking System/Database"), 1)
+                                ))
+                                .children(List.of())
+                                .build()
+                ))
+                .containerInstances(List.of())
+                .description("A Docker container.")
+                .environment("Development")
+                .id("51")
+                .instances(1)
+                .path(null)
+                .tags(Set.of())
+                .relationships(List.of())
+                .technology("Docker")
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
     public void shouldReadSystemViews() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getViews().getSystemViews().size(), is(equalTo(1)));
 
@@ -178,7 +222,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadContainerViews() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getViews().getContainerViews().size(), is(equalTo(1)));
 
@@ -205,7 +250,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadComponentViews() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getViews().getComponentViews().size(), is(equalTo(1)));
 
@@ -235,7 +281,8 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadDeploymentViews() throws IOException {
-        var data = new ArchitectureDataStructureReader().load(fileForViews);
+        var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
+        var data = new ArchitectureDataStructureReader().load(file);
 
         assertThat(data.getViews().getDeploymentViews().size(), is(equalTo(1)));
 

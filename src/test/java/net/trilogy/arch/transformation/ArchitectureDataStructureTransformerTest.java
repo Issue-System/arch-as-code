@@ -38,7 +38,7 @@ public class ArchitectureDataStructureTransformerTest {
     @Test
     public void should_transform_architecture_yaml_to_structurizr_workspace() throws IOException {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
-        File manifestFile = new File(getClass().getResource(TestHelper.MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS).getPath());
+        File manifestFile = new File(getClass().getResource(TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
 
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);
 

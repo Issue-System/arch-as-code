@@ -5,6 +5,7 @@ import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.C4ContainerView;
+import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import net.trilogy.arch.domain.c4.view.C4SystemView;
 import org.junit.Test;
 
@@ -163,6 +164,7 @@ public class ArchitectureDataStructureReaderTest {
                 .name("System Context diagram for Internet Banking System")
                 .description("Internet Banking System - System View")
                 .systemAlias("c4://Internet Banking System")
+                .tags(Set.of())
                 .references(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),
                         new C4Reference(null, "c4://Internet Banking System"),
@@ -185,6 +187,7 @@ public class ArchitectureDataStructureReaderTest {
                 .name("Container diagram for Internet Banking System")
                 .systemAlias("c4://Internet Banking System")
                 .description("Internet Banking System - Container View")
+                .tags(Set.of())
                 .references(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),
                         new C4Reference(null, "c4://Internet Banking System/Web Application"),
@@ -211,6 +214,7 @@ public class ArchitectureDataStructureReaderTest {
                 .name("Component diagram for Internet Banking System - API Application")
                 .containerAlias("c4://Internet Banking System/API Application")
                 .description("Internet Banking System : API Application - Component View")
+                .tags(Set.of())
                 .references(Set.of(
                         new C4Reference(null, "c4://Internet Banking System/API Application/Sign In Controller"),
                         new C4Reference(null, "c4://Internet Banking System/API Application/Reset Password Controller"),
@@ -224,6 +228,26 @@ public class ArchitectureDataStructureReaderTest {
                         new C4Reference(null, "c4://E-mail System"),
                         new C4Reference(null, "c4://Mainframe Banking System")
                 ))
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadDeploymentViews() throws IOException {
+        var data = new ArchitectureDataStructureReader().load(fileForViews);
+
+        assertThat(data.getViews().getDeploymentViews().size(), is(equalTo(1)));
+
+        var actual = data.getViews().getDeploymentViews().get(0);
+        var expected = C4DeploymentView.builder()
+                .description("An example development deployment scenario for the Internet Banking System.")
+                .environment("Development")
+                .key("Laptop")
+                .name("Development Deployment")
+                .system(new C4Reference(null, "c4://Internet Banking System"))
+                .references(Set.of(new C4Reference(null, "Developer Laptop")))
+                .tags(Set.of())
                 .build();
 
         assertThat(actual, is(equalTo(expected)));

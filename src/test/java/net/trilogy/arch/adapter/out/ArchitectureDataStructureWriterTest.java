@@ -23,6 +23,7 @@ public class ArchitectureDataStructureWriterTest {
 
     @Test
     public void shouldWriteHumanReadableDates() throws IOException {
+        // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
         File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
@@ -33,6 +34,7 @@ public class ArchitectureDataStructureWriterTest {
 
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws IOException {
+        // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
         File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
@@ -43,9 +45,8 @@ public class ArchitectureDataStructureWriterTest {
 
     @SneakyThrows
     public void parseDateAsIsoOrThrow(String str) {
-        TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(tz);
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         df.parse(str);
     }
 

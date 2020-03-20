@@ -29,8 +29,10 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
 
     public static class C4SoftwareSystemBuilder {
         public C4SoftwareSystemBuilder path(C4Path path) {
-            checkArgument(C4Type.system.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));
-            this.path = path;
+            if (path != null) {
+                checkArgument(C4Type.system.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));
+                this.path = path;
+            }
             return this;
         }
     }

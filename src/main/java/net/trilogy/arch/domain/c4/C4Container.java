@@ -21,7 +21,7 @@ public class C4Container extends BaseEntity implements Entity, HasTechnology, Ha
 
 
     @Builder(toBuilder = true)
-    public C4Container(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, String systemId, String systemAlias,  String technology, String url) {
+    public C4Container(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, String systemId, String systemAlias, String technology, String url) {
         super(id, alias, path, name, description, tags, relationships);
         this.systemId = systemId;
         this.systemAlias = systemAlias;
@@ -41,8 +41,10 @@ public class C4Container extends BaseEntity implements Entity, HasTechnology, Ha
 
     public static class C4ContainerBuilder {
         public C4ContainerBuilder path(C4Path path) {
-            checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));
-            this.path = path;
+            if (path != null) {
+                checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));
+                this.path = path;
+            }
             return this;
         }
     }

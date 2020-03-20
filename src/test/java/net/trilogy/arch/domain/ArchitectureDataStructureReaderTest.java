@@ -52,8 +52,7 @@ public class ArchitectureDataStructureReaderTest {
 
     @Test
     public void shouldReadPeople() {
-        C4Model model = this.dataStructureReadFromFile.getModel();
-
+        var model = this.dataStructureReadFromFile.getModel();
         var people = model.getPeople();
         assertThat(people.size(), equalTo(4));
 
@@ -79,9 +78,52 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadSystems() throws IOException {
-        C4Model model = this.dataStructureReadFromFile.getModel();
-        assertThat(model.getSystems().size(), is(equalTo(5)));
+    public void shouldReadSystems() {
+        var model = this.dataStructureReadFromFile.getModel();
+        var systems = model.getSystems();
+        assertThat(systems.size(), is(equalTo(5)));
+
+        var actual = (C4SoftwareSystem) model.findEntityById("6");
+        var expected = C4SoftwareSystem.builder()
+                .alias("c4://SalesForce")
+                .id("6")
+                .name("SalesForce")
+                .description("Book keeping")
+                .location(C4Location.EXTERNAL)
+                .relationships(List.of(
+                        new C4Relationship("29", null, C4Action.USES, "c4://DevSpaces/DevSpaces Backend", "11", "queries usage details to estimate monthly costs", null)
+                ))
+                .tags(Set.of())
+                .path(null)
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadContainers() {
+        var model = this.dataStructureReadFromFile.getModel();
+        var containers = model.getComponents();
+        assertThat(containers.size(), is(equalTo(4)));
+
+        var actual = (C4Container) model.findEntityById("11");
+        var expected = C4Container.builder()
+                .alias("c4://DevSpaces/DevSpaces Backend")
+                .name("DevSpaces/DevSpaces Backend")
+                .id("11")
+                .systemAlias("c4://DevSpaces")
+                .description("Restful API providing capabilities for interacting with a DevSpace")
+                .technology("Spring Boot")
+                .tags(Set.of(
+                        new C4Tag("DevSpaces Container View")
+                ))
+                .relationships(List.of(
+                        new C4Relationship("32", null, C4Action.USES, "c4://DevSpaces/DevSpaces API", "13", "to manipulate dev spaces", null)
+                ))
+                .path(null)
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
     }
 
     private LocalDate decisionDate(ImportantTechnicalDecision decision) {

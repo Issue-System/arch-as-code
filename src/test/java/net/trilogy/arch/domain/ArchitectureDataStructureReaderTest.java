@@ -73,7 +73,6 @@ public class ArchitectureDataStructureReaderTest {
                         new C4Relationship("27", null, C4Action.USES, "c4://XO Chat", "5", "to communicate with team", null),
                         new C4Relationship("28", null, C4Action.USES, "c4://Trilogy Google G Suite", "7", "inter-team collaboration", null)
                 ))
-                .path(null)
                 .build();
         assertThat(actualPerson, is(equalTo(expectedPerson)));
     }
@@ -96,7 +95,6 @@ public class ArchitectureDataStructureReaderTest {
                         new C4Relationship("29", null, C4Action.USES, "c4://DevSpaces/DevSpaces Backend", "11", "queries usage details to estimate monthly costs", null)
                 ))
                 .tags(Set.of())
-                .path(null)
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -123,7 +121,6 @@ public class ArchitectureDataStructureReaderTest {
                 .relationships(List.of(
                         new C4Relationship("32", null, C4Action.USES, "c4://DevSpaces/DevSpaces API", "13", "to manipulate dev spaces", null)
                 ))
-                .path(null)
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -149,7 +146,6 @@ public class ArchitectureDataStructureReaderTest {
                 .relationships(List.of(
                         new C4Relationship("34", null, C4Action.USES, "c4://DevSpaces/DevSpaces API/Security Component", "14", "Authorizes user", null)
                 ))
-                .path(null)
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -187,7 +183,6 @@ public class ArchitectureDataStructureReaderTest {
                 .environment("Development")
                 .id("51")
                 .instances(1)
-                .path(null)
                 .tags(Set.of())
                 .relationships(List.of())
                 .technology("Docker")

@@ -41,10 +41,8 @@ public class C4Container extends BaseEntity implements Entity, HasTechnology, Ha
 
     public static class C4ContainerBuilder {
         public C4ContainerBuilder path(C4Path path) {
-            if (path != null) {
-                checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));
-                this.path = path;
-            }
+            checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));
+            this.path = path;
             return this;
         }
     }

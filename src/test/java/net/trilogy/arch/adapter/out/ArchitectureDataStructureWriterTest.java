@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static java.util.stream.Collectors.toList;
-import static net.trilogy.arch.TestHelper.TEST_SPACES_MANIFEST_PATH;
+import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +24,7 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteHumanReadableDates() throws IOException {
         // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
-        File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
+        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
@@ -35,7 +35,7 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws IOException {
         // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
-        File existingYamlFile = new File(getClass().getResource(TEST_SPACES_MANIFEST_PATH).getPath());
+        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_EVERYTHING_EXCEPT_VIEWS).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);

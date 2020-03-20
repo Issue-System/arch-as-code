@@ -79,7 +79,7 @@ public class SchemaValidationTest {
     }
 
     private Set<ValidationMessage> getSchemaValidationMessages(String yamlFileName) throws FileNotFoundException {
-        File validationRoot = new File(getClass().getResource(TestHelper.TEST_VALIDATION_ROOT_PATH).getPath());
+        File validationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VALIDATION).getPath());
         File yamlFile = new File(validationRoot + File.separator + yamlFileName);
         return new ArchitectureDataStructureSchemaValidator()
                 .validate(new FileInputStream(yamlFile));

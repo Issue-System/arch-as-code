@@ -14,7 +14,7 @@ public class PublishCommandE2ETest {
 
     @Test
     public void publish() throws Exception {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         PublishCommand publishCommand = new PublishCommand(documentationRoot, "data-structure.yml");
 
         Integer statusCode = publishCommand.call();
@@ -24,7 +24,7 @@ public class PublishCommandE2ETest {
 
     @Test
     public void publish_invalid_manifest() throws Exception {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_VALIDATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VALIDATION).getPath());
         PublishCommand publishCommand = new PublishCommand(documentationRoot, "missingMetadata.yml");
 
         Integer statusCode = publishCommand.call();

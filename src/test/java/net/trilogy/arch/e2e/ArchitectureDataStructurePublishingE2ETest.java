@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static net.trilogy.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
+import static net.trilogy.arch.TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION;
 import static net.trilogy.arch.TestHelper.TEST_WORKSPACE_ID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -21,7 +21,7 @@ public class ArchitectureDataStructurePublishingE2ETest {
     public void should_publish_architecture_data_structure_changes_to_structurizr() throws IOException, StructurizrClientException {
         //given
         File documentationRoot =
-                new File(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+                new File(getClass().getResource(ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
 
         //when
         ArchitectureDataStructurePublisher.create(documentationRoot, "data-structure.yml").publish();

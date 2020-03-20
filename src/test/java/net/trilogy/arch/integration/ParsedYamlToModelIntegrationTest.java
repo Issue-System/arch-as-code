@@ -350,7 +350,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     private Workspace getWorkspace() throws IOException {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
 
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);

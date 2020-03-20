@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static net.trilogy.arch.TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH;
+import static net.trilogy.arch.TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -20,7 +20,7 @@ public class DocumentationEnhancerTest {
         Workspace workspace = new Workspace("Foo", "Bazz");
         ArchitectureDataStructure dataStructure = mock(ArchitectureDataStructure.class);
 
-        when(root.getAbsolutePath()).thenReturn(getClass().getResource(TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        when(root.getAbsolutePath()).thenReturn(getClass().getResource(ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         when(dataStructure.getName()).thenReturn("testspaces");
 
         new DocumentationEnhancer(root).enhance(workspace, dataStructure);

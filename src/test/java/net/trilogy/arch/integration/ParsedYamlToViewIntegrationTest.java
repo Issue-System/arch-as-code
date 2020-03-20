@@ -106,7 +106,7 @@ public class ParsedYamlToViewIntegrationTest {
     }
 
     private Workspace getWorkspace() throws IOException {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_VIEW_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VIEWS).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
 
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);

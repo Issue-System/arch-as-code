@@ -73,13 +73,13 @@ public class IdGenerationTest {
     }
 
     private ArchitectureDataStructure getDataStructure() throws IOException {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
         return new ArchitectureDataStructureReader().load(manifestFile);
     }
 
     private Workspace getWorkspace(ArchitectureDataStructure dataStructure) {
-        File documentationRoot = new File(getClass().getResource(TestHelper.TEST_PRODUCT_DOCUMENTATION_ROOT_PATH).getPath());
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         return transformer.toWorkSpace(dataStructure);
     }

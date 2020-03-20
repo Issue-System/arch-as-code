@@ -3,6 +3,9 @@ package net.trilogy.arch.domain;
 
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.c4.*;
+import net.trilogy.arch.domain.c4.view.C4ComponentView;
+import net.trilogy.arch.domain.c4.view.C4ContainerView;
+import net.trilogy.arch.domain.c4.view.C4SystemView;
 import org.junit.Test;
 
 import java.io.File;
@@ -144,6 +147,83 @@ public class ArchitectureDataStructureReaderTest {
                         new C4Relationship("34", null, C4Action.USES, "c4://DevSpaces/DevSpaces API/Security Component", "14", "Authorizes user", null)
                 ))
                 .path(null)
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadSystemViews() throws IOException {
+        var data = new ArchitectureDataStructureReader().load(fileForViews);
+
+        assertThat(data.getViews().getSystemViews().size(), is(equalTo(1)));
+
+        var actual = data.getViews().getSystemViews().get(0);
+        var expected = C4SystemView.builder()
+                .name("System Context diagram for Internet Banking System")
+                .description("Internet Banking System - System View")
+                .systemAlias("c4://Internet Banking System")
+                .references(Set.of(
+                        new C4Reference(null, "@Personal Banking Customer"),
+                        new C4Reference(null, "c4://Internet Banking System"),
+                        new C4Reference(null, "c4://E-mail System"),
+                        new C4Reference(null, "c4://Mainframe Banking System")
+                ))
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadContainerViews() throws IOException {
+        var data = new ArchitectureDataStructureReader().load(fileForViews);
+
+        assertThat(data.getViews().getContainerViews().size(), is(equalTo(1)));
+
+        var actual = data.getViews().getContainerViews().get(0);
+        var expected = C4ContainerView.builder()
+                .name("Container diagram for Internet Banking System")
+                .systemAlias("c4://Internet Banking System")
+                .description("Internet Banking System - Container View")
+                .references(Set.of(
+                        new C4Reference(null, "@Personal Banking Customer"),
+                        new C4Reference(null, "c4://Internet Banking System/Web Application"),
+                        new C4Reference(null, "c4://Internet Banking System/Single-Page Application"),
+                        new C4Reference(null, "c4://Internet Banking System/Mobile App"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application"),
+                        new C4Reference(null, "c4://Internet Banking System/Database"),
+                        new C4Reference(null, "c4://E-mail System"),
+                        new C4Reference(null, "c4://Mainframe Banking System")
+                ))
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadComponentViews() throws IOException {
+        var data = new ArchitectureDataStructureReader().load(fileForViews);
+
+        assertThat(data.getViews().getComponentViews().size(), is(equalTo(1)));
+
+        var actual = data.getViews().getComponentViews().get(0);
+        var expected = C4ComponentView.builder()
+                .name("Component diagram for Internet Banking System - API Application")
+                .containerAlias("c4://Internet Banking System/API Application")
+                .description("Internet Banking System : API Application - Component View")
+                .references(Set.of(
+                        new C4Reference(null, "c4://Internet Banking System/API Application/Sign In Controller"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application/Reset Password Controller"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application/Accounts Summary Controller"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application/Security Component"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application/E-mail Component"),
+                        new C4Reference(null, "c4://Internet Banking System/API Application/Mainframe Banking System Facade"),
+                        new C4Reference(null, "c4://Internet Banking System/Single-Page Application"),
+                        new C4Reference(null, "c4://Internet Banking System/Mobile App"),
+                        new C4Reference(null, "c4://Internet Banking System/Database"),
+                        new C4Reference(null, "c4://E-mail System"),
+                        new C4Reference(null, "c4://Mainframe Banking System")
+                ))
                 .build();
 
         assertThat(actual, is(equalTo(expected)));

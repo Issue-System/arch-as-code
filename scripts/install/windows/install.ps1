@@ -1,4 +1,4 @@
-Set-PSDebug -Trace 1
+Set-PSDebug -Trace 2
 
 $download_url = (Invoke-WebRequest "https://api.github.com/repos/trilogy-group/arch-as-code/releases/latest" | ConvertFrom-Json).assets.browser_download_url
 

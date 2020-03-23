@@ -80,7 +80,7 @@ public class ModelMediator {
     }
 
     public DeploymentNode addDeploymentNode(C4Model dataStructureModel, C4DeploymentNode c4DeploymentNode) {
-        return DeploymentNodeTransformer.convertToStructurizrDeploymentNode(model, dataStructureModel, c4DeploymentNode);
+        return DeploymentNodeTransformer.addDeploymentNodeFromC4ToModel(c4DeploymentNode, dataStructureModel, model);
     }
 
     private String[] getTags(HasTag t) {

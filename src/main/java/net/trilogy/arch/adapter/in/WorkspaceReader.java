@@ -8,11 +8,13 @@ import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.*;
+import net.trilogy.arch.transformation.DeploymentNodeTransformer;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -31,6 +33,7 @@ public class WorkspaceReader {
         softwareSystems(model).forEach(c4Model::addSoftwareSystem);
         containers(model, c4Model).forEach(c4Model::addContainer);
         components(model, c4Model).forEach(c4Model::addComponent);
+        deploymentNodes(model).forEach(c4Model::addDeploymentNode);
         architectureDataStructure.setModel(c4Model);
 
         C4ViewContainer views = new C4ViewContainer();
@@ -94,6 +97,14 @@ public class WorkspaceReader {
                 .collect(toSet());
 
         c4View.setReferences(elements);
+    }
+
+    private List<C4DeploymentNode> deploymentNodes(Model model) {
+        return model
+                .getDeploymentNodes()
+                .stream()
+                .map(DeploymentNodeTransformer::toC4)
+                .collect(Collectors.toList());
     }
 
     private Set<C4Component> components(Model model, C4Model c4Model) {

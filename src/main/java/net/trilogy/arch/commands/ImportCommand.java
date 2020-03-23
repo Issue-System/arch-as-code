@@ -26,6 +26,7 @@ public class ImportCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
         File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure);
+        System.out.println(exportedFile.getAbsolutePath());
         return new PublishCommand(exportedFile.getParentFile(), exportedFile.getName()).call();
     }
 }

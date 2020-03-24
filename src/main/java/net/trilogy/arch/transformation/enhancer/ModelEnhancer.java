@@ -6,7 +6,7 @@ import io.vavr.Tuple2;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
-import net.trilogy.arch.generator.NumericIdGenerator;
+import net.trilogy.arch.generator.FunctionalIdGenerator;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -22,7 +22,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         Model workspaceModel = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
-        workspaceModel.setIdGenerator(new NumericIdGenerator(dataStructureModel));
+        workspaceModel.setIdGenerator(new FunctionalIdGenerator());
 
         ModelMediator modelMediator = new ModelMediator(workspaceModel);
 

@@ -4,6 +4,7 @@ import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.*;
+import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
@@ -103,6 +104,25 @@ public class WorkspaceReaderTest {
                 .instances(1)
                 .tags(Set.of())
                 .relationships(List.of())
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadDeploymentViews() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+        C4DeploymentView actual = dataStructure.getViews().getDeploymentViews().stream()
+                .filter(v -> v.getKey().equals("DevelopmentDeployment")).findAny().get();
+
+        C4DeploymentView expected = new C4DeploymentView().builder()
+                .key("DevelopmentDeployment")
+                .name("Internet Banking System - Deployment - Development")
+                .system(new C4Reference("2", null))
+                .description("An example development deployment scenario for the Internet Banking System.")
+                .environment("Development")
+                .references(Set.of(new C4Reference("50", null)))
                 .build();
 
         assertThat(actual, is(equalTo(expected)));

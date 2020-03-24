@@ -41,9 +41,11 @@ public class WorkspaceReader {
         views.setSystemViews(systemViews(workspaceViews));
         views.setContainerViews(containerViews(workspaceViews));
         views.setComponentViews(componentViews(workspaceViews));
+        views.setDeploymentViews(deploymentViews(workspaceViews, architectureDataStructure.getModel()));
         architectureDataStructure.setViews(views);
         return architectureDataStructure;
     }
+
 
     private List<C4SystemView> systemViews(ViewSet views) {
         return views
@@ -85,6 +87,33 @@ public class WorkspaceReader {
                     return view;
                 })
                 .collect(toList());
+    }
+
+    private List<C4DeploymentView> deploymentViews(ViewSet views, C4Model c4Model) {
+        return views
+                .getDeploymentViews()
+                .stream()
+                .map(deploymentView -> {
+
+                    Set<C4Reference> references = c4Model.getDeploymentNodes()
+                            .stream()
+                            .filter(d -> deploymentView.getElements().stream()
+                                    .map(e -> e.getId())
+                                    .collect(toList()).contains(d.getId())
+                            )
+                            .map(d -> new C4Reference(d.getId(), null))
+                            .collect(toSet());
+
+                    return C4DeploymentView.builder()
+                            .key(deploymentView.getKey())
+                            .name(deploymentView.getName())
+                            .description(deploymentView.getDescription())
+                            .environment(deploymentView.getEnvironment())
+                            .system(new C4Reference(deploymentView.getSoftwareSystem().getId(), null))
+                            .references(references)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     private void mapCommonViewAttributes(StaticView view, C4View c4View) {

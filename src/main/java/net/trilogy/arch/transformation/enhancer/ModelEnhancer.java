@@ -22,7 +22,9 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         Model workspaceModel = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
-        workspaceModel.setIdGenerator(new FunctionalIdGenerator());
+
+        FunctionalIdGenerator idGenerator = new FunctionalIdGenerator();
+        workspaceModel.setIdGenerator(idGenerator);
 
         ModelMediator modelMediator = new ModelMediator(workspaceModel);
 

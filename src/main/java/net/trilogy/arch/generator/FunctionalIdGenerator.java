@@ -11,6 +11,7 @@ public class FunctionalIdGenerator implements IdGenerator {
     private Supplier<String> generatorFunction;
 
     public FunctionalIdGenerator() {
+        this.setFunctionToDefault();
     }
 
     public void setNext(String id) {
@@ -25,7 +26,28 @@ public class FunctionalIdGenerator implements IdGenerator {
 //            return makeContainerInstanceId(element);
 //        }
 
-        return this.generatorFunction.get();
+        return generateNextId();
+    }
+
+    @Override
+    public String generateId(Relationship relationship) {
+        return generateNextId();
+    }
+
+    @Override
+    public void found(String id) {
+    }
+
+    private String generateNextId() {
+        String id = this.generatorFunction.get();
+        this.setFunctionToDefault();
+        return id;
+    }
+
+    private void setFunctionToDefault() {
+        this.generatorFunction = () -> {
+            throw new NoNextIdSetException();
+        };
     }
 
     private String makeContainerInstanceId(Element element) {
@@ -33,13 +55,9 @@ public class FunctionalIdGenerator implements IdGenerator {
         return id;
     }
 
-    @Override
-    public String generateId(Relationship relationship) {
-        return this.generatorFunction.get();
+    public static class NoNextIdSetException extends RuntimeException {
+        public NoNextIdSetException(){
+            super("Error: No next ID.");
+        }
     }
-
-    @Override
-    public void found(String id) {
-    }
-
 }

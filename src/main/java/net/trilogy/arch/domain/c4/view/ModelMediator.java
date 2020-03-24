@@ -2,6 +2,7 @@ package net.trilogy.arch.domain.c4.view;
 
 import com.structurizr.model.*;
 import net.trilogy.arch.domain.c4.*;
+import net.trilogy.arch.generator.FunctionalIdGenerator;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
 import net.trilogy.arch.transformation.LocationTransformer;
 

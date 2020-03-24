@@ -9,29 +9,40 @@ import static org.hamcrest.Matchers.is;
 
 
 public class FunctionalIdGeneratorTest {
-    private final FunctionalIdGenerator generator = new FunctionalIdGenerator();
 
     @Test
     public void shouldReturnIDFromAnonymousFunctionForElements() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
         generator.setNext("5");
-        Person person = buildPerson();
-        assertThat(generator.generateId(person), is(equalTo("5")));
+        assertThat(generator.generateId(newPerson()), is(equalTo("5")));
     }
 
     @Test
     public void shouldReturnIDFromAnonymousFunctionForRelationships() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
         generator.setNext("300");
-
-        Relationship relationship = buildRelationship();
-
-        assertThat(generator.generateId(relationship), is(equalTo("300")));
+        assertThat(generator.generateId(newRelationship()), is(equalTo("300")));
     }
 
-    private Person buildPerson() {
+    @Test(expected = FunctionalIdGenerator.NoNextIdSetException.class)
+    public void shouldNotGenerateIDUnlessSet() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
+        generator.generateId(newRelationship());
+    }
+
+    @Test(expected = FunctionalIdGenerator.NoNextIdSetException.class)
+    public void shouldNotGenerateIDTwiceIfSetOnce() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
+        generator.setNext("300");
+        generator.generateId(newPerson());
+        generator.generateId(newPerson());
+    }
+
+    private Person newPerson() {
         return new Model().addPerson("abc", "def");
     }
 
-    private Relationship buildRelationship() {
+    private Relationship newRelationship() {
         Model model = new Model();
         Person person = model.addPerson("abc", "def");
         SoftwareSystem system = model.addSoftwareSystem("def", "ghi");

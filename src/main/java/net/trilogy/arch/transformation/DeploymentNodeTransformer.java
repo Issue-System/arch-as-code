@@ -11,7 +11,10 @@ import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Reference;
 import net.trilogy.arch.generator.FunctionalIdGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @UtilityClass
 public class DeploymentNodeTransformer {
@@ -28,7 +31,7 @@ public class DeploymentNodeTransformer {
             containerInstances.forEach(instance -> {
                 String containerId = c4Model.findEntityByReference(instance.getContainerReference()).getId();
                 idGenerator.setNext(instance.getId());
-                idGenerator.setDefaultForRelationships(() -> UUID.randomUUID().toString());
+                idGenerator.setDefaultForRelationships((r) -> r.getSourceId() + "->" + r.getDestinationId());
                 deploymentNode.add((Container) Objects.requireNonNull(model.getElement(containerId)));
                 idGenerator.clearDefaultForRelationships();
             });

@@ -5,11 +5,11 @@ import com.structurizr.model.IdGenerator;
 import com.structurizr.model.Relationship;
 
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class FunctionalIdGenerator implements IdGenerator {
     private String nextValue;
-    private Supplier<String> defaultFunctionForRelationships;
+    private Function<Relationship, String> defaultFunctionForRelationships;
 
     public FunctionalIdGenerator() {
         this.nextValue = null;
@@ -26,11 +26,11 @@ public class FunctionalIdGenerator implements IdGenerator {
         return Optional.ofNullable(temp);
     }
 
-    private Optional<String> useDefaultFunctionForRelationships() {
-        if(this.defaultFunctionForRelationships == null) {
+    private Optional<String> useDefaultFunctionForRelationships(Relationship r) {
+        if (this.defaultFunctionForRelationships == null) {
             return Optional.empty();
         }
-        return Optional.of(this.defaultFunctionForRelationships.get());
+        return Optional.of(this.defaultFunctionForRelationships.apply(r));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class FunctionalIdGenerator implements IdGenerator {
     @Override
     public String generateId(Relationship relationship) {
         return consumeNextValue()
-                .or(this::useDefaultFunctionForRelationships)
+                .or(() -> useDefaultFunctionForRelationships(relationship))
                 .orElseThrow(NoNextIdSetException::new);
     }
 
@@ -49,8 +49,8 @@ public class FunctionalIdGenerator implements IdGenerator {
     public void found(String id) {
     }
 
-    public void setDefaultForRelationships(Supplier<String> supplier) {
-        this.defaultFunctionForRelationships = supplier;
+    public void setDefaultForRelationships(Function<Relationship, String> func) {
+        this.defaultFunctionForRelationships = func;
     }
 
     public void clearDefaultForRelationships() {
@@ -58,7 +58,7 @@ public class FunctionalIdGenerator implements IdGenerator {
     }
 
     public static class NoNextIdSetException extends RuntimeException {
-        public NoNextIdSetException(){
+        public NoNextIdSetException() {
             super("Error: No next ID.");
         }
     }

@@ -43,7 +43,7 @@ public class FunctionalIdGeneratorTest {
         final FunctionalIdGenerator generator = new FunctionalIdGenerator();
         generator.setNext("-");
         generator.setNext("Next");
-        generator.setDefaultForRelationships(() -> "Default");
+        generator.setDefaultForRelationships((r) -> "Default");
         assertThat(generator.generateId(newRelationship()), is(equalTo("Next")));
         assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
         assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
@@ -56,7 +56,7 @@ public class FunctionalIdGeneratorTest {
     public void shouldClearDefaultGeneratorForRelationships() {
         final FunctionalIdGenerator generator = new FunctionalIdGenerator();
 
-        generator.setDefaultForRelationships(() -> "Default");
+        generator.setDefaultForRelationships((r) -> "Default");
         assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
 
         generator.setNext("Next");
@@ -70,7 +70,7 @@ public class FunctionalIdGeneratorTest {
     public void shouldNotUseDefaultGeneratorForRelationshipsForElements() {
         final FunctionalIdGenerator generator = new FunctionalIdGenerator();
 
-        generator.setDefaultForRelationships(() -> "Default");
+        generator.setDefaultForRelationships((r) -> "Default");
         assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
 
         generator.setNext("Next");

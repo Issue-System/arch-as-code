@@ -25,8 +25,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
         FunctionalIdGenerator idGenerator = new FunctionalIdGenerator();
         workspaceModel.setIdGenerator(idGenerator);
-
-        ModelMediator modelMediator = new ModelMediator(workspaceModel);
+        ModelMediator modelMediator = new ModelMediator(workspaceModel, idGenerator);
 
         addPeople(dataStructureModel, modelMediator);
         addSystems(dataStructureModel, modelMediator);

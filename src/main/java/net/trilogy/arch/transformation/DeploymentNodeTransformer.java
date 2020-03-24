@@ -9,32 +9,36 @@ import net.trilogy.arch.domain.c4.C4ContainerInstance;
 import net.trilogy.arch.domain.c4.C4DeploymentNode;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Reference;
+import net.trilogy.arch.generator.FunctionalIdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @UtilityClass
 public class DeploymentNodeTransformer {
-    static public DeploymentNode addDeploymentNodeFromC4ToModel(C4DeploymentNode node, C4Model c4Model, Model model) {
+    static public DeploymentNode addDeploymentNodeFromC4ToModel(C4DeploymentNode node, C4Model c4Model, Model model, FunctionalIdGenerator idGenerator) {
+        idGenerator.setNext(node.getId());
         DeploymentNode deploymentNode = model.addDeploymentNode(node.getName(), node.getDescription(), node.getTechnology(), node.getInstances());
-        addChildren(model, c4Model, deploymentNode, node);
+        addChildren(model, c4Model, deploymentNode, node, idGenerator);
         return deploymentNode;
     }
 
-    private static void addChildren(Model model, C4Model c4Model, DeploymentNode deploymentNode, C4DeploymentNode c4Node) {
+    private static void addChildren(Model model, C4Model c4Model, DeploymentNode deploymentNode, C4DeploymentNode c4Node, FunctionalIdGenerator idGenerator) {
         List<C4ContainerInstance> containerInstances = c4Node.getContainerInstances();
         if (!containerInstances.isEmpty()) {
-            containerInstances.forEach(c -> {
-                C4Reference containerReference = c.getContainerReference();
-                String id = c4Model.findEntityByReference(containerReference).getId();
-                deploymentNode.add((Container) model.getElement(id));
+            containerInstances.forEach(instance -> {
+                String containerId = c4Model.findEntityByReference(instance.getContainerReference()).getId();
+                idGenerator.setNext(instance.getId());
+                deploymentNode.add((Container) Objects.requireNonNull(model.getElement(containerId)));
             });
         }
 
         List<C4DeploymentNode> children = c4Node.getChildren();
         if (!children.isEmpty()) {
             children.forEach(child -> {
+                idGenerator.setNext(child.getId());
                 DeploymentNode addedDeploymentNode = deploymentNode.addDeploymentNode(
                         child.getName(),
                         child.getDescription(),
@@ -42,7 +46,7 @@ public class DeploymentNodeTransformer {
                         child.getInstances()
                 );
 
-                addChildren(model, c4Model, addedDeploymentNode, child);
+                addChildren(model, c4Model, addedDeploymentNode, child, idGenerator);
             });
         }
     }

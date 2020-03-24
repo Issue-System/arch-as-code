@@ -8,9 +8,16 @@ import net.trilogy.arch.transformation.LocationTransformer;
 
 public class ModelMediator {
     private final Model model;
+    private final FunctionalIdGenerator idGenerator;
+
+    public ModelMediator(Model model, FunctionalIdGenerator idGenerator) {
+        this.model = model;
+        this.idGenerator = idGenerator;
+    }
 
     public ModelMediator(Model model) {
         this.model = model;
+        this.idGenerator = new FunctionalIdGenerator();
     }
 
     public Person person(String id) {
@@ -52,6 +59,7 @@ public class ModelMediator {
 
     public SoftwareSystem addSoftwareSystem(C4SoftwareSystem softwareSystem) {
         Location location = LocationTransformer.c4LocationToLocation(softwareSystem.getLocation());
+        idGenerator.setNext(softwareSystem.getId());
         SoftwareSystem result = this.model.addSoftwareSystem(location, softwareSystem.getName(), softwareSystem.getDescription());
         result.addTags(getTags(softwareSystem));
         return result;
@@ -59,6 +67,7 @@ public class ModelMediator {
 
     public Person addPerson(C4Person person) {
         Location location = LocationTransformer.c4LocationToLocation(person.getLocation());
+        idGenerator.setNext(person.getId());
         Person result = model.addPerson(location, person.getName(), person.getDescription());
         result.addTags(getTags(person));
         return result;
@@ -66,6 +75,7 @@ public class ModelMediator {
 
     public Container addContainer(C4SoftwareSystem system, C4Container container) {
         SoftwareSystem softwareSystem = new ModelMediator(model).softwareSystem(system.getId());
+        idGenerator.setNext(container.getId());
         Container result = softwareSystem.addContainer(container.getName(), container.getDescription(), container.getTechnology());
         result.addTags(getTags(container));
         result.setUrl(container.getUrl());
@@ -74,6 +84,7 @@ public class ModelMediator {
 
     public Component addComponent(C4Container c4Container, C4Component component) {
         Container container = new ModelMediator(model).container(c4Container.getId());
+        idGenerator.setNext(component.getId());
         Component result = container.addComponent(component.getName(), component.getDescription(), component.getTechnology());
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
@@ -81,7 +92,7 @@ public class ModelMediator {
     }
 
     public DeploymentNode addDeploymentNode(C4Model dataStructureModel, C4DeploymentNode c4DeploymentNode) {
-        return DeploymentNodeTransformer.addDeploymentNodeFromC4ToModel(c4DeploymentNode, dataStructureModel, model);
+        return DeploymentNodeTransformer.addDeploymentNodeFromC4ToModel(c4DeploymentNode, dataStructureModel, model, idGenerator);
     }
 
     private String[] getTags(HasTag t) {

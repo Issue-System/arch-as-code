@@ -19,11 +19,12 @@ import static net.trilogy.arch.domain.c4.C4Type.person;
 
 public class ModelEnhancer implements WorkspaceEnhancer {
 
+    private final FunctionalIdGenerator idGenerator = new FunctionalIdGenerator();
+
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         Model workspaceModel = workspace.getModel();
         C4Model dataStructureModel = dataStructure.getModel();
 
-        FunctionalIdGenerator idGenerator = new FunctionalIdGenerator();
         workspaceModel.setIdGenerator(idGenerator);
         ModelMediator modelMediator = new ModelMediator(workspaceModel, idGenerator);
 
@@ -107,6 +108,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         if (r.getAction() == C4Action.USES) {
             Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
             C4Type type = destination.getType();
+            idGenerator.setNext(r.getId());
 
             switch (type) {
                 case system: {
@@ -138,6 +140,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
             if (type.equals(person)) {
                 Person person = modelMediator.person(destinationId);
+                idGenerator.setNext(r.getId());
                 element.delivers(person, r.getDescription(), r.getTechnology());
             } else {
                 throw new IllegalStateException("Action DELIVERS supported only with type person, not: " + type);
@@ -153,6 +156,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
             if (type.equals(C4Type.person)) {
                 Person personDestination = modelMediator.person(destinationId);
+                idGenerator.setNext(r.getId());
                 person.interactsWith(personDestination, r.getDescription(), r.getTechnology());
             } else {
                 throw new IllegalStateException("Action INTERACTS_WITH supported only with type person, not: " + type);

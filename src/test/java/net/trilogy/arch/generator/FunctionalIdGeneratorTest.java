@@ -38,6 +38,47 @@ public class FunctionalIdGeneratorTest {
         generator.generateId(newPerson());
     }
 
+    @Test
+    public void shouldUseDefaultGeneratorIfSetForRelationships() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
+        generator.setNext("-");
+        generator.setNext("Next");
+        generator.setDefaultForRelationships(() -> "Default");
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Next")));
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
+        generator.setNext("Next");
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Next")));
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
+    }
+
+    @Test(expected = FunctionalIdGenerator.NoNextIdSetException.class)
+    public void shouldClearDefaultGeneratorForRelationships() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
+
+        generator.setDefaultForRelationships(() -> "Default");
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
+
+        generator.setNext("Next");
+        generator.clearDefaultForRelationships();
+
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Next")));
+        generator.generateId(newRelationship());
+    }
+
+    @Test(expected = FunctionalIdGenerator.NoNextIdSetException.class)
+    public void shouldNotUseDefaultGeneratorForRelationshipsForElements() {
+        final FunctionalIdGenerator generator = new FunctionalIdGenerator();
+
+        generator.setDefaultForRelationships(() -> "Default");
+        assertThat(generator.generateId(newRelationship()), is(equalTo("Default")));
+
+        generator.setNext("Next");
+        assertThat(generator.generateId(newPerson()), is(equalTo("Next")));
+
+        generator.generateId(newPerson());
+    }
+
     private Person newPerson() {
         return new Model().addPerson("abc", "def");
     }

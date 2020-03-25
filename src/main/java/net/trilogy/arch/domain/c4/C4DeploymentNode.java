@@ -38,6 +38,14 @@ public class C4DeploymentNode extends BaseEntity implements Entity {
         this.containerInstances = containerInstances;
     }
 
+    public void addChild(C4DeploymentNode node) {
+        this.children.add(node);
+    }
+
+    public void addContainerInstance(C4ContainerInstance containerInstance) {
+        this.containerInstances.add(containerInstance);
+    }
+
     public C4Type getType() {
         return C4Type.deploymentNode;
     }

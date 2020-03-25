@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import static java.util.stream.Collectors.toList;
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY;
+import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +36,7 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws IOException {
         // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
-        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
+        File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);

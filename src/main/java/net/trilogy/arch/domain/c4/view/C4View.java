@@ -17,7 +17,6 @@ import static java.util.Collections.emptySet;
 @NoArgsConstructor
 public abstract class C4View {
     private String key;
-    @NonNull
     private String name;
     @NonNull
     private String description;

@@ -13,6 +13,9 @@ public abstract class TestHelper {
     public static String MANIFEST_PATH_TO_TEST_VIEWS = "/view/bigBank/data-structure.yml";
     public static String MANIFEST_PATH_TO_TEST_METADATA = "/architecture/products/testspaces/data-structure.yml";
 
+    public static String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/BigBank.json";
+    public static String JSON_STRUCTURIZR_THINK3_SOCOCO = "/structurizr/Think3-Sococo.c4model.json";
+
     public static String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
     public static String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";

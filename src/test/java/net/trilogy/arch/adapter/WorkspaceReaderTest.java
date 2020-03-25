@@ -1,15 +1,21 @@
 package net.trilogy.arch.adapter;
 
+import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.*;
+import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
 import static net.trilogy.arch.domain.c4.C4Action.USES;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -18,7 +24,9 @@ public class WorkspaceReaderTest {
 
     @Test
     public void shouldReadComponent() throws Exception {
-        ArchitectureDataStructure data = readFromTestJson();
+        // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);
+        ArchitectureDataStructure data = new WorkspaceReader().load(new File(resource.getPath()));
 
         C4Component component = (C4Component) data.getModel().findEntityById("220");
 
@@ -43,7 +51,9 @@ public class WorkspaceReaderTest {
 
     @Test
     public void shouldReadCorrectNumberOfElements() throws Exception {
-        ArchitectureDataStructure dataStructure = readFromTestJson();
+        // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
 
         assertThat(dataStructure.getName(), is(equalTo("Sococo Import")));
         assertThat(dataStructure.getBusinessUnit(), is(equalTo("Think3")));
@@ -61,9 +71,61 @@ public class WorkspaceReaderTest {
         MatcherAssert.assertThat(dataStructure.getViews().getSystemViews(), hasSize(6));
     }
 
-    private ArchitectureDataStructure readFromTestJson() throws Exception {
-        // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
-        URL resource = getClass().getResource("/structurizr/Think3-Sococo.c4model.json");
-        return new WorkspaceReader().load(new File(resource.getPath()));
+    @Test
+    public void shouldReadDeploymentNodes() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+
+        assertThat(dataStructure.getModel().getDeploymentNodes().size(), is(equalTo(4)));
+        assertThat(dataStructure.getModel().getDeploymentNodesRecursively().size(), is(equalTo(18)));
+
+        var actual = (C4DeploymentNode) dataStructure.getModel().findEntityById("65");
+
+        var expected = C4DeploymentNode.builder()
+                .alias(null)
+                .id("65")
+                .name("Customer's computer")
+                .children(List.of(
+                        C4DeploymentNode.builder()
+                                .id("66")
+                                .name("Web Browser")
+                                .environment("Live")
+                                .technology("Chrome, Firefox, Safari, or Edge")
+                                .instances(1)
+                                .containerInstances(List.of(
+                                        new C4ContainerInstance("67", "Live", new C4Reference("17", null), 2)
+                                ))
+                                .children(List.of())
+                                .build()
+                ))
+                .containerInstances(List.of())
+                .environment("Live")
+                .technology("Microsoft Windows or Apple macOS")
+                .instances(1)
+                .tags(Set.of())
+                .relationships(List.of())
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
     }
+
+    @Test
+    public void shouldReadDeploymentViews() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+        C4DeploymentView actual = dataStructure.getViews().getDeploymentViews().stream()
+                .filter(v -> v.getKey().equals("DevelopmentDeployment")).findAny().get();
+
+        C4DeploymentView expected = new C4DeploymentView().builder()
+                .key("DevelopmentDeployment")
+                .name("Internet Banking System - Deployment - Development")
+                .system(new C4Reference("2", null))
+                .description("An example development deployment scenario for the Internet Banking System.")
+                .environment("Development")
+                .references(Set.of(new C4Reference("50", null)))
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
 }

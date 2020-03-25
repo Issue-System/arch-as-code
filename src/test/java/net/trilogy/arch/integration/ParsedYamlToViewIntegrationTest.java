@@ -3,10 +3,7 @@ package net.trilogy.arch.integration;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.structurizr.Workspace;
-import com.structurizr.view.ComponentView;
-import com.structurizr.view.ContainerView;
-import com.structurizr.view.DeploymentView;
-import com.structurizr.view.SystemContextView;
+import com.structurizr.view.*;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -18,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -94,7 +92,15 @@ public class ParsedYamlToViewIntegrationTest {
         List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
         Iterables.removeIf(elementNames, Predicates.isNull());
 
-        assertThat(view.getRelationships().size(), equalTo(3));
+        Set<RelationshipView> relationships = view.getRelationships();
+        assertThat(relationships.size(), equalTo(3));
+
+        assertThat(relationships.stream().map(r -> r.getId()).collect(Collectors.toList()),
+                containsInAnyOrder(
+                        "58->60",
+                        "60->57",
+                        "57->53")
+        );
         assertThat(elementNames,
                 containsInAnyOrder("Apache Tomcat",
                         "Web Browser",

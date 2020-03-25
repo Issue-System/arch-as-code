@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine.Command;
@@ -8,6 +9,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @Command(
@@ -32,6 +34,10 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
         return 0;
     }
 
+    private static File getAuFolder(File productDocumentationRoot) {
+        return productDocumentationRoot.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+    }
+
     @Command(name = "initialize", aliases = {"init"}, description = "Initialize the architecture updates work space.")
     public static class Initialize implements Callable<Integer> {
 
@@ -40,7 +46,7 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
 
         @Override
         public Integer call() {
-            File auFolder = productDocumentationRoot.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+            File auFolder = getAuFolder(productDocumentationRoot);
             boolean succeeded = auFolder.mkdir();
             if (!succeeded) {
                 logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));
@@ -61,12 +67,21 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
         File productDocumentationRoot;
 
         @Override
-        public Integer call() {
-            File auFolder = productDocumentationRoot.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+        public Integer call() throws IOException {
+            File auFolder = getAuFolder(productDocumentationRoot);
+
             if(!auFolder.exists() || !auFolder.isDirectory()){
                 logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
                 return 1;
             }
+
+            File auFile = auFolder.toPath().resolve(name).toFile();
+            if(auFile.exists()){
+                logger.error(String.format("AU %s already exists. Try a different name.", name));
+                return 1;
+            }
+
+            new ObjectMapper().writeValue(auFile, "ABCD");
             return 0;
         }
     }

@@ -68,6 +68,18 @@ public class ArchitectureUpdateCommandE2ETest {
     }
 
     @Test
+    public void initShouldFailIfDirectoryAlreadyExists() throws IOException {
+        Path rootDir = getTempDirectory();
+        execute("au", "init", str(rootDir));
+
+        assertThat(
+                execute("au", "init", str(rootDir)),
+                not(equalTo(0))
+        );
+        // TODO: check that nothing was overridden
+    }
+
+    @Test
     public void initShouldReturnSadStatusWhenFailToCreateDirectory() {
         Integer status = execute("au", "init", "???");
 
@@ -90,6 +102,9 @@ public class ArchitectureUpdateCommandE2ETest {
                 execute("au", "new", "au-name", str(dir)),
                 is(equalTo(0))
         );
+
+        dir = getTempDirectory();
+        execute("au", "init", str(dir));
         assertThat(
                 execute("architecture-update", "new", "au-name", str(dir)),
                 is(equalTo(0))
@@ -109,7 +124,48 @@ public class ArchitectureUpdateCommandE2ETest {
                 execute("au", "new", "au-name", str(tempDirPath)),
                 not(equalTo(0))
         );
+    }
 
+    @Test
+    public void newShouldCreateFile() throws IOException {
+        // GIVEN an initialized root dir
+        Path rootDir = getTempDirectory();
+        execute("init", str(rootDir), "-i i", "-k k", "-s s");
+
+        // GIVEN an initialized au dir
+        execute("au", "init", str(rootDir));
+        Path auDir = rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
+
+        // GIVEN that the au does not exist
+        Path auFile = auDir.resolve("au-name");
+        assertThat(
+                "AU does not already exist. (Precondition check)",
+                Files.exists(auFile),
+                is(false)
+        );
+
+        // WHEN the new command is run
+        Integer exitCode = execute("au", "new", "au-name", str(rootDir));
+
+        // THEN the au should exist
+        assertThat(exitCode, is(equalTo(0)));
+        assertThat(Files.exists(auFile), is(true));
+
+        // TODO: check that file content matches output of AuWriter
+    }
+
+    @Test
+    public void newShouldNotCreateFileIfAlreadyExists() throws IOException {
+        Path rootDir = getTempDirectory();
+        execute("au", "init", str(rootDir));
+
+        String name = "au-name";
+        execute("au", "new", name, str(rootDir));
+        assertThat(
+                execute("au", "new", name, str(rootDir)),
+                not(equalTo(0))
+        );
+        // TODO: check that file was not overridden
     }
 
     private String str(Path tempDirPath) {

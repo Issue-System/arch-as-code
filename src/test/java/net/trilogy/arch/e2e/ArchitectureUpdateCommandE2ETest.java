@@ -82,6 +82,36 @@ public class ArchitectureUpdateCommandE2ETest {
         );
     }
 
+    @Test
+    public void newShouldExitWithHappyStatus() throws IOException {
+        Path dir = getTempDirectory();
+        execute("au", "init", str(dir));
+        assertThat(
+                execute("au", "new", "au-name", str(dir)),
+                is(equalTo(0))
+        );
+        assertThat(
+                execute("architecture-update", "new", "au-name", str(dir)),
+                is(equalTo(0))
+        );
+    }
+
+    @Test
+    public void newShouldFailIfNotInitialized() throws IOException {
+        Path tempDirPath = getTempDirectory();
+        assertThat(
+                ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
+                Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
+                is(false)
+        );
+
+        assertThat(
+                execute("au", "new", "au-name", str(tempDirPath)),
+                not(equalTo(0))
+        );
+
+    }
+
     private String str(Path tempDirPath) {
         return tempDirPath.toAbsolutePath().toString();
     }

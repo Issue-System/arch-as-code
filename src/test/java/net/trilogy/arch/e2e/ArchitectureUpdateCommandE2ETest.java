@@ -9,8 +9,7 @@ import java.nio.file.Path;
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ArchitectureUpdateCommandE2ETest {
 
@@ -48,13 +47,22 @@ public class ArchitectureUpdateCommandE2ETest {
                 is(false)
         );
 
-        execute("au", "init", str(tempDirPath));
+        Integer status = execute("au", "init", str(tempDirPath));
+
+        assertThat(status, is(equalTo(0)));
 
         assertThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder was created.",
                 Files.isDirectory(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(true)
         );
+    }
+
+    @Test
+    public void shouldReturnSadStatusWhenFailToCreateDirectory() throws IOException {
+        Integer status = execute("au", "init", "???");
+
+        assertThat(status, not(equalTo(0)));
     }
 
     private String str(Path tempDirPath) {

@@ -19,7 +19,16 @@ public class ArchitectureUpdateCommandE2ETest {
     }
 
     @Test
-    public void shouldExitWithHappyStatus() throws IOException {
+    public void rootCommandShouldPrintUsage() {
+        // TODO: assert that usage is shown
+        assertThat(
+                execute("au"),
+                is(equalTo(0))
+        );
+    }
+
+    @Test
+    public void initShouldExitWithHappyStatus() throws IOException {
         assertThat(
                 execute("au", "init", str(getTempDirectory())),
                 is(equalTo(0))
@@ -39,7 +48,7 @@ public class ArchitectureUpdateCommandE2ETest {
     }
 
     @Test
-    public void shouldCreateDirectory() throws IOException {
+    public void initShouldCreateDirectory() throws IOException {
         Path tempDirPath = getTempDirectory();
         assertThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
@@ -59,10 +68,18 @@ public class ArchitectureUpdateCommandE2ETest {
     }
 
     @Test
-    public void shouldReturnSadStatusWhenFailToCreateDirectory() throws IOException {
+    public void initShouldReturnSadStatusWhenFailToCreateDirectory() {
         Integer status = execute("au", "init", "???");
 
         assertThat(status, not(equalTo(0)));
+    }
+
+    @Test
+    public void initShouldRequireDocumentRootParameter() {
+        assertThat(
+                execute("au", "init"),
+                is(equalTo(2))
+        );
     }
 
     private String str(Path tempDirPath) {

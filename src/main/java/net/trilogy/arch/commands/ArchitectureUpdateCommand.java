@@ -1,6 +1,8 @@
 package net.trilogy.arch.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine.Command;
@@ -10,6 +12,7 @@ import picocli.CommandLine.Spec;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 @Command(
@@ -70,18 +73,25 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
         public Integer call() throws IOException {
             File auFolder = getAuFolder(productDocumentationRoot);
 
-            if(!auFolder.exists() || !auFolder.isDirectory()){
+            if (!auFolder.exists() || !auFolder.isDirectory()) {
                 logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
                 return 1;
             }
 
             File auFile = auFolder.toPath().resolve(name).toFile();
-            if(auFile.exists()){
+            if (auFile.exists()) {
                 logger.error(String.format("AU %s already exists. Try a different name.", name));
                 return 1;
             }
 
-            new ObjectMapper().writeValue(auFile, "ABCD");
+            new ArchitectureUpdateObjectMapper().writeValue(
+                    auFile,
+                    new ArchitectureUpdate(
+                            "name",
+                            "milestone",
+                            List.of(new Person("author")),
+                            List.of(new Person("PCA")))
+            );
             return 0;
         }
     }

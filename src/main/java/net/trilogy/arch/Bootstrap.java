@@ -12,10 +12,11 @@ public class Bootstrap {
 
     protected int execute(String[] args) {
         return new CommandLine(new ParentCommand())
-                    .addSubcommand(new InitializeCommand())
-                    .addSubcommand(new ValidateCommand())
-                    .addSubcommand(new PublishCommand())
-                    .addSubcommand(new ImportCommand())
-                    .execute(args);
+                .addSubcommand(new InitializeCommand())
+                .addSubcommand(new ValidateCommand())
+                .addSubcommand(new PublishCommand())
+                .addSubcommand(new ImportCommand())
+                .addSubcommand(new ArchitectureUpdateCommand())
+                .execute(args);
     }
 }

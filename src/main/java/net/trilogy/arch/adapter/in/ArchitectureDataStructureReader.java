@@ -17,7 +17,7 @@ public class ArchitectureDataStructureReader {
         checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
 
 
-        return new ArchitectureDataStructureObjectMapper().readValue(new FileInputStream(manifest), ArchitectureDataStructure.class);
+        return new ArchitectureDataStructureObjectMapper().readValue(new FileInputStream(manifest));
 
     }
 }

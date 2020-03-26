@@ -2,6 +2,11 @@ package net.trilogy.arch.commands;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.ArchitectureUpdate.MilestoneDependency;
+import net.trilogy.arch.domain.ArchitectureUpdate.P1;
+import net.trilogy.arch.domain.ArchitectureUpdate.P2;
+import net.trilogy.arch.domain.Jira;
+import net.trilogy.arch.domain.Link;
 import net.trilogy.arch.domain.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,10 +92,15 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
             new ArchitectureUpdateObjectMapper().writeValue(
                     auFile,
                     new ArchitectureUpdate(
-                            "name",
-                            "milestone",
-                            List.of(new Person("author")),
-                            List.of(new Person("PCA")))
+                            "",
+                            "",
+                            List.of(new Person("", "")),
+                            List.of(new Person("", "")),
+                            new P2("", new Jira("", "")),
+                            new P1("", new Jira("", ""), ""),
+                            List.of(new Link("","")),
+                            List.of(new MilestoneDependency("", List.of(new Link("", ""))))
+                    )
             );
             return 0;
         }

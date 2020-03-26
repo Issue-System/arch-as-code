@@ -41,11 +41,11 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
         return productDocumentationRoot.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
     }
 
-    @Command(name = "initialize", aliases = {"init"}, description = "Initialize the architecture updates work space.")
+    @Command(name = "initialize", aliases = "init", description = "Initialize the architecture updates work space.")
     public static class Initialize implements Callable<Integer> {
 
         @Parameters(index = "0", description = "Product documentation root directory")
-        File productDocumentationRoot;
+        private File productDocumentationRoot;
 
         @Override
         public Integer call() {
@@ -64,22 +64,22 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
     public static class New implements Callable<Integer> {
 
         @Parameters(index = "0", description = "Name for new architecture update")
-        String name;
+        private String name;
 
         @Parameters(index = "1", description = "Product documentation root directory")
-        File productDocumentationRoot;
+        private File productDocumentationRoot;
 
         @Override
         public Integer call() throws IOException {
             File auFolder = getAuFolder(productDocumentationRoot);
 
-            if (!auFolder.exists() || !auFolder.isDirectory()) {
+            if (!auFolder.isDirectory()) {
                 logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
                 return 1;
             }
 
             File auFile = auFolder.toPath().resolve(name).toFile();
-            if (auFile.exists()) {
+            if (auFile.isFile()) {
                 logger.error(String.format("AU %s already exists. Try a different name.", name));
                 return 1;
             }

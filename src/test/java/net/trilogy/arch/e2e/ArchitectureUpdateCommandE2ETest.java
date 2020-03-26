@@ -1,6 +1,8 @@
 package net.trilogy.arch.e2e;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,49 +10,53 @@ import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class ArchitectureUpdateCommandE2ETest {
 
+    @Rule
+    public final ErrorCollector collector = new ErrorCollector();
+
     @Test
     public void shouldUseCorrectFolder() {
-        assertThat(ARCHITECTURE_UPDATES_ROOT_FOLDER, is(equalTo("architecture-updates")));
+        collector.checkThat(ARCHITECTURE_UPDATES_ROOT_FOLDER, equalTo("architecture-updates"));
     }
 
     @Test
     public void rootCommandShouldPrintUsage() {
         // TODO: assert that usage is shown
-        assertThat(
+        collector.checkThat(
                 execute("au"),
-                is(equalTo(0))
+                equalTo(0)
         );
     }
 
     @Test
     public void initShouldExitWithHappyStatus() throws IOException {
-        assertThat(
+        collector.checkThat(
                 execute("au", "init", str(getTempDirectory())),
-                is(equalTo(0))
+                equalTo(0)
         );
-        assertThat(
+        collector.checkThat(
                 execute("architecture-update", "init", str(getTempDirectory())),
-                is(equalTo(0))
+                equalTo(0)
         );
-        assertThat(
+        collector.checkThat(
                 execute("au", "initialize", str(getTempDirectory())),
-                is(equalTo(0))
+                equalTo(0)
         );
-        assertThat(
+        collector.checkThat(
                 execute("architecture-update", "initialize", str(getTempDirectory())),
-                is(equalTo(0))
+                equalTo(0)
         );
     }
 
     @Test
     public void initShouldCreateDirectory() throws IOException {
         Path tempDirPath = getTempDirectory();
-        assertThat(
+        collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
                 Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(false)
@@ -58,9 +64,9 @@ public class ArchitectureUpdateCommandE2ETest {
 
         Integer status = execute("au", "init", str(tempDirPath));
 
-        assertThat(status, is(equalTo(0)));
+        collector.checkThat(status, is(equalTo(0)));
 
-        assertThat(
+        collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder was created.",
                 Files.isDirectory(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(true)
@@ -72,7 +78,7 @@ public class ArchitectureUpdateCommandE2ETest {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir));
 
-        assertThat(
+        collector.checkThat(
                 execute("au", "init", str(rootDir)),
                 not(equalTo(0))
         );
@@ -83,12 +89,12 @@ public class ArchitectureUpdateCommandE2ETest {
     public void initShouldReturnSadStatusWhenFailToCreateDirectory() {
         Integer status = execute("au", "init", "???");
 
-        assertThat(status, not(equalTo(0)));
+        collector.checkThat(status, not(equalTo(0)));
     }
 
     @Test
     public void initShouldRequireDocumentRootParameter() {
-        assertThat(
+        collector.checkThat(
                 execute("au", "init"),
                 is(equalTo(2))
         );
@@ -98,14 +104,14 @@ public class ArchitectureUpdateCommandE2ETest {
     public void newShouldExitWithHappyStatus() throws IOException {
         Path dir = getTempDirectory();
         execute("au", "init", str(dir));
-        assertThat(
+        collector.checkThat(
                 execute("au", "new", "au-name", str(dir)),
                 is(equalTo(0))
         );
 
         dir = getTempDirectory();
         execute("au", "init", str(dir));
-        assertThat(
+        collector.checkThat(
                 execute("architecture-update", "new", "au-name", str(dir)),
                 is(equalTo(0))
         );
@@ -114,13 +120,13 @@ public class ArchitectureUpdateCommandE2ETest {
     @Test
     public void newShouldFailIfNotInitialized() throws IOException {
         Path tempDirPath = getTempDirectory();
-        assertThat(
+        collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
                 Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(false)
         );
 
-        assertThat(
+        collector.checkThat(
                 execute("au", "new", "au-name", str(tempDirPath)),
                 not(equalTo(0))
         );
@@ -138,7 +144,7 @@ public class ArchitectureUpdateCommandE2ETest {
 
         // GIVEN that the au does not exist
         Path auFile = auDir.resolve("au-name");
-        assertThat(
+        collector.checkThat(
                 "AU does not already exist. (Precondition check)",
                 Files.exists(auFile),
                 is(false)
@@ -148,8 +154,8 @@ public class ArchitectureUpdateCommandE2ETest {
         Integer exitCode = execute("au", "new", "au-name", str(rootDir));
 
         // THEN the au should exist
-        assertThat(exitCode, is(equalTo(0)));
-        assertThat(Files.exists(auFile), is(true));
+        collector.checkThat(exitCode, is(equalTo(0)));
+        collector.checkThat(Files.exists(auFile), is(true));
 
         // TODO: check that file content matches output of AuWriter
     }
@@ -161,7 +167,7 @@ public class ArchitectureUpdateCommandE2ETest {
 
         String name = "au-name";
         execute("au", "new", name, str(rootDir));
-        assertThat(
+        collector.checkThat(
                 execute("au", "new", name, str(rootDir)),
                 not(equalTo(0))
         );

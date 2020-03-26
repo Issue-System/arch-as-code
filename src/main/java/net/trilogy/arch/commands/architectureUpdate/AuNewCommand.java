@@ -31,14 +31,18 @@ public class AuNewCommand implements Callable<Integer> {
             return 1;
         }
 
-        File auFile = auFolder.toPath().resolve(name).toFile();
+        String auFileName = name + ".yml";
+
+        File auFile = auFolder.toPath().resolve(auFileName).toFile();
         if (auFile.isFile()) {
-            logger.error(String.format("AU %s already exists. Try a different name.", name));
+            logger.error(String.format("AU %s already exists. Try a different name.", auFileName));
             return 1;
         }
 
         ArchitectureUpdate au = ArchitectureUpdate.blank();
         Files.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
+
+        logger.info(String.format("AU created - %s", auFile.toPath()));
         return 0;
     }
 }

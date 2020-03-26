@@ -63,7 +63,7 @@ public class NewCommandTest {
         Path auDir = rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
 
         // GIVEN that the au does not exist
-        Path auFile = auDir.resolve("au-name");
+        Path auFile = auDir.resolve("au-name.yml");
         collector.checkThat(
                 "AU does not already exist. (Precondition check)",
                 Files.exists(auFile),

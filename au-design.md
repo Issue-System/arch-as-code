@@ -18,7 +18,7 @@ arch.jira [VCS]
 
 ## Architecture Update Yaml Format:
 ```
-name [P1]
+name [O]
 identifier [A]
 milestone [P1]
 authors ->
@@ -51,9 +51,9 @@ milestone-dependencies ->
             link... [P1]
 model-updates ->
     model-update... ->
-        component-id ? [M]
+        identifier [M]
         description [M]
-        view-ids ->
+        views ->
             view-id... [M]
         src-mapping... ->
             ???

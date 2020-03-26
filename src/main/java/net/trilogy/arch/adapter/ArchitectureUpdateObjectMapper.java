@@ -5,14 +5,14 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 
-import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.IOException;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.annotation.PropertyAccessor.*;
+import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
+import static com.fasterxml.jackson.annotation.PropertyAccessor.GETTER;
+import static com.fasterxml.jackson.annotation.PropertyAccessor.IS_GETTER;
 
 public class ArchitectureUpdateObjectMapper {
     private final ObjectMapper mapper;
@@ -25,7 +25,7 @@ public class ArchitectureUpdateObjectMapper {
         this.mapper.setSerializationInclusion(NON_NULL);
     }
 
-    public void writeValue(@NotNull File resultFile, ArchitectureUpdate value) throws IOException {
-        this.mapper.writeValue(resultFile, value);
+    public String writeValueAsString(ArchitectureUpdate value) throws IOException {
+        return this.mapper.writeValueAsString(value);
     }
 }

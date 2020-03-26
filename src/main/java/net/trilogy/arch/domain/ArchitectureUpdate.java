@@ -34,6 +34,19 @@ public class ArchitectureUpdate {
         this.milestoneDependencies = copyList(milestoneDependencies);
     }
 
+    public static ArchitectureUpdate blank() {
+        return new ArchitectureUpdate(
+                "",
+                "",
+                List.of(new Person("", "")),
+                List.of(new Person("", "")),
+                new P2("", new Jira("", "")),
+                new P1("", new Jira("", ""), ""),
+                List.of(new Link("", "")),
+                List.of(new MilestoneDependency("", List.of(new Link("", ""))))
+        );
+    }
+
     private static <T> ArrayList<T> copyList(List<T> orig) {
         return orig != null ? new ArrayList<>(orig) : new ArrayList<>();
     }

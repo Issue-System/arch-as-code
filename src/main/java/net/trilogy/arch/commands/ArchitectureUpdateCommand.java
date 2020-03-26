@@ -2,12 +2,6 @@ package net.trilogy.arch.commands;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.ArchitectureUpdate;
-import net.trilogy.arch.domain.ArchitectureUpdate.MilestoneDependency;
-import net.trilogy.arch.domain.ArchitectureUpdate.P1;
-import net.trilogy.arch.domain.ArchitectureUpdate.P2;
-import net.trilogy.arch.domain.Jira;
-import net.trilogy.arch.domain.Link;
-import net.trilogy.arch.domain.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine.Command;
@@ -17,7 +11,7 @@ import picocli.CommandLine.Spec;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Files;
 import java.util.concurrent.Callable;
 
 @Command(
@@ -32,6 +26,7 @@ import java.util.concurrent.Callable;
 public class ArchitectureUpdateCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
     public static final String ARCHITECTURE_UPDATES_ROOT_FOLDER = "architecture-updates";
+    private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
 
     @Spec
     private CommandSpec spec;
@@ -89,19 +84,8 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
                 return 1;
             }
 
-            new ArchitectureUpdateObjectMapper().writeValue(
-                    auFile,
-                    new ArchitectureUpdate(
-                            "",
-                            "",
-                            List.of(new Person("", "")),
-                            List.of(new Person("", "")),
-                            new P2("", new Jira("", "")),
-                            new P1("", new Jira("", ""), ""),
-                            List.of(new Link("","")),
-                            List.of(new MilestoneDependency("", List.of(new Link("", ""))))
-                    )
-            );
+            ArchitectureUpdate au = ArchitectureUpdate.blank();
+            Files.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
             return 0;
         }
     }

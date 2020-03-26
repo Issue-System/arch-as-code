@@ -1,5 +1,7 @@
 package net.trilogy.arch.e2e;
 
+import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -77,12 +79,23 @@ public class ArchitectureUpdateCommandE2ETest {
     public void initShouldFailIfDirectoryAlreadyExists() throws IOException {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir));
+        Files.writeString(auPathFrom(rootDir, "name"), "EXISTING CONTENTS");
+        collector.checkThat(
+                "Precondition check: AU must contain our contents.",
+                Files.readString(auPathFrom(rootDir, "name")),
+                equalTo("EXISTING CONTENTS")
+        );
+
+        Integer result = execute("au", "init", str(rootDir));
 
         collector.checkThat(
-                execute("au", "init", str(rootDir)),
+                result,
                 not(equalTo(0))
         );
-        // TODO: check that nothing was overridden
+        collector.checkThat(
+                Files.readString(auPathFrom(rootDir, "name")),
+                equalTo("EXISTING CONTENTS")
+        );
     }
 
     @Test
@@ -157,7 +170,11 @@ public class ArchitectureUpdateCommandE2ETest {
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
 
-        // TODO: check that file content matches output of AuWriter
+        // THEN the au contents should be a blank au
+        collector.checkThat(
+                Files.readString(auFile.toAbsolutePath()),
+                equalTo(new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank()))
+        );
     }
 
     @Test
@@ -165,13 +182,31 @@ public class ArchitectureUpdateCommandE2ETest {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir));
 
-        String name = "au-name";
-        execute("au", "new", name, str(rootDir));
+        String auName = "au-name";
+        execute("au", "new", auName, str(rootDir));
+        Files.writeString(auPathFrom(rootDir, auName), "EXISTING CONTENTS");
+
         collector.checkThat(
-                execute("au", "new", name, str(rootDir)),
+                "Precondition check: AU must contain our contents.",
+                Files.readString(auPathFrom(rootDir, auName)),
+                equalTo("EXISTING CONTENTS")
+        );
+
+        collector.checkThat(
+                "Overwriting an AU must exit with failed status.",
+                execute("au", "new", auName, str(rootDir)),
                 not(equalTo(0))
         );
-        // TODO: check that file was not overridden
+
+        collector.checkThat(
+                "Must not overwrite an AU",
+                Files.readString(auPathFrom(rootDir, auName)),
+                equalTo("EXISTING CONTENTS")
+        );
+    }
+
+    private Path auPathFrom(Path rootPath, String auName) {
+        return rootPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER).resolve(auName).toAbsolutePath();
     }
 
     private String str(Path tempDirPath) {

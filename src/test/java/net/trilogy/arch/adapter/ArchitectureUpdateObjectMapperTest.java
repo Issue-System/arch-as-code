@@ -9,9 +9,7 @@ import net.trilogy.arch.domain.Link;
 import net.trilogy.arch.domain.Person;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,44 +29,40 @@ public class ArchitectureUpdateObjectMapperTest {
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),
                 List.of(new MilestoneDependency("description", List.of(new Link("description", "link")))));
-        File tempFile = getTempFile();
-        new ArchitectureUpdateObjectMapper().writeValue(tempFile, architectureUpdate);
 
-        assertThat(
-                Files.readString(tempFile.toPath()),
-                equalTo(
-                        "name: \"name\"\n" +
-                                "milestone: \"milestone\"\n" +
-                                "authors:\n" +
-                                "- name: \"author\"\n" +
-                                "  email: \"email\"\n" +
-                                "PCAs:\n" +
-                                "- name: \"PCA\"\n" +
-                                "  email: \"email\"\n" +
-                                "P2:\n" +
-                                "  link: \"link\"\n" +
-                                "  jira:\n" +
-                                "    ticket: \"ticket\"\n" +
-                                "    link: \"link\"\n" +
-                                "P1:\n" +
-                                "  link: \"link\"\n" +
-                                "  jira:\n" +
-                                "    ticket: \"ticket\"\n" +
-                                "    link: \"link\"\n" +
-                                "  summary: \"summary\"\n" +
-                                "useful-links:\n" +
-                                "- description: \"description\"\n" +
-                                "  link: \"link\"\n" +
-                                "milestone-dependencies:\n" +
-                                "- description: \"description\"\n" +
-                                "  links:\n" +
-                                "  - description: \"description\"\n" +
-                                "    link: \"link\"\n"
-                )
+        String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(architectureUpdate);
+
+        String expected = String.join("\n"
+                , ""
+                , "name: \"name\""
+                , "milestone: \"milestone\""
+                , "authors:"
+                , "- name: \"author\""
+                , "  email: \"email\""
+                , "PCAs:"
+                , "- name: \"PCA\""
+                , "  email: \"email\""
+                , "P2:"
+                , "  link: \"link\""
+                , "  jira:"
+                , "    ticket: \"ticket\""
+                , "    link: \"link\""
+                , "P1:"
+                , "  link: \"link\""
+                , "  jira:"
+                , "    ticket: \"ticket\""
+                , "    link: \"link\""
+                , "  summary: \"summary\""
+                , "useful-links:"
+                , "- description: \"description\""
+                , "  link: \"link\""
+                , "milestone-dependencies:"
+                , "- description: \"description\""
+                , "  links:"
+                , "  - description: \"description\""
+                , "    link: \"link\""
         );
-    }
 
-    private File getTempFile() throws IOException {
-        return File.createTempFile("abc", "def");
+        assertThat(actual.trim(), equalTo(expected.trim()));
     }
 }

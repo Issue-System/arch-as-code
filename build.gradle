@@ -31,6 +31,9 @@ repositories {
 }
 
 dependencies {
+    //Google
+    compile 'com.google.api-client:google-api-client:1.30.5'
+
     //Guava
     implementation 'com.google.guava:guava:28.2-jre'
 

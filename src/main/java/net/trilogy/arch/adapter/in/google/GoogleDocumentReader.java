@@ -16,6 +16,8 @@ import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class GoogleDocumentReader {
@@ -49,8 +51,14 @@ public class GoogleDocumentReader {
                 jsonFactory,
                 credential
         );
-        Document execute = docs.documents().get("abcd").execute();
-        System.out.println(execute.toPrettyString());
+        Document execute = docs.documents().get("1roBAWDEcIVQC4pv1gBGC3GOb8v0Nk7l6pfOIWxbidfA").execute();
+        String document = execute.toPrettyString();
+        Path file = Files.createTempFile("arch-as-code_google-doc-output", ".json");
+        Files.writeString(file, document);
+
+        System.out.println("WRITTEN: " + file.toAbsolutePath());
+        System.out.println("Run: cat " + file.toAbsolutePath() + " | jq -c '.body.content[].paragraph.elements[]?.textRun.content'" );
+
     }
 
     private Credential authorize() throws Exception {
@@ -73,6 +81,7 @@ public class GoogleDocumentReader {
                 googleAuthorizationCodeFlow,
                 new LocalServerReceiver()
         );
+
         return authorizationCodeInstalledApp.authorize("user");
     }
 }

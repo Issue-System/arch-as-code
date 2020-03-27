@@ -6,10 +6,12 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.DocsScopes;
+import com.google.api.services.docs.v1.model.Document;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -17,6 +19,20 @@ import java.io.FileReader;
 import java.util.List;
 
 public class GoogleDocumentReader {
+
+    private final String clientSecretsPath;
+    private final String googleCredsDataStoreDirectory;
+    private final NetHttpTransport httpTransport;
+    private final JacksonFactory jsonFactory;
+
+    @SneakyThrows
+    public GoogleDocumentReader() {
+        clientSecretsPath = ".arch-as-code/google/client_secret.json";
+        googleCredsDataStoreDirectory = ".arch-as-code/google/stored-credentials";
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        jsonFactory = JacksonFactory.getDefaultInstance();
+    }
+
     public void doAThing() {
         System.out.println("\n\n\n***\n\n\n");
         System.out.println("BEGIN");
@@ -27,38 +43,36 @@ public class GoogleDocumentReader {
 
     @SneakyThrows
     private void execute() {
-        authorize();
+        Credential credential = authorize();
+        Docs docs = new Docs(
+                httpTransport,
+                jsonFactory,
+                credential
+        );
+        Document execute = docs.documents().get("abcd").execute();
+        System.out.println(execute.toPrettyString());
     }
 
-    private static void authorize() throws Exception {
-        JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        String clientSecretsPath = ".arch-as-code/google/client_secret.json";
-        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(
-                File.createTempFile("prefix", "suffix")
-        );
-
-        // load client secrets
+    private Credential authorize() throws Exception {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
                 jsonFactory,
                 new FileReader(clientSecretsPath)
         );
 
-        // set up authorization code flow
-        GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow = new GoogleAuthorizationCodeFlow(
+        GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport,
                 jsonFactory,
                 clientSecrets.getDetails().getClientId(),
                 clientSecrets.getDetails().getClientSecret(),
                 List.of(DocsScopes.DOCUMENTS_READONLY)
-        );
+        ).setCredentialDataStore(
+                new FileDataStoreFactory(new File(googleCredsDataStoreDirectory)).getDataStore("user")
+        ).build();
 
-        Credential user = new AuthorizationCodeInstalledApp(
+        AuthorizationCodeInstalledApp authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(
                 googleAuthorizationCodeFlow,
                 new LocalServerReceiver()
-        ).authorize("user");
-
-        System.out.println(user);
-
+        );
+        return authorizationCodeInstalledApp.authorize("user");
     }
 }

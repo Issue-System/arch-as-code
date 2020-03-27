@@ -57,17 +57,19 @@ model-updates ->
             view-id... [M]
         src-mapping... ->
             ???
-ITDs -> 
-    ???
-TDDs ->
-    TDD ->
-        component-id / component-alias [M]
-        text [M]
-        traces ->
-            ???
+decisions -> 
+    decision... ->
+        type (ITD, IFD, or SSD) [P1]
+        info ??? [P1]
+    TDDs ->
+        TDD ->
+            component-id / component-alias [M]
+            text [M]
+            decision-id [M]
+            ac-id [M]
     ...
 ACs ->
     AC... ->
-        id [M]
-        text [M]
+        id [P1, or M]
+        text [P1, or M]
 ```

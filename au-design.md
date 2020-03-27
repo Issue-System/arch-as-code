@@ -61,15 +61,14 @@ decisions ->
     decision... ->
         type (ITD, IFD, or SSD) [P1]
         info ??? [P1]
-    TDDs ->
+    TDDs... ->
         TDD ->
             component-id / component-alias [M]
             text [M]
             decision-id [M]
             ac-id [M]
-    ...
 ACs ->
     AC... ->
-        id [P1, or M]
-        text [P1, or M]
+        id [P1]/[M]
+        text [P1]/[M] 
 ```

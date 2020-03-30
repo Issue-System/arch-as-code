@@ -4,7 +4,6 @@ import net.trilogy.arch.commands.ImportCommand;
 import net.trilogy.arch.commands.InitializeCommand;
 import net.trilogy.arch.commands.ParentCommand;
 import net.trilogy.arch.commands.PublishCommand;
-import net.trilogy.arch.commands.Spike;
 import net.trilogy.arch.commands.ValidateCommand;
 import net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand;
 import net.trilogy.arch.commands.architectureUpdate.AuInitializeCommand;
@@ -20,7 +19,6 @@ public class Bootstrap {
 
     protected int execute(String[] args) {
         return new CommandLine(new ParentCommand())
-                .addSubcommand(new Spike())
                 .addSubcommand(new InitializeCommand())
                 .addSubcommand(new ValidateCommand())
                 .addSubcommand(new PublishCommand())

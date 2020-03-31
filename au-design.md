@@ -74,7 +74,7 @@ ACs ->
         tdds... ->
             tdd-id / tdd-alias [M]
 TDDs... ->
-    Component affected ->
+    Component... ->
         component-id / component-alias [M]
         TDD... -> 
             id / alias [M]

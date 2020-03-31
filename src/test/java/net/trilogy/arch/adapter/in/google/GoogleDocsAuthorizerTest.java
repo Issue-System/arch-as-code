@@ -8,8 +8,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.DocsScopes;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,37 +21,42 @@ import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizer.CREDS_DATASTORE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 
+@RunWith(MockitoJUnitRunner.StrictStubs.class)
 public class GoogleDocsAuthorizerTest {
+    @Rule
+    public final ErrorCollector collector = new ErrorCollector();
 
-    private final String CLIENT_ID = "asfdasdfasd";
-    private final String CLIENT_SECRET = "fadsfadsfa";
+    private final String CLIENT_ID = "client-id";
+    private final String CLIENT_SECRET = "client-secret";
     private final List<String> SCOPES = List.of(DocsScopes.DOCUMENTS_READONLY);
 
     private GoogleDocsAuthorizer.AuthorizationCodeInstalledAppFactory mockedAuthorizationCodeInstalledAppFactory;
     private GoogleDocsAuthorizer.CodeFlowBuilderFactory mockedCodeFlowBuilderFactory;
     private GoogleDocsAuthorizer.DocsFactory mockedDocsFactory;
-    private Path dataStore;
-    private Path secretsFile;
+    private Path userCredentialsDirectory;
+    private Path clientCredentialsFile;
     private final NetHttpTransport httpTransport = new NetHttpTransport();
     private final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
     @Before
     public void setUp() throws GeneralSecurityException, IOException {
-        dataStore = Files.createTempDirectory("arch-as-code_tests");
-        secretsFile = Files.createTempFile("arch-as-code_tests", ".json");
+        userCredentialsDirectory = Files.createTempDirectory("arch-as-code_tests");
+        clientCredentialsFile = Files.createTempFile("arch-as-code_tests", ".json");
 
         Files.writeString(
-                secretsFile,
+                clientCredentialsFile,
                 "{" +
                         "\"installed\":" +
                         "{" +
                         "\"client_id\":\"" + CLIENT_ID + "\"," +
-                        "\"project_id\":\"fdsafdfasdf\"," +
+                        "\"project_id\":\"proj-id\"," +
                         "\"auth_uri\":\"https://accounts.fake.com/o/oauth2/auth\"," +
                         "\"token_uri\":\"https://oauth2.fakeapis.com/token\"," +
                         "\"auth_provider_x509_cert_url\":\"https://www.fakeapis.com/oauth2/v1/certs\"," +
@@ -63,13 +72,18 @@ public class GoogleDocsAuthorizerTest {
     }
 
     @Test
+    public void shouldUseCorrectAuFolder() {
+        collector.checkThat(CREDS_DATASTORE_NAME, equalTo("userCredentialsDatastore"));
+    }
+
+    @Test
     public void shouldCallTheGoogleApiInTheCorrectSequence() throws IOException {
         // GIVEN
         Docs expected = mockGoogleApiBehavior();
 
         GoogleDocsAuthorizer authorizer = new GoogleDocsAuthorizer(
-                secretsFile.toAbsolutePath().toString(),
-                dataStore.toAbsolutePath().toString(),
+                clientCredentialsFile.toAbsolutePath().toString(),
+                userCredentialsDirectory.toAbsolutePath().toString(),
                 httpTransport,
                 jsonFactory,
                 mockedCodeFlowBuilderFactory,
@@ -106,12 +120,13 @@ public class GoogleDocsAuthorizerTest {
         );
 
         var mockedCredential = Mockito.mock(Credential.class);
-        Mockito.when(mockedAuthorization.authorize(any())).thenReturn(mockedCredential);
+        Mockito.when(mockedAuthorization.authorize(CREDS_DATASTORE_NAME)).thenReturn(mockedCredential);
         return mockedCredential;
     }
 
-    private GoogleAuthorizationCodeFlow mockGoogleCodeFlow() {
+    private GoogleAuthorizationCodeFlow mockGoogleCodeFlow() throws IOException {
         var mockedCodeFlowBuilder = Mockito.mock(GoogleAuthorizationCodeFlow.Builder.class);
+        // TODO Future: Replace any() with factory
         Mockito.when(mockedCodeFlowBuilder.setCredentialDataStore(any())).thenReturn(mockedCodeFlowBuilder);
         Mockito.when(
                 mockedCodeFlowBuilderFactory.make(httpTransport, jsonFactory, CLIENT_ID, CLIENT_SECRET, SCOPES)

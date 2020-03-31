@@ -24,10 +24,10 @@ import java.util.List;
 
 public class GoogleDocsAuthorizer {
 
-    private final String CREDS_DATASTORE_NAME = "credentials_datastore";
+    public static final String CREDS_DATASTORE_NAME = "userCredentialsDatastore";
 
-    private final String clientSecretsPath;
-    private final String credsStoreDirectory;
+    private final String clientCredentialsPath;
+    private final String userCredentialsDirectory;
     private final NetHttpTransport httpTransport;
     private final JacksonFactory jsonFactory;
     private final CodeFlowBuilderFactory codeFlowBuilderFactory;
@@ -35,11 +35,11 @@ public class GoogleDocsAuthorizer {
     private final DocsFactory docsFactory;
 
     public GoogleDocsAuthorizer(
-            String clientSecretsPath,
-            String credsStoreDirectory
+            String clientCredentialsPath,
+            String userCredentialsDirectory
     ) throws GeneralSecurityException, IOException {
-        this.clientSecretsPath = clientSecretsPath;
-        this.credsStoreDirectory = credsStoreDirectory;
+        this.clientCredentialsPath = clientCredentialsPath;
+        this.userCredentialsDirectory = userCredentialsDirectory;
         this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         this.jsonFactory = JacksonFactory.getDefaultInstance();
         this.docsFactory = new DocsFactory();
@@ -49,16 +49,16 @@ public class GoogleDocsAuthorizer {
 
     @VisibleForTesting
     public GoogleDocsAuthorizer(
-            String clientSecretsPath,
-            String credsStoreDirectory,
+            String clientCredentialsPath,
+            String userCredentialsDirectory,
             NetHttpTransport httpTransport,
             JacksonFactory jsonFactory,
             CodeFlowBuilderFactory codeFlowBuilderFactory,
             AuthorizationCodeInstalledAppFactory authorizationCodeInstalledAppFactory,
             DocsFactory docsFactory
     ) {
-        this.clientSecretsPath = clientSecretsPath;
-        this.credsStoreDirectory = credsStoreDirectory;
+        this.clientCredentialsPath = clientCredentialsPath;
+        this.userCredentialsDirectory = userCredentialsDirectory;
         this.httpTransport = httpTransport;
         this.jsonFactory = jsonFactory;
         this.codeFlowBuilderFactory = codeFlowBuilderFactory;
@@ -71,7 +71,7 @@ public class GoogleDocsAuthorizer {
     }
 
     private Credential authorize() throws IOException {
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new FileReader(clientSecretsPath));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new FileReader(clientCredentialsPath));
         GoogleAuthorizationCodeFlow.Builder codeFlowBuilder = codeFlowBuilderFactory.make(
                 httpTransport,
                 jsonFactory,
@@ -79,7 +79,7 @@ public class GoogleDocsAuthorizer {
                 clientSecrets.getDetails().getClientSecret(),
                 List.of(DocsScopes.DOCUMENTS_READONLY)
         );
-        DataStore<StoredCredential> dataStore = new FileDataStoreFactory(new File(credsStoreDirectory)).getDataStore(CREDS_DATASTORE_NAME);
+        DataStore<StoredCredential> dataStore = new FileDataStoreFactory(new File(userCredentialsDirectory)).getDataStore(CREDS_DATASTORE_NAME);
         GoogleAuthorizationCodeFlow codeFlow = codeFlowBuilder.setCredentialDataStore(dataStore).build();
         AuthorizationCodeInstalledApp authorizationCodeInstalledApp = authorizationCodeInstalledAppFactory.make(codeFlow, new LocalServerReceiver());
         return authorizationCodeInstalledApp.authorize(CREDS_DATASTORE_NAME);

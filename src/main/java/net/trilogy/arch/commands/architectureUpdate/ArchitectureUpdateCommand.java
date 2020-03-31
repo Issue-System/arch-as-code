@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
 )
 public class ArchitectureUpdateCommand implements Callable<Integer> {
     public static final String ARCHITECTURE_UPDATES_ROOT_FOLDER = "architecture-updates";
+    public static final String ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER = ".arch-as-code/google/";
 
     private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
 

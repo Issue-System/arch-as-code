@@ -9,10 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
+import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class InitializeCommandTest {
     @Rule
@@ -21,6 +20,11 @@ public class InitializeCommandTest {
     @Test
     public void shouldUseCorrectFolder() {
         collector.checkThat(ARCHITECTURE_UPDATES_ROOT_FOLDER, equalTo("architecture-updates"));
+    }
+
+    @Test
+    public void shouldUseCorrectCredentialsFolder() {
+        collector.checkThat(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER, equalTo(".arch-as-code/google/"));
     }
 
     @Test
@@ -53,7 +57,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldCreateDirectory() throws IOException {
+    public void shouldCreateAuDirectory() throws IOException {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
@@ -68,6 +72,26 @@ public class InitializeCommandTest {
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder was created.",
                 Files.isDirectory(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
+                is(true)
+        );
+    }
+
+    @Test
+    public void shouldCreateGoogleCredentialsDirectory() throws IOException {
+        Path tempDirPath = getTempDirectory();
+        collector.checkThat(
+                ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER + " folder does not exist. (Precondition check)",
+                Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER)),
+                is(false)
+        );
+
+        Integer status = execute("au", "init", str(tempDirPath));
+
+        collector.checkThat(status, is(equalTo(0)));
+
+        collector.checkThat(
+                ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER + " folder was created.",
+                Files.isDirectory(tempDirPath.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER)),
                 is(true)
         );
     }

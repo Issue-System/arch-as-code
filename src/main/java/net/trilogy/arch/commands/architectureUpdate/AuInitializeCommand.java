@@ -17,13 +17,30 @@ public class AuInitializeCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        if (!makeAuFolder()) return 1;
+        if (!makeCredentialsFolder()) return 1;
+
+        logger.info(String.format("Architecture updates initialized under - %s", Helpers.getAuFolder(productDocumentationRoot)));
+        return 0;
+    }
+
+    private boolean makeAuFolder() {
         File auFolder = Helpers.getAuFolder(productDocumentationRoot);
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
             logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));
-            return 1;
+            return false;
         }
-        logger.info(String.format("Architecture updates initialized under - %s", auFolder.getAbsolutePath()));
-        return 0;
+        return true;
+    }
+
+    private boolean makeCredentialsFolder() {
+        File auCredentialFolder = Helpers.getAuCredentialFolder(productDocumentationRoot);
+        boolean credSucceeded = auCredentialFolder.mkdirs();
+        if (!credSucceeded) {
+            logger.error(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));
+            return false;
+        }
+        return true;
     }
 }

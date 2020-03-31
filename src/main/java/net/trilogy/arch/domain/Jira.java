@@ -1,5 +1,8 @@
 package net.trilogy.arch.domain;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Jira {
     private final String ticket;
     private final String link;

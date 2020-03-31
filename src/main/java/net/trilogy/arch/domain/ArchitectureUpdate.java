@@ -1,10 +1,12 @@
 package net.trilogy.arch.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode
 public class ArchitectureUpdate {
     private final String name;
     private final String milestone;
@@ -51,6 +53,7 @@ public class ArchitectureUpdate {
         return orig != null ? new ArrayList<>(orig) : new ArrayList<>();
     }
 
+    @EqualsAndHashCode
     public static class P2 {
         private final String link;
         private final Jira jira;
@@ -61,6 +64,7 @@ public class ArchitectureUpdate {
         }
     }
 
+    @EqualsAndHashCode
     public static class P1 {
         private final String link;
         private final Jira jira;
@@ -73,6 +77,7 @@ public class ArchitectureUpdate {
         }
     }
 
+    @EqualsAndHashCode
     public static class MilestoneDependency {
         private final String description;
         private final List<Link> links;

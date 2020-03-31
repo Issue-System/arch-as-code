@@ -31,6 +31,12 @@ public class AuInitializeCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
+    private final String authUri = "https://accounts.google.com/o/oauth2/auth";
+    private final String tokenUri = "https://oauth2.googleapis.com/token";
+    private final String authProviderCertUrl = "https://www.googleapis.com/oauth2/v1/certs";
+    private final String redirectUrn = "urn:ietf:wg:oauth:2.0:oob";
+    private final String redirectUri = "http://localhost";
+
     @Override
     public Integer call() {
         if (!makeAuFolder()) return 1;
@@ -60,13 +66,13 @@ public class AuInitializeCommand implements Callable<Integer> {
                 "  \"installed\": {\n" +
                 "    \"client_id\": \"" + clientId.strip() + "\",\n" +
                 "    \"project_id\": \"" + projectId.strip() + "\",\n" +
-                "    \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n" +
-                "    \"token_uri\": \"https://oauth2.googleapis.com/token\",\n" +
-                "    \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n" +
+                "    \"auth_uri\": \"" + authUri + "\",\n" +
+                "    \"token_uri\": \"" + tokenUri + "\",\n" +
+                "    \"auth_provider_x509_cert_url\": \"" + authProviderCertUrl + "\",\n" +
                 "    \"client_secret\": \"" + secret.strip() + "\",\n" +
                 "    \"redirect_uris\": [\n" +
-                "      \"urn:ietf:wg:oauth:2.0:oob\",\n" +
-                "      \"http://localhost\"\n" +
+                "      \"" + redirectUrn + "\",\n" +
+                "      \"" + redirectUri + "\"\n" +
                 "    ]\n" +
                 "  }\n" +
                 "}";

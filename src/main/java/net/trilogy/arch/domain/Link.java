@@ -1,5 +1,8 @@
 package net.trilogy.arch.domain;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Link {
     private final String description;
     private final String link;

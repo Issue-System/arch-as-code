@@ -2,6 +2,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.ArchitectureUpdate;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -19,7 +20,7 @@ public class NewCommandTest {
     public final ErrorCollector collector = new ErrorCollector();
 
     @Test
-    public void shouldExitWithHappyStatus() throws IOException {
+    public void shouldExitWithHappyStatusWithoutP1() throws IOException {
         Path dir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(dir));
         collector.checkThat(
@@ -31,6 +32,24 @@ public class NewCommandTest {
         execute("au", "init", "-c c", "-p p", "-s s", str(dir));
         collector.checkThat(
                 execute("architecture-update", "new", "au-name", str(dir)),
+                is(equalTo(0))
+        );
+    }
+
+    @Test()
+    @Ignore
+    public void shouldExitWithHappyStatusWithP1() throws IOException {
+        Path dir = getTempDirectory();
+        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+        collector.checkThat(
+                execute("au", "new", "au-name", "-p1 url", str(dir)),
+                is(equalTo(0))
+        );
+
+        dir = getTempDirectory();
+        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+        collector.checkThat(
+                execute("architecture-update", "new", "au-name", "-p1 url", str(dir)),
                 is(equalTo(0))
         );
     }

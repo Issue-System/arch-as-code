@@ -12,9 +12,7 @@ import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class NewCommandTest {
     @Rule
@@ -23,14 +21,14 @@ public class NewCommandTest {
     @Test
     public void shouldExitWithHappyStatus() throws IOException {
         Path dir = getTempDirectory();
-        execute("au", "init", str(dir));
+        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
         collector.checkThat(
                 execute("au", "new", "au-name", str(dir)),
                 is(equalTo(0))
         );
 
         dir = getTempDirectory();
-        execute("au", "init", str(dir));
+        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
         collector.checkThat(
                 execute("architecture-update", "new", "au-name", str(dir)),
                 is(equalTo(0))
@@ -59,7 +57,7 @@ public class NewCommandTest {
         execute("init", str(rootDir), "-i i", "-k k", "-s s");
 
         // GIVEN an initialized au dir
-        execute("au", "init", str(rootDir));
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         Path auDir = rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
 
         // GIVEN that the au does not exist
@@ -87,7 +85,7 @@ public class NewCommandTest {
     @Test
     public void shouldNotCreateFileIfAlreadyExists() throws IOException {
         Path rootDir = getTempDirectory();
-        execute("au", "init", str(rootDir));
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
 
         String auName = "au-name";
         execute("au", "new", auName, str(rootDir));

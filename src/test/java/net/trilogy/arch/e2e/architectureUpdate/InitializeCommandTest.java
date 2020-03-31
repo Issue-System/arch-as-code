@@ -9,16 +9,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER;
-import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
+import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.*;
 import static org.hamcrest.Matchers.*;
 
 public class InitializeCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
+    private final String client_id = "id";
+    private final String project_id = "proj";
+    private final String secret = "secret";
 
     @Test
-    public void shouldUseCorrectFolder() {
+    public void shouldUseCorrectAuFolder() {
         collector.checkThat(ARCHITECTURE_UPDATES_ROOT_FOLDER, equalTo("architecture-updates"));
     }
 
@@ -28,8 +30,13 @@ public class InitializeCommandTest {
     }
 
     @Test
+    public void shouldUseCorrectClientCredentialsFile() {
+        collector.checkThat(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE, equalTo("client_credentials.json"));
+    }
+
+    @Test
     public void rootCommandShouldPrintUsage() {
-        // TODO: assert that usage is shown
+        // TODO FUTURE: Assert that usage is shown AAC-75
         collector.checkThat(
                 execute("au"),
                 equalTo(0)
@@ -39,19 +46,19 @@ public class InitializeCommandTest {
     @Test
     public void shouldExitWithHappyStatus() throws IOException {
         collector.checkThat(
-                execute("au", "init", str(getTempDirectory())),
+                execute("au", "init", "-c c", "-p p", "-s s", str(getTempDirectory())),
                 equalTo(0)
         );
         collector.checkThat(
-                execute("architecture-update", "init", str(getTempDirectory())),
+                execute("architecture-update", "init", "-c c", "-p p", "-s s", str(getTempDirectory())),
                 equalTo(0)
         );
         collector.checkThat(
-                execute("au", "initialize", str(getTempDirectory())),
+                execute("au", "initialize", "-c c", "-p p", "-s s", str(getTempDirectory())),
                 equalTo(0)
         );
         collector.checkThat(
-                execute("architecture-update", "initialize", str(getTempDirectory())),
+                execute("architecture-update", "initialize", "-c c", "-p p", "-s s", str(getTempDirectory())),
                 equalTo(0)
         );
     }
@@ -65,7 +72,7 @@ public class InitializeCommandTest {
                 is(false)
         );
 
-        Integer status = execute("au", "init", str(tempDirPath));
+        Integer status = execute("au", "init", "-c c", "-p p", "-s s", str(tempDirPath));
 
         collector.checkThat(status, is(equalTo(0)));
 
@@ -85,7 +92,7 @@ public class InitializeCommandTest {
                 is(false)
         );
 
-        Integer status = execute("au", "init", str(tempDirPath));
+        Integer status = execute("au", "init", "-c c", "-p p", "-s s", str(tempDirPath));
 
         collector.checkThat(status, is(equalTo(0)));
 
@@ -97,9 +104,9 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldFailIfDirectoryAlreadyExists() throws IOException {
+    public void shouldFailIfAuDirectoryAlreadyExists() throws IOException {
         Path rootDir = getTempDirectory();
-        execute("au", "init", str(rootDir));
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         Files.writeString(auPathFrom(rootDir, "name"), "EXISTING CONTENTS");
         collector.checkThat(
                 "Precondition check: AU must contain our contents.",
@@ -120,17 +127,61 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldReturnSadStatusWhenFailToCreateDirectory() {
-        Integer status = execute("au", "init", "???");
-
-        collector.checkThat(status, not(equalTo(0)));
-    }
-
-    @Test
     public void shouldRequireDocumentRootParameter() {
         collector.checkThat(
                 execute("au", "init"),
                 is(equalTo(2))
+        );
+    }
+
+    @Test
+    public void shouldCreateClientCredentialsFile() throws IOException {
+        Path rootDir = getTempDirectory();
+        execute("au", "init", str(rootDir), "-c " + client_id, "-p " + project_id, "-s " + secret);
+
+        Path auCredFile = rootDir.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER).resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);
+        String expected = "{\n" +
+                "  \"installed\": {\n" +
+                "    \"client_id\": \"" + client_id + "\",\n" +
+                "    \"project_id\": \"" + project_id + "\",\n" +
+                "    \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n" +
+                "    \"token_uri\": \"https://oauth2.googleapis.com/token\",\n" +
+                "    \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n" +
+                "    \"client_secret\": \"" + secret + "\",\n" +
+                "    \"redirect_uris\": [\n" +
+                "      \"urn:ietf:wg:oauth:2.0:oob\",\n" +
+                "      \"http://localhost\"\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+
+        collector.checkThat(
+                Files.readString(auCredFile),
+                equalTo(expected));
+    }
+
+    @Test
+    public void shouldNotOverrideExistingCredentialsFolder() throws IOException {
+        Path rootDir = getTempDirectory();
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
+        final Path auClientCredentialsFile = rootDir.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER).resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);
+        Files.writeString(auClientCredentialsFile.toAbsolutePath(), "EXISTING CONTENTS");
+
+        collector.checkThat(
+                "Precondition check: AU must contain our contents.",
+                Files.readString(auClientCredentialsFile),
+                equalTo("EXISTING CONTENTS")
+        );
+
+        Integer result = execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
+
+        collector.checkThat(
+                result,
+                not(equalTo(0))
+        );
+        collector.checkThat(
+                Files.readString(auClientCredentialsFile),
+                equalTo("EXISTING CONTENTS")
         );
     }
 

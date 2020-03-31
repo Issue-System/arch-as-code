@@ -2,50 +2,59 @@ package net.trilogy.arch.adapter.in.google;
 
 import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Document;
-import net.trilogy.arch.domain.ArchitectureUpdate;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.*;
 
+@RunWith(JUnitParamsRunner.class)
 public class GoogleDocumentReaderTest {
-    private Docs mockDocApi;
+    private Docs mockedApi;
     private GoogleDocumentReader reader;
 
     @Before
     public void setUp() throws IOException {
-        GoogleDocsAuthorizer authorizer = Mockito.mock(GoogleDocsAuthorizer.class);
-        mockDocApi = Mockito.mock(Docs.class, Answers.RETURNS_DEEP_STUBS);
-        Mockito.when(authorizer.getAuthorizedDocsApi())
-                .thenReturn(mockDocApi);
-
-        reader = new GoogleDocumentReader(authorizer);
+        mockedApi = mock(Docs.class);
+        GoogleDocsAuthorizedApiFactory mockedApiFactory = mock(GoogleDocsAuthorizedApiFactory.class);
+        when(mockedApiFactory.getAuthorizedDocsApi()).thenReturn(mockedApi);
+        reader = new GoogleDocumentReader(mockedApiFactory);
     }
 
-
+    @Parameters({"", " ", " \n ", "https://docs.fake.com/document/d/"})
     @Test(expected = GoogleDocumentReader.InvalidUrlException.class)
-    public void shouldRaiseExceptionOnEmptyUrl() {
-        reader.load("  ");
+    public void shouldRaiseExceptionOnEmptyUrl(String s) throws IOException {
+        reader.load(s);
     }
 
+    @Parameters({
+            "https://docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk/view | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+            "https://docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk/edit?usp=sharing | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+            "docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk/view | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+            "docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+            "https://docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+            "docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
+    })
     @Test
-    public void shouldCreateBlankAuWhenDocIsBlank() throws IOException {
-        Document doc = new Document();
-        String url = "http://url";
-        mockApi(doc, url);
+    public void shouldParseDocumentId(String url, String id) throws IOException {
+        mockApi(new Document(), id);
 
-        ArchitectureUpdate expected = ArchitectureUpdate.blank();
-        ArchitectureUpdate actual = reader.load(url);
-        assertThat(expected, equalTo(actual));
+        reader.load(url);
+
+        verify(mockedApi.documents()).get(id);
     }
 
-    private void mockApi(Document d, String url) throws IOException {
-        Mockito.when(mockDocApi.documents().get(url).execute())
-                .thenReturn(d);
+    private void mockApi(Document toReturn, String given) throws IOException {
+        var mockedDocuments = mock(Docs.Documents.class);
+        when(mockedApi.documents()).thenReturn(mockedDocuments);
+
+        var mockedGet = mock(Docs.Documents.Get.class);
+        when(mockedDocuments.get(given)).thenReturn(mockedGet);
+
+        when(mockedGet.execute()).thenReturn(toReturn);
     }
 }

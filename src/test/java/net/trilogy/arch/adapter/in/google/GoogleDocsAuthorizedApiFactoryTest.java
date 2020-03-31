@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizer.CREDS_DATASTORE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.CREDS_DATASTORE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 
 @RunWith(MockitoJUnitRunner.StrictStubs.class)
-public class GoogleDocsAuthorizerTest {
+public class GoogleDocsAuthorizedApiFactoryTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
@@ -37,9 +37,9 @@ public class GoogleDocsAuthorizerTest {
     private final String CLIENT_SECRET = "client-secret";
     private final List<String> SCOPES = List.of(DocsScopes.DOCUMENTS_READONLY);
 
-    private GoogleDocsAuthorizer.AuthorizationCodeInstalledAppFactory mockedAuthorizationCodeInstalledAppFactory;
-    private GoogleDocsAuthorizer.CodeFlowBuilderFactory mockedCodeFlowBuilderFactory;
-    private GoogleDocsAuthorizer.DocsFactory mockedDocsFactory;
+    private GoogleDocsAuthorizedApiFactory.AuthorizationCodeInstalledAppFactory mockedAuthorizationCodeInstalledAppFactory;
+    private GoogleDocsAuthorizedApiFactory.CodeFlowBuilderFactory mockedCodeFlowBuilderFactory;
+    private GoogleDocsAuthorizedApiFactory.DocsFactory mockedDocsFactory;
     private Path userCredentialsDirectory;
     private Path clientCredentialsFile;
     private final NetHttpTransport httpTransport = new NetHttpTransport();
@@ -66,9 +66,9 @@ public class GoogleDocsAuthorizerTest {
                         "}"
         );
 
-        mockedAuthorizationCodeInstalledAppFactory = Mockito.mock(GoogleDocsAuthorizer.AuthorizationCodeInstalledAppFactory.class);
-        mockedCodeFlowBuilderFactory = Mockito.mock(GoogleDocsAuthorizer.CodeFlowBuilderFactory.class);
-        mockedDocsFactory = Mockito.mock(GoogleDocsAuthorizer.DocsFactory.class);
+        mockedAuthorizationCodeInstalledAppFactory = Mockito.mock(GoogleDocsAuthorizedApiFactory.AuthorizationCodeInstalledAppFactory.class);
+        mockedCodeFlowBuilderFactory = Mockito.mock(GoogleDocsAuthorizedApiFactory.CodeFlowBuilderFactory.class);
+        mockedDocsFactory = Mockito.mock(GoogleDocsAuthorizedApiFactory.DocsFactory.class);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class GoogleDocsAuthorizerTest {
         // GIVEN
         Docs expected = mockGoogleApiBehavior();
 
-        GoogleDocsAuthorizer authorizer = new GoogleDocsAuthorizer(
+        GoogleDocsAuthorizedApiFactory authorizer = new GoogleDocsAuthorizedApiFactory(
                 clientCredentialsFile.toAbsolutePath().toString(),
                 userCredentialsDirectory.toAbsolutePath().toString(),
                 httpTransport,

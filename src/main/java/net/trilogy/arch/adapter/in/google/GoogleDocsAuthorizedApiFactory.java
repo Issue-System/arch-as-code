@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-public class GoogleDocsAuthorizer {
+public class GoogleDocsAuthorizedApiFactory {
 
     public static final String CREDS_DATASTORE_NAME = "userCredentialsDatastore";
 
@@ -34,7 +34,7 @@ public class GoogleDocsAuthorizer {
     private final AuthorizationCodeInstalledAppFactory authorizationCodeInstalledAppFactory;
     private final DocsFactory docsFactory;
 
-    public GoogleDocsAuthorizer(
+    public GoogleDocsAuthorizedApiFactory(
             String clientCredentialsPath,
             String userCredentialsDirectory
     ) throws GeneralSecurityException, IOException {
@@ -48,7 +48,7 @@ public class GoogleDocsAuthorizer {
     }
 
     @VisibleForTesting
-    public GoogleDocsAuthorizer(
+    public GoogleDocsAuthorizedApiFactory(
             String clientCredentialsPath,
             String userCredentialsDirectory,
             NetHttpTransport httpTransport,

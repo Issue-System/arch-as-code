@@ -1,7 +1,10 @@
 package net.trilogy.arch.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class ArchitectureUpdate {
     private final String name;
+    @Getter
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
@@ -25,6 +29,7 @@ public class ArchitectureUpdate {
     @JsonProperty(value = "milestone-dependencies")
     private final List<MilestoneDependency> milestoneDependencies;
 
+    @Builder
     public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;

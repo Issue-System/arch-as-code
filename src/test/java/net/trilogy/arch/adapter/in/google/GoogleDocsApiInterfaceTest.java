@@ -53,7 +53,7 @@ public class GoogleDocsApiInterfaceTest {
     }
 
     @Test
-    public void shouldReturnParsedJson() throws IOException {
+    public void shouldReturnsJson() throws IOException {
         String id = "1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk";
         String url = "https://docs.fake.com/document/d/" + id;
 

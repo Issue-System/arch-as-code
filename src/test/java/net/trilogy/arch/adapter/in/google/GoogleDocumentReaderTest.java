@@ -3,6 +3,7 @@ package net.trilogy.arch.adapter.in.google;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.services.docs.v1.model.Document;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,18 +27,18 @@ public class GoogleDocumentReaderTest {
     private final GoogleDocumentReader reader = new GoogleDocumentReader(mockedApiInterface);
 
     @Test
-    @Ignore
     public void shouldReturnEmptyAu() throws IOException {
-        mockApiToReturnAGivenB(
-                new GoogleDocsApiInterface.Response(getJsonNodeFrom("{}"), null),
-                "url"
+        var apiResponse = new GoogleDocsApiInterface.Response(
+                getJsonNodeFrom("{}"),
+                new Document()
         );
+
+        mockApiToReturnAGivenB( apiResponse, "url" );
 
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
     }
 
     @Test
-    @Ignore
     public void shouldReturnAuWithMilestone() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         final Path path = Paths.get(classLoader.getResource("Json/SampleP1.json").getPath());
@@ -50,7 +51,7 @@ public class GoogleDocumentReaderTest {
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getMilestone(), equalTo("Whtasdfkl"));
+        assertThat(result.getMilestone(), equalTo("M1.0 First Milestone"));
     }
 
     @Test

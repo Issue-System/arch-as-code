@@ -128,7 +128,6 @@ class GoogleDocsJsonParser {
                 .map(this::getTextRuns)
                 .map(GoogleDocsJsonParser::getAllLinks)
                 .map(s -> s.stream().collect(joining(",")));
-
     }
 
     private static class TextRun {

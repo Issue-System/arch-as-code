@@ -22,6 +22,9 @@ public class AuNewCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
+    @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Document", required = false)
+    private String p1GoogleDocUrl;
+
     @Override
     public Integer call() throws IOException {
         File auFolder = Helpers.getAuFolder(productDocumentationRoot);

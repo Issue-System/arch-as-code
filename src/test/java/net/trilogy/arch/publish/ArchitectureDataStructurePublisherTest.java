@@ -7,6 +7,7 @@ import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
 import org.junit.Test;
+import org.mockito.MockSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class ArchitectureDataStructurePublisherTest {
         ArchitectureDataStructureReader importer = mock(ArchitectureDataStructureReader.class);
         ArchitectureDataStructureTransformer transformer = mock(ArchitectureDataStructureTransformer.class);
         StructurizrAdapter adapter = mock(StructurizrAdapter.class);
+
+        when(importer.load(any())).thenReturn(new ArchitectureDataStructure());
+        when(transformer.toWorkSpace(any())).thenReturn(new Workspace("any", "any"));
 
         //when
         when(productDocumentationRoot.exists()).thenReturn(true);

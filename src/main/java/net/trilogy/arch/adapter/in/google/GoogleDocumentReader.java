@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 public class GoogleDocumentReader {
@@ -20,62 +21,100 @@ public class GoogleDocumentReader {
             return ArchitectureUpdate.blank();
         }
 
+        JsonParser jsonParser = new JsonParser(response.asJson());
+
         return ArchitectureUpdate.builder()
-                .milestone(parseMilestone(response))
+                .milestone(jsonParser.getMilestone().orElse(""))
                 .build();
     }
 
-    private String parseMilestone(GoogleDocsApiInterface.Response fromResponse) {
-        var contentJsonNode = fromResponse.asJson().get("body").get("content");
 
-        for (JsonNode content : contentJsonNode) {
-            if ( ! content.hasNonNull("table")) continue;
+    private boolean isEmpty(GoogleDocsApiInterface.Response response) {
+        return !response.asJson().hasNonNull("body");
+    }
 
-            var table = content.get("table");
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private static class JsonParser {
+        private static final String MILESTONE_ROW_HEADER = "Milestone";
 
-            if( ! table.hasNonNull("columns")) continue;
-            if(table.get("columns").asInt() != 2) continue;
+        private final JsonNode json;
+        private Optional<JsonNode> metaDataTable;
 
-            if( ! table.hasNonNull("tableRows")) continue;
+        private JsonParser(JsonNode json) {
+            this.json = json;
+            this.metaDataTable = Optional.empty();
+        }
 
-            for(JsonNode row : table.get("tableRows")) {
-                if( ! row.hasNonNull("tableCells")) continue;
-                if(row.get("tableCells").size() != 2) continue;
+        private Optional<JsonNode> getMetaDataTable() {
+            if (metaDataTable.isPresent()) return metaDataTable;
+
+            var contentJsonNode = this.json.get("body").get("content");
+            for (JsonNode content : contentJsonNode) {
+                if (!content.hasNonNull("table")) continue;
+
+                var table = content.get("table");
+                if (!table.hasNonNull("columns")) continue;
+                if (table.get("columns").asInt() != 2) continue;
+
+                if (!table.hasNonNull("tableRows")) continue;
+
+                for (JsonNode row : table.get("tableRows")) {
+                    if (!row.hasNonNull("tableCells")) continue;
+                    if (row.get("tableCells").size() != 2) continue;
+
+                    var firstCell = row.get("tableCells").get(0);
+                    if (getText(firstCell).orElse("").equals(MILESTONE_ROW_HEADER)) {
+                        this.metaDataTable = Optional.of(table);
+                    }
+                }
+            }
+
+            return this.metaDataTable;
+        }
+
+        private Optional<String> getMilestone() {
+            var table = getMetaDataTable().orElseGet(() -> null);
+
+            if (table == null) return Optional.empty();
+
+            for (JsonNode row : table.get("tableRows")) {
+                if (!row.hasNonNull("tableCells")) continue;
+                if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
-                if(!getText(firstCell).equals("Milestone")) continue;
+                if (!getText(firstCell).orElse("").equals(MILESTONE_ROW_HEADER)) continue;
 
                 var secondCell = row.get("tableCells").get(1);
                 return getText(secondCell);
             }
+
+            return Optional.empty();
         }
 
-        return "";
-    }
+        private Optional<String> getText(JsonNode fromNode) {
+            Optional<String> result = Optional.empty();
 
-    private String getText(JsonNode fromNode) {
-        String result = "";
+            if (!fromNode.hasNonNull("content")) return result;
 
-        if( ! fromNode.hasNonNull("content")) return result;
+            for (JsonNode contentItem : fromNode.get("content")) {
+                if (!contentItem.hasNonNull("paragraph")) continue;
 
-        for(JsonNode contentItem : fromNode.get("content")) {
-            if( ! contentItem.hasNonNull("paragraph")) continue;
+                var paragraph = contentItem.get("paragraph");
 
-            var paragraph = contentItem.get("paragraph");
+                if (!paragraph.hasNonNull("elements")) continue;
 
-            if( ! paragraph.hasNonNull("elements")) continue;
+                for (JsonNode paragraphElement : paragraph.get("elements")) {
+                    if (!paragraphElement.hasNonNull("textRun")) continue;
+                    var textRun = paragraphElement.get("textRun");
 
-            for(JsonNode paragraphElement : paragraph.get("elements")) {
-                if( ! paragraphElement.hasNonNull("textRun")) continue;
-                var textRun = paragraphElement.get("textRun");
-                result = result + textRun.get("content").textValue();
+                    result = result.or(() -> Optional.of(""))
+                            .map(str -> str + textRun.get("content").textValue());
+                }
             }
+
+            return result.map(String::trim);
         }
 
-        return result.trim();
-    }
 
-    private boolean isEmpty(GoogleDocsApiInterface.Response response) {
-        return !response.asJson().hasNonNull("body");
     }
 }

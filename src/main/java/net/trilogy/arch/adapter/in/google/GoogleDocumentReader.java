@@ -2,6 +2,8 @@ package net.trilogy.arch.adapter.in.google;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.ArchitectureUpdate.P1;
+import net.trilogy.arch.domain.Jira;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,7 +27,17 @@ public class GoogleDocumentReader {
 
         return ArchitectureUpdate.builder()
                 .milestone(jsonParser.getMilestone().orElse(""))
+                .p1(extractP1(jsonParser))
                 .build();
+    }
+
+    private P1 extractP1(JsonParser jsonParser) {
+        return P1.builder().jira(
+                new Jira(
+                        jsonParser.getP1JiraTicket().orElse(""),
+                        null
+                )
+        ).build();
     }
 
 
@@ -36,6 +48,7 @@ public class GoogleDocumentReader {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private static class JsonParser {
         private static final String MILESTONE_ROW_HEADER = "Milestone";
+        private static final String P1_JIRA_TICKET_ROW_HEADER = "P1 Jira Ticket";
 
         private final JsonNode json;
         private Optional<JsonNode> metaDataTable;
@@ -63,7 +76,7 @@ public class GoogleDocumentReader {
                     if (row.get("tableCells").size() != 2) continue;
 
                     var firstCell = row.get("tableCells").get(0);
-                    if (getText(firstCell).orElse("").equals(MILESTONE_ROW_HEADER)) {
+                    if (getText(firstCell).orElse("").equalsIgnoreCase(MILESTONE_ROW_HEADER)) {
                         this.metaDataTable = Optional.of(table);
                     }
                 }
@@ -72,7 +85,7 @@ public class GoogleDocumentReader {
             return this.metaDataTable;
         }
 
-        private Optional<String> getMilestone() {
+        private Optional<String> getFromMetaDataTable(String rowHeading) {
             var table = getMetaDataTable().orElseGet(() -> null);
 
             if (table == null) return Optional.empty();
@@ -82,13 +95,17 @@ public class GoogleDocumentReader {
                 if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
-                if (!getText(firstCell).orElse("").equals(MILESTONE_ROW_HEADER)) continue;
+                if (!getText(firstCell).orElse("").equalsIgnoreCase(rowHeading)) continue;
 
                 var secondCell = row.get("tableCells").get(1);
                 return getText(secondCell);
             }
 
             return Optional.empty();
+        }
+
+        private Optional<String> getMilestone() {
+            return getFromMetaDataTable(MILESTONE_ROW_HEADER);
         }
 
         private Optional<String> getText(JsonNode fromNode) {
@@ -115,6 +132,8 @@ public class GoogleDocumentReader {
             return result.map(String::trim);
         }
 
-
+        public Optional<String> getP1JiraTicket() {
+            return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER);
+        }
     }
 }

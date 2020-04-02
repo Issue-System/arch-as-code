@@ -9,10 +9,10 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @EqualsAndHashCode
 public class ArchitectureUpdate {
     private final String name;
-    @Getter
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
@@ -63,18 +63,21 @@ public class ArchitectureUpdate {
         private final String link;
         private final Jira jira;
 
+        @Builder
         public P2(String link, Jira jira) {
             this.link = link;
             this.jira = jira;
         }
     }
 
+    @Getter
     @EqualsAndHashCode
     public static class P1 {
         private final String link;
         private final Jira jira;
         private final String summary;
 
+        @Builder
         public P1(String link, Jira jira, String summary) {
             this.link = link;
             this.jira = jira;
@@ -87,6 +90,7 @@ public class ArchitectureUpdate {
         private final String description;
         private final List<Link> links;
 
+        @Builder
         public MilestoneDependency(String description, List<Link> links) {
             this.description = description;
             this.links = links;

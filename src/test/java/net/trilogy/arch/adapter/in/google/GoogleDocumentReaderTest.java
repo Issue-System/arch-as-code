@@ -16,7 +16,7 @@ import java.security.GeneralSecurityException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,25 +33,38 @@ public class GoogleDocumentReaderTest {
                 new Document()
         );
 
-        mockApiToReturnAGivenB( apiResponse, "url" );
+        mockApiToReturnAGivenB(apiResponse, "url");
 
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
     }
 
     @Test
-    public void shouldReturnAuWithMilestone() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        final Path path = Paths.get(classLoader.getResource("Json/SampleP1.json").getPath());
-        final JsonNode sampleSpec = getJsonNodeFrom(Files.readString(path));
+    public void shouldReturnAuWithP1JiraTicket() throws IOException {
+        mockApiWith("Json/SampleP1.json", "url");
 
-        mockApiToReturnAGivenB(
-                new GoogleDocsApiInterface.Response(sampleSpec, null),
-                "url"
-        );
+        ArchitectureUpdate result = reader.load("url");
+
+        assertThat(result.getP1().getJira().getTicket(), equalTo("ABCD-1231"));
+    }
+
+    @Test
+    public void shouldReturnAuWithMilestone() throws IOException {
+        mockApiWith("Json/SampleP1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
         assertThat(result.getMilestone(), equalTo("M1.0 First Milestone"));
+    }
+
+    private void mockApiWith(String fileWhoseContentsWillBeReturned, String whenCalledWithUrl) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        final Path path = Paths.get(classLoader.getResource(fileWhoseContentsWillBeReturned).getPath());
+        final JsonNode sampleSpec = getJsonNodeFrom(Files.readString(path));
+
+        mockApiToReturnAGivenB(
+                new GoogleDocsApiInterface.Response(sampleSpec, null),
+                whenCalledWithUrl
+        );
     }
 
     @Test
@@ -59,9 +72,19 @@ public class GoogleDocumentReaderTest {
     public void fetchSampleP1Spec() throws GeneralSecurityException, IOException {
         String url = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
 
-        new GoogleDocsApiInterface(
+        GoogleDocsApiInterface.Response response = new GoogleDocsApiInterface(
                 new GoogleDocsAuthorizedApiFactory(".arch-as-code/google/client_secret.json", ".arch-as-code/google/")
         ).getDocument(url);
+
+        Path tempFile = Files.createTempFile("arch-as-code_test-json-file", ".json");
+
+        new ObjectMapper().writeValue(tempFile.toFile(), response.asJson());
+
+        assertThat(
+                "Written to file " + tempFile.toAbsolutePath() + "\nRun: mv " + tempFile.toAbsolutePath() + " src/test/resources/Json/SampleP1.json" + "\nNow failing test on purpuse :)",
+                true, is(false)
+        );
+
     }
 
     private JsonNode getJsonNodeFrom(String content) throws JsonProcessingException {

@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 class GoogleDocsJsonParser {
@@ -81,8 +84,16 @@ class GoogleDocsJsonParser {
                 .map(TextRun::getTextFrom)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.joining(""))
+                .collect(joining(""))
                 .trim();
+    }
+
+    private static Set<String> getAllLinks(List<TextRun> runs) {
+        return runs.stream()
+                .map(TextRun::getLinkFrom)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toSet());
     }
 
     private List<TextRun> getTextRuns(JsonNode fromNode) {
@@ -113,20 +124,35 @@ class GoogleDocsJsonParser {
     }
 
     public Optional<String> getP1JiraLink() {
-        Optional<JsonNode> cellContents = getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER);
-        return Optional.empty();
+        return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
+                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getAllLinks)
+                .map(s -> s.stream().collect(joining(",")));
+
     }
 
     private static class TextRun {
         private final JsonNode node;
 
-        private TextRun(JsonNode node) {this.node = node;}
+        private TextRun(JsonNode node) {
+            this.node = node;
+        }
 
-        private JsonNode getNode() {return node;}
+        private JsonNode getNode() {
+            return node;
+        }
 
         private Optional<String> getTextFrom() {
             if (!getNode().hasNonNull("content")) return Optional.empty();
             return Optional.of(getNode().get("content").textValue());
+        }
+
+        private Optional<String> getLinkFrom() {
+            if (!getNode().hasNonNull("textStyle")) return Optional.empty();
+            if (!getNode().get("textStyle").hasNonNull("link")) return Optional.empty();
+            if (!getNode().get("textStyle").get("link").hasNonNull("url")) return Optional.empty();
+
+            return Optional.of(getNode().get("textStyle").get("link").get("url").textValue());
         }
     }
 }

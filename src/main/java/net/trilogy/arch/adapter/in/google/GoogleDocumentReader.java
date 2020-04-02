@@ -1,12 +1,16 @@
 package net.trilogy.arch.adapter.in.google;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.vavr.collection.Traversable;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import net.trilogy.arch.domain.ArchitectureUpdate.P1;
 import net.trilogy.arch.domain.Jira;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class GoogleDocumentReader {
@@ -35,7 +39,7 @@ public class GoogleDocumentReader {
         return P1.builder().jira(
                 new Jira(
                         jsonParser.getP1JiraTicket().orElse(""),
-                        null
+                        jsonParser.getP1JiraLink().orElse("")
                 )
         ).build();
     }
@@ -76,7 +80,8 @@ public class GoogleDocumentReader {
                     if (row.get("tableCells").size() != 2) continue;
 
                     var firstCell = row.get("tableCells").get(0);
-                    if (getText(firstCell).orElse("").equalsIgnoreCase(MILESTONE_ROW_HEADER)) {
+                    String text = getCombinedText(getTextRuns(firstCell));
+                    if (text.equalsIgnoreCase(MILESTONE_ROW_HEADER)) {
                         this.metaDataTable = Optional.of(table);
                     }
                 }
@@ -85,7 +90,7 @@ public class GoogleDocumentReader {
             return this.metaDataTable;
         }
 
-        private Optional<String> getFromMetaDataTable(String rowHeading) {
+        private Optional<JsonNode> getFromMetaDataTable(String rowHeading) {
             var table = getMetaDataTable().orElseGet(() -> null);
 
             if (table == null) return Optional.empty();
@@ -95,23 +100,40 @@ public class GoogleDocumentReader {
                 if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
-                if (!getText(firstCell).orElse("").equalsIgnoreCase(rowHeading)) continue;
+                List<JsonNode> textRuns = getTextRuns(firstCell);
+                boolean isTextSameAsHeading = getCombinedText(textRuns).equalsIgnoreCase(rowHeading);
+
+                if (!isTextSameAsHeading) continue;
 
                 var secondCell = row.get("tableCells").get(1);
-                return getText(secondCell);
+                return Optional.of(secondCell);
             }
 
             return Optional.empty();
         }
 
         private Optional<String> getMilestone() {
-            return getFromMetaDataTable(MILESTONE_ROW_HEADER);
+            Optional<JsonNode> fromMetaDataTable = getFromMetaDataTable(MILESTONE_ROW_HEADER);
+            Optional<List<JsonNode>> jsonNodes = fromMetaDataTable
+                    .map(this::getTextRuns);
+            Optional<String> s = jsonNodes
+                    .map(this::getCombinedText);
+            return s;
         }
 
-        private Optional<String> getText(JsonNode fromNode) {
-            Optional<String> result = Optional.empty();
+        private String getCombinedText(List<JsonNode> fromTextRuns) {
+            return fromTextRuns.stream()
+                    .map(this::getTextFrom)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.joining(""))
+                    .trim();
+        }
 
-            if (!fromNode.hasNonNull("content")) return result;
+        private List<JsonNode> getTextRuns(JsonNode fromNode) {
+            List<JsonNode> textRuns = new ArrayList<>();
+
+            if (!fromNode.hasNonNull("content")) return textRuns;
 
             for (JsonNode contentItem : fromNode.get("content")) {
                 if (!contentItem.hasNonNull("paragraph")) continue;
@@ -123,17 +145,26 @@ public class GoogleDocumentReader {
                 for (JsonNode paragraphElement : paragraph.get("elements")) {
                     if (!paragraphElement.hasNonNull("textRun")) continue;
                     var textRun = paragraphElement.get("textRun");
-
-                    result = result.or(() -> Optional.of(""))
-                            .map(str -> str + textRun.get("content").textValue());
+                    textRuns.add(textRun);
                 }
             }
+            return textRuns;
+        }
 
-            return result.map(String::trim);
+        private Optional<String> getTextFrom(JsonNode textRun) {
+            if (!textRun.hasNonNull("content")) return Optional.empty();
+            return Optional.of(textRun.get("content").textValue());
         }
 
         public Optional<String> getP1JiraTicket() {
-            return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER);
+            return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
+                    .map(this::getTextRuns)
+                    .map(this::getCombinedText);
+        }
+
+        public Optional<String> getP1JiraLink() {
+            Optional<JsonNode> cellContents = getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER);
+            return Optional.empty();
         }
     }
 }

@@ -45,6 +45,7 @@ public class GoogleDocumentReaderTest {
         ArchitectureUpdate result = reader.load("url");
 
         assertThat(result.getP1().getJira().getTicket(), equalTo("ABCD-1231"));
+//        assertThat(result.getP1().getJira().getLink(), equalTo("http://fake-jira.com"));
     }
 
     @Test

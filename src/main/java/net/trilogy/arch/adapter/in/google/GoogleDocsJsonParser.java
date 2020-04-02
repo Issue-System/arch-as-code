@@ -73,10 +73,10 @@ class GoogleDocsJsonParser {
     public Optional<String> getMilestone() {
         return getFromMetaDataTable(MILESTONE_ROW_HEADER)
                 .map(this::getTextRuns)
-                .map(this::getCombinedText);
+                .map(GoogleDocsJsonParser::getCombinedText);
     }
 
-    private String getCombinedText(List<TextRun> runs) {
+    private static String getCombinedText(List<TextRun> runs) {
         return runs.stream()
                 .map(TextRun::getTextFrom)
                 .filter(Optional::isPresent)
@@ -109,7 +109,7 @@ class GoogleDocsJsonParser {
     public Optional<String> getP1JiraTicket() {
         return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
                 .map(this::getTextRuns)
-                .map(this::getCombinedText);
+                .map(GoogleDocsJsonParser::getCombinedText);
     }
 
     public Optional<String> getP1JiraLink() {
@@ -117,7 +117,7 @@ class GoogleDocsJsonParser {
         return Optional.empty();
     }
 
-    private static class TextRun{
+    private static class TextRun {
         private final JsonNode node;
 
         private TextRun(JsonNode node) {this.node = node;}

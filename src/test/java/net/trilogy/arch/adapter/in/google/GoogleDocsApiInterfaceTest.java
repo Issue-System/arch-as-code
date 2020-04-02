@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnitParamsRunner.class)
@@ -53,20 +54,37 @@ public class GoogleDocsApiInterfaceTest {
     }
 
     @Test
+    public void shouldReturnDocument() throws IOException {
+        String id = "1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk";
+        String url = "https://docs.fake.com/document/d/" + id;
+        final Document doc = new Document();
+        doc.setBody(new Body());
+
+        // given
+        mockApiToReturn(doc, id);
+
+        // when
+        GoogleDocsApiInterface.Response output = apiInterface.getDocument(url);
+
+        // then
+        assertThat(output.asDocument(), is(doc));
+    }
+
+    @Test
     public void shouldReturnsJson() throws IOException {
         String id = "1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk";
         String url = "https://docs.fake.com/document/d/" + id;
+        final Document doc = new Document();
+        doc.setBody(new Body());
 
-        //given that the api returns a new document
-        final Document mockedDoc = new Document();
-        mockedDoc.setBody(new Body());
-        mockApiToReturn(mockedDoc, id);
+        // given
+        mockApiToReturn(doc, id);
 
-        //when we call our interface
-        JsonNode result = apiInterface.getDocument(url);
+        // when
+        GoogleDocsApiInterface.Response output = apiInterface.getDocument(url);
 
-        //the interface should return json, not the new Document() that the api returned
-        assertThat(result.get("body").toString(), equalTo("{}"));
+        // then
+        assertThat(output.asJson().get("body").toString(), equalTo("{}"));
     }
 
     private void mockApiToReturn(Document toReturn, String given) throws IOException {

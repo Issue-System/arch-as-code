@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Document;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -17,7 +18,7 @@ public class GoogleDocsApiInterface {
         this.api = apiFactory.getAuthorizedDocsApi();
     }
 
-    public JsonNode getDocument(String url) throws IOException {
+    public Response getDocument(String url) throws IOException {
         if (url == null || url.isBlank()) {
             throw new InvalidUrlException();
         }
@@ -30,7 +31,7 @@ public class GoogleDocsApiInterface {
         final String jsonString = mapper.writeValueAsString(doc);
         final JsonNode jsonNode = mapper.readValue(jsonString, JsonNode.class);
 
-        return jsonNode;
+        return new Response(jsonNode, doc);
     }
 
     private static String getDocumentId(String documentUrl) {
@@ -43,6 +44,23 @@ public class GoogleDocsApiInterface {
         return matcher.group(1);
     }
 
-    static class InvalidUrlException extends RuntimeException {
+    public static class Response {
+        private final JsonNode json;
+        private final Document document;
+
+        public Response(JsonNode json, Document document) {
+            this.json = json;
+            this.document = document;
+        }
+
+        public JsonNode asJson() {
+            return this.json;
+        }
+
+        public Document asDocument() {
+            return this.document;
+        }
     }
+
+    static class InvalidUrlException extends RuntimeException {}
 }

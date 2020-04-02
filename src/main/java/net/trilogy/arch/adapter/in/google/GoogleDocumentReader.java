@@ -14,11 +14,11 @@ public class GoogleDocumentReader {
     }
 
     public ArchitectureUpdate load(String url) throws IOException {
-        final JsonNode document = api.getDocument(url);
+        final JsonNode json = api.getDocument(url).asJson();
 
         // Parse Json
-        String milestone = document.get("body").get("content").toString();
-        document.at("");
+        String milestone = json.get("body").get("content").toString();
+        json.at("");
         return ArchitectureUpdate.builder()
                 .milestone(milestone)
                 .build();

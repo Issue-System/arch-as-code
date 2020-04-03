@@ -5,9 +5,6 @@ import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import static net.trilogy.arch.Application.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH;
-import static net.trilogy.arch.Application.GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH;
-
 public abstract class TestHelper {
     public static Long TEST_WORKSPACE_ID = 49344L;
 
@@ -29,7 +26,7 @@ public abstract class TestHelper {
     public static String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
 
     public static Integer execute(String... args) throws GeneralSecurityException, IOException {
-        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH, GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH);
+        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
         return new Application(googleDocsApiFactory).execute(args);
     }
 

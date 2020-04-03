@@ -18,13 +18,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
 import java.util.List;
 
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.CREDS_DATASTORE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 
@@ -42,14 +42,18 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     private GoogleDocsAuthorizedApiFactory.DocsFactory mockedDocsFactory;
     private Path userCredentialsDirectory;
     private Path clientCredentialsFile;
+    private Path rootDir;
     private final NetHttpTransport httpTransport = new NetHttpTransport();
     private final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
     @Before
-    public void setUp() throws GeneralSecurityException, IOException {
-        userCredentialsDirectory = Files.createTempDirectory("arch-as-code_tests");
-        clientCredentialsFile = Files.createTempFile("arch-as-code_tests", ".json");
+    public void setUp() throws Exception {
+        rootDir = Files.createTempDirectory("arch-as-code_tests");
 
+        userCredentialsDirectory = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH);
+        userCredentialsDirectory.toFile().mkdirs();
+
+        clientCredentialsFile = userCredentialsDirectory.resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);
         Files.writeString(
                 clientCredentialsFile,
                 "{" +
@@ -73,19 +77,17 @@ public class GoogleDocsAuthorizedApiFactoryTest {
 
     @Test
     public void shouldUseCorrectAuFolder() {
-        collector.checkThat(CREDS_DATASTORE_NAME, equalTo("userCredentialsDatastore"));
+        collector.checkThat(GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME, equalTo("userCredentialsDatastore"));
     }
 
     @Test
     public void shouldCallTheGoogleApiInTheCorrectSequence() throws Exception {
         // GIVEN
-        Docs docsApi = setBehaviourOnMockedGoogleApiBuilderClasses();
+        Docs docsApi = setBehaviourOnMockedGoogleApiBuilderClassesToReturnMockedApi();
 
         GoogleDocsApiInterface expected = new GoogleDocsApiInterface(docsApi);
 
         GoogleDocsAuthorizedApiFactory apiFactory = new GoogleDocsAuthorizedApiFactory(
-                clientCredentialsFile.toAbsolutePath().toString(),
-                userCredentialsDirectory.toAbsolutePath().toString(),
                 httpTransport,
                 jsonFactory,
                 mockedCodeFlowBuilderFactory,
@@ -93,14 +95,14 @@ public class GoogleDocsAuthorizedApiFactoryTest {
                 mockedDocsFactory);
 
         // WHEN
-        var result = apiFactory.getAuthorizedDocsApi();
+        var result = apiFactory.getAuthorizedDocsApi(rootDir.toFile());
 
         // THEN
         assertThat(result, equalTo(expected));
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private Docs setBehaviourOnMockedGoogleApiBuilderClasses() throws IOException {
+    private Docs setBehaviourOnMockedGoogleApiBuilderClassesToReturnMockedApi() throws IOException {
         GoogleAuthorizationCodeFlow googleCodeFlowResult = mockGoogleCodeFlow();
         Credential googleAuthorizeFlowResult = mockGoogleAuthorizeFlow(googleCodeFlowResult);
         Docs googleDocsFlowResult = mockGoogleDocsFlow(googleAuthorizeFlowResult);
@@ -122,7 +124,7 @@ public class GoogleDocsAuthorizedApiFactoryTest {
         );
 
         var mockedCredential = Mockito.mock(Credential.class);
-        Mockito.when(mockedAuthorization.authorize(CREDS_DATASTORE_NAME)).thenReturn(mockedCredential);
+        Mockito.when(mockedAuthorization.authorize(GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME)).thenReturn(mockedCredential);
         return mockedCredential;
     }
 

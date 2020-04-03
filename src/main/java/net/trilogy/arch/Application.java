@@ -14,11 +14,10 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class Application {
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 
-    // TODO FUTURE: Extract these to configuration
-    public static final String GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH = ".arch-as-code/google/client_secret.json";
-    public static final String GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH = ".arch-as-code/google/";
+public class Application {
 
     private final CommandLine cli;
 
@@ -36,7 +35,8 @@ public class Application {
     }
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH, GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH);
+
+        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
 
         var app = new Application(googleDocsApiFactory);
 

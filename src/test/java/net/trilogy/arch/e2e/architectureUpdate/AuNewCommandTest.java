@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,71 +35,72 @@ public class AuNewCommandTest {
 
     private GoogleDocsApiInterface googleDocsApiMock;
     private Application app;
+    private File rootDir;
 
     @Before
     public void setUp() throws Exception {
+        rootDir = getTempDirectory().toFile();
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
-        when(googleDocsApiFactoryMock.getAuthorizedDocsApi()).thenReturn(googleDocsApiMock);
+        when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
         app = new Application(googleDocsApiFactoryMock);
     }
 
     @Test
-    public void shouldExitWithHappyStatusWithoutP1() throws Exception {
-        Path dir = getTempDirectory();
-        initializeAuDirectory(dir);
-
+    public void shouldExitWithHappyStatusWithoutP1_short() throws Exception {
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
         collector.checkThat(
-                execute("au", "new", "au-name", str(dir)),
+                execute("au", "new", "au-name", str(rootDir.toPath())),
                 is(equalTo(0))
         );
-
-        dir = getTempDirectory();
-        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+    }
+    @Test
+    public void shouldExitWithHappyStatusWithoutP1_long() throws Exception {
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
         collector.checkThat(
-                execute("architecture-update", "new", "au-name", str(dir)),
+                execute("architecture-update", "new", "au-name", str(rootDir.toPath())),
                 is(equalTo(0))
         );
     }
 
-    @Test()
-    public void shouldExitWithHappyStatusWithP1() throws IOException, GeneralSecurityException {
+    @Test
+    public void shouldExitWithHappyStatusWithP1_short() throws IOException, GeneralSecurityException {
         mockGoogleDocsApi();
-
-        Path dir = getTempDirectory();
-        initializeAuDirectory(dir);
+        initializeAuDirectory(rootDir.toPath());
         collector.checkThat(
-                execute(app, "au new au-name -p url " + str(dir)),
+                execute(app, "au new au-name -p url " + str(rootDir.toPath())),
                 is(equalTo(0))
         );
+    }
 
-        dir = getTempDirectory();
-        initializeAuDirectory(dir);
+    @Test
+    public void shouldExitWithHappyStatusWithP1_long() throws IOException, GeneralSecurityException {
+        mockGoogleDocsApi();
+        initializeAuDirectory(rootDir.toPath());
         collector.checkThat(
-                execute(app, "architecture-update new au-name --p1-url url " + str(dir)),
+                execute(app, "architecture-update new au-name --p1-url url " + str(rootDir.toPath())),
                 is(equalTo(0))
         );
     }
 
     @Test
     public void shouldFailIfNotInitialized() throws Exception {
-        Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
-                Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
+                Files.exists(rootDir.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(false)
         );
 
         collector.checkThat(
-                execute("au", "new", "au-name", str(tempDirPath)),
+                execute("au", "new", "au-name", str(rootDir.toPath())),
                 not(equalTo(0))
         );
     }
 
     @Test
     public void shouldCreateFileWithoutP1() throws Exception {
-        Path rootDir = initializeRootDirectory();
-        Path auDir = initializeAuDirectory(rootDir);
+        execute("init", str(rootDir.toPath()), "-i i", "-k k", "-s s");
+        Path auDir = initializeAuDirectory(rootDir.toPath());
         Path auFile = auDir.resolve("au-name.yml");
         collector.checkThat(
                 "AU does not already exist. (Precondition check)",
@@ -106,7 +108,7 @@ public class AuNewCommandTest {
                 is(false)
         );
 
-        Integer exitCode = execute("au", "new", "au-name", str(rootDir));
+        Integer exitCode = execute("au", "new", "au-name", str(rootDir.toPath()));
 
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
@@ -120,8 +122,8 @@ public class AuNewCommandTest {
     public void shouldCreateFileWithP1() throws Exception {
         mockGoogleDocsApi();
 
-        Path rootDir = initializeRootDirectory();
-        Path auDir = initializeAuDirectory(rootDir);
+        execute("init", str(rootDir.toPath()), "-i i", "-k k", "-s s");
+        Path auDir = initializeAuDirectory(rootDir.toPath());
         Path auFile = auDir.resolve("au-name.yml");
         collector.checkThat(
                 "AU does not already exist. (Precondition check)",
@@ -129,7 +131,7 @@ public class AuNewCommandTest {
                 is(false)
         );
 
-        Integer exitCode = execute(app, "au new au-name -p url " + str(rootDir));
+        Integer exitCode = execute(app, "au new au-name -p url " + str(rootDir.toPath()));
 
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
@@ -178,12 +180,6 @@ public class AuNewCommandTest {
     private Path initializeAuDirectory(Path rootDir) throws GeneralSecurityException, IOException {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         return rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
-    }
-
-    private Path initializeRootDirectory() throws IOException, GeneralSecurityException {
-        Path rootDir = getTempDirectory();
-        execute("init", str(rootDir), "-i i", "-k k", "-s s");
-        return rootDir;
     }
 
     private Path auPathFrom(Path rootPath, String auName) {

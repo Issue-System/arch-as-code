@@ -8,12 +8,14 @@ import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -68,13 +70,15 @@ public class GoogleDocumentReaderTest {
         );
     }
 
+    // TODO: Remove when no longer needed
     @Test
     @Ignore("This is not a test. Use this to generate new json from google docs if needed.")
     public void fetchSampleP1Spec() throws GeneralSecurityException, IOException {
         String url = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
+        File productDocumentationRoot = new File(".");
 
-        var apiFactory = new GoogleDocsAuthorizedApiFactory(".arch-as-code/google/client_secret.json", ".arch-as-code/google/");
-        var api = apiFactory.getAuthorizedDocsApi();
+        var apiFactory = new GoogleDocsAuthorizedApiFactory();
+        var api = apiFactory.getAuthorizedDocsApi(productDocumentationRoot);
         var response = api.fetch(url);
 
         Path tempFile = Files.createTempFile("arch-as-code_test-json-file", ".json");
@@ -82,7 +86,13 @@ public class GoogleDocumentReaderTest {
         new ObjectMapper().writeValue(tempFile.toFile(), response.asJson());
 
         assertThat(
-                "Written to file " + tempFile.toAbsolutePath() + "\nRun: mv " + tempFile.toAbsolutePath() + " src/test/resources/Json/SampleP1.json" + "\nNow failing test on purpuse :)",
+                "********* STATUS *********" +
+                "\nReading doc: " + url +
+                        "\nUsing credentials within " + productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
+                        "\nWritten to file " + tempFile.toAbsolutePath() +
+                        "\nRun: mv " + tempFile.toAbsolutePath() + " src/test/resources/Json/SampleP1.json" +
+                        "\nNow failing test on purpose :)" +
+                        "\n********* STATUS *********\n\n",
                 true, is(false)
         );
 

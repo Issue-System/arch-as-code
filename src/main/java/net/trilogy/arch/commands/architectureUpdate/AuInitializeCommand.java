@@ -9,10 +9,10 @@ import picocli.CommandLine.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 
 @Command(name = "initialize", aliases = "init", description = "Initialize the architecture updates work space.")
 public class AuInitializeCommand implements Callable<Integer> {
@@ -41,27 +41,27 @@ public class AuInitializeCommand implements Callable<Integer> {
     public Integer call() {
         if (!makeAuFolder()) return 1;
         if (!makeCredentialsFolder()) return 1;
-        // TODO FUTURE: Test IO DI AAC-75
-        createCredentials(clientId, projectId, secret);
 
-        logger.info(String.format("Architecture updates initialized under - %s", Helpers.getAuFolder(productDocumentationRoot)));
+        // TODO FUTURE: [Dependencies: AAC-75] Test case where creating file fails
+        createClientCredentialsFile(clientId, projectId, secret);
+
+        logger.info(String.format("Architecture updates initialized under - %s", productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
-    private boolean createCredentials(String clientId, String projectId, String secret) {
-        Path cred = Helpers.getAuCredentialFolder(productDocumentationRoot).toPath().resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);
-        String credentialJsonString = getCredentialJsonString(clientId, projectId, secret);
-
+    private boolean createClientCredentialsFile(String clientId, String projectId, String secret) {
+        File file = productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME).toFile();
+        String credentialJsonString = buildCredentialJsonString(clientId, projectId, secret);
         try {
-            Files.writeString(cred, credentialJsonString);
+            Files.writeString(file.toPath(), credentialJsonString);
             return true;
         } catch (IOException e) {
-            logger.error(String.format("Unable to create %s", cred));
+            logger.error(String.format("Unable to create %s", file.getAbsolutePath()));
             return false;
         }
     }
 
-    private String getCredentialJsonString(String clientId, String projectId, String secret) {
+    private String buildCredentialJsonString(String clientId, String projectId, String secret) {
         return "{\n" +
                 "  \"installed\": {\n" +
                 "    \"client_id\": \"" + clientId.strip() + "\",\n" +
@@ -79,7 +79,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean makeAuFolder() {
-        File auFolder = Helpers.getAuFolder(productDocumentationRoot);
+        File auFolder = productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
             logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));
@@ -89,7 +89,9 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean makeCredentialsFolder() {
-        File auCredentialFolder = Helpers.getAuCredentialFolder(productDocumentationRoot);
+        File auCredentialFolder = productDocumentationRoot.toPath()
+                .resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toFile();
+
         boolean credSucceeded = auCredentialFolder.mkdirs();
         if (!credSucceeded) {
             logger.error(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));

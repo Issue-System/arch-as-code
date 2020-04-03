@@ -3,7 +3,6 @@ package net.trilogy.arch.adapter.in.google;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Document;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Ignore;
@@ -76,7 +75,7 @@ public class GoogleDocumentReaderTest {
 
         var apiFactory = new GoogleDocsAuthorizedApiFactory(".arch-as-code/google/client_secret.json", ".arch-as-code/google/");
         var api = apiFactory.getAuthorizedDocsApi();
-        var response = api.getDocument(url);
+        var response = api.fetch(url);
 
         Path tempFile = Files.createTempFile("arch-as-code_test-json-file", ".json");
 
@@ -94,6 +93,6 @@ public class GoogleDocumentReaderTest {
     }
 
     private void mockApiToReturnAGivenB(GoogleDocsApiInterface.Response a, String b) throws IOException {
-        when(mockedApiInterface.getDocument(b)).thenReturn(a);
+        when(mockedApiInterface.fetch(b)).thenReturn(a);
     }
 }

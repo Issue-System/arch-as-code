@@ -1,6 +1,11 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.trilogy.arch.Bootstrap;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
+import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,23 +15,32 @@ import org.junit.rules.ErrorCollector;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class NewCommandTest {
+public class AuNewCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
-//    GoogleDocsApiInterface googleDocsApiMock;
+    private GoogleDocsApiInterface googleDocsApiMock;
+    private Bootstrap app;
 
     @Before
-    public void setUp() {
-//        new Bootstrap(googleDocsApiFactory)
+    public void setUp() throws Exception {
+        googleDocsApiMock = mock(GoogleDocsApiInterface.class);
+        final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
+        when(googleDocsApiFactoryMock.getAuthorizedDocsApi()).thenReturn(googleDocsApiMock);
+        app = new Bootstrap(googleDocsApiFactoryMock);
     }
 
     @Test
@@ -49,18 +63,19 @@ public class NewCommandTest {
 
     @Test()
     public void shouldExitWithHappyStatusWithP1() throws IOException, GeneralSecurityException {
+        mockGoogleDocsApi();
+
         Path dir = getTempDirectory();
         initializeAuDirectory(dir);
-
         collector.checkThat(
-                execute("au", "new", "au-name", "-p url", str(dir)),
+                execute(app, "au new au-name -p url " + str(dir)),
                 is(equalTo(0))
         );
 
         dir = getTempDirectory();
-        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+        initializeAuDirectory(dir);
         collector.checkThat(
-                execute("architecture-update", "new", "au-name", "--p1-url", "url", str(dir)),
+                execute(app, "architecture-update new au-name --p1-url url " + str(dir)),
                 is(equalTo(0))
         );
     }
@@ -103,6 +118,7 @@ public class NewCommandTest {
 
     @Test
     public void shouldCreateFileWithP1() throws Exception {
+        mockGoogleDocsApi();
 
         Path rootDir = initializeRootDirectory();
         Path auDir = initializeAuDirectory(rootDir);
@@ -113,14 +129,22 @@ public class NewCommandTest {
                 is(false)
         );
 
-        Integer exitCode = execute("au", "new", "au-name", "-p url", str(rootDir));
+        Integer exitCode = execute(app, "au new au-name -p url " + str(rootDir));
 
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
+
+        // TODO: [dependency: AAC-73, AAC-74] Check the full file, not just if it contains a substring
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
-                equalTo(new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank()))
+                containsString("ABCD-1231")
         );
+    }
+
+    private void mockGoogleDocsApi() throws IOException {
+        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1.json")).getPath()));
+        JsonNode jsonFileContents = new ObjectMapper().readValue(rawFileContents, JsonNode.class);
+        when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
     }
 
     @Test

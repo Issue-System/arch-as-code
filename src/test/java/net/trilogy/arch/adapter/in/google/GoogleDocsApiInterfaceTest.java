@@ -1,6 +1,5 @@
 package net.trilogy.arch.adapter.in.google;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Body;
 import com.google.api.services.docs.v1.model.Document;
@@ -31,7 +30,7 @@ public class GoogleDocsApiInterfaceTest {
     @Parameters({"", " ", " \n ", "https://docs.fake.com/document/d/"})
     @Test(expected = GoogleDocsApiInterface.InvalidUrlException.class)
     public void shouldRaiseExceptionOnEmptyUrl(String url) throws IOException {
-        apiInterface.getDocument(url);
+        apiInterface.fetch(url);
     }
 
     @Parameters({
@@ -46,7 +45,7 @@ public class GoogleDocsApiInterfaceTest {
     public void shouldParseDocumentId(String url, String id) throws Exception {
         mockApiToReturn(new Document(), id);
 
-        apiInterface.getDocument(url);
+        apiInterface.fetch(url);
 
         verify(mockedApi.documents()).get(id);
     }
@@ -62,7 +61,7 @@ public class GoogleDocsApiInterfaceTest {
         mockApiToReturn(doc, id);
 
         // when
-        GoogleDocsApiInterface.Response output = apiInterface.getDocument(url);
+        GoogleDocsApiInterface.Response output = apiInterface.fetch(url);
 
         // then
         assertThat(output.asDocument(), is(doc));
@@ -79,7 +78,7 @@ public class GoogleDocsApiInterfaceTest {
         mockApiToReturn(doc, id);
 
         // when
-        GoogleDocsApiInterface.Response output = apiInterface.getDocument(url);
+        GoogleDocsApiInterface.Response output = apiInterface.fetch(url);
 
         // then
         assertThat(output.asJson().get("body").toString(), equalTo("{}"));

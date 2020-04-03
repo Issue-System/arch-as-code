@@ -15,7 +15,7 @@ public class GoogleDocumentReader {
     }
 
     public ArchitectureUpdate load(String url) throws IOException {
-        var response = api.getDocument(url);
+        var response = api.fetch(url);
 
         if (isEmpty(response)) {
             return ArchitectureUpdate.blank();

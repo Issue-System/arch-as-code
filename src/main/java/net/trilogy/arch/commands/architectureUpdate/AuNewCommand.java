@@ -1,7 +1,9 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,6 +51,11 @@ public class AuNewCommand implements Callable<Integer> {
         }
 
         ArchitectureUpdate au = ArchitectureUpdate.blank();
+        if(p1GoogleDocUrl != null) {
+            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi();
+            au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
+        }
+
         Files.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
 
         logger.info(String.format("AU created - %s", auFile.toPath()));

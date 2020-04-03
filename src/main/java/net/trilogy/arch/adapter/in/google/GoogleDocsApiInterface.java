@@ -20,7 +20,7 @@ public class GoogleDocsApiInterface {
         this.api = rawGoogleDocsApi;
     }
 
-    public Response getDocument(String url) throws IOException {
+    public Response fetch(String url) throws IOException {
         if (url == null || url.isBlank()) {
             throw new InvalidUrlException();
         }

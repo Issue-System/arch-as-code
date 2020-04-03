@@ -1,6 +1,7 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +16,7 @@ import java.util.concurrent.Callable;
 public class AuNewCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
+    private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
 
     @CommandLine.Parameters(index = "0", description = "Name for new architecture update")
     private String name;
@@ -24,6 +26,10 @@ public class AuNewCommand implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Document", required = false)
     private String p1GoogleDocUrl;
+
+    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory) {
+        this.googleDocsApiFactory = googleDocsApiFactory;
+    }
 
     @Override
     public Integer call() throws IOException {

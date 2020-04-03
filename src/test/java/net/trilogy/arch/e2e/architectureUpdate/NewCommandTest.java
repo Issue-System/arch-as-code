@@ -10,6 +10,7 @@ import org.junit.rules.ErrorCollector;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
@@ -21,17 +22,15 @@ public class NewCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
-//    GoogleDocsApiInterface mockedApiInterface;
-//    GoogleDocumentReader googleDocumentReader;
+//    GoogleDocsApiInterface googleDocsApiMock;
 
     @Before
     public void setUp() {
-//        mockedApiInterface = mock(GoogleDocsApiInterface.class);
-//        googleDocumentReader = new GoogleDocumentReader(mockedApiInterface);
+//        new Bootstrap(googleDocsApiFactory)
     }
 
     @Test
-    public void shouldExitWithHappyStatusWithoutP1() throws IOException {
+    public void shouldExitWithHappyStatusWithoutP1() throws IOException, GeneralSecurityException {
         Path dir = getTempDirectory();
         initializeAuDirectory(dir);
 
@@ -49,7 +48,7 @@ public class NewCommandTest {
     }
 
     @Test()
-    public void shouldExitWithHappyStatusWithP1() throws IOException {
+    public void shouldExitWithHappyStatusWithP1() throws IOException, GeneralSecurityException {
         Path dir = getTempDirectory();
         initializeAuDirectory(dir);
 
@@ -67,7 +66,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldFailIfNotInitialized() throws IOException {
+    public void shouldFailIfNotInitialized() throws IOException, GeneralSecurityException {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
@@ -82,7 +81,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldCreateFileWithoutP1() throws IOException {
+    public void shouldCreateFileWithoutP1() throws IOException, GeneralSecurityException {
         Path rootDir = initializeRootDirectory();
         Path auDir = initializeAuDirectory(rootDir);
         Path auFile = auDir.resolve("au-name.yml");
@@ -103,7 +102,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldCreateFileWithP1() throws IOException {
+    public void shouldCreateFileWithP1() throws IOException, GeneralSecurityException {
 
         Path rootDir = initializeRootDirectory();
         Path auDir = initializeAuDirectory(rootDir);
@@ -125,7 +124,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldNotCreateFileIfAlreadyExists() throws IOException {
+    public void shouldNotCreateFileIfAlreadyExists() throws IOException, GeneralSecurityException {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
 
@@ -152,12 +151,12 @@ public class NewCommandTest {
         );
     }
 
-    private Path initializeAuDirectory(Path rootDir) {
+    private Path initializeAuDirectory(Path rootDir) throws GeneralSecurityException, IOException {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         return rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
     }
 
-    private Path initializeRootDirectory() throws IOException {
+    private Path initializeRootDirectory() throws IOException, GeneralSecurityException {
         Path rootDir = getTempDirectory();
         execute("init", str(rootDir), "-i i", "-k k", "-s s");
         return rootDir;

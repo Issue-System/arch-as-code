@@ -1,6 +1,12 @@
 package net.trilogy.arch;
 
-import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
+import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import static net.trilogy.arch.Bootstrap.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH;
+import static net.trilogy.arch.Bootstrap.GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH;
 
 public abstract class TestHelper {
     public static Long TEST_WORKSPACE_ID = 49344L;
@@ -22,11 +28,12 @@ public abstract class TestHelper {
     public static String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
     public static String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
 
-    public static Integer execute(String... args) {
-        return new Bootstrap().execute(args);
+    public static Integer execute(String... args) throws GeneralSecurityException, IOException {
+        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_PATH, GOOGLE_DOCS_API_USER_CREDENTIALS_DIR_PATH);
+        return new Bootstrap(googleDocsApiFactory).execute(args);
     }
 
-//    public static Integer execute(GoogleDocsApiInterface docsApiInterface, String command) {
-//        return new Bootstrap(docsApiInterface).execute(command.split(" "));
-//    }
+    public static Integer execute(Bootstrap bootstrap, String command) {
+        return bootstrap.execute(command.split(" "));
+    }
 }

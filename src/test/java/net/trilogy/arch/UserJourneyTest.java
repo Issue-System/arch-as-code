@@ -6,8 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.security.GeneralSecurityException;
 
+import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -25,142 +28,111 @@ public class UserJourneyTest {
     }
 
     @Test
-    public void prints_arch_as_code_when_no_args() {
-        int exitCode = parent();
+    public void prints_arch_as_code_when_no_args() throws GeneralSecurityException, IOException {
+        int exitCode = execute();
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void prints_version() {
-        int exitCode = version();
+    public void prints_version() throws GeneralSecurityException, IOException {
+        int exitCode = execute("--version");
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void prints_help() {
-        int exitCode = help();
+    public void prints_help() throws GeneralSecurityException, IOException {
+        int exitCode = execute("--help");
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void fails_when_no_parameters_passed_to_initialize_command() {
-        int exitCode = new Bootstrap().execute(new String[]{"init"});
+    public void fails_when_no_parameters_passed_to_initialize_command() throws GeneralSecurityException, IOException {
+        int exitCode = execute("init");
 
         assertThat(exitCode, equalTo(2));
     }
 
     @Test
-    public void fails_when_options_passed_but_parameter_is_not_passed_to_initialize_command() {
-        int exitCode = new Bootstrap()
-                .execute(new String[]{
-                        "init",
-                        "-i", String.valueOf(config.getWorkspaceId()),
-                        "-k", config.getApiKey(),
-                        "-s", config.getApiSecret()
-                });
+    public void fails_when_options_passed_but_parameter_is_not_passed_to_initialize_command() throws GeneralSecurityException, IOException {
+        int exitCode = execute("init",
+                "-i", String.valueOf(config.getWorkspaceId()),
+                "-k", config.getApiKey(),
+                "-s", config.getApiSecret());
 
         assertThat(exitCode, equalTo(2));
     }
 
     @Test
-    public void initializes_workspace_when_all_parameters_and_options_passed_to_initialize_command() {
+    public void initializes_workspace_when_all_parameters_and_options_passed_to_initialize_command() throws GeneralSecurityException, IOException {
         int exitCode = init();
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void fails_when_workspace_path_not_passed_to_validate_command() {
+    public void fails_when_workspace_path_not_passed_to_validate_command() throws GeneralSecurityException, IOException {
         init();
 
-        int exitCode = new Bootstrap().execute(new String[]{"validate"});
+        int exitCode = execute("validate");
 
         assertThat(exitCode, equalTo(2));
     }
 
     @Test
-    public void validates_workspace_when_workspace_path_passed_to_validate_command() {
+    public void validates_workspace_when_workspace_path_passed_to_validate_command() throws GeneralSecurityException, IOException {
         init();
 
-        int exitCode = validate();
+        int exitCode = execute("validate", workspaceRoot);
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void should_fail_when_workspace_path_not_passed_to_publish_command() {
+    public void should_fail_when_workspace_path_not_passed_to_publish_command() throws GeneralSecurityException, IOException {
         init();
-        validate();
+        execute("validate", workspaceRoot);
 
-        int exitCode = new Bootstrap().execute(new String[]{"publish"});
+        int exitCode = execute("publish");
 
         assertThat(exitCode, equalTo(2));
     }
 
     @Test
-    public void publishes_workspace_when_workspace_path_passed_to_validate_command() {
+    public void publishes_workspace_when_workspace_path_passed_to_validate_command() throws GeneralSecurityException, IOException {
         init();
-        validate();
+        execute("validate", workspaceRoot);
 
-        int exitCode = publish();
+        int exitCode = execute("publish", workspaceRoot);
 
         assertThat(exitCode, equalTo(0));
     }
 
     @Test
-    public void fails_when_exported_workspace_path_not_passed_to_import_command() {
-        int exitCode = new Bootstrap().execute(new String[]{"import"});
+    public void fails_when_exported_workspace_path_not_passed_to_import_command() throws GeneralSecurityException, IOException {
+        int exitCode = execute("import");
 
         assertThat(exitCode, equalTo(2));
     }
 
     @Test
-    public void imports_exported_workspace_when_workspace_path_passed_to_import_command() {
+    public void imports_exported_workspace_when_workspace_path_passed_to_import_command() throws GeneralSecurityException, IOException {
         int exitCode = importWorkspace();
 
         assertThat(exitCode, equalTo(0));
     }
 
-    private int publish() {
-        return new Bootstrap().execute(new String[]{
-                "publish",
-                workspaceRoot
-        });
-    }
-
-    private int validate() {
-        return new Bootstrap().execute(new String[]{
-                "validate",
-                workspaceRoot
-        });
-    }
-
-    private int init() {
-        return new Bootstrap().execute(new String[]{
-                "init",
+    private int init() throws GeneralSecurityException, IOException {
+        return execute("init",
                 "-i", String.valueOf(config.getWorkspaceId()),
                 "-k", config.getApiKey(),
                 "-s", config.getApiSecret(),
-                workspaceRoot
-        });
+                workspaceRoot);
     }
 
-    private int version() {
-        return new Bootstrap().execute(new String[]{"--version"});
-    }
-
-    private int help() {
-        return new Bootstrap().execute(new String[]{"--help"});
-    }
-
-    private int parent() {
-        return new Bootstrap().execute(new String[]{});
-    }
-
-    private int importWorkspace() {
-        return new Bootstrap().execute(new String[]{"import", exportedWorkspacePath.getAbsolutePath()});
+    private int importWorkspace() throws GeneralSecurityException, IOException {
+        return execute("import", exportedWorkspacePath.getAbsolutePath());
     }
 }

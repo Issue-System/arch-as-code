@@ -35,7 +35,7 @@ public class AuNewCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
-        File auFolder = Helpers.getAuFolder(productDocumentationRoot);
+        File auFolder = productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {
             logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
@@ -52,7 +52,7 @@ public class AuNewCommand implements Callable<Integer> {
 
         ArchitectureUpdate au = ArchitectureUpdate.blank();
         if(p1GoogleDocUrl != null) {
-            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi();
+            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productDocumentationRoot);
             au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
         }
 

@@ -7,13 +7,14 @@ import org.junit.rules.ErrorCollector;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
 
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.*;
 import static org.hamcrest.Matchers.*;
 
-public class InitializeCommandTest {
+public class AuInitializeCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
     private final String client_id = "id";
@@ -23,16 +24,6 @@ public class InitializeCommandTest {
     @Test
     public void shouldUseCorrectAuFolder() {
         collector.checkThat(ARCHITECTURE_UPDATES_ROOT_FOLDER, equalTo("architecture-updates"));
-    }
-
-    @Test
-    public void shouldUseCorrectCredentialsFolder() {
-        collector.checkThat(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER, equalTo(".arch-as-code/google/"));
-    }
-
-    @Test
-    public void shouldUseCorrectClientCredentialsFile() {
-        collector.checkThat(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE, equalTo("client_credentials.json"));
     }
 
     @Test
@@ -88,8 +79,8 @@ public class InitializeCommandTest {
     public void shouldCreateGoogleCredentialsDirectory() throws Exception {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
-                ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER + " folder does not exist. (Precondition check)",
-                Files.exists(tempDirPath.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER)),
+                GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH + " folder does not exist. (Precondition check)",
+                Files.exists(tempDirPath.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH)),
                 is(false)
         );
 
@@ -98,8 +89,8 @@ public class InitializeCommandTest {
         collector.checkThat(status, is(equalTo(0)));
 
         collector.checkThat(
-                ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER + " folder was created.",
-                Files.isDirectory(tempDirPath.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER)),
+                GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH + " folder was created.",
+                Files.isDirectory(tempDirPath.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH)),
                 is(true)
         );
     }
@@ -140,7 +131,7 @@ public class InitializeCommandTest {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir), "-c " + client_id, "-p " + project_id, "-s " + secret);
 
-        Path auCredFile = rootDir.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER).resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);
+        Path auCredFile = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);
         String expected = "{\n" +
                 "  \"installed\": {\n" +
                 "    \"client_id\": \"" + client_id + "\",\n" +
@@ -165,7 +156,7 @@ public class InitializeCommandTest {
     public void shouldNotOverrideExistingCredentialsFolder() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
-        final Path auClientCredentialsFile = rootDir.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER).resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);
+        final Path auClientCredentialsFile = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);
         Files.writeString(auClientCredentialsFile.toAbsolutePath(), "EXISTING CONTENTS");
 
         collector.checkThat(

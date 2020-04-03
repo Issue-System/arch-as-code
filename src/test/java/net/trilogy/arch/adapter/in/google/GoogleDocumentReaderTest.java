@@ -3,6 +3,7 @@ package net.trilogy.arch.adapter.in.google;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Document;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Ignore;
@@ -73,9 +74,9 @@ public class GoogleDocumentReaderTest {
     public void fetchSampleP1Spec() throws GeneralSecurityException, IOException {
         String url = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
 
-        GoogleDocsApiInterface.Response response = new GoogleDocsApiInterface(
-                new GoogleDocsAuthorizedApiFactory(".arch-as-code/google/client_secret.json", ".arch-as-code/google/")
-        ).getDocument(url);
+        var apiFactory = new GoogleDocsAuthorizedApiFactory(".arch-as-code/google/client_secret.json", ".arch-as-code/google/");
+        var api = apiFactory.getAuthorizedDocsApi();
+        var response = api.getDocument(url);
 
         Path tempFile = Files.createTempFile("arch-as-code_test-json-file", ".json");
 

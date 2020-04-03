@@ -23,11 +23,9 @@ public class GoogleDocsApiInterfaceTest {
     private GoogleDocsApiInterface apiInterface;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp(){
         mockedApi = mock(Docs.class);
-        GoogleDocsAuthorizedApiFactory mockedApiFactory = mock(GoogleDocsAuthorizedApiFactory.class);
-        when(mockedApiFactory.getAuthorizedDocsApi()).thenReturn(mockedApi);
-        apiInterface = new GoogleDocsApiInterface(mockedApiFactory);
+        apiInterface = new GoogleDocsApiInterface(mockedApi);
     }
 
     @Parameters({"", " ", " \n ", "https://docs.fake.com/document/d/"})

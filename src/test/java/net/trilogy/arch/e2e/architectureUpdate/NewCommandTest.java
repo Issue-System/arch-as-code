@@ -2,7 +2,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.ArchitectureUpdate;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -13,16 +13,28 @@ import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class NewCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
+//    GoogleDocsApiInterface mockedApiInterface;
+//    GoogleDocumentReader googleDocumentReader;
+
+    @Before
+    public void setUp() {
+//        mockedApiInterface = mock(GoogleDocsApiInterface.class);
+//        googleDocumentReader = new GoogleDocumentReader(mockedApiInterface);
+    }
+
     @Test
     public void shouldExitWithHappyStatusWithoutP1() throws IOException {
         Path dir = getTempDirectory();
-        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+        initializeAuDirectory(dir);
+
         collector.checkThat(
                 execute("au", "new", "au-name", str(dir)),
                 is(equalTo(0))
@@ -39,7 +51,8 @@ public class NewCommandTest {
     @Test()
     public void shouldExitWithHappyStatusWithP1() throws IOException {
         Path dir = getTempDirectory();
-        execute("au", "init", "-c c", "-p p", "-s s", str(dir));
+        initializeAuDirectory(dir);
+
         collector.checkThat(
                 execute("au", "new", "au-name", "-p url", str(dir)),
                 is(equalTo(0))
@@ -69,17 +82,9 @@ public class NewCommandTest {
     }
 
     @Test
-    @Ignore
     public void shouldCreateFileWithoutP1() throws IOException {
-        // GIVEN an initialized root dir
-        Path rootDir = getTempDirectory();
-        execute("init", str(rootDir), "-i i", "-k k", "-s s");
-
-        // GIVEN an initialized au dir
-        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
-        Path auDir = rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
-
-        // GIVEN that the au does not exist
+        Path rootDir = initializeRootDirectory();
+        Path auDir = initializeAuDirectory(rootDir);
         Path auFile = auDir.resolve("au-name.yml");
         collector.checkThat(
                 "AU does not already exist. (Precondition check)",
@@ -87,33 +92,21 @@ public class NewCommandTest {
                 is(false)
         );
 
-        // WHEN the new command is run
         Integer exitCode = execute("au", "new", "au-name", str(rootDir));
 
-        // THEN the au should exist
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
-
-        // THEN the au contents should be a blank au
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
                 equalTo(new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank()))
         );
     }
 
-
     @Test
-    @Ignore
     public void shouldCreateFileWithP1() throws IOException {
-        // GIVEN an initialized root dir
-        Path rootDir = getTempDirectory();
-        execute("init", str(rootDir), "-i i", "-k k", "-s s");
 
-        // GIVEN an initialized au dir
-        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
-        Path auDir = rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
-
-        // GIVEN that the au does not exist
+        Path rootDir = initializeRootDirectory();
+        Path auDir = initializeAuDirectory(rootDir);
         Path auFile = auDir.resolve("au-name.yml");
         collector.checkThat(
                 "AU does not already exist. (Precondition check)",
@@ -121,14 +114,10 @@ public class NewCommandTest {
                 is(false)
         );
 
-        // WHEN the new command is run
         Integer exitCode = execute("au", "new", "au-name", "-p url", str(rootDir));
 
-        // THEN the au should exist
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
-
-        // THEN the au contents should be a blank au
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
                 equalTo(new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank()))
@@ -161,6 +150,17 @@ public class NewCommandTest {
                 Files.readString(auPathFrom(rootDir, auName)),
                 equalTo("EXISTING CONTENTS")
         );
+    }
+
+    private Path initializeAuDirectory(Path rootDir) {
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
+        return rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
+    }
+
+    private Path initializeRootDirectory() throws IOException {
+        Path rootDir = getTempDirectory();
+        execute("init", str(rootDir), "-i i", "-k k", "-s s");
+        return rootDir;
     }
 
     private Path auPathFrom(Path rootPath, String auName) {

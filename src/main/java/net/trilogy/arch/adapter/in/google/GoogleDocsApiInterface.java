@@ -4,18 +4,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.docs.v1.Docs;
 import com.google.api.services.docs.v1.model.Document;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode
 public class GoogleDocsApiInterface {
     private static final Pattern pattern = Pattern.compile("\\/document\\/d\\/([^\\/]+)");
     private Docs api;
 
-    public GoogleDocsApiInterface(GoogleDocsAuthorizedApiFactory apiFactory) throws IOException {
-        this.api = apiFactory.getAuthorizedDocsApi();
+    public GoogleDocsApiInterface(Docs rawGoogleDocsApi){
+        this.api = rawGoogleDocsApi;
     }
 
     public Response getDocument(String url) throws IOException {

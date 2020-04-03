@@ -79,9 +79,11 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     @Test
     public void shouldCallTheGoogleApiInTheCorrectSequence() throws IOException {
         // GIVEN
-        Docs expected = mockGoogleApiBehavior();
+        Docs docsApi = setBehaviourOnMockedGoogleApiBuilderClasses();
 
-        GoogleDocsAuthorizedApiFactory authorizer = new GoogleDocsAuthorizedApiFactory(
+        GoogleDocsApiInterface expected = new GoogleDocsApiInterface(docsApi);
+
+        GoogleDocsAuthorizedApiFactory apiFactory = new GoogleDocsAuthorizedApiFactory(
                 clientCredentialsFile.toAbsolutePath().toString(),
                 userCredentialsDirectory.toAbsolutePath().toString(),
                 httpTransport,
@@ -91,17 +93,17 @@ public class GoogleDocsAuthorizedApiFactoryTest {
                 mockedDocsFactory);
 
         // WHEN
-        var result = authorizer.getAuthorizedDocsApi();
+        var result = apiFactory.getAuthorizedDocsApi();
 
         // THEN
-        assertThat(result, is(expected));
+        assertThat(result, equalTo(expected));
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private Docs mockGoogleApiBehavior() throws IOException {
-        var googleCodeFlowResult = mockGoogleCodeFlow();
-        var googleAuthorizeFlowResult = mockGoogleAuthorizeFlow(googleCodeFlowResult);
-        var googleDocsFlowResult = mockGoogleDocsFlow(googleAuthorizeFlowResult);
+    private Docs setBehaviourOnMockedGoogleApiBuilderClasses() throws IOException {
+        GoogleAuthorizationCodeFlow googleCodeFlowResult = mockGoogleCodeFlow();
+        Credential googleAuthorizeFlowResult = mockGoogleAuthorizeFlow(googleCodeFlowResult);
+        Docs googleDocsFlowResult = mockGoogleDocsFlow(googleAuthorizeFlowResult);
         return googleDocsFlowResult;
     }
 

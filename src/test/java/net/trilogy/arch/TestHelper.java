@@ -1,5 +1,7 @@
 package net.trilogy.arch;
 
+import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
+
 public abstract class TestHelper {
     public static Long TEST_WORKSPACE_ID = 49344L;
 
@@ -23,4 +25,8 @@ public abstract class TestHelper {
     public static Integer execute(String... args) {
         return new Bootstrap().execute(args);
     }
+
+//    public static Integer execute(GoogleDocsApiInterface docsApiInterface, String command) {
+//        return new Bootstrap(docsApiInterface).execute(command.split(" "));
+//    }
 }

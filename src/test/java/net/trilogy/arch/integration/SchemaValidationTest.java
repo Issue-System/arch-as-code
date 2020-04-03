@@ -21,14 +21,14 @@ public class SchemaValidationTest {
 
 
     @Test
-    public void validate_all_valid_schema() throws IOException {
+    public void validate_all_valid_schema() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("allValidSchema.yml");
 
         assertThat(validationMessageSet, Matchers.emptyIterable());
     }
 
     @Test
-    public void validate_missing_system() throws IOException {
+    public void validate_missing_system() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("missingMetadata.yml");
 
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),
@@ -40,7 +40,7 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void validate_missing_decision_log() throws IOException {
+    public void validate_missing_decision_log() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("missingDecisionLog.yml");
 
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),
@@ -54,7 +54,7 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void validate_missing_model_properties() throws IOException {
+    public void validate_missing_model_properties() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("missingModelProperties.yml");
 
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),
@@ -64,7 +64,7 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void validate_missing_view_contexts() throws IOException {
+    public void validate_missing_view_contexts() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("missingViewContexts.yml");
 
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),

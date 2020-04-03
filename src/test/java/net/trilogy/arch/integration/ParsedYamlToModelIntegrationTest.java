@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class ParsedYamlToModelIntegrationTest {
 
     @Test
-    public void should_build_person_developer() throws IOException {
+    public void should_build_person_developer() throws Exception {
         String personName = "Developer";
         Workspace workspace = getWorkspace();
 
@@ -48,7 +48,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_person_saasops() throws IOException {
+    public void should_build_person_saasops() throws Exception {
         String personName = "SaasOps";
         Workspace workspace = getWorkspace();
 
@@ -70,7 +70,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_person_pca() throws IOException {
+    public void should_build_person_pca() throws Exception {
         String personName = "PCA";
         Workspace workspace = getWorkspace();
 
@@ -89,7 +89,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_system_xo_chat() throws IOException {
+    public void should_build_system_xo_chat() throws Exception {
         String systemName = "XO Chat";
         Workspace workspace = getWorkspace();
 
@@ -106,7 +106,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_system_salesforce() throws IOException {
+    public void should_build_system_salesforce() throws Exception {
         String systemName = "SalesForce";
         Workspace workspace = getWorkspace();
 
@@ -121,7 +121,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_system_trilogy_g_suite() throws IOException {
+    public void should_build_system_trilogy_g_suite() throws Exception {
         String systemName = "Trilogy Google G Suite";
         Workspace workspace = getWorkspace();
 
@@ -141,7 +141,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_system_github() throws IOException {
+    public void should_build_system_github() throws Exception {
         String systemName = "GitHub";
         Workspace workspace = getWorkspace();
 
@@ -159,7 +159,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_system_devspaces() throws IOException {
+    public void should_build_system_devspaces() throws Exception {
         String systemName = "DevSpaces";
         Workspace workspace = getWorkspace();
 
@@ -183,7 +183,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_container_devspaces_backend() throws IOException {
+    public void should_build_container_devspaces_backend() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces Backend";
         Workspace workspace = getWorkspace();
@@ -205,7 +205,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_container_devspaces_web_app() throws IOException {
+    public void should_build_container_devspaces_web_app() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces Web Application";
         Workspace workspace = getWorkspace();
@@ -227,7 +227,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_container_devspaces_api() throws IOException {
+    public void should_build_container_devspaces_api() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces API";
         Workspace workspace = getWorkspace();
@@ -255,7 +255,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_component_devspaces_api_sign_in_controller() throws IOException {
+    public void should_build_component_devspaces_api_sign_in_controller() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces API";
         String componentName = "DevSpaces/DevSpaces API/Sign In Controller";
@@ -279,7 +279,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_component_devspaces_api_security_component() throws IOException {
+    public void should_build_component_devspaces_api_security_component() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces API";
         String componentName = "DevSpaces/DevSpaces API/Security Component";
@@ -303,7 +303,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_component_devspaces_api_reset_password_controller() throws IOException {
+    public void should_build_component_devspaces_api_reset_password_controller() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces API";
         String componentName = "DevSpaces/DevSpaces API/Reset Password Controller";
@@ -328,7 +328,7 @@ public class ParsedYamlToModelIntegrationTest {
     }
 
     @Test
-    public void should_build_component_devspaces_api_email_component() throws IOException {
+    public void should_build_component_devspaces_api_email_component() throws Exception {
         String systemName = "DevSpaces";
         String containerName = "DevSpaces/DevSpaces API";
         String componentName = "DevSpaces/DevSpaces API/E-mail Component";

@@ -26,7 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ArchitectureDataStructureReaderTest {
 
     @Test
-    public void shouldReadMetaData() throws IOException {
+    public void shouldReadMetaData() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_METADATA).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -36,7 +36,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadDecisions() throws IOException {
+    public void shouldReadDecisions() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_DECISIONS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -52,7 +52,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadPeople() throws IOException {
+    public void shouldReadPeople() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_PEOPLE).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -78,7 +78,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadSystems() throws IOException {
+    public void shouldReadSystems() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -101,7 +101,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadContainers() throws IOException {
+    public void shouldReadContainers() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -127,7 +127,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadComponents() throws IOException {
+    public void shouldReadComponents() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -152,7 +152,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadDeploymentNodes() throws IOException {
+    public void shouldReadDeploymentNodes() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -192,7 +192,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadSystemViews() throws IOException {
+    public void shouldReadSystemViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -216,7 +216,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadContainerViews() throws IOException {
+    public void shouldReadContainerViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -244,7 +244,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadComponentViews() throws IOException {
+    public void shouldReadComponentViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
@@ -275,7 +275,7 @@ public class ArchitectureDataStructureReaderTest {
     }
 
     @Test
-    public void shouldReadDeploymentViews() throws IOException {
+    public void shouldReadDeploymentViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 

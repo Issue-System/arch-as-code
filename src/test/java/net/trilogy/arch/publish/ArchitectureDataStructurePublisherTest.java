@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 public class ArchitectureDataStructurePublisherTest {
 
     @Test
-    public void given_file_that_exists_should_publish_workspace() throws IOException, StructurizrClientException {
+    public void given_file_that_exists_should_publish_workspace() throws Exception {
         File productDocumentationRoot = mock(File.class);
         ArchitectureDataStructureReader importer = mock(ArchitectureDataStructureReader.class);
         ArchitectureDataStructureTransformer transformer = mock(ArchitectureDataStructureTransformer.class);

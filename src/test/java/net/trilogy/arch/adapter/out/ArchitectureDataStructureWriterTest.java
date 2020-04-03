@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ArchitectureDataStructureWriterTest {
 
     @Test
-    public void shouldWriteHumanReadableDates() throws IOException {
+    public void shouldWriteHumanReadableDates() throws Exception {
         // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
@@ -34,7 +34,7 @@ public class ArchitectureDataStructureWriterTest {
     }
 
     @Test
-    public void shouldWriteTheSameYamlAsWhatWasRead() throws IOException {
+    public void shouldWriteTheSameYamlAsWhatWasRead() throws Exception {
         // TODO FUTURE: Make this test independent of the ArchitectureDataStructureReader implementation.
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);

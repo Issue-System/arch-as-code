@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class ArchitectureDataStructurePublishingE2ETest {
 
     @Test
-    public void should_publish_architecture_data_structure_changes_to_structurizr() throws IOException, StructurizrClientException {
+    public void should_publish_architecture_data_structure_changes_to_structurizr() throws Exception {
         //given
         File documentationRoot =
                 new File(getClass().getResource(ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());

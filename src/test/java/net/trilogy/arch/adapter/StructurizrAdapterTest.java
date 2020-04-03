@@ -13,7 +13,7 @@ import static org.hamcrest.core.Is.is;
 public class StructurizrAdapterTest {
 
     @Test
-    public void should_bump_structurizr_revision_after_publishing() throws StructurizrClientException {
+    public void should_bump_structurizr_revision_after_publishing() throws Exception {
         StructurizrAdapter adapter = new StructurizrAdapter();
         Workspace workspace = adapter.load(TEST_WORKSPACE_ID);
         Long revision = workspace.getRevision();

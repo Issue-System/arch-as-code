@@ -36,7 +36,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void rootCommandShouldPrintUsage() throws GeneralSecurityException, IOException {
+    public void rootCommandShouldPrintUsage() throws Exception {
         // TODO FUTURE: Assert that usage is shown AAC-75
         collector.checkThat(
                 execute("au"),
@@ -45,7 +45,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldExitWithHappyStatus() throws IOException, GeneralSecurityException {
+    public void shouldExitWithHappyStatus() throws Exception {
         collector.checkThat(
                 execute("au", "init", "-c c", "-p p", "-s s", str(getTempDirectory())),
                 equalTo(0)
@@ -65,7 +65,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldCreateAuDirectory() throws IOException, GeneralSecurityException {
+    public void shouldCreateAuDirectory() throws Exception {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
@@ -85,7 +85,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldCreateGoogleCredentialsDirectory() throws IOException, GeneralSecurityException {
+    public void shouldCreateGoogleCredentialsDirectory() throws Exception {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER + " folder does not exist. (Precondition check)",
@@ -105,7 +105,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldFailIfAuDirectoryAlreadyExists() throws IOException, GeneralSecurityException {
+    public void shouldFailIfAuDirectoryAlreadyExists() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         Files.writeString(auPathFrom(rootDir, "name"), "EXISTING CONTENTS");
@@ -128,7 +128,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldRequireDocumentRootParameter() throws GeneralSecurityException, IOException {
+    public void shouldRequireDocumentRootParameter() throws Exception {
         collector.checkThat(
                 execute("au", "init"),
                 is(equalTo(2))
@@ -136,7 +136,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldCreateClientCredentialsFile() throws IOException, GeneralSecurityException {
+    public void shouldCreateClientCredentialsFile() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir), "-c " + client_id, "-p " + project_id, "-s " + secret);
 
@@ -162,7 +162,7 @@ public class InitializeCommandTest {
     }
 
     @Test
-    public void shouldNotOverrideExistingCredentialsFolder() throws IOException, GeneralSecurityException {
+    public void shouldNotOverrideExistingCredentialsFolder() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         final Path auClientCredentialsFile = rootDir.resolve(ARCHITECTURE_UPDATES_CREDENTIAL_FOLDER).resolve(ARCHITECTURE_UPDATES_CLIENT_CREDENTIAL_FILE);

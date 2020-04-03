@@ -12,7 +12,7 @@ import java.io.IOException;
 public class SchemaGenerationTest {
 
     @Test
-    public void generate_schema() throws IOException {
+    public void generate_schema() throws Exception {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
         JsonSchema jsonSchema = schemaGen.generateSchema(ArchitectureDataStructure.class);

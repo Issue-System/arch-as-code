@@ -36,7 +36,7 @@ public class ArchitectureDataStructureTransformerTest {
     private static final String PRODUCT_DESCRIPTION = "TestSpaces is a tool!";
 
     @Test
-    public void should_transform_architecture_yaml_to_structurizr_workspace() throws IOException {
+    public void should_transform_architecture_yaml_to_structurizr_workspace() throws Exception {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(getClass().getResource(TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
 

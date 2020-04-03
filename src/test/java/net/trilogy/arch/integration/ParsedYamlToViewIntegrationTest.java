@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class ParsedYamlToViewIntegrationTest {
 
     @Test
-    public void system_view_test() throws IOException {
+    public void system_view_test() throws Exception {
         Workspace workspace = getWorkspace();
         Collection<SystemContextView> systemContextViews = workspace.getViews().getSystemContextViews();
         SystemContextView view = systemContextViews.stream().findFirst().get();
@@ -41,7 +41,7 @@ public class ParsedYamlToViewIntegrationTest {
     }
 
     @Test
-    public void container_view_test() throws IOException {
+    public void container_view_test() throws Exception {
         Workspace workspace = getWorkspace();
         Collection<ContainerView> containerViews = workspace.getViews().getContainerViews();
         ContainerView view = containerViews.stream().findFirst().get();
@@ -61,7 +61,7 @@ public class ParsedYamlToViewIntegrationTest {
     }
 
     @Test
-    public void component_view_test() throws IOException {
+    public void component_view_test() throws Exception {
         Workspace workspace = getWorkspace();
         Collection<ComponentView> componentViews = workspace.getViews().getComponentViews();
         ComponentView view = componentViews.stream().findFirst().get();
@@ -84,7 +84,7 @@ public class ParsedYamlToViewIntegrationTest {
     }
 
     @Test
-    public void deployment_view_test() throws IOException {
+    public void deployment_view_test() throws Exception {
         Workspace workspace = getWorkspace();
         Collection<DeploymentView> deploymentViews = workspace.getViews().getDeploymentViews();
         DeploymentView view = deploymentViews.stream().findFirst().get();

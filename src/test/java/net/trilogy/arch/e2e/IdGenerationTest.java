@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class IdGenerationTest {
 
     @Test
-    public void people_id_generation_test() throws IOException {
+    public void people_id_generation_test() throws Exception {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
@@ -31,7 +31,7 @@ public class IdGenerationTest {
     }
 
     @Test
-    public void systems_id_generation_test() throws IOException {
+    public void systems_id_generation_test() throws Exception {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
@@ -45,7 +45,7 @@ public class IdGenerationTest {
     }
 
     @Test
-    public void containers_id_generation_test() throws IOException {
+    public void containers_id_generation_test() throws Exception {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 
@@ -59,7 +59,7 @@ public class IdGenerationTest {
     }
 
     @Test
-    public void component_id_generation_test() throws IOException {
+    public void component_id_generation_test() throws Exception {
         ArchitectureDataStructure dataStructure = getDataStructure();
         Workspace workspace = getWorkspace(dataStructure);
 

@@ -43,7 +43,7 @@ public class GoogleDocsApiInterfaceTest {
             "docs.fake.com/document/d/1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk | 1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk",
     })
     @Test
-    public void shouldParseDocumentId(String url, String id) throws IOException {
+    public void shouldParseDocumentId(String url, String id) throws Exception {
         mockApiToReturn(new Document(), id);
 
         apiInterface.getDocument(url);
@@ -52,7 +52,7 @@ public class GoogleDocsApiInterfaceTest {
     }
 
     @Test
-    public void shouldReturnDocument() throws IOException {
+    public void shouldReturnDocument() throws Exception {
         String id = "1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk";
         String url = "https://docs.fake.com/document/d/" + id;
         final Document doc = new Document();
@@ -69,7 +69,7 @@ public class GoogleDocsApiInterfaceTest {
     }
 
     @Test
-    public void shouldReturnsJson() throws IOException {
+    public void shouldReturnsJson() throws Exception {
         String id = "1yTTKKPfZzf6Q6h4IBxT1u_-DrarilQnvpNCp6LRTlfk";
         String url = "https://docs.fake.com/document/d/" + id;
         final Document doc = new Document();

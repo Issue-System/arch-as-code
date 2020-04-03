@@ -28,7 +28,7 @@ public class GoogleDocumentReaderTest {
     private final GoogleDocumentReader reader = new GoogleDocumentReader(mockedApiInterface);
 
     @Test
-    public void shouldReturnEmptyAu() throws IOException {
+    public void shouldReturnEmptyAu() throws Exception {
         var apiResponse = new GoogleDocsApiInterface.Response(
                 getJsonNodeFrom("{}"),
                 new Document()
@@ -40,7 +40,7 @@ public class GoogleDocumentReaderTest {
     }
 
     @Test
-    public void shouldReturnAuWithP1JiraTicket() throws IOException {
+    public void shouldReturnAuWithP1JiraTicket() throws Exception {
         mockApiWith("Json/SampleP1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
@@ -50,7 +50,7 @@ public class GoogleDocumentReaderTest {
     }
 
     @Test
-    public void shouldReturnAuWithMilestone() throws IOException {
+    public void shouldReturnAuWithMilestone() throws Exception {
         mockApiWith("Json/SampleP1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");

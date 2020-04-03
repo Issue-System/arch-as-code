@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class ArchitectureUpdateObjectMapperTest {
 
     @Test
-    public void shouldWrite() throws IOException {
+    public void shouldWrite() throws Exception {
         ArchitectureUpdate architectureUpdate = new ArchitectureUpdate(
                 "name",
                 "milestone",

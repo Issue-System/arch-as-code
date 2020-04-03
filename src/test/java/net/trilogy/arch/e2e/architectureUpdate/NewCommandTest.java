@@ -30,7 +30,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldExitWithHappyStatusWithoutP1() throws IOException, GeneralSecurityException {
+    public void shouldExitWithHappyStatusWithoutP1() throws Exception {
         Path dir = getTempDirectory();
         initializeAuDirectory(dir);
 
@@ -66,7 +66,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldFailIfNotInitialized() throws IOException, GeneralSecurityException {
+    public void shouldFailIfNotInitialized() throws Exception {
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
@@ -81,7 +81,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldCreateFileWithoutP1() throws IOException, GeneralSecurityException {
+    public void shouldCreateFileWithoutP1() throws Exception {
         Path rootDir = initializeRootDirectory();
         Path auDir = initializeAuDirectory(rootDir);
         Path auFile = auDir.resolve("au-name.yml");
@@ -102,7 +102,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldCreateFileWithP1() throws IOException, GeneralSecurityException {
+    public void shouldCreateFileWithP1() throws Exception {
 
         Path rootDir = initializeRootDirectory();
         Path auDir = initializeAuDirectory(rootDir);
@@ -124,7 +124,7 @@ public class NewCommandTest {
     }
 
     @Test
-    public void shouldNotCreateFileIfAlreadyExists() throws IOException, GeneralSecurityException {
+    public void shouldNotCreateFileIfAlreadyExists() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
 

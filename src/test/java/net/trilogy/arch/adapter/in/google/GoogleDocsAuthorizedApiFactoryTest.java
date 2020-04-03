@@ -77,7 +77,7 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     }
 
     @Test
-    public void shouldCallTheGoogleApiInTheCorrectSequence() throws IOException {
+    public void shouldCallTheGoogleApiInTheCorrectSequence() throws Exception {
         // GIVEN
         Docs docsApi = setBehaviourOnMockedGoogleApiBuilderClasses();
 

@@ -2,7 +2,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.trilogy.arch.Bootstrap;
+import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
@@ -33,14 +33,14 @@ public class AuNewCommandTest {
     public final ErrorCollector collector = new ErrorCollector();
 
     private GoogleDocsApiInterface googleDocsApiMock;
-    private Bootstrap app;
+    private Application app;
 
     @Before
     public void setUp() throws Exception {
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi()).thenReturn(googleDocsApiMock);
-        app = new Bootstrap(googleDocsApiFactoryMock);
+        app = new Application(googleDocsApiFactoryMock);
     }
 
     @Test

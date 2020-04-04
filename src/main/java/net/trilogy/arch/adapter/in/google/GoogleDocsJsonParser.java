@@ -15,45 +15,55 @@ class GoogleDocsJsonParser {
     private static final String MILESTONE_ROW_HEADER = "Milestone";
     private static final String P1_JIRA_TICKET_ROW_HEADER = "P1 Jira Ticket";
     private static final String P2_LINK_ROW_HEADER = "P2 Spec Links";
+    private static final String EXECUTIVE_SUMMARY_COLUMN_HEADER = "Executive Summary";
 
     private final JsonNode json;
     private Optional<JsonNode> metaDataTable;
+    private Optional<JsonNode> content;
 
     GoogleDocsJsonParser(JsonNode json) {
         this.json = json;
         this.metaDataTable = Optional.empty();
+        this.content = Optional.empty();
+    }
+
+    private Optional<JsonNode> getContent() {
+        if (this.content.isPresent()) return content;
+
+        if (!this.json.hasNonNull("body")) return Optional.empty();
+        if (!this.json.get("body").hasNonNull("content")) return Optional.empty();
+
+        this.content = Optional.of(this.json.get("body").get("content"));
+        return this.content;
     }
 
     private Optional<JsonNode> getMetaDataTable() {
         if (metaDataTable.isPresent()) return metaDataTable;
 
-        var contentJsonNode = this.json.get("body").get("content");
-        for (JsonNode content : contentJsonNode) {
-            if (!content.hasNonNull("table")) continue;
+        if (getContent().isEmpty()) return Optional.empty();
 
-            var table = content.get("table");
-            if (!table.hasNonNull("columns")) continue;
-            if (table.get("columns").asInt() != 2) continue;
+        for (JsonNode contentItem : getContent().get()) {
+            Optional<JsonNode> table = getTableThatHasNColumns(contentItem, 2);
+            if (table.isEmpty()) continue;
 
-            if (!table.hasNonNull("tableRows")) continue;
-
-            for (JsonNode row : table.get("tableRows")) {
+            for (JsonNode row : table.get().get("tableRows")) {
                 if (!row.hasNonNull("tableCells")) continue;
                 if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
                 String text = getCombinedText(getTextRuns(firstCell));
                 if (text.equalsIgnoreCase(MILESTONE_ROW_HEADER)) {
-                    this.metaDataTable = Optional.of(table);
+                    this.metaDataTable = table;
+                    return this.metaDataTable;
                 }
             }
         }
 
-        return this.metaDataTable;
+        return Optional.empty();
     }
 
     private Optional<JsonNode> getFromMetaDataTable(String rowHeading) {
-        var table = getMetaDataTable().orElseGet(() -> null);
+        var table = getMetaDataTable().orElse(null);
 
         if (table == null) return Optional.empty();
 
@@ -63,9 +73,9 @@ class GoogleDocsJsonParser {
 
             var firstCell = row.get("tableCells").get(0);
             List<TextRun> textRuns = getTextRuns(firstCell);
-            boolean isTextSameAsHeading = getCombinedText(textRuns).equalsIgnoreCase(rowHeading);
+            boolean doesTextContainHeadingWeWant = getCombinedText(textRuns).toLowerCase().contains(rowHeading.toLowerCase());
 
-            if (!isTextSameAsHeading) continue;
+            if (!doesTextContainHeadingWeWant) continue;
 
             var secondCell = row.get("tableCells").get(1);
             return Optional.of(secondCell);
@@ -143,6 +153,45 @@ class GoogleDocsJsonParser {
                 .map(s -> String.join(", ", s));
     }
 
+    private Optional<JsonNode> getTableThatHasNColumns(JsonNode fromNode, int numColumns) {
+        if (!fromNode.hasNonNull("table")) return Optional.empty();
+
+        var table = fromNode.get("table");
+        if (!table.hasNonNull("columns")) return Optional.empty();
+        if (table.get("columns").asInt() != numColumns) return Optional.empty();
+
+        if (!table.hasNonNull("tableRows")) return Optional.empty();
+
+        return Optional.of(table);
+    }
+
+    public Optional<String> getExecutiveSummary() {
+        if (getContent().isEmpty()) return Optional.empty();
+
+        for (JsonNode contentItem : getContent().get()) {
+            Optional<JsonNode> table = getTableThatHasNColumns(contentItem, 1);
+            if (table.isEmpty()) continue;
+            if (table.get().get("tableRows").size() != 2) continue;
+
+            JsonNode firstRow = table.get().get("tableRows").get(0);
+            if (!firstRow.hasNonNull("tableCells")) continue;
+            if (firstRow.get("tableCells").size() != 1) continue;
+            JsonNode firstCell = firstRow.get("tableCells").get(0);
+
+            JsonNode secondRow = table.get().get("tableRows").get(1);
+            if (!secondRow.hasNonNull("tableCells")) continue;
+            if (secondRow.get("tableCells").size() != 1) continue;
+            JsonNode secondCell = secondRow.get("tableCells").get(0);
+
+            boolean isTheFirstRowTheExecutiveSummaryHeader = getCombinedText(getTextRuns(firstCell)).toLowerCase().contains(EXECUTIVE_SUMMARY_COLUMN_HEADER.toLowerCase());
+            if (!isTheFirstRowTheExecutiveSummaryHeader) continue;
+
+            return Optional.of(getCombinedText(getTextRuns(secondCell)));
+        }
+
+        return Optional.empty();
+    }
+
     private static class TextRun {
         private final JsonNode node;
 
@@ -156,7 +205,9 @@ class GoogleDocsJsonParser {
 
         private Optional<String> getTextFrom() {
             if (!getNode().hasNonNull("content")) return Optional.empty();
-            return Optional.of(getNode().get("content").textValue());
+            String content = getNode().get("content").textValue();
+            content = content.replaceAll("\\P{Print}", "");
+            return Optional.of(content);
         }
 
         private Optional<String> getLinkFrom() {

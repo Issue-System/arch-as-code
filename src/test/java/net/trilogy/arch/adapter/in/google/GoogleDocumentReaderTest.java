@@ -42,6 +42,20 @@ public class GoogleDocumentReaderTest {
     }
 
     @Test
+    public void shouldReturnAuWithExecutiveSummary() throws Exception {
+        mockApiWith("Json/SampleP1.json", "url");
+
+        ArchitectureUpdate result = reader.load("url");
+
+        String expected = "Just a whole bunch of text goes here. Like a bunch of it. " +
+                "Maybe some symbols &@#*!)(@(#&*@." +
+                "Maybe some paragraphs. " +
+                "Just a bunch, yknow?";
+
+        assertThat(result.getP1().getSummary(), equalTo(expected));
+    }
+
+    @Test
     public void shouldReturnAuWithP2Link() throws Exception {
         mockApiWith("Json/SampleP1.json", "url");
 

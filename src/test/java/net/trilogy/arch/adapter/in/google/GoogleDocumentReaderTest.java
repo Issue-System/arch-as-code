@@ -51,6 +51,15 @@ public class GoogleDocumentReaderTest {
     }
 
     @Test
+    public void shouldReturnAuWithP1Link() throws Exception {
+        mockApiWith("Json/SampleP1.json", "url");
+
+        ArchitectureUpdate result = reader.load("url");
+
+        assertThat(result.getP1().getLink(), equalTo("url"));
+    }
+
+    @Test
     public void shouldReturnAuWithP1JiraTicket() throws Exception {
         mockApiWith("Json/SampleP1.json", "url");
 

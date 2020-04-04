@@ -26,7 +26,7 @@ public class GoogleDocumentReader {
 
         return ArchitectureUpdate.builder()
                 .milestone(jsonParser.getMilestone().orElse(""))
-                .p1(extractP1(jsonParser))
+                .p1(extractP1(jsonParser, url))
                 .p2(extractP2(jsonParser))
                 .build();
     }
@@ -37,8 +37,10 @@ public class GoogleDocumentReader {
                 .build();
     }
 
-    private P1 extractP1(GoogleDocsJsonParser jsonParser) {
-        return P1.builder().jira(
+    private P1 extractP1(GoogleDocsJsonParser jsonParser, String url) {
+        return P1.builder()
+                .link(url)
+                .jira(
                 new Jira(
                         jsonParser.getP1JiraTicket().orElse(""),
                         jsonParser.getP1JiraLink().orElse("")

@@ -42,6 +42,15 @@ public class GoogleDocumentReaderTest {
     }
 
     @Test
+    public void shouldReturnAuWithP2Link() throws Exception {
+        mockApiWith("Json/SampleP1.json", "url");
+
+        ArchitectureUpdate result = reader.load("url");
+
+        assertThat(result.getP2().getLink(), equalTo("http://fake-link-to-p2.com"));
+    }
+
+    @Test
     public void shouldReturnAuWithP1JiraTicket() throws Exception {
         mockApiWith("Json/SampleP1.json", "url");
 
@@ -79,7 +88,7 @@ public class GoogleDocumentReaderTest {
     // TODO: Remove when no longer needed
     @Test
     @Ignore("This is not a test. Use this to generate new json from google docs if needed.")
-    public void fetchSampleP1Spec() throws GeneralSecurityException, IOException {
+    public void NotATest_UtilToFetchSampleP1Spec() throws GeneralSecurityException, IOException {
         String url = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
         File productDocumentationRoot = new File(".");
 

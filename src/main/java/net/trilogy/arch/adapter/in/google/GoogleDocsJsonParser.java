@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toSet;
 class GoogleDocsJsonParser {
     private static final String MILESTONE_ROW_HEADER = "Milestone";
     private static final String P1_JIRA_TICKET_ROW_HEADER = "P1 Jira Ticket";
+    private static final String P2_LINK_ROW_HEADER = "P2 Spec Links";
 
     private final JsonNode json;
     private Optional<JsonNode> metaDataTable;
@@ -127,7 +128,19 @@ class GoogleDocsJsonParser {
         return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
                 .map(this::getTextRuns)
                 .map(GoogleDocsJsonParser::getAllLinks)
-                .map(s -> s.stream().collect(joining(",")));
+                .map(s -> String.join(", ", s));
+    }
+
+    public Optional<String> getP2Link() {
+        return getFromMetaDataTable(P2_LINK_ROW_HEADER)
+                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getAllLinks)
+                .map(theSetOfLinks ->
+                        theSetOfLinks.stream()
+                                .filter(theLink -> !theLink.contains("jira"))
+                                .collect(toSet())
+                )
+                .map(s -> String.join(", ", s));
     }
 
     private static class TextRun {

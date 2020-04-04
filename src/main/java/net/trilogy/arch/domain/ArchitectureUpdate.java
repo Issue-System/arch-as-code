@@ -58,6 +58,7 @@ public class ArchitectureUpdate {
         return orig != null ? new ArrayList<>(orig) : new ArrayList<>();
     }
 
+    @Getter
     @EqualsAndHashCode
     public static class P2 {
         private final String link;

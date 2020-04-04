@@ -2,6 +2,7 @@ package net.trilogy.arch.adapter.in.google;
 
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import net.trilogy.arch.domain.ArchitectureUpdate.P1;
+import net.trilogy.arch.domain.ArchitectureUpdate.P2;
 import net.trilogy.arch.domain.Jira;
 
 import java.io.IOException;
@@ -26,6 +27,13 @@ public class GoogleDocumentReader {
         return ArchitectureUpdate.builder()
                 .milestone(jsonParser.getMilestone().orElse(""))
                 .p1(extractP1(jsonParser))
+                .p2(extractP2(jsonParser))
+                .build();
+    }
+
+    private P2 extractP2(GoogleDocsJsonParser jsonParser) {
+        return P2.builder()
+                .link(jsonParser.getP2Link().orElse(""))
                 .build();
     }
 

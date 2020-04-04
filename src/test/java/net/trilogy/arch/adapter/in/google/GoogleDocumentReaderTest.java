@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,9 +60,14 @@ public class GoogleDocumentReaderTest {
         assertThat(result.getMilestone(), equalTo("M1.0 First Milestone"));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void mockApiWith(String fileWhoseContentsWillBeReturned, String whenCalledWithUrl) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        final Path path = Paths.get(classLoader.getResource(fileWhoseContentsWillBeReturned).getPath());
+        final Path path = Paths.get(
+                Objects.requireNonNull(
+                        classLoader.getResource(fileWhoseContentsWillBeReturned)
+                ).getPath()
+        );
         final JsonNode sampleSpec = getJsonNodeFrom(Files.readString(path));
 
         mockApiToReturnAGivenB(

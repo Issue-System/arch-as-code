@@ -20,14 +20,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.ACCESS_SCOPES;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 
+/*
+* NOTE: Mockito Strict Stubbing is required. This test walks through
+*     the process of obtaining a google API connection by
+*     mocking each individual step. Strict stubbing acts as assertions
+*     throughout this process.
+*/
 @RunWith(MockitoJUnitRunner.StrictStubs.class)
 public class GoogleDocsAuthorizedApiFactoryTest {
     @Rule
@@ -40,8 +48,6 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     private GoogleDocsAuthorizedApiFactory.AuthorizationCodeInstalledAppFactory mockedAuthorizationCodeInstalledAppFactory;
     private GoogleDocsAuthorizedApiFactory.CodeFlowBuilderFactory mockedCodeFlowBuilderFactory;
     private GoogleDocsAuthorizedApiFactory.DocsFactory mockedDocsFactory;
-    private Path userCredentialsDirectory;
-    private Path clientCredentialsFile;
     private Path rootDir;
     private final NetHttpTransport httpTransport = new NetHttpTransport();
     private final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -50,10 +56,12 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     public void setUp() throws Exception {
         rootDir = Files.createTempDirectory("arch-as-code_tests");
 
-        userCredentialsDirectory = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH);
+        Path userCredentialsDirectory = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH);
+
+        //noinspection ResultOfMethodCallIgnored
         userCredentialsDirectory.toFile().mkdirs();
 
-        clientCredentialsFile = userCredentialsDirectory.resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);
+        Path clientCredentialsFile = userCredentialsDirectory.resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);
         Files.writeString(
                 clientCredentialsFile,
                 "{" +
@@ -76,36 +84,38 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     }
 
     @Test
-    public void shouldUseCorrectAuFolder() {
+    public void shouldUseTheRightConstants() {
+        collector.checkThat(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH, equalTo(".arch-as-code/google/"));
         collector.checkThat(GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME, equalTo("userCredentialsDatastore"));
+        collector.checkThat(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME, equalTo("client_secret.json"));
+        collector.checkThat(ACCESS_SCOPES, contains(DocsScopes.DOCUMENTS_READONLY));
     }
 
     @Test
     public void shouldCallTheGoogleApiInTheCorrectSequence() throws Exception {
-        // GIVEN
         Docs docsApi = setBehaviourOnMockedGoogleApiBuilderClassesToReturnMockedApi();
-
         GoogleDocsApiInterface expected = new GoogleDocsApiInterface(docsApi);
 
-        GoogleDocsAuthorizedApiFactory apiFactory = new GoogleDocsAuthorizedApiFactory(
+        var result = new GoogleDocsAuthorizedApiFactory(
                 httpTransport,
                 jsonFactory,
                 mockedCodeFlowBuilderFactory,
                 mockedAuthorizationCodeInstalledAppFactory,
-                mockedDocsFactory);
+                mockedDocsFactory
+        ).getAuthorizedDocsApi(
+                rootDir.toFile()
+        );
 
-        // WHEN
-        var result = apiFactory.getAuthorizedDocsApi(rootDir.toFile());
-
-        // THEN
         assertThat(result, equalTo(expected));
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     private Docs setBehaviourOnMockedGoogleApiBuilderClassesToReturnMockedApi() throws IOException {
         GoogleAuthorizationCodeFlow googleCodeFlowResult = mockGoogleCodeFlow();
         Credential googleAuthorizeFlowResult = mockGoogleAuthorizeFlow(googleCodeFlowResult);
+
+        //noinspection UnnecessaryLocalVariable
         Docs googleDocsFlowResult = mockGoogleDocsFlow(googleAuthorizeFlowResult);
+
         return googleDocsFlowResult;
     }
 
@@ -128,10 +138,12 @@ public class GoogleDocsAuthorizedApiFactoryTest {
         return mockedCredential;
     }
 
-    private GoogleAuthorizationCodeFlow mockGoogleCodeFlow() throws IOException {
+    private GoogleAuthorizationCodeFlow mockGoogleCodeFlow() {
         var mockedCodeFlowBuilder = Mockito.mock(GoogleAuthorizationCodeFlow.Builder.class);
-        // TODO Future: Replace any() with factory
+
+        // TODO FUTURE: Replace any() to assert that the right credential data store is being used.
         Mockito.when(mockedCodeFlowBuilder.setCredentialDataStore(any())).thenReturn(mockedCodeFlowBuilder);
+
         Mockito.when(
                 mockedCodeFlowBuilderFactory.make(httpTransport, jsonFactory, CLIENT_ID, CLIENT_SECRET, SCOPES)
         ).thenReturn(

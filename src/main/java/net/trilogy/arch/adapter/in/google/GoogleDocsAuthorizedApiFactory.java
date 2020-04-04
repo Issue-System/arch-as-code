@@ -28,6 +28,7 @@ public class GoogleDocsAuthorizedApiFactory {
     public static final String GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH = ".arch-as-code/google/";
     public static final String GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME = "userCredentialsDatastore";
     public static final String GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME = "client_secret.json";
+    public static final List<String> ACCESS_SCOPES = List.of(DocsScopes.DOCUMENTS_READONLY);
 
     private final String clientCredentialsFileName;
     private final String credentialsDirectory;
@@ -36,7 +37,6 @@ public class GoogleDocsAuthorizedApiFactory {
     private final CodeFlowBuilderFactory codeFlowBuilderFactory;
     private final AuthorizationCodeInstalledAppFactory authorizationCodeInstalledAppFactory;
     private final DocsFactory docsFactory;
-    private final List<String> ACCESS_SCOPES = List.of(DocsScopes.DOCUMENTS_READONLY);
 
     public GoogleDocsAuthorizedApiFactory() throws GeneralSecurityException, IOException {
         this.clientCredentialsFileName = GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;

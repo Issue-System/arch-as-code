@@ -51,21 +51,26 @@ public class GoogleDocumentReaderTest {
             "Json/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes."
     })
     @Test
-    public void shouldReturnAuWithExecutiveSummary(String jsonFilename, String expectedString) throws Exception {
+    public void shouldReturnAuWithExecutiveSummary(String jsonFilename, String expected) throws Exception {
         mockApiWith(jsonFilename, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getP1().getSummary(), equalTo(expectedString));
+        assertThat(result.getP1().getSummary(), equalTo(expected));
     }
 
+    @Parameters({
+            "Json/SampleP1-1.json | http://fake-link-to-p2.com",
+            "Json/SampleP1-2.json | https://docs.google.com/document/d/15CnasdfasdfasdfLi1p8PDJA/edit#heading=h.ze6rbvelp0",
+            "Json/SampleP1-3.json | https://docs.google.com/document/d/15sCnB9pKdddddddrlYU8F"
+    })
     @Test
-    public void shouldReturnAuWithP2Link() throws Exception {
-        mockApiWith("Json/SampleP1-1.json", "url");
+    public void shouldReturnAuWithP2Link(String jsonFilename, String expected) throws Exception {
+        mockApiWith(jsonFilename, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getP2().getLink(), equalTo("http://fake-link-to-p2.com"));
+        assertThat(result.getP2().getLink(), equalTo(expected));
     }
 
     @Test
@@ -77,23 +82,33 @@ public class GoogleDocumentReaderTest {
         assertThat(result.getP1().getLink(), equalTo("url"));
     }
 
+    @Parameters({
+            "Json/SampleP1-1.json | ABCD-1231 | http://fake-jira.com",
+            "Json/SampleP1-2.json | SPEC-12312 | https://jira.dev.com/browse/SPEC-12312",
+            "Json/SampleP1-3.json | SPEC-01127 (M1.5) | https://jira.devshop.com/browse/SPEC-01127"
+    })
     @Test
-    public void shouldReturnAuWithP1JiraTicket() throws Exception {
-        mockApiWith("Json/SampleP1-1.json", "url");
+    public void shouldReturnAuWithP1JiraTicket(String jsonFilename, String expectedTicket, String expectedLink) throws Exception {
+        mockApiWith(jsonFilename, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getP1().getJira().getTicket(), equalTo("ABCD-1231"));
-        assertThat(result.getP1().getJira().getLink(), equalTo("http://fake-jira.com"));
+        assertThat(result.getP1().getJira().getTicket(), equalTo(expectedTicket));
+        assertThat(result.getP1().getJira().getLink(), equalTo(expectedLink));
     }
 
+    @Parameters({
+            "Json/SampleP1-1.json | M1.0 First Milestone",
+            "Json/SampleP1-2.json | M1.2 - Video Processing (M1 - Upload\\, Download\\, and Stream Video)",
+            "Json/SampleP1-3.json | M1.5 - Content Delivery and Download (M2 - Upload\\, Download\\, and Stream Content)"
+    })
     @Test
-    public void shouldReturnAuWithMilestone() throws Exception {
-        mockApiWith("Json/SampleP1-1.json", "url");
+    public void shouldReturnAuWithMilestone(String jsonFilename, String expected) throws Exception {
+        mockApiWith(jsonFilename, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getMilestone(), equalTo("M1.0 First Milestone"));
+        assertThat(result.getMilestone(), equalTo(expected));
     }
 
     @SuppressWarnings("SameParameterValue")

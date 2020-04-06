@@ -54,6 +54,7 @@ public class AuNewCommandTest {
                 is(equalTo(0))
         );
     }
+
     @Test
     public void shouldExitWithHappyStatusWithoutP1_long() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));

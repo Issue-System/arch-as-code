@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.docs.v1.model.Document;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import net.trilogy.arch.domain.ArchitectureUpdate;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(JUnitParamsRunner.class)
 public class GoogleDocumentReaderTest {
 
 
@@ -41,18 +45,18 @@ public class GoogleDocumentReaderTest {
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
     }
 
+    @Parameters({
+            "Json/SampleP1-1.json | Just a whole bunch of text goes here. Like a bunch of it. Maybe some symbols &@#*!)(@(#&*@.Maybe some paragraphs. Just a bunch\\, yknow?",
+            "Json/SampleP1-2.json | Video processing capabilities will be added to the Video upload mechanism with this milestone using AWS services for generating transcriptions\\, captions\\, thumbnails and video objects/scenes.",
+            "Json/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes."
+    })
     @Test
-    public void shouldReturnAuWithExecutiveSummary() throws Exception {
-        mockApiWith("Json/SampleP1-1.json", "url");
+    public void shouldReturnAuWithExecutiveSummary(String jsonFilename, String expectedString) throws Exception {
+        mockApiWith(jsonFilename, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
-        String expected = "Just a whole bunch of text goes here. Like a bunch of it. " +
-                "Maybe some symbols &@#*!)(@(#&*@." +
-                "Maybe some paragraphs. " +
-                "Just a bunch, yknow?";
-
-        assertThat(result.getP1().getSummary(), equalTo(expected));
+        assertThat(result.getP1().getSummary(), equalTo(expectedString));
     }
 
     @Test

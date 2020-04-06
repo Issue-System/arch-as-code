@@ -144,7 +144,7 @@ public class AuNewCommandTest {
     }
 
     private void mockGoogleDocsApi() throws IOException {
-        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1.json")).getPath()));
+        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1-1.json")).getPath()));
         JsonNode jsonFileContents = new ObjectMapper().readValue(rawFileContents, JsonNode.class);
         when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
     }

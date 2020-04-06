@@ -43,7 +43,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithExecutiveSummary() throws Exception {
-        mockApiWith("Json/SampleP1.json", "url");
+        mockApiWith("Json/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -57,7 +57,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithP2Link() throws Exception {
-        mockApiWith("Json/SampleP1.json", "url");
+        mockApiWith("Json/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -66,7 +66,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithP1Link() throws Exception {
-        mockApiWith("Json/SampleP1.json", "url");
+        mockApiWith("Json/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -75,7 +75,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithP1JiraTicket() throws Exception {
-        mockApiWith("Json/SampleP1.json", "url");
+        mockApiWith("Json/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -85,7 +85,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithMilestone() throws Exception {
-        mockApiWith("Json/SampleP1.json", "url");
+        mockApiWith("Json/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -112,25 +112,39 @@ public class GoogleDocumentReaderTest {
     @Test
     @Ignore("This is not a test. Use this to generate new json from google docs if needed.")
     public void NotATest_UtilToFetchSampleP1Spec() throws GeneralSecurityException, IOException {
-        String url = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
+        String url1 = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
+        String url2 = "https://docs.google.com/document/d/1Mhli4ZvCAAIwIguE7UY-DihkI1JsdxZjRG36QVen5aU/edit#";
+        String url3 = "https://docs.google.com/document/d/1h-yiali65IQp6qXWb6qxkKvwvYTI9oshfOqJ3SmM4jQ/edit#";
         File productDocumentationRoot = new File(".");
 
         var apiFactory = new GoogleDocsAuthorizedApiFactory();
         var api = apiFactory.getAuthorizedDocsApi(productDocumentationRoot);
-        var response = api.fetch(url);
+        var response1 = api.fetch(url1);
+        var response2 = api.fetch(url2);
+        var response3 = api.fetch(url3);
 
-        Path tempFile = Files.createTempFile("arch-as-code_test-json-file", ".json");
+        Path tempFile1 = Files.createTempFile("arch-as-code_test-json-file", ".json");
+        Path tempFile2 = Files.createTempFile("arch-as-code_test-json-file", ".json");
+        Path tempFile3 = Files.createTempFile("arch-as-code_test-json-file", ".json");
 
-        new ObjectMapper().writeValue(tempFile.toFile(), response.asJson());
+        new ObjectMapper().writeValue(tempFile1.toFile(), response1.asJson());
+        new ObjectMapper().writeValue(tempFile2.toFile(), response2.asJson());
+        new ObjectMapper().writeValue(tempFile3.toFile(), response3.asJson());
 
         assertThat(
                 "********* STATUS *********" +
-                "\nReading doc: " + url +
-                        "\nUsing credentials within " + productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
-                        "\nWritten to file " + tempFile.toAbsolutePath() +
-                        "\nRun: mv " + tempFile.toAbsolutePath() + " src/test/resources/Json/SampleP1.json" +
-                        "\nNow failing test on purpose :)" +
-                        "\n********* STATUS *********\n\n",
+                        "\n\nReading doc: " + url1 +
+                        "\nReading doc: " + url2 +
+                        "\nReading doc: " + url3 +
+                        "\n\nUsing credentials within " + productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
+                        "\n\nWritten to file " + tempFile1.toAbsolutePath() +
+                        "\nWritten to file " + tempFile2.toAbsolutePath() +
+                        "\nWritten to file " + tempFile3.toAbsolutePath() +
+                        "\n\nRun: mv " + tempFile1.toAbsolutePath() + " src/test/resources/Json/SampleP1-1.json" +
+                        "\nRun: mv " + tempFile2.toAbsolutePath() + " src/test/resources/Json/SampleP1-2.json" +
+                        "\nRun: mv " + tempFile3.toAbsolutePath() + " src/test/resources/Json/SampleP1-3.json" +
+                        "\n\nNow failing test on purpose :)" +
+                        "\n\n********* STATUS *********\n\n",
                 true, is(false)
         );
 

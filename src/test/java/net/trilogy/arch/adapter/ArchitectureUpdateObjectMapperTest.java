@@ -9,7 +9,6 @@ import net.trilogy.arch.domain.Link;
 import net.trilogy.arch.domain.Person;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +24,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 "milestone",
                 List.of(new Person("author", "email")),
                 List.of(new Person("PCA", "email")),
+                List.of(new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "decision")),
                 new P2("link", new Jira("ticket", "link")),
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),
@@ -42,6 +42,9 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "PCAs:"
                 , "- name: \"PCA\""
                 , "  email: \"email\""
+                , "decisions:"
+                , "- type: \"ITD\""
+                , "  decision: \"decision\""
                 , "P2:"
                 , "  link: \"link\""
                 , "  jira:"
@@ -52,7 +55,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "  jira:"
                 , "    ticket: \"ticket\""
                 , "    link: \"link\""
-                , "  summary: \"summary\""
+                , "  executive-summary: \"summary\""
                 , "useful-links:"
                 , "- description: \"description\""
                 , "  link: \"link\""

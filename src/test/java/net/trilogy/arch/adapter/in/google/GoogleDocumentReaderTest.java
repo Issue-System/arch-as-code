@@ -58,7 +58,7 @@ public class GoogleDocumentReaderTest {
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getP1().getSummary(), equalTo(expected));
+        assertThat(result.getP1().getExecutiveSummary(), equalTo(expected));
     }
 
     @Parameters({

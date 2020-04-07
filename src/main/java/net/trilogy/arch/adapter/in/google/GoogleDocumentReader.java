@@ -40,7 +40,7 @@ public class GoogleDocumentReader {
     private P1 extractP1(GoogleDocsJsonParser jsonParser, String url) {
         return P1.builder()
                 .link(url)
-                .summary(jsonParser.getExecutiveSummary().orElse(""))
+                .executiveSummary(jsonParser.getExecutiveSummary().orElse(""))
                 .jira(new Jira(
                                 jsonParser.getP1JiraTicket().orElse(""),
                                 jsonParser.getP1JiraLink().orElse("")

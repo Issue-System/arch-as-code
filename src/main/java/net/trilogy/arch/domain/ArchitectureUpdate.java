@@ -2,7 +2,6 @@ package net.trilogy.arch.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -16,6 +15,7 @@ public class ArchitectureUpdate {
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
+    private final List<Decision> decisions;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -30,11 +30,12 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, List<Decision> decisions, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
+        this.decisions = decisions;
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = copyList(usefulLinks);
@@ -47,6 +48,7 @@ public class ArchitectureUpdate {
                 "",
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
+                List.of(new Decision(DecisionType.ITD, "decision")),
                 new P2("", new Jira("", "")),
                 new P1("", new Jira("", ""), ""),
                 List.of(new Link("", "")),
@@ -76,13 +78,15 @@ public class ArchitectureUpdate {
     public static class P1 {
         private final String link;
         private final Jira jira;
-        private final String summary;
+
+        @JsonProperty(value = "executive-summary")
+        private final String executiveSummary;
 
         @Builder
-        public P1(String link, Jira jira, String summary) {
+        public P1(String link, Jira jira, String executiveSummary) {
             this.link = link;
             this.jira = jira;
-            this.summary = summary;
+            this.executiveSummary = executiveSummary;
         }
     }
 
@@ -97,4 +101,18 @@ public class ArchitectureUpdate {
             this.links = links;
         }
     }
+
+    @EqualsAndHashCode
+    public static class Decision {
+        private final DecisionType type;
+        private final String decision;
+
+        @Builder
+        public Decision(DecisionType type, String decision) {
+            this.type = type;
+            this.decision = decision;
+        }
+    }
+
+    public enum DecisionType { ITD }
 }

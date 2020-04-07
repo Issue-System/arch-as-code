@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +103,7 @@ public class ArchitectureUpdate {
         }
     }
 
+    @ToString
     @EqualsAndHashCode
     public static class Decision {
         private final DecisionType type;

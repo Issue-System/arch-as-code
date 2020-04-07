@@ -200,7 +200,7 @@ class GoogleDocsJsonParser {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(cell -> getCombinedText(getTextRuns(cell)))
-                .filter(str -> str.contains("P1"))
+                .filter(str -> str.startsWith("P1"))
                 .collect(toList());
     }
 

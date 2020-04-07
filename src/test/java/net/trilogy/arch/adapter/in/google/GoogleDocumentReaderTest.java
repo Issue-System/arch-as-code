@@ -7,6 +7,7 @@ import com.google.api.services.docs.v1.model.Document;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import net.trilogy.arch.domain.ArchitectureUpdate;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
@@ -47,18 +51,32 @@ public class GoogleDocumentReaderTest {
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
     }
 
+    @Parameters({
+            "Json/SampleP1-1.json | P1 ITD 1.1", // TODO: should also contain the title: "Chosen P1 decision"
+
+            "Json/SampleP1-2.json | P1 ITD 11.1 - Configure Step Functions to emit CloudWatch events when execution state changes",
+            "Json/SampleP1-2.json | P1 ITD 11.2 - Retry failed Step Function states following the policy described in Appendix 2.1",
+            "Json/SampleP1-2.json | P1 ITD 11.3 - Allow the user to publish the video as soon as its uploaded without waiting for any processing",
+            "Json/SampleP1-2.json | P1 ITD 11.4 - Start Basic Processing as soon as the video is uploaded\\, and Complex Processing as soon as video Publishing is initiated",
+            "Json/SampleP1-2.json | P1 ITD 12.1 - Transcode video files into MP4 format for download",
+            "Json/SampleP1-2.json | P1 ITD 12.2 - Extract the embedded captions in WebVTT format",
+            "Json/SampleP1-2.json | P1 ITD 15.1 - Dont perform automatic transcription if the user has uploaded caption files explicitly or the caption files were embedded into the video",
+            "Json/SampleP1-2.json | P1 ITD 18.1 - Recognize Labels\\, Celebrities\\, Text\\, Faces\\, Unsafe Content from the uploaded video using AWS Rekognition",
+            "Json/SampleP1-2.json | P1 ITD 19.1 - Use CloudWatch to collect events from all AWS services in Basic and Complex workflows",
+            "Json/SampleP1-2.json | P1 ITD 10 - Create Thumbnails using AWS Elemental MediaConvert.",
+
+            "Json/SampleP1-4.json | P1 ITD 5.1 - Update API interface as defined by Appendix 2 to allow forward multiple documents for multiple users.",
+            "Json/SampleP1-4.json | P1 ITD 4.1 - Use existing interface to allow forward single document for a single user.",
+    })
     @Test
-    public void shouldReturnAuWithDecisions() throws Exception {
-        mockApiWith("Json/SampleP1-4.json", "url");
+    public void shouldReturnAuWithDecisions(String file, String decisionsMustContain) throws Exception {
+        mockApiWith(file, "url");
 
         ArchitectureUpdate result = reader.load("url");
 
         assertThat(
                 result.getDecisions(),
-                containsInAnyOrder(
-                        new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "P1 ITD 5.1 - Update API interface as defined by Appendix 2 to allow forward multiple documents for multiple users."),
-                        new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "P1 ITD 4.1 - Use existing interface to allow forward single document for a single user.")
-                )
+                Matchers.hasItem( new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, decisionsMustContain))
         );
     }
 

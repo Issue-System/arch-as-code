@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -81,7 +82,7 @@ class GoogleDocsJsonParser {
 
     public Optional<String> getMilestone() {
         return getFromMetaDataTable(MILESTONE_ROW_HEADER)
-                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getTextRuns)
                 .map(GoogleDocsJsonParser::getCombinedText);
     }
 
@@ -102,7 +103,7 @@ class GoogleDocsJsonParser {
                 .collect(toSet());
     }
 
-    private List<TextRun> getTextRuns(JsonNode fromNode) {
+    private static List<TextRun> getTextRuns(JsonNode fromNode) {
         List<TextRun> textRuns = new ArrayList<>();
 
         if (!fromNode.hasNonNull("content")) return textRuns;
@@ -125,20 +126,20 @@ class GoogleDocsJsonParser {
 
     public Optional<String> getP1JiraTicket() {
         return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
-                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getTextRuns)
                 .map(GoogleDocsJsonParser::getCombinedText);
     }
 
     public Optional<String> getP1JiraLink() {
         return getFromMetaDataTable(P1_JIRA_TICKET_ROW_HEADER)
-                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getTextRuns)
                 .map(GoogleDocsJsonParser::getAllLinks)
                 .map(s -> String.join(", ", s));
     }
 
     public Optional<String> getP2Link() {
         return getFromMetaDataTable(P2_LINK_ROW_HEADER)
-                .map(this::getTextRuns)
+                .map(GoogleDocsJsonParser::getTextRuns)
                 .map(GoogleDocsJsonParser::getAllLinks)
                 .map(theSetOfLinks ->
                         theSetOfLinks.stream()
@@ -193,8 +194,14 @@ class GoogleDocsJsonParser {
     }
 
     public List<String> getDecisions() {
-        List<Table> tables = getAllRootLevelTables();
-        return List.of();
+        return getAllRootLevelTables()
+                .stream()
+                .map(Table::getFirstCell)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(cell -> getCombinedText(getTextRuns(cell)))
+                .filter(str -> str.contains("P1"))
+                .collect(toList());
     }
 
     private static class Table {
@@ -203,6 +210,16 @@ class GoogleDocsJsonParser {
         private Table(JsonNode node) {
             this.node = node;
         }
+
+       private Optional<JsonNode> getFirstCell() {
+            if(getRows().size() == 0) return Optional.empty();
+
+            JsonNode firstRow = getRows().get(0);
+            if(!firstRow.hasNonNull("tableCells")) return Optional.empty();
+            if(firstRow.get("tableCells").size() == 0) return Optional.empty();
+
+            return Optional.of(firstRow.get("tableCells").get(0));
+       }
 
         private List<JsonNode> getRows() {
             List<JsonNode> rowsFound = new ArrayList<>();

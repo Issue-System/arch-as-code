@@ -22,6 +22,7 @@ import java.util.Objects;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -46,7 +47,6 @@ public class GoogleDocumentReaderTest {
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldReturnAuWithDecisions() throws Exception {
         mockApiWith("Json/SampleP1-4.json", "url");
@@ -55,8 +55,9 @@ public class GoogleDocumentReaderTest {
 
         assertThat(
                 result.getDecisions(),
-                contains(
-                    new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "")
+                containsInAnyOrder(
+                        new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "P1 ITD 5.1 - Update API interface as defined by Appendix 2 to allow forward multiple documents for multiple users."),
+                        new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "P1 ITD 4.1 - Use existing interface to allow forward single document for a single user.")
                 )
         );
     }

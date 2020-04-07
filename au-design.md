@@ -51,7 +51,7 @@ P1 ->
     jira ->
         ticket [P1]
         link [P1]
-    summary [P1]
+    executive-summary [P1]
 useful-links -> (might not be necessary to duplicate from the P1)
     link... ->
         description [P1] / [M]
@@ -64,21 +64,32 @@ milestone-dependencies -> (might not be necessary to duplicate from the P1)
 decisions -> 
     decision... ->
         type (ITD, IFD, or SSD) [P1]
-        info ??? [P1]
-        tdds... ->
-            tdd-id / tdd-alias [M]
+        title [P1]
+        TDDs ->
+            - TDD-id / TDD-alias [M]
+            - TDD-id / TDD-alias [M]
+            - TDD-id / TDD-alias [M]
 ACs ->
     AC... ->
         id [P1] (Special case: [M] if new AC only in AU)
         text [P1] (Special case: [M] if new AC only in AU)
-        tdds... ->
-            tdd-id / tdd-alias [M]
-TDDs... ->
+        TDDs ->
+            - TDD-id / TDD-alias [M]
+            - TDD-id / TDD-alias [M]
+            - TDD-id / TDD-alias [M]
+TDDs ->
     Component... ->
         component-id / component-alias [M]
-        TDD... -> 
-            id / alias [M]
-            text [M]
+        TDDs -> 
+            - TDD ->
+                id / alias [M]
+                text [M]
+            - TDD ->
+                id / alias [M]
+                text [M]
+            - TDD ->
+                id / alias [M]
+                text [M]
 ```
 
 ## Things to validate:

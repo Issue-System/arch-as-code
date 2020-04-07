@@ -20,11 +20,13 @@ class GoogleDocsJsonParser {
     private final JsonNode json;
     private Optional<JsonNode> metaDataTable;
     private Optional<JsonNode> content;
+    private List<JsonNode> rootLevelTables;
 
     GoogleDocsJsonParser(JsonNode json) {
         this.json = json;
         this.metaDataTable = Optional.empty();
         this.content = Optional.empty();
+        this.rootLevelTables = null;
     }
 
     private Optional<JsonNode> getContent() {
@@ -40,7 +42,7 @@ class GoogleDocsJsonParser {
     private Optional<JsonNode> getMetaDataTable() {
         if (metaDataTable.isPresent()) return metaDataTable;
 
-        List<JsonNode> tables = getTablesWithNColumns(2);
+        List<JsonNode> tables = getAllRootLevelTables();
 
         for (JsonNode table : tables) {
             for (JsonNode row : table.get("tableRows")) {
@@ -150,7 +152,9 @@ class GoogleDocsJsonParser {
                 .map(s -> String.join(", ", s));
     }
 
-    private List<JsonNode> getTablesWithNColumns(int numColumns) {
+    private List<JsonNode> getAllRootLevelTables() {
+        if(this.rootLevelTables != null) return this.rootLevelTables;
+
         List<JsonNode> tablesFound = new ArrayList<>();
 
         if(getContent().isEmpty()) return tablesFound;
@@ -160,18 +164,18 @@ class GoogleDocsJsonParser {
 
             var table = contentItem.get("table");
             if (!table.hasNonNull("columns")) continue;
-            if (table.get("columns").asInt() != numColumns) continue;
 
             if (!table.hasNonNull("tableRows")) continue;
 
             tablesFound.add(table);
         }
 
-        return tablesFound;
+        this.rootLevelTables = tablesFound;
+        return this.rootLevelTables;
     }
 
     public Optional<String> getExecutiveSummary() {
-        List<JsonNode> tables = getTablesWithNColumns(1);
+        List<JsonNode> tables = getAllRootLevelTables();
 
         for (JsonNode table : tables) {
             if (table.get("tableRows").size() != 2) continue;
@@ -193,6 +197,11 @@ class GoogleDocsJsonParser {
         }
 
         return Optional.empty();
+    }
+
+    public List<String> getDecisions() {
+        List<JsonNode> tables = getAllRootLevelTables();
+        return List.of();
     }
 
     private static class TextRun {

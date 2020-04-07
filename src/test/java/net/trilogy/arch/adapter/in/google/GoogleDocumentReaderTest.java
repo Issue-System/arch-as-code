@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -43,6 +44,21 @@ public class GoogleDocumentReaderTest {
         mockApiToReturnAGivenB(apiResponse, "url");
 
         assertThat(reader.load("url"), equalTo(ArchitectureUpdate.blank()));
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldReturnAuWithDecisions() throws Exception {
+        mockApiWith("Json/SampleP1-4.json", "url");
+
+        ArchitectureUpdate result = reader.load("url");
+
+        assertThat(
+                result.getDecisions(),
+                contains(
+                    new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "")
+                )
+        );
     }
 
     @Parameters({

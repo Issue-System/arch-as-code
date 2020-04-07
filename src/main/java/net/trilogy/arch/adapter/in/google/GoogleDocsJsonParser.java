@@ -40,20 +40,17 @@ class GoogleDocsJsonParser {
     private Optional<JsonNode> getMetaDataTable() {
         if (metaDataTable.isPresent()) return metaDataTable;
 
-        if (getContent().isEmpty()) return Optional.empty();
+        List<JsonNode> tables = getTablesWithNColumns(2);
 
-        for (JsonNode contentItem : getContent().get()) {
-            Optional<JsonNode> table = getTableThatHasNColumns(contentItem, 2);
-            if (table.isEmpty()) continue;
-
-            for (JsonNode row : table.get().get("tableRows")) {
+        for (JsonNode table : tables) {
+            for (JsonNode row : table.get("tableRows")) {
                 if (!row.hasNonNull("tableCells")) continue;
                 if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
                 String text = getCombinedText(getTextRuns(firstCell));
                 if (text.equalsIgnoreCase(MILESTONE_ROW_HEADER)) {
-                    this.metaDataTable = table;
+                    this.metaDataTable = Optional.of(table);
                     return this.metaDataTable;
                 }
             }
@@ -153,32 +150,38 @@ class GoogleDocsJsonParser {
                 .map(s -> String.join(", ", s));
     }
 
-    private Optional<JsonNode> getTableThatHasNColumns(JsonNode fromNode, int numColumns) {
-        if (!fromNode.hasNonNull("table")) return Optional.empty();
+    private List<JsonNode> getTablesWithNColumns(int numColumns) {
+        List<JsonNode> tablesFound = new ArrayList<>();
 
-        var table = fromNode.get("table");
-        if (!table.hasNonNull("columns")) return Optional.empty();
-        if (table.get("columns").asInt() != numColumns) return Optional.empty();
+        if(getContent().isEmpty()) return tablesFound;
 
-        if (!table.hasNonNull("tableRows")) return Optional.empty();
+        for(JsonNode contentItem : getContent().get()) {
+            if (!contentItem.hasNonNull("table")) continue;
 
-        return Optional.of(table);
+            var table = contentItem.get("table");
+            if (!table.hasNonNull("columns")) continue;
+            if (table.get("columns").asInt() != numColumns) continue;
+
+            if (!table.hasNonNull("tableRows")) continue;
+
+            tablesFound.add(table);
+        }
+
+        return tablesFound;
     }
 
     public Optional<String> getExecutiveSummary() {
-        if (getContent().isEmpty()) return Optional.empty();
+        List<JsonNode> tables = getTablesWithNColumns(1);
 
-        for (JsonNode contentItem : getContent().get()) {
-            Optional<JsonNode> table = getTableThatHasNColumns(contentItem, 1);
-            if (table.isEmpty()) continue;
-            if (table.get().get("tableRows").size() != 2) continue;
+        for (JsonNode table : tables) {
+            if (table.get("tableRows").size() != 2) continue;
 
-            JsonNode firstRow = table.get().get("tableRows").get(0);
+            JsonNode firstRow = table.get("tableRows").get(0);
             if (!firstRow.hasNonNull("tableCells")) continue;
             if (firstRow.get("tableCells").size() != 1) continue;
             JsonNode firstCell = firstRow.get("tableCells").get(0);
 
-            JsonNode secondRow = table.get().get("tableRows").get(1);
+            JsonNode secondRow = table.get("tableRows").get(1);
             if (!secondRow.hasNonNull("tableCells")) continue;
             if (secondRow.get("tableCells").size() != 1) continue;
             JsonNode secondCell = secondRow.get("tableCells").get(0);

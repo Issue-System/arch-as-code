@@ -18,9 +18,9 @@ class GoogleDocsJsonParser {
     private static final String EXECUTIVE_SUMMARY_COLUMN_HEADER = "Executive Summary";
 
     private final JsonNode json;
-    private Optional<JsonNode> metaDataTable;
+    private Optional<Table> metaDataTable;
     private Optional<JsonNode> content;
-    private List<JsonNode> rootLevelTables;
+    private List<Table> rootLevelTables;
 
     GoogleDocsJsonParser(JsonNode json) {
         this.json = json;
@@ -39,14 +39,11 @@ class GoogleDocsJsonParser {
         return this.content;
     }
 
-    private Optional<JsonNode> getMetaDataTable() {
+    private Optional<Table> getMetaDataTable() {
         if (metaDataTable.isPresent()) return metaDataTable;
 
-        List<JsonNode> tables = getAllRootLevelTables();
-
-        for (JsonNode table : tables) {
-            for (JsonNode row : table.get("tableRows")) {
-                if (!row.hasNonNull("tableCells")) continue;
+        for (Table table : getAllRootLevelTables()) {
+            for (JsonNode row : table.getRows()) {
                 if (row.get("tableCells").size() != 2) continue;
 
                 var firstCell = row.get("tableCells").get(0);
@@ -66,8 +63,7 @@ class GoogleDocsJsonParser {
 
         if (table == null) return Optional.empty();
 
-        for (JsonNode row : table.get("tableRows")) {
-            if (!row.hasNonNull("tableCells")) continue;
+        for (JsonNode row : table.getRows()) {
             if (row.get("tableCells").size() != 2) continue;
 
             var firstCell = row.get("tableCells").get(0);
@@ -152,22 +148,20 @@ class GoogleDocsJsonParser {
                 .map(s -> String.join(", ", s));
     }
 
-    private List<JsonNode> getAllRootLevelTables() {
-        if(this.rootLevelTables != null) return this.rootLevelTables;
+    private List<Table> getAllRootLevelTables() {
+        if (this.rootLevelTables != null) return this.rootLevelTables;
 
-        List<JsonNode> tablesFound = new ArrayList<>();
+        List<Table> tablesFound = new ArrayList<>();
 
-        if(getContent().isEmpty()) return tablesFound;
+        if (getContent().isEmpty()) return tablesFound;
 
-        for(JsonNode contentItem : getContent().get()) {
+        for (JsonNode contentItem : getContent().get()) {
             if (!contentItem.hasNonNull("table")) continue;
 
-            var table = contentItem.get("table");
-            if (!table.hasNonNull("columns")) continue;
+            var tableNode = contentItem.get("table");
+            if (!tableNode.hasNonNull("tableRows")) continue;
 
-            if (!table.hasNonNull("tableRows")) continue;
-
-            tablesFound.add(table);
+            tablesFound.add(new Table(tableNode));
         }
 
         this.rootLevelTables = tablesFound;
@@ -175,17 +169,16 @@ class GoogleDocsJsonParser {
     }
 
     public Optional<String> getExecutiveSummary() {
-        List<JsonNode> tables = getAllRootLevelTables();
+        for (Table table : getAllRootLevelTables()) {
+            List<JsonNode> rows = table.getRows();
+            if (rows.size() != 2) continue;
 
-        for (JsonNode table : tables) {
-            if (table.get("tableRows").size() != 2) continue;
-
-            JsonNode firstRow = table.get("tableRows").get(0);
+            JsonNode firstRow = rows.get(0);
             if (!firstRow.hasNonNull("tableCells")) continue;
             if (firstRow.get("tableCells").size() != 1) continue;
             JsonNode firstCell = firstRow.get("tableCells").get(0);
 
-            JsonNode secondRow = table.get("tableRows").get(1);
+            JsonNode secondRow = rows.get(1);
             if (!secondRow.hasNonNull("tableCells")) continue;
             if (secondRow.get("tableCells").size() != 1) continue;
             JsonNode secondCell = secondRow.get("tableCells").get(0);
@@ -200,8 +193,27 @@ class GoogleDocsJsonParser {
     }
 
     public List<String> getDecisions() {
-        List<JsonNode> tables = getAllRootLevelTables();
+        List<Table> tables = getAllRootLevelTables();
         return List.of();
+    }
+
+    private static class Table {
+        private final JsonNode node;
+
+        private Table(JsonNode node) {
+            this.node = node;
+        }
+
+        private List<JsonNode> getRows() {
+            List<JsonNode> rowsFound = new ArrayList<>();
+
+            for(JsonNode row : node.get("tableRows")) {
+                if(!row.hasNonNull("tableCells")) continue;
+                rowsFound.add(row);
+            }
+
+            return rowsFound;
+        }
     }
 
     private static class TextRun {

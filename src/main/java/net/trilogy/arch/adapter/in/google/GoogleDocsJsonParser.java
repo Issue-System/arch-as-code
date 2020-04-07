@@ -210,8 +210,11 @@ class GoogleDocsJsonParser {
 
         private Optional<String> getTextFromFirstRow() {
             if (getRows().size() == 0) return Optional.empty();
-
             JsonNode firstRow = getRows().get(0);
+            return getCombinedTextFromRow(firstRow);
+        }
+
+        private static Optional<String> getCombinedTextFromRow(JsonNode firstRow) {
             if (!firstRow.hasNonNull("tableCells")) return Optional.empty();
 
             JsonNode cells = firstRow.get("tableCells");

@@ -18,15 +18,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -52,7 +47,7 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | P1 ITD 1.1", // TODO: should also contain the title: "Chosen P1 decision"
+            "Json/SampleP1-1.json | P1 ITD 1.1 Chosen P1 decision",
 
             "Json/SampleP1-2.json | P1 ITD 11.1 - Configure Step Functions to emit CloudWatch events when execution state changes",
             "Json/SampleP1-2.json | P1 ITD 11.2 - Retry failed Step Function states following the policy described in Appendix 2.1",
@@ -88,7 +83,7 @@ public class GoogleDocumentReaderTest {
 
         assertThat(
                 result.getDecisions(),
-                Matchers.hasItem( new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, decisionsMustContain))
+                Matchers.hasItem(new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, decisionsMustContain))
         );
     }
 

@@ -175,12 +175,10 @@ class GoogleDocsJsonParser {
             if (rows.size() != 2) continue;
 
             JsonNode firstRow = rows.get(0);
-            if (!firstRow.hasNonNull("tableCells")) continue;
             if (firstRow.get("tableCells").size() != 1) continue;
             JsonNode firstCell = firstRow.get("tableCells").get(0);
 
             JsonNode secondRow = rows.get(1);
-            if (!secondRow.hasNonNull("tableCells")) continue;
             if (secondRow.get("tableCells").size() != 1) continue;
             JsonNode secondCell = secondRow.get("tableCells").get(0);
 
@@ -196,10 +194,9 @@ class GoogleDocsJsonParser {
     public List<String> getDecisions() {
         return getAllRootLevelTables()
                 .stream()
-                .map(Table::getFirstCell)
+                .map(Table::getTextFromFirstRow)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(cell -> getCombinedText(getTextRuns(cell)))
                 .filter(str -> str.startsWith("P1"))
                 .collect(toList());
     }
@@ -211,21 +208,29 @@ class GoogleDocsJsonParser {
             this.node = node;
         }
 
-       private Optional<JsonNode> getFirstCell() {
-            if(getRows().size() == 0) return Optional.empty();
+        private Optional<String> getTextFromFirstRow() {
+            if (getRows().size() == 0) return Optional.empty();
 
             JsonNode firstRow = getRows().get(0);
-            if(!firstRow.hasNonNull("tableCells")) return Optional.empty();
-            if(firstRow.get("tableCells").size() == 0) return Optional.empty();
+            if (!firstRow.hasNonNull("tableCells")) return Optional.empty();
 
-            return Optional.of(firstRow.get("tableCells").get(0));
-       }
+            JsonNode cells = firstRow.get("tableCells");
+            if (cells.size() == 0) return Optional.empty();
+
+            List<String> textPerCell = new ArrayList<>();
+            cells.forEach(cell ->
+                    textPerCell.add(getCombinedText(getTextRuns(cell)))
+            );
+
+            String joinedString = String.join(" ", textPerCell).trim();
+            return Optional.of(joinedString);
+        }
 
         private List<JsonNode> getRows() {
             List<JsonNode> rowsFound = new ArrayList<>();
 
-            for(JsonNode row : node.get("tableRows")) {
-                if(!row.hasNonNull("tableCells")) continue;
+            for (JsonNode row : node.get("tableRows")) {
+                if (!row.hasNonNull("tableCells")) continue;
                 rowsFound.add(row);
             }
 

@@ -65,8 +65,20 @@ public class GoogleDocumentReaderTest {
             "Json/SampleP1-2.json | P1 ITD 19.1 - Use CloudWatch to collect events from all AWS services in Basic and Complex workflows",
             "Json/SampleP1-2.json | P1 ITD 10 - Create Thumbnails using AWS Elemental MediaConvert.",
 
+            "Json/SampleP1-3.json | P1 ITD 7.1 - Reuse the existing CloudFront distribution for video content",
+            "Json/SampleP1-3.json | P1 ITD 7.2 - Rely on CloudWatch events to monitor video content usage through CloudFront\\, and maintain 31 days worth of CloudFront access logs",
+            "Json/SampleP1-3.json | P1 ITD 7.3 - Apply on the fly CENC encryption using Lambda@Edge when delivering the video for streaming with download possibility disabled",
+            "Json/SampleP1-3.json | P1 ITD 8.1 - Have the download and streaming URLs be valid for one use only",
+            "Json/SampleP1-3.json | P1 ITD 9.1 - Collect events used by Product for other types of content and the video playback events\\, including: playing\\, paused\\, buffering\\, ended",
+
             "Json/SampleP1-4.json | P1 ITD 5.1 - Update API interface as defined by Appendix 2 to allow forward multiple documents for multiple users.",
             "Json/SampleP1-4.json | P1 ITD 4.1 - Use existing interface to allow forward single document for a single user.",
+
+            "Json/SampleP1-5.json | P1 ITD 1.1 - Use keyset approach for pagination",
+            "Json/SampleP1-5.json | P1 ITD 1.2 - Enhance the REST API endpoints with filtering and sorting capabilities in addition to paging",
+            "Json/SampleP1-5.json | P1 ITD 1.3 - Introduce a configurable delay between user input event and issuing the data request",
+            "Json/SampleP1-5.json | P1 ITD 1.4 - Initiate loading new data page when user is 20% of page size away from the bottom of the list",
+            "Json/SampleP1-5.json | P1 ITD 1.5 - Preload initial data page asynchronously on page load",
     })
     @Test
     public void shouldReturnAuWithDecisions(String file, String decisionsMustContain) throws Exception {

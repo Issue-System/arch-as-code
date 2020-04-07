@@ -48,7 +48,9 @@ public class GoogleDocumentReaderTest {
     @Parameters({
             "Json/SampleP1-1.json | Just a whole bunch of text goes here. Like a bunch of it. Maybe some symbols &@#*!)(@(#&*@.Maybe some paragraphs. Just a bunch\\, yknow?",
             "Json/SampleP1-2.json | Video processing capabilities will be added to the Video upload mechanism with this milestone using AWS services for generating transcriptions\\, captions\\, thumbnails and video objects/scenes.",
-            "Json/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes."
+            "Json/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes.",
+            "Json/SampleP1-4.json | Product Automates supply chain orchestration\\, providing a single view into everything that touches the supply chain ecosystem. In a supply chain ecosystem\\, hundreds or thousands of documents can be submitted through a typical buyer/supplier relationship.  Each of these documents is processed through a workflow that can be configured to place the document in a users individual review workqueue. Currently reviewers can accept or reject these documents. This milestone shall change the Product API and UI to allow user forward documents from his/her review workqueue to other users review workqueue.",
+            "Json/SampleP1-5.json | Currently Product UI load time is drastically slow (>30 secs to load) due to requesting large data sets (1M+ records) from the server. After the Milestone is implemented\\, REST API endpoints are extended to support pagination\\, while retaining backwards compatible behavior of loading the entire data set by default. UIs with performance problems (Appendix 1.3) are modified to take advantage of pagination and limit the initially loaded data set.",
     })
     @Test
     public void shouldReturnAuWithExecutiveSummary(String jsonFilename, String expected) throws Exception {
@@ -62,7 +64,9 @@ public class GoogleDocumentReaderTest {
     @Parameters({
             "Json/SampleP1-1.json | http://fake-link-to-p2.com",
             "Json/SampleP1-2.json | https://docs.google.com/document/d/15CnasdfasdfasdfLi1p8PDJA/edit#heading=h.ze6rbvelp0",
-            "Json/SampleP1-3.json | https://docs.google.com/document/d/15sCnB9pKdddddddrlYU8F"
+            "Json/SampleP1-3.json | https://docs.google.com/document/d/15sCnB9pKdddddddrlYU8F",
+            "Json/SampleP1-4.json | https://docs.google.com/document/d/AAAAfdasfafdsfadfasdfs",
+            "Json/SampleP1-5.json | https://docs.google.com/document/d/15zy2hpZ5OI3XaWhha7ncO6sHWGbeA9WP",
     })
     @Test
     public void shouldReturnAuWithP2Link(String jsonFilename, String expected) throws Exception {
@@ -85,7 +89,9 @@ public class GoogleDocumentReaderTest {
     @Parameters({
             "Json/SampleP1-1.json | ABCD-1231 | http://fake-jira.com",
             "Json/SampleP1-2.json | SPEC-12312 | https://jira.dev.com/browse/SPEC-12312",
-            "Json/SampleP1-3.json | SPEC-01127 (M1.5) | https://jira.devshop.com/browse/SPEC-01127"
+            "Json/SampleP1-3.json | SPEC-01127 (M1.5) | https://jira.devshop.com/browse/SPEC-01127",
+            "Json/SampleP1-4.json | SPEC-212312 | https://jira.fake.com/browse/SPEC-12321",
+            "Json/SampleP1-5.json | SPEC-18952 | https://jira.dev.com/browse/SPEC-18952",
     })
     @Test
     public void shouldReturnAuWithP1JiraTicket(String jsonFilename, String expectedTicket, String expectedLink) throws Exception {
@@ -100,7 +106,9 @@ public class GoogleDocumentReaderTest {
     @Parameters({
             "Json/SampleP1-1.json | M1.0 First Milestone",
             "Json/SampleP1-2.json | M1.2 - Video Processing (M1 - Upload\\, Download\\, and Stream Video)",
-            "Json/SampleP1-3.json | M1.5 - Content Delivery and Download (M2 - Upload\\, Download\\, and Stream Content)"
+            "Json/SampleP1-3.json | M1.5 - Content Delivery and Download (M2 - Upload\\, Download\\, and Stream Content)",
+            "Json/SampleP1-4.json | M1 - Document Forwarding",
+            "Json/SampleP1-5.json | M1 - Pagination",
     })
     @Test
     public void shouldReturnAuWithMilestone(String jsonFilename, String expected) throws Exception {

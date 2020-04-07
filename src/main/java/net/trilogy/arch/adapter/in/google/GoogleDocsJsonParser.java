@@ -209,7 +209,10 @@ class GoogleDocsJsonParser {
         private Optional<String> getTextFrom() {
             if (!getNode().hasNonNull("content")) return Optional.empty();
             String content = getNode().get("content").textValue();
+
+            // TODO FUTURE: Keep special characters (like ’ (which is different from '))
             content = content.replaceAll("\\P{Print}", "");
+
             return Optional.of(content);
         }
 

@@ -134,6 +134,11 @@ public class GoogleDocumentReaderTest {
         String url1 = "https://docs.google.com/document/d/1xPIrv159vlRKklTABSxJx9Yq76MOrRfEdKLiVlXUQ68";
         String url2 = "https://docs.google.com/document/d/1Mhli4ZvCAAIwIguE7UY-DihkI1JsdxZjRG36QVen5aU/edit#";
         String url3 = "https://docs.google.com/document/d/1h-yiali65IQp6qXWb6qxkKvwvYTI9oshfOqJ3SmM4jQ/edit#";
+
+        // More prod-like than the first two:
+        String url4 = "https://docs.google.com/document/d/1_beIF2LWC3XgjDaUSrbXTuQ-3XENnjmmB8Hz3kw7hOs/edit";
+        String url5 = "https://docs.google.com/document/d/1tbahd26QIINkEyOx3vvvY-ReShMdsIE34PRTA5W9Dng/edit";
+
         File productDocumentationRoot = new File(".");
 
         var apiFactory = new GoogleDocsAuthorizedApiFactory();
@@ -141,27 +146,39 @@ public class GoogleDocumentReaderTest {
         var response1 = api.fetch(url1);
         var response2 = api.fetch(url2);
         var response3 = api.fetch(url3);
+        var response4 = api.fetch(url4);
+        var response5 = api.fetch(url5);
 
         Path tempFile1 = Files.createTempFile("arch-as-code_test-json-file", ".json");
         Path tempFile2 = Files.createTempFile("arch-as-code_test-json-file", ".json");
         Path tempFile3 = Files.createTempFile("arch-as-code_test-json-file", ".json");
+        Path tempFile4 = Files.createTempFile("arch-as-code_test-json-file", ".json");
+        Path tempFile5 = Files.createTempFile("arch-as-code_test-json-file", ".json");
 
         new ObjectMapper().writeValue(tempFile1.toFile(), response1.asJson());
         new ObjectMapper().writeValue(tempFile2.toFile(), response2.asJson());
         new ObjectMapper().writeValue(tempFile3.toFile(), response3.asJson());
+        new ObjectMapper().writeValue(tempFile4.toFile(), response4.asJson());
+        new ObjectMapper().writeValue(tempFile5.toFile(), response5.asJson());
 
         assertThat(
                 "********* STATUS *********" +
                         "\n\nReading doc: " + url1 +
                         "\nReading doc: " + url2 +
                         "\nReading doc: " + url3 +
+                        "\nReading doc: " + url4 +
+                        "\nReading doc: " + url5 +
                         "\n\nUsing credentials within " + productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
                         "\n\nWritten to file " + tempFile1.toAbsolutePath() +
                         "\nWritten to file " + tempFile2.toAbsolutePath() +
                         "\nWritten to file " + tempFile3.toAbsolutePath() +
-                        "\n\nRun: mv " + tempFile1.toAbsolutePath() + " src/test/resources/Json/SampleP1-1.json" +
-                        "\nRun: mv " + tempFile2.toAbsolutePath() + " src/test/resources/Json/SampleP1-2.json" +
-                        "\nRun: mv " + tempFile3.toAbsolutePath() + " src/test/resources/Json/SampleP1-3.json" +
+                        "\nWritten to file " + tempFile4.toAbsolutePath() +
+                        "\nWritten to file " + tempFile5.toAbsolutePath() +
+                        "\n\nRun: \nmv " + tempFile1.toAbsolutePath() + " src/test/resources/Json/SampleP1-1.json" +
+                        " && mv " + tempFile2.toAbsolutePath() + " src/test/resources/Json/SampleP1-2.json" +
+                        " && mv " + tempFile3.toAbsolutePath() + " src/test/resources/Json/SampleP1-3.json" +
+                        " && mv " + tempFile4.toAbsolutePath() + " src/test/resources/Json/SampleP1-4.json" +
+                        " && mv " + tempFile5.toAbsolutePath() + " src/test/resources/Json/SampleP1-5.json" +
                         "\n\nNow failing test on purpose :)" +
                         "\n\n********* STATUS *********\n\n",
                 true, is(false)

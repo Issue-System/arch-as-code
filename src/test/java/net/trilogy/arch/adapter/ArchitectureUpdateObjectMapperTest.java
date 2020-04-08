@@ -1,6 +1,7 @@
 package net.trilogy.arch.adapter;
 
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.Capabilities;
 import net.trilogy.arch.domain.architectureUpdate.MilestoneDependency;
 import net.trilogy.arch.domain.architectureUpdate.P1;
 import net.trilogy.arch.domain.architectureUpdate.P2;
@@ -27,6 +28,11 @@ public class ArchitectureUpdateObjectMapperTest {
                 List.of(new Person("author", "email")),
                 List.of(new Person("PCA", "email")),
                 Map.of( new Requirement.Id("ITD 1.1"), new Requirement("requirement")),
+                new Capabilities(
+                        "e2e placeholder text",
+                        "acc placeholder text",
+                        List.of(new Capabilities.Story(List.of("tdd 1"), List.of("ITD 1.1")))
+                ),
                 new P2("link", new Jira("ticket", "link")),
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),
@@ -46,13 +52,14 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "  email: \"email\""
                 , "requirements:"
                 , "  ITD 1.1: \"requirement\""
-                // TODO
-//                , "capabilities:"
-//                , "  stories:"
-//                , "    TDDs:"
-//                , "    - \"tdd 1\""
-//                , "    requirements:"
-//                , "    - \"ITD 1.1\""
+                , "capabilities:"
+                , "  E2Es: \"e2e placeholder text\""
+                , "  ACCs: \"acc placeholder text\""
+                , "  stories:"
+                , "  - TDDs:"
+                , "    - \"tdd 1\""
+                , "    requirements:"
+                , "    - \"ITD 1.1\""
                 , "P2:"
                 , "  link: \"link\""
                 , "  jira:"

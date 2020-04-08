@@ -18,6 +18,7 @@ public class ArchitectureUpdate {
     private final List<Person> authors;
     private final List<Person> PCAs;
     private final Map<Requirement.Id, Requirement> requirements;
+    private final Capabilities capabilities;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -32,18 +33,20 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Capabilities capabilities, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
         this.requirements = copyMap(requirements);
+        this.capabilities = capabilities;
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = copyList(usefulLinks);
         this.milestoneDependencies = copyList(milestoneDependencies);
     }
 
+    // TODO: Test what this returns
     public static ArchitectureUpdate blank() {
         return new ArchitectureUpdate(
                 "",
@@ -51,6 +54,7 @@ public class ArchitectureUpdate {
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
                 Map.of(new Requirement.Id("ITD 1.1"), new Requirement("requirement")),
+                null,
                 new P2("", new Jira("", "")),
                 new P1("", new Jira("", ""), ""),
                 List.of(new Link("", "")),
@@ -62,7 +66,7 @@ public class ArchitectureUpdate {
         return toCopy != null ? new LinkedHashMap<>(toCopy) : new LinkedHashMap<>();
     }
 
-    private static <T> ArrayList<T> copyList(List<T> orig) {
+    static <T> ArrayList<T> copyList(List<T> orig) {
         return orig != null ? new ArrayList<>(orig) : new ArrayList<>();
     }
 

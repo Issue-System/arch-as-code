@@ -61,18 +61,10 @@ milestone-dependencies -> (might not be necessary to duplicate from the P1)
         description [P1]
         links ->
             link... [P1]
-decisions -> 
-    decision... ->
-        type (ITD, IFD, or SSD) [P1]
+requirements -> 
+    requirement... ->
+        type (AC, ITD, IFD, or SSD) [P1]
         title [P1]
-        TDDs ->
-            - TDD-id / TDD-alias [M]
-            - TDD-id / TDD-alias [M]
-            - TDD-id / TDD-alias [M]
-ACs ->
-    AC... ->
-        id [P1] (Special case: [M] if new AC only in AU)
-        text [P1] (Special case: [M] if new AC only in AU)
         TDDs ->
             - TDD-id / TDD-alias [M]
             - TDD-id / TDD-alias [M]
@@ -90,6 +82,15 @@ TDDs ->
             - TDD ->
                 id / alias [M]
                 text [M]
+Capabilities ->
+    E2Es ??? [M]
+    ACCs ??? [M]/[or A from its own spreadsheet]
+    Stories ->
+        TDDs ->
+            - id / alias [M]
+        Requirements ->
+            - id / alias [M]
+        ???
 ```
 
 ## Things to validate:

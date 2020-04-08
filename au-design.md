@@ -63,6 +63,7 @@ milestone-dependencies -> (might not be necessary to duplicate from the P1)
             link... [P1]
 requirements -> 
     requirement... ->
+        id / alias [A]
         type (AC, ITD, IFD, or SSD) [P1]
         title [P1]
         TDDs ->
@@ -88,7 +89,11 @@ Capabilities ->
     Stories ->
         TDDs ->
             - id / alias [M]
+            - id / alias [M]
+            - id / alias [M]
         Requirements ->
+            - id / alias [M]
+            - id / alias [M]
             - id / alias [M]
         ???
 ```

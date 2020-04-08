@@ -1,12 +1,9 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -69,63 +66,4 @@ public class ArchitectureUpdate {
         return orig != null ? new ArrayList<>(orig) : new ArrayList<>();
     }
 
-    @Getter
-    @EqualsAndHashCode
-    public static class P2 {
-        private final String link;
-        private final Jira jira;
-
-        @Builder
-        public P2(String link, Jira jira) {
-            this.link = link;
-            this.jira = jira;
-        }
-    }
-
-    @Getter
-    @EqualsAndHashCode
-    public static class P1 {
-        private final String link;
-        private final Jira jira;
-
-        @JsonProperty(value = "executive-summary")
-        private final String executiveSummary;
-
-        @Builder
-        public P1(String link, Jira jira, String executiveSummary) {
-            this.link = link;
-            this.jira = jira;
-            this.executiveSummary = executiveSummary;
-        }
-    }
-
-    @EqualsAndHashCode
-    public static class MilestoneDependency {
-        private final String description;
-        private final List<Link> links;
-
-        @Builder
-        public MilestoneDependency(String description, List<Link> links) {
-            this.description = description;
-            this.links = links;
-        }
-    }
-
-    @Getter
-    @ToString
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    public static class Requirement {
-        @Getter
-        @ToString
-        @EqualsAndHashCode
-        @AllArgsConstructor
-        public static class Id{
-            @JsonValue
-            private final String id;
-        }
-
-        @JsonValue
-        private final String requirement;
-    }
 }

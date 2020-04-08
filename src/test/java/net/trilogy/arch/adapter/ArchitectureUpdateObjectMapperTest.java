@@ -1,12 +1,13 @@
 package net.trilogy.arch.adapter;
 
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.MilestoneDependency;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P1;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P2;
+import net.trilogy.arch.domain.architectureUpdate.MilestoneDependency;
+import net.trilogy.arch.domain.architectureUpdate.P1;
+import net.trilogy.arch.domain.architectureUpdate.P2;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Link;
 import net.trilogy.arch.domain.architectureUpdate.Person;
+import net.trilogy.arch.domain.architectureUpdate.Requirement;
 import org.junit.Test;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 "milestone",
                 List.of(new Person("author", "email")),
                 List.of(new Person("PCA", "email")),
-                Map.of( new ArchitectureUpdate.Requirement.Id("ITD 1.1"), new ArchitectureUpdate.Requirement("requirement")),
+                Map.of( new Requirement.Id("ITD 1.1"), new Requirement("requirement")),
                 new P2("link", new Jira("ticket", "link")),
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),

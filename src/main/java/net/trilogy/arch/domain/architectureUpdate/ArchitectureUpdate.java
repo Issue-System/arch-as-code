@@ -1,4 +1,4 @@
-package net.trilogy.arch.domain;
+package net.trilogy.arch.domain.architectureUpdate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;

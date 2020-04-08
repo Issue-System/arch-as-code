@@ -84,7 +84,7 @@ TDDs ->
                 text [M]
 Capabilities ->
     E2Es ??? [M]
-    ACCs ??? [M]/[or A from its own spreadsheet]
+    ACCs ??? [M] (or [A] from its own spreadsheet)
     Stories ->
         TDDs ->
             - id / alias [M]

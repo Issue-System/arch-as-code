@@ -3,7 +3,7 @@ package net.trilogy.arch.adapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 
 import java.io.IOException;
 

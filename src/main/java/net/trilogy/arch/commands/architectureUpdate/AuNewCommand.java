@@ -4,7 +4,7 @@ import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
-import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;

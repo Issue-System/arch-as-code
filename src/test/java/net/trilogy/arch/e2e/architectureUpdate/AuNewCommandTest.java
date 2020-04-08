@@ -6,7 +6,7 @@ import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
-import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

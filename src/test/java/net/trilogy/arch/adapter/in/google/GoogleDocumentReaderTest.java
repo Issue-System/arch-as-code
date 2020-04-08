@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.docs.v1.model.Document;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import net.trilogy.arch.domain.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;

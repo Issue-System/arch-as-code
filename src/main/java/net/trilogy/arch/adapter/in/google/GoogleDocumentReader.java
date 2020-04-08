@@ -1,15 +1,13 @@
 package net.trilogy.arch.adapter.in.google;
 
-import net.trilogy.arch.domain.ArchitectureUpdate;
-import net.trilogy.arch.domain.ArchitectureUpdate.P1;
-import net.trilogy.arch.domain.ArchitectureUpdate.P2;
-import net.trilogy.arch.domain.Jira;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P1;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P2;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class GoogleDocumentReader {

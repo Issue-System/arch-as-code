@@ -1,12 +1,12 @@
 package net.trilogy.arch.adapter;
 
-import net.trilogy.arch.domain.ArchitectureUpdate;
-import net.trilogy.arch.domain.ArchitectureUpdate.MilestoneDependency;
-import net.trilogy.arch.domain.ArchitectureUpdate.P1;
-import net.trilogy.arch.domain.ArchitectureUpdate.P2;
-import net.trilogy.arch.domain.Jira;
-import net.trilogy.arch.domain.Link;
-import net.trilogy.arch.domain.Person;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.MilestoneDependency;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P1;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate.P2;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
+import net.trilogy.arch.domain.architectureUpdate.Link;
+import net.trilogy.arch.domain.architectureUpdate.Person;
 import org.junit.Test;
 
 import java.util.List;
@@ -45,6 +45,13 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "  email: \"email\""
                 , "requirements:"
                 , "  ITD 1.1: \"requirement\""
+                // TODO
+//                , "capabilities:"
+//                , "  stories:"
+//                , "    TDDs:"
+//                , "    - \"tdd 1\""
+//                , "    requirements:"
+//                , "    - \"ITD 1.1\""
                 , "P2:"
                 , "  link: \"link\""
                 , "  jira:"

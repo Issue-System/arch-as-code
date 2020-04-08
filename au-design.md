@@ -63,9 +63,8 @@ milestone-dependencies -> (might not be necessary to duplicate from the P1)
             link... [P1]
 requirements -> 
     requirement... ->
-        id / alias [A]
-        type (AC, ITD, IFD, or SSD) [P1]
-        title [P1]
+        id / alias [P1] (or [M])
+        title [P1] (or [M])
         TDDs ->
             - TDD-id / TDD-alias [M]
             - TDD-id / TDD-alias [M]
@@ -99,10 +98,15 @@ Capabilities ->
 ```
 
 ## Things to validate:
- - All decisions from P1 are covered by >=1 TDD.
- - All ACs from P1 (or ACs that were added manually) are covered by >=1 TDD.
- - All TDDs refer to valid components in the model.
- - There are no TDDs that are not referred to by an AC or decision.
+ - TDDs
+    - must refer to valid components
+    - must be referred to by >=1 requirement (no orphan TDDs)
+    - all requirements must have >=1 TDD
+ - Stories
+    - must refer to >=1 valid requirements
+    - must refer to >=1 valid tdds
+    - all tdds must have >=1 story
+    - all requirements must have >=1 story
 
 ## How to visualize:
  - Some way to visualize the model in each branch is necessary

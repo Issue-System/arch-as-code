@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
+@ToString
 @EqualsAndHashCode
 public class ArchitectureUpdate {
     private final String name;
@@ -46,15 +48,16 @@ public class ArchitectureUpdate {
         this.milestoneDependencies = copyList(milestoneDependencies);
     }
 
-    // TODO: Test what this returns
     public static ArchitectureUpdate blank() {
         return new ArchitectureUpdate(
                 "",
                 "",
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
-                Map.of(new Requirement.Id("ITD 1.1"), new Requirement("requirement")),
-                null,
+                Map.of(new Requirement.Id(" "), new Requirement(" ")),
+                new Capabilities("", "",
+                        List.of(new Capabilities.Story(List.of(""), List.of("")))
+                ),
                 new P2("", new Jira("", "")),
                 new P1("", new Jira("", ""), ""),
                 List.of(new Link("", "")),

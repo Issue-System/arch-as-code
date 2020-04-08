@@ -221,11 +221,12 @@ class GoogleDocsJsonParser {
             if (cells.size() == 0) return Optional.empty();
 
             List<String> textPerCell = new ArrayList<>();
-            cells.forEach(cell ->
-                    textPerCell.add(getCombinedText(getTextRuns(cell)))
-            );
+            cells.forEach(cell -> {
+                String combinedText = getCombinedText(getTextRuns(cell));
+                if (!combinedText.isBlank()) textPerCell.add(combinedText);
+            });
 
-            String joinedString = String.join(" ", textPerCell).trim();
+            String joinedString = String.join(" - ", textPerCell).trim();
             return Optional.of(joinedString);
         }
 

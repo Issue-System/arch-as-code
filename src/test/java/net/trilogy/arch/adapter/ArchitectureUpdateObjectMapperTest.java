@@ -10,6 +10,7 @@ import net.trilogy.arch.domain.Person;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,7 +25,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 "milestone",
                 List.of(new Person("author", "email")),
                 List.of(new Person("PCA", "email")),
-                List.of(new ArchitectureUpdate.Requirement("req1", ArchitectureUpdate.RequirementType.ITD, "requirement")),
+                Map.of( new ArchitectureUpdate.Requirement.Id("ITD 1.1"), new ArchitectureUpdate.Requirement("requirement")),
                 new P2("link", new Jira("ticket", "link")),
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),
@@ -43,9 +44,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "- name: \"PCA\""
                 , "  email: \"email\""
                 , "requirements:"
-                , "- type: \"ITD\""
-                , "  id: \"req1\""
-                , "  requirement: \"requirement\""
+                , "  ITD 1.1: \"requirement\""
                 , "P2:"
                 , "  link: \"link\""
                 , "  jira:"

@@ -1,13 +1,17 @@
 package net.trilogy.arch.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @EqualsAndHashCode
@@ -16,7 +20,7 @@ public class ArchitectureUpdate {
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
-    private final List<Requirement> requirements;
+    private final Map<Requirement.Id, Requirement> requirements;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -31,12 +35,12 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, List<Requirement> requirements, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
-        this.requirements = requirements;
+        this.requirements = copyMap(requirements);
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = copyList(usefulLinks);
@@ -49,12 +53,16 @@ public class ArchitectureUpdate {
                 "",
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
-                List.of(new Requirement("ITD 1.1", RequirementType.ITD, "requirement")),
+                Map.of(new Requirement.Id("ITD 1.1"), new Requirement("requirement")),
                 new P2("", new Jira("", "")),
                 new P1("", new Jira("", ""), ""),
                 List.of(new Link("", "")),
                 List.of(new MilestoneDependency("", List.of(new Link("", ""))))
         );
+    }
+
+    private <TA, TB> Map<TA, TB> copyMap(Map<TA, TB> toCopy) {
+        return toCopy != null ? new LinkedHashMap<>(toCopy) : new LinkedHashMap<>();
     }
 
     private static <T> ArrayList<T> copyList(List<T> orig) {
@@ -103,20 +111,21 @@ public class ArchitectureUpdate {
         }
     }
 
+    @Getter
     @ToString
     @EqualsAndHashCode
+    @AllArgsConstructor
     public static class Requirement {
-        private final RequirementType type;
-        private final String id;
-        private final String requirement;
-
-        @Builder
-        public Requirement(String id, RequirementType type, String requirement) {
-            this.id = id;
-            this.type = type;
-            this.requirement = requirement;
+        @Getter
+        @ToString
+        @EqualsAndHashCode
+        @AllArgsConstructor
+        public static class Id{
+            @JsonValue
+            private final String id;
         }
-    }
 
-    public enum RequirementType { ITD, IFD, SSD, AC }
+        @JsonValue
+        private final String requirement;
+    }
 }

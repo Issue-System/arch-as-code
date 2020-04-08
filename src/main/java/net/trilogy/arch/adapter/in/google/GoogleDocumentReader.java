@@ -6,7 +6,9 @@ import net.trilogy.arch.domain.ArchitectureUpdate.P2;
 import net.trilogy.arch.domain.Jira;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,12 +36,17 @@ public class GoogleDocumentReader {
                 .build();
     }
 
-    private List<ArchitectureUpdate.Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
-        List<String> decisionStrings = jsonParser.getDecisions();
-        return decisionStrings
-                .stream()
-                .map(string -> new ArchitectureUpdate.Requirement("", ArchitectureUpdate.RequirementType.ITD, string))
-                .collect(Collectors.toList());
+    private Map<ArchitectureUpdate.Requirement.Id, ArchitectureUpdate.Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
+        var map = new HashMap<ArchitectureUpdate.Requirement.Id, ArchitectureUpdate.Requirement>();
+        jsonParser.getDecisions().forEach(decisionString -> {
+            String[] split = decisionString.split("-", 2);
+            if(split.length == 2) {
+                var id = new ArchitectureUpdate.Requirement.Id(split[0].trim());
+                var requirement = new ArchitectureUpdate.Requirement(split[1].trim());
+                map.put(id, requirement);
+            }
+        });
+        return map;
     }
 
     private P2 extractP2(GoogleDocsJsonParser jsonParser) {

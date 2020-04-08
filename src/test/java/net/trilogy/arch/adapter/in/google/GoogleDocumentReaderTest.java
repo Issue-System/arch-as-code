@@ -81,11 +81,11 @@ public class GoogleDocumentReaderTest {
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getDecisions().size(), equalTo(totalDecisionsInFile));
+        assertThat(result.getRequirements().size(), equalTo(totalDecisionsInFile));
 
         assertThat(
-                result.getDecisions(),
-                Matchers.hasItem(new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, decisionsMustContain))
+                result.getRequirements(),
+                Matchers.hasItem(new ArchitectureUpdate.Requirement("", ArchitectureUpdate.RequirementType.ITD, decisionsMustContain))
         );
     }
 

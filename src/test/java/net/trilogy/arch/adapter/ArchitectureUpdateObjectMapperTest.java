@@ -24,7 +24,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 "milestone",
                 List.of(new Person("author", "email")),
                 List.of(new Person("PCA", "email")),
-                List.of(new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, "decision")),
+                List.of(new ArchitectureUpdate.Requirement("req1", ArchitectureUpdate.RequirementType.ITD, "requirement")),
                 new P2("link", new Jira("ticket", "link")),
                 new P1("link", new Jira("ticket", "link"), "summary"),
                 List.of(new Link("description", "link")),
@@ -42,9 +42,10 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "PCAs:"
                 , "- name: \"PCA\""
                 , "  email: \"email\""
-                , "decisions:"
+                , "requirements:"
                 , "- type: \"ITD\""
-                , "  decision: \"decision\""
+                , "  id: \"req1\""
+                , "  requirement: \"requirement\""
                 , "P2:"
                 , "  link: \"link\""
                 , "  jira:"

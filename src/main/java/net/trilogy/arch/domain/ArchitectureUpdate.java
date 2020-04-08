@@ -16,7 +16,7 @@ public class ArchitectureUpdate {
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
-    private final List<Decision> decisions;
+    private final List<Requirement> requirements;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -31,12 +31,12 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, List<Decision> decisions, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, List<Requirement> requirements, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
-        this.decisions = decisions;
+        this.requirements = requirements;
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = copyList(usefulLinks);
@@ -49,7 +49,7 @@ public class ArchitectureUpdate {
                 "",
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
-                List.of(new Decision(DecisionType.ITD, "decision")),
+                List.of(new Requirement("ITD 1.1", RequirementType.ITD, "requirement")),
                 new P2("", new Jira("", "")),
                 new P1("", new Jira("", ""), ""),
                 List.of(new Link("", "")),
@@ -105,16 +105,18 @@ public class ArchitectureUpdate {
 
     @ToString
     @EqualsAndHashCode
-    public static class Decision {
-        private final DecisionType type;
-        private final String decision;
+    public static class Requirement {
+        private final RequirementType type;
+        private final String id;
+        private final String requirement;
 
         @Builder
-        public Decision(DecisionType type, String decision) {
+        public Requirement(String id, RequirementType type, String requirement) {
+            this.id = id;
             this.type = type;
-            this.decision = decision;
+            this.requirement = requirement;
         }
     }
 
-    public enum DecisionType { ITD }
+    public enum RequirementType { ITD, IFD, SSD, AC }
 }

@@ -30,15 +30,15 @@ public class GoogleDocumentReader {
                 .milestone(jsonParser.getMilestone().orElse(""))
                 .p1(extractP1(jsonParser, url))
                 .p2(extractP2(jsonParser))
-                .decisions(extractDecisions(jsonParser))
+                .requirements(extractDecisions(jsonParser))
                 .build();
     }
 
-    private List<ArchitectureUpdate.Decision> extractDecisions(GoogleDocsJsonParser jsonParser) {
+    private List<ArchitectureUpdate.Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
         List<String> decisionStrings = jsonParser.getDecisions();
         return decisionStrings
                 .stream()
-                .map(string -> new ArchitectureUpdate.Decision(ArchitectureUpdate.DecisionType.ITD, string))
+                .map(string -> new ArchitectureUpdate.Requirement("", ArchitectureUpdate.RequirementType.ITD, string))
                 .collect(Collectors.toList());
     }
 

@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
@@ -86,7 +87,7 @@ public class GoogleDocumentReaderTest {
 
         assertThat(
                 result.getRequirements(),
-                Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement))
+                Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement, List.of()))
         );
     }
 

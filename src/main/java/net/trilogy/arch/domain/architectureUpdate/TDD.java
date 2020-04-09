@@ -9,8 +9,25 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
 public class TDD {
+
+    private final TDD.Id id;
+    private final String text;
+
+    public TDD(Id id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    @Getter
+    @EqualsAndHashCode
+    @AllArgsConstructor
+    public static class Id {
+        private final String id;
+
+        @JsonValue
+        public String asJson() {return "TDD-" + id;}
+    }
 
     @Getter
     @EqualsAndHashCode
@@ -23,7 +40,4 @@ public class TDD {
             return "Component-" + id;
         }
     }
-
-    @JsonValue
-    private final String tdd;
 }

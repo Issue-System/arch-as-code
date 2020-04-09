@@ -36,16 +36,17 @@ public class GoogleDocumentReader {
     }
 
     private Map<Requirement.Id, Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
-        var map = new HashMap<Requirement.Id, Requirement>();
-        jsonParser.getDecisions().forEach(decisionString -> {
-            String[] split = decisionString.split("-", 2);
-            if(split.length == 2) {
-                var id = new Requirement.Id(split[0].trim());
-                var requirement = new Requirement(split[1].trim());
-                map.put(id, requirement);
-            }
-        });
-        return map;
+        return null;
+//        var map = new HashMap<Requirement.Id, Requirement>();
+//        jsonParser.getDecisions().forEach(decisionString -> {
+//            String[] split = decisionString.split("-", 2);
+//            if(split.length == 2) {
+//                var id = new Requirement.Id(split[0].trim());
+//                var requirement = new Requirement(split[1].trim());
+//                map.put(id, requirement);
+//            }
+//        });
+//        return map;
     }
 
     private P2 extractP2(GoogleDocsJsonParser jsonParser) {

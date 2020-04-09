@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,6 +15,20 @@ import java.util.Map;
 @Getter
 @ToString
 @EqualsAndHashCode
+@JsonPropertyOrder(value = {
+        "name",
+        "milestone",
+        "authors",
+        "PCAs",
+        "P2",
+        "P1",
+        "useful-links",
+        "milestone-dependencies",
+        "requirements",
+        "TDDs",
+        "E2Es",
+        "epic"
+})
 public class ArchitectureUpdate {
     private final String name;
     private final String milestone;
@@ -21,7 +36,8 @@ public class ArchitectureUpdate {
     private final List<Person> PCAs;
     private final Map<Requirement.Id, Requirement> requirements;
     private final Map<TDD.ComponentReference, List<TDD>> TDDs;
-    private final Capabilities capabilities;
+    private final List<String> E2Es;
+    private final Epic epic;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -36,14 +52,15 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<TDD.ComponentReference, List<TDD>> TDDs, Capabilities capabilities, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<TDD.ComponentReference, List<TDD>> TDDs, List<String> E2Es, Epic epic, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
         this.requirements = copyMap(requirements);
         this.TDDs = copyMapWithList(TDDs);
-        this.capabilities = capabilities;
+        this.E2Es = copyList(E2Es);
+        this.epic = epic;
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = copyList(usefulLinks);
@@ -51,21 +68,22 @@ public class ArchitectureUpdate {
     }
 
     public static ArchitectureUpdate blank() {
-        return new ArchitectureUpdate(
-                "",
-                "",
-                List.of(new Person("", "")),
-                List.of(new Person("", "")),
-                Map.of(new Requirement.Id(" "), new Requirement(" ")),
-                Map.of(new TDD.ComponentReference(" "), List.of(new TDD(" "))),
-                new Capabilities("", "",
-                        List.of(new Capabilities.Story(List.of(""), List.of("")))
-                ),
-                new P2("", new Jira("", "")),
-                new P1("", new Jira("", ""), ""),
-                List.of(new Link("", "")),
-                List.of(new MilestoneDependency("", List.of(new Link("", ""))))
-        );
+        return null;
+//        return new ArchitectureUpdate(
+//                "",
+//                "",
+//                List.of(new Person("", "")),
+//                List.of(new Person("", "")),
+//                Map.of(new Requirement.Id(" "), new Requirement(" ")),
+//                Map.of(new TDD.ComponentReference(" "), List.of(new TDD(" "))),
+//                new Capabilities("", "",
+//                        List.of(new Capabilities.Story(List.of(""), List.of("")))
+//                ),
+//                new P2("", new Jira("", "")),
+//                new P1("", new Jira("", ""), ""),
+//                List.of(new Link("", "")),
+//                List.of(new MilestoneDependency("", List.of(new Link("", ""))))
+//        );
     }
 
     private <TA, TB> Map<TA, TB> copyMap(Map<TA, TB> toCopy) {

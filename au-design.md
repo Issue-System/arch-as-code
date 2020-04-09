@@ -67,13 +67,15 @@ requirements:
           - "TDD-id"
 TDDs:
     "Component-id":
-        "TDD-id": "tdd-description" [M]
-        "TDD-id": "tdd-description" [M]
-        "TDD-id": "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
     "Component-id":
-        "TDD-id": "tdd-description" [M]
-        "TDD-id": "tdd-description" [M]
-        "TDD-id": "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
 E2Es ??? [M]
 epic:
     title: "" [M]

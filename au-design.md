@@ -27,74 +27,69 @@ model updates' descriptions (would be in the commit history, PR description, etc
 
 ## Architecture Update Yaml Format:
 ```
-name [O]
-identifier [A]
-milestone [P1]
-jira epic ->
-    ticket [A] (when feature stories are created)
-    link [A] (when feature stories are created)
-authors ->
-    author... ->
-        name [O]
-        email [O]
-PCAs ->
-    PCA... ->
-        name [M] (Future: [A] sourced from a "product master" google sheet)
-        email [M] (Future: [A] sourced from a "product master" google sheet)
-P2 ->
-    link [P1]
-    jira ->
-        ticket [P1]
-        link [P1]
-P1 ->
-    link [P1]
-    jira ->
-        ticket [P1]
-        link [P1]
-    executive-summary [P1]
-useful-links -> (might not be necessary to duplicate from the P1)
-    link... ->
-        description [P1] / [M]
-        link [P1] / [M]
-milestone-dependencies -> (might not be necessary to duplicate from the P1)
-    dependency... ->
-        description [P1]
-        links ->
-            link... [P1]
-requirements -> 
-    requirement... ->
-        id / alias [P1] (or [M])
-        title [P1] (or [M])
-        TDDs ->
-            - TDD-id / TDD-alias [M]
-            - TDD-id / TDD-alias [M]
-            - TDD-id / TDD-alias [M]
-TDDs ->
-    Component... ->
-        component-id / component-alias [M]
-        TDDs -> 
-            - TDD ->
-                id / alias [M]
-                text [M]
-            - TDD ->
-                id / alias [M]
-                text [M]
-            - TDD ->
-                id / alias [M]
-                text [M]
-Capabilities ->
-    E2Es ??? [M]
-    ACCs ??? [M] (or [A] from its own spreadsheet)
-    Stories ->
-        TDDs ->
-            - id / alias [M]
-            - id / alias [M]
-            - id / alias [M]
-        Requirements ->
-            - id / alias [M]
-            - id / alias [M]
-            - id / alias [M]
-        ???
+name: "" [O]
+milestone: "" [P1]
+authors:
+  - name: "" [O]
+    email: "" [O]
+  - name: "" [O]
+    email: "" [O]
+PCAs:
+  - name: "" [M] (Future: [A] sourced from a "product master" google sheet)
+    email: "" [M] (Future: [A] sourced from a "product master" google sheet)
+  - name: "" [M] (Future: [A] sourced from a "product master" google sheet)
+    email: "" [M] (Future: [A] sourced from a "product master" google sheet)
+P2:
+    link: "" [P1]
+    jira:
+        ticket: "" [P1]
+        link: "" [P1]
+P1:
+    link: "" [P1]
+    jira:
+        ticket: "" [P1]
+        link: "" [P1]
+    executive-summary: "" [P1]
+useful-links: ??? (might not be necessary to duplicate from the P1)
+milestone-dependencies: ??? (might not be necessary to duplicate from the P1)
+requirements:
+    "Requirement-id":
+        text: "" [P1] (or [M])
+        type: "" (ITD, IFD, SSD, AC, ACC) [A] (or [M])
+        TDD-references:
+          - "TDD-id"
+          - "TDD-id"
+    "Requirement-id":
+        text: "" [P1] (or [M])
+        type: "" (ITD, IFD, SSD, AC, ACC) [A] (or [M])
+        TDD-references:
+          - "TDD-id"
+          - "TDD-id"
+TDDs:
+    "Component-id":
+        "TDD-id": "tdd-description" [M]
+        "TDD-id": "tdd-description" [M]
+        "TDD-id": "tdd-description" [M]
+    "Component-id":
+        "TDD-id": "tdd-description" [M]
+        "TDD-id": "tdd-description" [M]
+        "TDD-id": "tdd-description" [M]
+E2Es ??? [M]
+epic:
+    title: "" [M]
+    jira:
+        ticket: "" [M]
+        link: "" [M]
+    capabilities:
+      - jira:
+          ticket: "" [A]
+          link: "" [A]
+        tdds:
+            - "id" [M]
+            - "id" [M]
+        requirements
+            - "id" [M]
+            - "id" [M]
 ```
 
 ## Things to validate:

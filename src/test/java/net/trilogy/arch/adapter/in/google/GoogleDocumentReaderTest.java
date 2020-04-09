@@ -8,6 +8,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Requirement;
+import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -87,7 +88,7 @@ public class GoogleDocumentReaderTest {
 
         assertThat(
                 result.getRequirements(),
-                Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement, List.of()))
+                Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement, List.of(Tdd.Id.blank())))
         );
     }
 

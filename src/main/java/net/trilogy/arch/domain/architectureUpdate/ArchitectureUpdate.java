@@ -33,7 +33,7 @@ public class ArchitectureUpdate {
     private final List<Person> authors;
     private final List<Person> PCAs;
     private final Map<Requirement.Id, Requirement> requirements;
-    private final Map<TDD.ComponentReference, List<TDD>> TDDs;
+    private final Map<Tdd.ComponentReference, List<Tdd>> TDDs;
     private final List<String> E2Es;
     private final Epic epic;
 
@@ -50,7 +50,7 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<TDD.ComponentReference, List<TDD>> TDDs, List<String> E2Es, Epic epic, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<Tdd.ComponentReference, List<Tdd>> TDDs, List<String> E2Es, Epic epic, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = authors;
@@ -72,7 +72,7 @@ public class ArchitectureUpdate {
                 .authors(List.of(Person.blank()))
                 .PCAs(List.of(Person.blank()))
                 .requirements(Map.of(Requirement.Id.blank(), Requirement.blank()))
-                .TDDs(Map.of(TDD.ComponentReference.blank(), List.of(TDD.blank())))
+                .TDDs(Map.of(Tdd.ComponentReference.blank(), List.of(Tdd.blank())))
                 .E2Es(List.of("[SAMPLE E2E]"))
                 .epic(Epic.blank())
                 .p2(P2.blank())

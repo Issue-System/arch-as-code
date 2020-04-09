@@ -5,6 +5,7 @@ import net.trilogy.arch.domain.architectureUpdate.P1;
 import net.trilogy.arch.domain.architectureUpdate.P2;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Requirement;
+import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class GoogleDocumentReader {
             String[] split = decisionString.split("-", 2);
             if(split.length == 2) {
                 var id = new Requirement.Id(split[0].trim());
-                var requirement = new Requirement(split[1].trim(), List.of());
+                var requirement = new Requirement(split[1].trim(), List.of(Tdd.Id.blank()));
                 map.put(id, requirement);
             }
         });

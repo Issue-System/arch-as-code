@@ -12,7 +12,7 @@ public class Link {
         this.link = link;
     }
 
-    static Link blank() {
+    public static Link blank() {
         return new Link("[SAMPLE LINK DESCRIPTION]", "[SAMPLE-LINK]");
     }
 }

@@ -16,7 +16,7 @@ public class MilestoneDependency {
         this.links = links;
     }
 
-    static MilestoneDependency blank() {
+    public static MilestoneDependency blank() {
         return new MilestoneDependency("[SAMPLE MILESTONE DEPENDENCY]", List.of(Link.blank()));
     }
 }

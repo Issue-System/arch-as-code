@@ -16,15 +16,15 @@ public class Requirement {
     private final String text;
 
     @JsonProperty(value = "tdd-references")
-    private final List<TDD.Id> tddReferences;
+    private final List<Tdd.Id> tddReferences;
 
-    public Requirement(String text, List<TDD.Id> tddReferences) {
+    public Requirement(String text, List<Tdd.Id> tddReferences) {
         this.text = text;
         this.tddReferences = tddReferences;
     }
 
-    static Requirement blank() {
-        return new Requirement("[SAMPLE REQUIREMENT TEXT]", List.of(TDD.Id.blank()));
+    public static Requirement blank() {
+        return new Requirement("[SAMPLE REQUIREMENT TEXT]", List.of(Tdd.Id.blank()));
     }
 
     @Getter
@@ -35,7 +35,7 @@ public class Requirement {
         @JsonValue
         private final String id;
 
-        static Id blank() {
+        public static Id blank() {
             return new Id("[SAMPLE-REQUIREMENT-ID]");
         }
     }

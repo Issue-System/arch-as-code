@@ -9,7 +9,7 @@ public class Person {
     private final String name;
     private final String email;
 
-    static Person blank() {
+    public static Person blank() {
         return new Person("[SAMPLE PERSON NAME]", "[SAMPLE PERSON EMAIL]");
     }
 }

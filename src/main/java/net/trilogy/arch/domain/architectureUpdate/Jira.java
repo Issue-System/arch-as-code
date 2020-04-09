@@ -14,7 +14,7 @@ public class Jira {
         this.link = link;
     }
 
-    static Jira blank() {
+    public static Jira blank() {
         return new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
     }
 }

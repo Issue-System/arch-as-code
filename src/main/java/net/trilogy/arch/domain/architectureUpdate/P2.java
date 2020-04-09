@@ -16,7 +16,7 @@ public class P2 {
         this.jira = jira;
     }
 
-    static P2 blank() {
+    public static P2 blank() {
         return new P2("[SAMPLE LINK TO P1]", Jira.blank());
     }
 }

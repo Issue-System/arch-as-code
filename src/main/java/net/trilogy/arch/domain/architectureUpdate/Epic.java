@@ -20,13 +20,13 @@ public class Epic {
         this.capabilities = capabilities;
     }
 
-    static Epic blank() {
+    public static Epic blank() {
         return new Epic("[SAMPLE EPIC TITLE]",
                 Jira.blank(),
                 List.of(
                         new Capability(
                                 Jira.blank(),
-                                List.of(TDD.Id.blank()),
+                                List.of(Tdd.Id.blank()),
                                 List.of(Requirement.Id.blank())
                         )
                 )

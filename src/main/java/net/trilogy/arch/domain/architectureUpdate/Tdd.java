@@ -9,18 +9,18 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class TDD {
+public class Tdd {
 
-    private final TDD.Id id;
+    private final Tdd.Id id;
     private final String text;
 
-    public TDD(Id id, String text) {
+    public Tdd(Id id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    static TDD blank() {
-        return new TDD(Id.blank(), "[SAMPLE TDD TEXT]");
+    public static Tdd blank() {
+        return new Tdd(Id.blank(), "[SAMPLE TDD TEXT]");
     }
 
     @Getter
@@ -30,7 +30,7 @@ public class TDD {
         @JsonValue
         private final String id;
 
-        static Id blank() {
+        public static Id blank() {
             return new Id("[SAMPLE-TDD-ID]");
         }
     }
@@ -41,12 +41,12 @@ public class TDD {
     public static class ComponentReference {
         private final String id;
 
-        static ComponentReference blank() {
+        public static ComponentReference blank() {
             return new ComponentReference("[SAMPLE-COMPONENT-ID]");
         }
 
         @JsonValue
-        public String jsonRender() {
+        public String asJson() {
             return "Component-" + id;
         }
     }

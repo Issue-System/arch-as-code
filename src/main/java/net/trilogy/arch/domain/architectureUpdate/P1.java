@@ -21,7 +21,7 @@ public class P1 {
         this.executiveSummary = executiveSummary;
     }
 
-    static P1 blank() {
+    public static P1 blank() {
         return new P1("[SAMPLE LINK TO P1]", Jira.blank(), "[SAMPLE EXECUTIVE SUMMARY]");
     }
 }

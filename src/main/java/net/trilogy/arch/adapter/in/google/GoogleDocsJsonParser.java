@@ -17,6 +17,8 @@ class GoogleDocsJsonParser {
     private static final String P1_JIRA_TICKET_ROW_HEADER = "P1 Jira Ticket";
     private static final String P2_LINK_ROW_HEADER = "P2 Spec Links";
     private static final String EXECUTIVE_SUMMARY_COLUMN_HEADER = "Executive Summary";
+    private static final String P2_REQUIREMENTS_START_WITH = "P2";
+    private static final String P1_REQUIREMENTS_START_WITH = "P1";
 
     private final JsonNode json;
     private Optional<Table> metaDataTable;
@@ -197,7 +199,7 @@ class GoogleDocsJsonParser {
                 .map(Table::getTextFromFirstRow)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .filter(str -> str.startsWith("P1"))
+                .filter(str -> str.startsWith(P1_REQUIREMENTS_START_WITH) || str.startsWith(P2_REQUIREMENTS_START_WITH))
                 .collect(toList());
     }
 

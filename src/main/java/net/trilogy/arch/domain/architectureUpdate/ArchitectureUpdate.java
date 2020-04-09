@@ -20,6 +20,7 @@ public class ArchitectureUpdate {
     private final List<Person> authors;
     private final List<Person> PCAs;
     private final Map<Requirement.Id, Requirement> requirements;
+    private final Map<TDD.ComponentReference, List<TDD>> TDDs;
     private final Capabilities capabilities;
 
     @JsonProperty(value = "P2")
@@ -35,12 +36,13 @@ public class ArchitectureUpdate {
     private final List<MilestoneDependency> milestoneDependencies;
 
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Capabilities capabilities, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<TDD.ComponentReference, List<TDD>> TDDs, Capabilities capabilities, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = copyList(authors);
         this.PCAs = copyList(PCAs);
         this.requirements = copyMap(requirements);
+        this.TDDs = copyMapWithList(TDDs);
         this.capabilities = capabilities;
         this.p2 = p2;
         this.p1 = p1;
@@ -55,6 +57,7 @@ public class ArchitectureUpdate {
                 List.of(new Person("", "")),
                 List.of(new Person("", "")),
                 Map.of(new Requirement.Id(" "), new Requirement(" ")),
+                Map.of(new TDD.ComponentReference(" "), List.of(new TDD(" "))),
                 new Capabilities("", "",
                         List.of(new Capabilities.Story(List.of(""), List.of("")))
                 ),
@@ -66,6 +69,10 @@ public class ArchitectureUpdate {
     }
 
     private <TA, TB> Map<TA, TB> copyMap(Map<TA, TB> toCopy) {
+        return toCopy != null ? new LinkedHashMap<>(toCopy) : new LinkedHashMap<>();
+    }
+
+    private <TA, TB> Map<TA, List<TB>> copyMapWithList(Map<TA, List<TB>> toCopy) {
         return toCopy != null ? new LinkedHashMap<>(toCopy) : new LinkedHashMap<>();
     }
 

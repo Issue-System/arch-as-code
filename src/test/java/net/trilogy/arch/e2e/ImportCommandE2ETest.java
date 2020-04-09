@@ -17,8 +17,6 @@ public class ImportCommandE2ETest {
 
         Integer statusCode = importCommand.call();
 
-
-
         assertThat(statusCode, equalTo(0));
     }
 }

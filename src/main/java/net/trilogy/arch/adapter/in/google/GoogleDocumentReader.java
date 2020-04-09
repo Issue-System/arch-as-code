@@ -29,7 +29,7 @@ public class GoogleDocumentReader {
 
         GoogleDocsJsonParser jsonParser = new GoogleDocsJsonParser(response.asJson());
 
-        return ArchitectureUpdate.preFilledBuilder()
+        return ArchitectureUpdate.builderPreFilledWithBlanks()
                 .milestone(jsonParser.getMilestone().orElse(""))
                 .p1(extractP1(jsonParser, url))
                 .p2(extractP2(jsonParser))

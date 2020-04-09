@@ -65,7 +65,7 @@ public class ArchitectureUpdate {
         this.milestoneDependencies = milestoneDependencies;
     }
 
-    public static ArchitectureUpdateBuilder preFilledBuilder() {
+    public static ArchitectureUpdateBuilder builderPreFilledWithBlanks() {
         return ArchitectureUpdate.builder()
                 .name("[SAMPLE NAME]")
                 .milestone("[SAMPLE MILESTONE]")
@@ -82,7 +82,7 @@ public class ArchitectureUpdate {
     }
 
     public static ArchitectureUpdate blank() {
-        return preFilledBuilder().build();
+        return builderPreFilledWithBlanks().build();
     }
 
 }

@@ -20,4 +20,8 @@ public class P1 {
         this.jira = jira;
         this.executiveSummary = executiveSummary;
     }
+
+    static P1 blank() {
+        return new P1("[SAMPLE LINK TO P1]", Jira.blank(), "[SAMPLE EXECUTIVE SUMMARY]");
+    }
 }

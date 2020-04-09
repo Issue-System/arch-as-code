@@ -19,12 +19,20 @@ public class TDD {
         this.text = text;
     }
 
+    static TDD blank() {
+        return new TDD(Id.blank(), "[SAMPLE TDD TEXT]");
+    }
+
     @Getter
     @EqualsAndHashCode
     @AllArgsConstructor
     public static class Id {
         @JsonValue
         private final String id;
+
+        static Id blank() {
+            return new Id("[SAMPLE-TDD-ID]");
+        }
     }
 
     @Getter
@@ -32,6 +40,10 @@ public class TDD {
     @AllArgsConstructor
     public static class ComponentReference {
         private final String id;
+
+        static ComponentReference blank() {
+            return new ComponentReference("[SAMPLE-COMPONENT-ID]");
+        }
 
         @JsonValue
         public String jsonRender() {

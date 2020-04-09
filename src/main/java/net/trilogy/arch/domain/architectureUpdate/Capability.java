@@ -16,7 +16,6 @@ public class Capability {
     private final List<Requirement.Id> requirementReferences;
 
     public Capability(Jira jira, List<TDD.Id> tddReferences, List<Requirement.Id> requirementReferences) {
-        // TODO: copy lists properly
         this.jira = jira;
         this.tddReferences = tddReferences;
         this.requirementReferences = requirementReferences;

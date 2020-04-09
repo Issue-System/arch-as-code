@@ -19,9 +19,12 @@ public class Requirement {
     private final List<TDD.Id> tddReferences;
 
     public Requirement(String text, List<TDD.Id> tddReferences) {
-        // TODO: copy lists correctly
         this.text = text;
         this.tddReferences = tddReferences;
+    }
+
+    static Requirement blank() {
+        return new Requirement("[SAMPLE REQUIREMENT TEXT]", List.of(TDD.Id.blank()));
     }
 
     @Getter
@@ -31,5 +34,9 @@ public class Requirement {
     public static class Id{
         @JsonValue
         private final String id;
+
+        static Id blank() {
+            return new Id("[SAMPLE-REQUIREMENT-ID]");
+        }
     }
 }

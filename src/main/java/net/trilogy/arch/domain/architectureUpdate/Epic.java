@@ -15,9 +15,21 @@ public class Epic {
 
     @Builder
     public Epic(String title, Jira jira, List<Capability> capabilities) {
-        // TODO: copy list properly
         this.title = title;
         this.jira = jira;
         this.capabilities = capabilities;
+    }
+
+    static Epic blank() {
+        return new Epic("[SAMPLE EPIC TITLE]",
+                Jira.blank(),
+                List.of(
+                        new Capability(
+                                Jira.blank(),
+                                List.of(TDD.Id.blank()),
+                                List.of(Requirement.Id.blank())
+                        )
+                )
+        );
     }
 }

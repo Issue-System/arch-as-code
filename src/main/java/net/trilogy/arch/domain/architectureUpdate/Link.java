@@ -11,4 +11,8 @@ public class Link {
         this.description = description;
         this.link = link;
     }
+
+    static Link blank() {
+        return new Link("[SAMPLE LINK DESCRIPTION]", "[SAMPLE-LINK]");
+    }
 }

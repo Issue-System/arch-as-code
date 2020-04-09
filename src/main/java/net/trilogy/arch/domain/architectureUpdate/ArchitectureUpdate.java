@@ -68,22 +68,25 @@ public class ArchitectureUpdate {
     }
 
     public static ArchitectureUpdate blank() {
-        return null;
-//        return new ArchitectureUpdate(
-//                "",
-//                "",
-//                List.of(new Person("", "")),
-//                List.of(new Person("", "")),
-//                Map.of(new Requirement.Id(" "), new Requirement(" ")),
-//                Map.of(new TDD.ComponentReference(" "), List.of(new TDD(" "))),
-//                new Capabilities("", "",
-//                        List.of(new Capabilities.Story(List.of(""), List.of("")))
-//                ),
-//                new P2("", new Jira("", "")),
-//                new P1("", new Jira("", ""), ""),
-//                List.of(new Link("", "")),
-//                List.of(new MilestoneDependency("", List.of(new Link("", ""))))
-//        );
+        Jira sampleJira = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
+        return ArchitectureUpdate.builder()
+                .name("[SAMPLE NAME]")
+                .milestone("[SAMPLE MILESTONE]")
+                .authors(List.of(new Person("[SAMPLE AUTHOR NAME]", "[SAMPLE AUTHOR EMAIL]")))
+                .PCAs(List.of(new Person("[SAMPLE PCA NAME]", "[SAMPLE PCA EMAIL]")))
+                .requirements(Map.of(new Requirement.Id("[SAMPLE-REQUIREMENT-ID]"), new Requirement("[SAMPLE REQUIREMENT TEXT]", List.of(new TDD.Id("[SAMPLE-TDD-ID]")))))
+                .TDDs(Map.of(new TDD.ComponentReference("[SAMPLE-COMPONENT-ID]"), List.of(new TDD(new TDD.Id("[SAMPLE-TDD-ID]"), "[SAMPLE TDD TEXT]"))))
+                .E2Es(List.of("[SAMPLE E2E]"))
+                .epic(new Epic("[SAMPLE EPIC TITLE]", sampleJira, List.of(new Capability(
+                        sampleJira,
+                        List.of(new TDD.Id("[SAMPLE-TDD-ID]")),
+                        List.of(new Requirement.Id("[SAMPLE-REQUIREMENT-ID]"))
+                ))))
+                .p2(new P2("[SAMPLE LINK TO P1]", sampleJira))
+                .p1(new P1("[SAMPLE LINK TO P1]", sampleJira, "[SAMPLE EXECUTIVE SUMMARY]"))
+                .usefulLinks(List.of(new Link("[SAMPLE USEFUL LINK DESCRIPTION]", "[SAMPLE-USEFUL-LINK]")))
+                .milestoneDependencies(List.of(new MilestoneDependency("[SAMPLE MILESTONE DEPENDENCY]", List.of(new Link("[SAMPLE LINK DESCRIPTION]", "[SAMPLE-LINK]")))))
+                .build();
     }
 
     private <TA, TB> Map<TA, TB> copyMap(Map<TA, TB> toCopy) {

@@ -23,10 +23,8 @@ public class TDD {
     @EqualsAndHashCode
     @AllArgsConstructor
     public static class Id {
-        private final String id;
-
         @JsonValue
-        public String asJson() {return "TDD-" + id;}
+        private final String id;
     }
 
     @Getter

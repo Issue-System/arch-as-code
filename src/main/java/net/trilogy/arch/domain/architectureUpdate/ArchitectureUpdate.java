@@ -65,7 +65,7 @@ public class ArchitectureUpdate {
         this.milestoneDependencies = milestoneDependencies;
     }
 
-    public static ArchitectureUpdate blank() {
+    public static ArchitectureUpdateBuilder preFilledBuilder() {
         return ArchitectureUpdate.builder()
                 .name("[SAMPLE NAME]")
                 .milestone("[SAMPLE MILESTONE]")
@@ -78,8 +78,11 @@ public class ArchitectureUpdate {
                 .p2(P2.blank())
                 .p1(P1.blank())
                 .usefulLinks(List.of(Link.blank()))
-                .milestoneDependencies(List.of(MilestoneDependency.blank()))
-                .build();
+                .milestoneDependencies(List.of(MilestoneDependency.blank()));
+    }
+
+    public static ArchitectureUpdate blank() {
+        return preFilledBuilder().build();
     }
 
 }

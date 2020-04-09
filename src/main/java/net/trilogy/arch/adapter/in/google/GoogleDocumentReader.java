@@ -28,7 +28,7 @@ public class GoogleDocumentReader {
 
         GoogleDocsJsonParser jsonParser = new GoogleDocsJsonParser(response.asJson());
 
-        return ArchitectureUpdate.builder()
+        return ArchitectureUpdate.preFilledBuilder()
                 .milestone(jsonParser.getMilestone().orElse(""))
                 .p1(extractP1(jsonParser, url))
                 .p2(extractP2(jsonParser))

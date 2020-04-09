@@ -15,6 +15,13 @@ public class ArchitectureUpdateObjectMapperTest {
         assertThat(actual.trim(), equalTo(expected.trim()));
     }
 
+    @Test
+    public void shouldWriteBlankYamlWithOverriddenName() throws Exception {
+        String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.preFilledBuilder().name("OVERRIDDEN").build());
+        String expected = getBlankYamlText().replace("'[SAMPLE NAME]'", "OVERRIDDEN");
+        assertThat(actual.trim(), equalTo(expected.trim()));
+    }
+
     private String getBlankYamlText() {
         return String.join("\n"
                 , ""

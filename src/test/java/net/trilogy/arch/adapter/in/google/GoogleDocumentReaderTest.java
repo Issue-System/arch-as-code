@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
@@ -66,7 +67,7 @@ public class GoogleDocumentReaderTest {
             "Json/SampleP1-5.json | 7  | P2 IF 1     | Use pagination in front-end app to speed-up UI and decrease memory footprint.",
     })
     @Test
-    public void shouldReturnAuWithDecisions(String file, Integer totalRequirementsInFile, String requirementId, String requirement) throws Exception {
+    public void shouldReturnAuWithRequirements(String file, Integer totalRequirementsInFile, String requirementId, String requirement) throws Exception {
         mockApiWith(file, "url");
 
         ArchitectureUpdate result = reader.load("url");
@@ -77,6 +78,21 @@ public class GoogleDocumentReaderTest {
                 result.getRequirements(),
                 Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement, List.of(Tdd.Id.blank())))
         );
+    }
+
+    @Test
+    public void shouldReturnAuWithOrderedRequirements() throws IOException {
+        mockApiWith("Json/SampleP1-4.json", "url");
+
+        ArchitectureUpdate result = reader.load("url");
+        List<String> expected = List.of("P2 IFD 1", "P2 IFD 2", "P2 IFD 3", "P2 ITD 4", "P1 ITD 4.1", "P2 ITD 5", "P1 ITD 5.1");
+
+        int count = 0;
+        for (Map.Entry<Requirement.Id, Requirement> entry : result.getRequirements().entrySet()) {
+            Requirement.Id k = entry.getKey();
+            assertThat(expected.get(count), equalTo(k.getId()));
+            count++;
+        }
     }
 
     @Parameters({

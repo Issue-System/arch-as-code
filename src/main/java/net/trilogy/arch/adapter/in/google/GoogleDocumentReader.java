@@ -1,14 +1,9 @@
 package net.trilogy.arch.adapter.in.google;
 
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.P1;
-import net.trilogy.arch.domain.architectureUpdate.P2;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
-import net.trilogy.arch.domain.architectureUpdate.Requirement;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.*;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,10 +33,10 @@ public class GoogleDocumentReader {
     }
 
     private Map<Requirement.Id, Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
-        var map = new HashMap<Requirement.Id, Requirement>();
+        var map = new LinkedHashMap<Requirement.Id, Requirement>();
         jsonParser.getDecisions().forEach(decisionString -> {
             String[] split = decisionString.split("-", 2);
-            if(split.length == 2) {
+            if (split.length == 2) {
                 var id = new Requirement.Id(split[0].trim());
                 var requirement = new Requirement(split[1].trim(), List.of(Tdd.Id.blank()));
                 map.put(id, requirement);

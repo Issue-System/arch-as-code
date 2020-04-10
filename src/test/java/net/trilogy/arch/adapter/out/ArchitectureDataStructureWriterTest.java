@@ -44,6 +44,16 @@ public class ArchitectureDataStructureWriterTest {
         assertYamlContentsEqual(writtenYamlFile, existingYamlFile);
     }
 
+    @Test
+    public void shouldWriteYamlToSpecifiedDirectory() throws IOException {
+        final File tempFile = File.createTempFile("aac", "test");
+
+        File writtenYamlFile = new ArchitectureDataStructureWriter()
+                .export(new ArchitectureDataStructure(), tempFile);
+
+        assertThat(tempFile.getAbsoluteFile(), equalTo(writtenYamlFile.getAbsoluteFile()));
+    }
+
     @SneakyThrows
     public void parseDateAsIsoOrThrow(String str) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

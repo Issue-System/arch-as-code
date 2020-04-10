@@ -8,7 +8,6 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.concurrent.Callable;
 
 import static net.trilogy.arch.adapter.Credentials.createCredentials;
@@ -61,9 +60,8 @@ public class InitializeCommand implements Callable<Integer> {
     }
 
     private void write(ArchitectureDataStructure data, String toFilePath) throws IOException {
-        File export = new ArchitectureDataStructureWriter().export(data);
         File manifestFile = new File(toFilePath);
-        Files.move(export.toPath(), manifestFile.toPath());
+        new ArchitectureDataStructureWriter().export(data, manifestFile);
     }
 
     private ArchitectureDataStructure createSampleDataStructure() {

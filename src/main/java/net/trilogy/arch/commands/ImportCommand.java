@@ -10,12 +10,16 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "import", description = "Imports existing struturizr workspace")
+@CommandLine.Command(name = "import", description = "Imports existing structurizr workspace")
 public class ImportCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureDataStructureWriter.class);
 
     @CommandLine.Parameters(index = "0", paramLabel = "EXPORTED_WORKSPACE", description = "Exported structurizr workspace location.")
     private File exportedWorkspacePath;
+
+    @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
+    private File productDocumentationRoot;
+
 
     // Only for testing purposes
     public ImportCommand(File exportedWorkspacePath) {
@@ -28,7 +32,9 @@ public class ImportCommand implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
-        File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure);
+        File writeFile = this.productDocumentationRoot.toPath().resolve("data-structure.yml").toFile();
+
+        File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
         logger.info(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));
         return 0;
     }

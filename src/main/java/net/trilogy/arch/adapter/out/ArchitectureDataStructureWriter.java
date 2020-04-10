@@ -13,10 +13,15 @@ public class ArchitectureDataStructureWriter {
 
     public File export(ArchitectureDataStructure dataStructure) throws IOException {
         File tempFile = File.createTempFile("arch-as-code", ".yml");
+
+        return export(dataStructure, tempFile);
+    }
+
+    public File export(ArchitectureDataStructure dataStructure, File writeFile) throws IOException {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
-        mapper.writeValue(tempFile, dataStructure);
-        logger.info(String.format("Architecture data structure written to - %s", tempFile.getAbsolutePath()));
-        return tempFile;
+        mapper.writeValue(writeFile, dataStructure);
+        logger.info(String.format("Architecture data structure written to - %s", writeFile.getAbsolutePath()));
+        return writeFile;
     }
 
 }

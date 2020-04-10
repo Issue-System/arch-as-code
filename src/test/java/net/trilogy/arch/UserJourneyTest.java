@@ -133,6 +133,6 @@ public class UserJourneyTest {
     }
 
     private int importWorkspace() throws GeneralSecurityException, IOException {
-        return execute("import", exportedWorkspacePath.getAbsolutePath());
+        return execute("import", exportedWorkspacePath.getAbsolutePath(), workspaceRoot);
     }
 }

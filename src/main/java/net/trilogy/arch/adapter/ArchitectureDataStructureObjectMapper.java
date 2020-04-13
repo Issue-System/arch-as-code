@@ -26,7 +26,11 @@ public class ArchitectureDataStructureObjectMapper {
     private final ObjectMapper mapper;
 
     public ArchitectureDataStructureObjectMapper() {
-        this.mapper = new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER));
+        this.mapper = new ObjectMapper(
+                new YAMLFactory()
+                        .configure(YAMLGenerator.Feature.SPLIT_LINES, false)
+                        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+        );
         this.mapper.setVisibility(FIELD, ANY);
         this.mapper.setVisibility(GETTER, NONE);
         this.mapper.setVisibility(IS_GETTER, NONE);

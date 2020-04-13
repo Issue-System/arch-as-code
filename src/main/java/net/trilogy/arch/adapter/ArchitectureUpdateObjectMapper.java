@@ -20,7 +20,6 @@ public class ArchitectureUpdateObjectMapper {
     public ArchitectureUpdateObjectMapper() {
         this.mapper = new ObjectMapper(
                 new YAMLFactory()
-                        .configure(YAMLGenerator.Feature.MINIMIZE_QUOTES, true)
                         .configure(YAMLGenerator.Feature.SPLIT_LINES, false)
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
         );

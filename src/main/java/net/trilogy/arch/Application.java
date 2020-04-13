@@ -1,5 +1,6 @@
 package net.trilogy.arch;
 
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.commands.ImportCommand;
 import net.trilogy.arch.commands.InitializeCommand;
@@ -14,14 +15,11 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
-
 public class Application {
 
     private final CommandLine cli;
 
-    public Application(GoogleDocsAuthorizedApiFactory googleDocsApiFactory) {
+    public Application(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade) {
         cli = new CommandLine(new ParentCommand())
                 .addSubcommand(new InitializeCommand())
                 .addSubcommand(new ValidateCommand())
@@ -29,16 +27,16 @@ public class Application {
                 .addSubcommand(new ImportCommand())
                 .addSubcommand(
                         new CommandLine(new ArchitectureUpdateCommand())
-                                .addSubcommand(new AuInitializeCommand())
+                                .addSubcommand(new AuInitializeCommand(filesFacade))
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory))
                 );
     }
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
+        var filesAdapter = new FilesFacade();
 
-        var app = new Application(googleDocsApiFactory);
+        var app = new Application(googleDocsApiFactory, filesAdapter);
 
         int exitCode = app.execute(args);
         System.exit(exitCode);

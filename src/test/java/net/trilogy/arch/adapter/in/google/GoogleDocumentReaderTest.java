@@ -185,7 +185,7 @@ public class GoogleDocumentReaderTest {
         );
     }
 
-    // TODO: Remove when no longer needed
+    // TODO OPTIONAL: Remove when no longer needed
     @Test
     @Ignore("This is not a test. Use this to generate new json from google docs if needed.")
     public void NotATest_UtilToFetchSampleP1Spec() throws GeneralSecurityException, IOException {

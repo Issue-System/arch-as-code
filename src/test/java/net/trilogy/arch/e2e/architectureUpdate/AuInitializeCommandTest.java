@@ -1,8 +1,12 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
+import net.trilogy.arch.Application;
+import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +17,8 @@ import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AuInitializeCommandTest {
     @Rule
@@ -28,6 +34,8 @@ public class AuInitializeCommandTest {
 
     @Test
     public void rootCommandShouldPrintUsage() throws Exception {
+        // TODO OPTIONAL: Move test to file that only has root command tests
+
         // TODO FUTURE: Assert that usage is shown AAC-75
         collector.checkThat(
                 execute("au"),
@@ -93,6 +101,30 @@ public class AuInitializeCommandTest {
                 Files.isDirectory(tempDirPath.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH)),
                 is(true)
         );
+    }
+
+    @Test
+    public void shouldFailIfCreatingCredentialsFileFails() throws Exception {
+        // Given
+        Path tempDirPath = getTempDirectory();
+        collector.checkThat(
+                GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH + " folder does not exist. (Precondition check)",
+                Files.exists(tempDirPath.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH)),
+                is(false)
+        );
+        var mockedFilesAdapter = mock(FilesFacade.class);
+        when(
+                mockedFilesAdapter.writeString(ArgumentMatchers.any(), ArgumentMatchers.any())
+        ).thenThrow(
+                new IOException("Something horrible has happened. Maybe we ran out of bytes.")
+        );
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesAdapter);
+
+        // when
+        Integer status = execute(app, "au init -c c -p p -s s " + str(tempDirPath));
+
+        // then
+        collector.checkThat(status, not(equalTo(0)));
     }
 
     @Test

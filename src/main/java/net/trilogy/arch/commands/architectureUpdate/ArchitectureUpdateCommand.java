@@ -23,6 +23,7 @@ public class ArchitectureUpdateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        // TODO FUTURE: Don't use logger to print output
         logger.info(spec.commandLine().getUsageMessage());
         return 0;
     }

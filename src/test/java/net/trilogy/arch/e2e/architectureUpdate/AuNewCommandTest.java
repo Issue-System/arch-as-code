@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -43,7 +44,8 @@ public class AuNewCommandTest {
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
-        app = new Application(googleDocsApiFactoryMock);
+        var filesAdapter = new FilesFacade();
+        app = new Application(googleDocsApiFactoryMock, filesAdapter);
     }
 
     @Test
@@ -121,8 +123,8 @@ public class AuNewCommandTest {
 
     @Test
     public void shouldCreateFileWithP1() throws Exception {
+        // GIVEN
         mockGoogleDocsApi();
-
         execute("init", str(rootDir.toPath()), "-i i", "-k k", "-s s");
         Path auDir = initializeAuDirectory(rootDir.toPath());
         Path auFile = auDir.resolve("au-name.yml");
@@ -132,12 +134,12 @@ public class AuNewCommandTest {
                 is(false)
         );
 
+        // WHEN
         Integer exitCode = execute(app, "au new au-name -p url " + str(rootDir.toPath()));
 
+        // THEN
         collector.checkThat(exitCode, is(equalTo(0)));
         collector.checkThat(Files.exists(auFile), is(true));
-
-        // TODO: [dependency: AAC-73, AAC-74] Check the full file, not just if it contains a substring
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
                 containsString("ABCD-1231")

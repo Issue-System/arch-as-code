@@ -1,5 +1,6 @@
 package net.trilogy.arch;
 
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 
 import java.io.IOException;
@@ -27,7 +28,8 @@ public abstract class TestHelper {
 
     public static Integer execute(String... args) throws GeneralSecurityException, IOException {
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
-        return new Application(googleDocsApiFactory).execute(args);
+        var filesAdapter = new FilesFacade();
+        return new Application(googleDocsApiFactory, filesAdapter).execute(args);
     }
 
     public static Integer execute(Application application, String command) {

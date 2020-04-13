@@ -88,10 +88,10 @@ capabilities:
             ticket: "" [M]
             link: "" [M]
     feature-stories:
-      - jira:
+      - title: "" [M]
+        jira:
           ticket: "" [A] (after our tool creates jira stories)
           link: "" [A] (after our tool creates jira stories)
-        story-text: "" [M]
         tdd-references:
             - "id" [M]
             - "id" [M]

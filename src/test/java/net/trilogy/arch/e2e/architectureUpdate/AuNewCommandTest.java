@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.mockito.ArgumentMatchers;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +24,8 @@ import java.util.Objects;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,8 +43,8 @@ public class AuNewCommandTest {
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
-        var filesAdapter = new FilesFacade();
-        app = new Application(googleDocsApiFactoryMock, filesAdapter);
+        var filesFacade = new FilesFacade();
+        app = new Application(googleDocsApiFactoryMock, filesFacade);
     }
 
     @Test
@@ -146,12 +145,6 @@ public class AuNewCommandTest {
         );
     }
 
-    private void mockGoogleDocsApi() throws IOException {
-        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1-1.json")).getPath()));
-        JsonNode jsonFileContents = new ObjectMapper().readValue(rawFileContents, JsonNode.class);
-        when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
-    }
-
     @Test
     public void shouldNotCreateFileIfAlreadyExists() throws Exception {
         Path rootDir = getTempDirectory();
@@ -178,6 +171,30 @@ public class AuNewCommandTest {
                 Files.readString(auPathFrom(rootDir, auName)),
                 equalTo("EXISTING CONTENTS")
         );
+    }
+
+    @Test
+    public void shouldFailIfCannotWriteFile() throws Exception {
+        Path rootDir = getTempDirectory();
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
+
+        String auName = "au-name";
+
+        var mockedFilesFacade = mock(FilesFacade.class);
+
+        when(mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenThrow(new IOException("No disk space!"));
+
+        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
+        final String command = "au new " + auName + " " + str(rootDir);
+
+        assertThat(execute(app, command), not(equalTo(0)));
+    }
+
+    private void mockGoogleDocsApi() throws IOException {
+        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1-1.json")).getPath()));
+        JsonNode jsonFileContents = new ObjectMapper().readValue(rawFileContents, JsonNode.class);
+        when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
     }
 
     private Path initializeAuDirectory(Path rootDir) throws GeneralSecurityException, IOException {

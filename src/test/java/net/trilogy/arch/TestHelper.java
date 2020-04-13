@@ -28,8 +28,8 @@ public abstract class TestHelper {
 
     public static Integer execute(String... args) throws GeneralSecurityException, IOException {
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
-        var filesAdapter = new FilesFacade();
-        return new Application(googleDocsApiFactory, filesAdapter).execute(args);
+        var filesFacade = new FilesFacade();
+        return new Application(googleDocsApiFactory, filesFacade).execute(args);
     }
 
     public static Integer execute(Application application, String command) {

@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
-import static net.trilogy.arch.TestHelper.execute;
-import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.*;
+import static net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -112,13 +112,13 @@ public class AuInitializeCommandTest {
                 Files.exists(tempDirPath.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH)),
                 is(false)
         );
-        var mockedFilesAdapter = mock(FilesFacade.class);
+        var mockedFilesFacade = mock(FilesFacade.class);
         when(
-                mockedFilesAdapter.writeString(ArgumentMatchers.any(), ArgumentMatchers.any())
+                mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any())
         ).thenThrow(
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesAdapter);
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
 
         // when
         Integer status = execute(app, "au init -c c -p p -s s " + str(tempDirPath));

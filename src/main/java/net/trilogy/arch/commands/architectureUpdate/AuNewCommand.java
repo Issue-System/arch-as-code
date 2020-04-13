@@ -1,6 +1,7 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
@@ -11,7 +12,6 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", description = "Initialize a new architecture update.")
@@ -19,6 +19,7 @@ public class AuNewCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
+    private final FilesFacade filesFacade;
 
     @CommandLine.Parameters(index = "0", description = "Name for new architecture update")
     private String name;
@@ -29,8 +30,9 @@ public class AuNewCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Document", required = false)
     private String p1GoogleDocUrl;
 
-    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory) {
+    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade) {
         this.googleDocsApiFactory = googleDocsApiFactory;
+        this.filesFacade = filesFacade;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class AuNewCommand implements Callable<Integer> {
             au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
         }
 
-        Files.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
+        filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
 
         logger.info(String.format("AU created - %s", auFile.toPath()));
         return 0;

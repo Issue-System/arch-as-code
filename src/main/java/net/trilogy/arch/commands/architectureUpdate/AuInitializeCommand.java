@@ -56,7 +56,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         File file = productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME).toFile();
         String credentialJsonString = buildCredentialJsonString(clientId, projectId, secret);
         try {
-            filesFacade.writeString(file, credentialJsonString);
+            filesFacade.writeString(file.toPath(), credentialJsonString);
             return true;
         } catch (IOException e) {
             logger.error(String.format("Unable to create %s", file.getAbsolutePath()));

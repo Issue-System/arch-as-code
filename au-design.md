@@ -56,13 +56,13 @@ decisions: ( ITD / IFD / SSD )
     "decision-id":
         text: "" [P1] (or [M])
         TDD-references:
-          - "TDD-id"
-          - "TDD-id"
+          - "TDD-id" [M]
+          - "TDD-id" [M]
     "decision-id":
         text: "" [P1] (or [M])
         TDD-references:
-          - "TDD-id"
-          - "TDD-id"
+          - "TDD-id" [M]
+          - "TDD-id" [M]
 TDDs:
     "Component-id":
       - id: "TDD-id": [M]
@@ -75,12 +75,12 @@ TDDs:
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
 requirements: ( E2E steps, ACCs )
-    "requirement-id": 
-        text: "requirement text"
-        source: "some text, or link to requirement"
-    "e2e-5-step-4": 
-        text: "must send random xml when random button is pressed"
-        source: "link to e2e jira ticket? or spreadsheet containing accs/e2es?"
+    "requirement-id":  [M]
+        text: "requirement text" [M]
+        source: "some text, or link to requirement" [M]
+    "e2e-5-step-4":  [M]
+        text: "must send random xml when random button is pressed" [M]
+        source: "link to e2e jira ticket? or spreadsheet containing accs/e2es?" [M]
 capabilities:
     epic:
         title: "" [M]

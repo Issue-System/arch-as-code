@@ -52,19 +52,17 @@ P1:
     executive-summary: "" [P1]
 useful-links: ??? (might not be necessary to duplicate from the P1)
 milestone-dependencies: ??? (might not be necessary to duplicate from the P1)
-requirements:
-    "Requirement-id":
+decisions: ( ITDs, IFDs, SSDs, etc.)
+    "decision-id":
         text: "" [P1] (or [M])
-        type: "" (ITD, IFD, SSD, AC, ACC) [A] (or [M])
         TDD-references:
-          - "TDD-id"
-          - "TDD-id"
-    "Requirement-id":
+          - "TDD-id" [M]
+          - "TDD-id" [M]
+    "decision-id":
         text: "" [P1] (or [M])
-        type: "" (ITD, IFD, SSD, AC, ACC) [A] (or [M])
         TDD-references:
-          - "TDD-id"
-          - "TDD-id"
+          - "TDD-id" [M]
+          - "TDD-id" [M]
 TDDs:
     "Component-id":
       - id: "TDD-id": [M]
@@ -76,34 +74,43 @@ TDDs:
         text: "tdd-description" [M]
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
-E2Es ??? [M]
-epic:
-    title: "" [M]
-    jira:
-        ticket: "" [M]
-        link: "" [M]
-    capabilities:
+functional-requirements: ( E2E steps, ACCs, ACs from P1, ACs added manually, etc. )
+    "requirement-id":  [M]
+        text: "requirement text" [M]
+        source: "some text, or link to requirement" [M]
+    "e2e-5-step-4":  [M]
+        text: "must send random xml when random button is pressed" [M]
+        source: "link to e2e jira ticket? or spreadsheet containing accs/e2es?" [M]
+capabilities:
+    epic:
+        title: "" [M]
+        jira:
+            ticket: "" [M]
+            link: "" [M]
+    feature-stories:
       - jira:
-          ticket: "" [A]
-          link: "" [A]
-        tdds:
+          ticket: "" [A] (after our tool creates jira stories)
+          link: "" [A] (after our tool creates jira stories)
+        story-text: "" [M]
+        tdd-references:
             - "id" [M]
             - "id" [M]
-        requirements
+        requirement-references:
             - "id" [M]
             - "id" [M]
 ```
 
 ## Things to validate:
- - TDDs
-    - must refer to valid components
-    - must be referred to by >=1 requirement (no orphan TDDs)
-    - all requirements must have >=1 TDD
- - Stories
-    - must refer to >=1 valid requirements
-    - must refer to >=1 valid tdds
-    - all tdds must have >=1 story
-    - all requirements must have >=1 story
+ - Decisions  
+    - must have >=1 TDD  
+ - TDDs  
+    - must refer to valid components  
+    - must be referred to by >=1 decision (no orphan TDDs)  
+ - Stories  
+    - must refer to >=1 valid requirements  
+    - must refer to >=1 valid tdds  
+    - all tdds must have >=1 story   
+    - all requirements must have >=1 story   
 
 ## How to visualize:
  - Some way to visualize the model in each branch is necessary

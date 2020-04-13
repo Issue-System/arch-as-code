@@ -75,9 +75,9 @@ TDDs:
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
 functional-requirements: ( E2E steps, ACCs, ACs from P1, ACs added manually, etc. )
-    "requirement-id":  [M]
-        text: "requirement text" [M]
-        source: "some text, or link to requirement" [M]
+    "functional-requirement-id":  [M]
+        text: "functional requirement text" [M]
+        source: "some text, or link to functional requirement" [M]
     "e2e-5-step-4":  [M]
         text: "must send random xml when random button is pressed" [M]
         source: "link to e2e jira ticket? or spreadsheet containing accs/e2es?" [M]
@@ -95,7 +95,7 @@ capabilities:
         tdd-references:
             - "id" [M]
             - "id" [M]
-        requirement-references:
+        functional-requirement-references:
             - "id" [M]
             - "id" [M]
 ```
@@ -107,10 +107,10 @@ capabilities:
     - must refer to valid components  
     - must be referred to by >=1 decision (no orphan TDDs)  
  - Stories  
-    - must refer to >=1 valid requirements  
+    - must refer to >=1 valid functional requirements  
     - must refer to >=1 valid tdds  
     - all tdds must have >=1 story   
-    - all requirements must have >=1 story   
+    - all functional requirements must have >=1 story   
 
 ## How to visualize:
  - Some way to visualize the model in each branch is necessary

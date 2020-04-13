@@ -74,7 +74,7 @@ TDDs:
         text: "tdd-description" [M]
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
-requirements: ( E2E steps, ACCs )
+functional-requirements: ( E2E steps, ACCs )
     "requirement-id":  [M]
         text: "requirement text" [M]
         source: "some text, or link to requirement" [M]
@@ -89,8 +89,9 @@ capabilities:
             link: "" [M]
     feature-stories:
       - jira:
-          ticket: "" [A]
+          ticket: "" [A] (after our tool creates jira stories)
           link: "" [A]
+        story-text: "" [M]
         tdd-references:
             - "id" [M]
             - "id" [M]

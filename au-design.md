@@ -52,7 +52,7 @@ P1:
     executive-summary: "" [P1]
 useful-links: ??? (might not be necessary to duplicate from the P1)
 milestone-dependencies: ??? (might not be necessary to duplicate from the P1)
-decisions: ( ITD / IFD / SSD )
+decisions: ( ITDs, IFDs, SSDs, etc.)
     "decision-id":
         text: "" [P1] (or [M])
         TDD-references:
@@ -74,7 +74,7 @@ TDDs:
         text: "tdd-description" [M]
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
-functional-requirements: ( E2E steps, ACCs )
+functional-requirements: ( E2E steps, ACCs, ACs from P1, ACs added manually, etc. )
     "requirement-id":  [M]
         text: "requirement text" [M]
         source: "some text, or link to requirement" [M]
@@ -90,7 +90,7 @@ capabilities:
     feature-stories:
       - jira:
           ticket: "" [A] (after our tool creates jira stories)
-          link: "" [A]
+          link: "" [A] (after our tool creates jira stories)
         story-text: "" [M]
         tdd-references:
             - "id" [M]

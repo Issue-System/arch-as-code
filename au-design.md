@@ -52,29 +52,28 @@ P1:
     executive-summary: "" [P1]
 useful-links: ??? (might not be necessary to duplicate from the P1)
 milestone-dependencies: ??? (might not be necessary to duplicate from the P1)
-decisions:
-    business-decisions: ( ITD / IFD / SSD )
-        "decision-id":
-            text: "" [P1] (or [M])
-            TDD-references:
-              - "TDD-id"
-              - "TDD-id"
-        "decision-id":
-            text: "" [P1] (or [M])
-            TDD-references:
-              - "TDD-id"
-              - "TDD-id"
-    TDDs:
-        "Component-id":
-          - id: "TDD-id": [M]
-            text: "tdd-description" [M]
-          - id: "TDD-id": [M]
-            text: "tdd-description" [M]
-        "Component-id":
-          - id: "TDD-id": [M]
-            text: "tdd-description" [M]
-          - id: "TDD-id": [M]
-            text: "tdd-description" [M]
+decisions: ( ITD / IFD / SSD )
+    "decision-id":
+        text: "" [P1] (or [M])
+        TDD-references:
+          - "TDD-id"
+          - "TDD-id"
+    "decision-id":
+        text: "" [P1] (or [M])
+        TDD-references:
+          - "TDD-id"
+          - "TDD-id"
+TDDs:
+    "Component-id":
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
+    "Component-id":
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
+      - id: "TDD-id": [M]
+        text: "tdd-description" [M]
 requirements: ( E2E steps, ACCs )
     "requirement-id": 
         text: "requirement text"

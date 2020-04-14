@@ -10,7 +10,8 @@ import java.net.http.HttpResponse;
 
 public class JiraApi {
     private HttpClient client;
-    private String uri;
+    public static String JIRA_BASE_URI = "http://jira.devfactory.com/rest/api/2";
+    public static String BULK_ENDPOINT = "/issue/bulk";
 
 
     public JiraApi(HttpClient client) {
@@ -18,9 +19,24 @@ public class JiraApi {
     }
 
     public void createStory() throws IOException, InterruptedException {
-        uri = "http://www.example.com";
+        final String uri = JIRA_BASE_URI + BULK_ENDPOINT;
+        String body = "{\n" +
+                "    \"issueUpdates\": [\n" +
+                "        {\n" +
+                "            \"fields\": {\n" +
+                "                \"project\": {\n" +
+                "                    \"id\": \"43900\"\n" +
+                "                },\n" +
+                "                \"summary\": \"something's very wrong\"\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
         final HttpRequest request = HttpRequest
                 .newBuilder()
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .uri(URI.create(uri))
                 .build();
 

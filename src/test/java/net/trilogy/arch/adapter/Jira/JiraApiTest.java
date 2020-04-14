@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
@@ -53,24 +54,27 @@ public class JiraApiTest {
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         final HttpRequest requestMade = captor.getValue();
 
-        assertThat(getBody(requestMade), equalTo(body));
+        assertThat(HttpRequestParserForTests.getBody(requestMade), equalTo(body));
     }
 
-    private String getBody(HttpRequest fromHttpRequest) {
-        final HttpRequest.BodyPublisher bodyPublisherOfRequestMade = fromHttpRequest.bodyPublisher().get();
-        FlowSubscriber<ByteBuffer> flowSubscriber = new FlowSubscriber<>();
-        bodyPublisherOfRequestMade.subscribe(flowSubscriber);
-        final List<ByteBuffer> bodyItems = flowSubscriber.getBodyItems();
-        final byte[] array = bodyItems.get(0).array();
-        return new String(array);
-    }
 
     // https://stackoverflow.com/questions/59342963/how-to-test-java-net-http-java-11-requests-bodypublisher
-    private static class FlowSubscriber<T> implements Flow.Subscriber<T> {
+    private static class HttpRequestParserForTests<T> implements Flow.Subscriber<T> {
         private final CountDownLatch latch = new CountDownLatch(1);
         private List<T> bodyItems = new ArrayList<>();
 
-        public List<T> getBodyItems() {
+        public static String getBody(HttpRequest fromHttpRequest) {
+            final Optional<HttpRequest.BodyPublisher> maybeBodyPublisher = fromHttpRequest.bodyPublisher();
+            if(maybeBodyPublisher.isEmpty()) return "";
+            final HttpRequest.BodyPublisher bodyPublisherOfRequestMade = maybeBodyPublisher.get();
+            HttpRequestParserForTests<ByteBuffer> httpRequestParserForTests = new HttpRequestParserForTests<>();
+            bodyPublisherOfRequestMade.subscribe(httpRequestParserForTests);
+            final List<ByteBuffer> bodyItems = httpRequestParserForTests.getBodyItems();
+            final byte[] array = bodyItems.get(0).array();
+            return new String(array);
+        }
+
+        private List<T> getBodyItems() {
             try {
                 this.latch.await();
             } catch (InterruptedException e) {

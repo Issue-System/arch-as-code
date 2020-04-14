@@ -15,7 +15,9 @@ public class JiraApiFactory {
     @VisibleForTesting
     HttpClient createClient() {
         if (build == null) {
-            build = HttpClient.newBuilder().build();
+            build = HttpClient.newBuilder()
+                    .followRedirects(HttpClient.Redirect.NORMAL)
+                    .build();
         }
 
         return build;

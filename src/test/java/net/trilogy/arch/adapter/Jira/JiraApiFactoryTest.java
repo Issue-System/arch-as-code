@@ -34,7 +34,7 @@ public class JiraApiFactoryTest {
         assertThat(client.cookieHandler(), equalTo(Optional.empty()));
         assertThat(client.executor(), equalTo(Optional.empty()));
         assertThat(client.proxy(), equalTo(Optional.empty()));
-        assertThat(client.followRedirects(), equalTo(HttpClient.Redirect.NEVER));
+        assertThat(client.followRedirects(), equalTo(HttpClient.Redirect.NORMAL));
         assertThat(client.sslContext(), equalTo(SSLContext.getDefault()));
         assertThat(client.version(), equalTo(HttpClient.Version.HTTP_2));
     }

@@ -9,38 +9,45 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class JiraApi {
-    private HttpClient client;
     public static String JIRA_BASE_URI = "http://jira.devfactory.com/rest/api/2";
     public static String BULK_ENDPOINT = "/issue/bulk";
+    public static String JIRA_PROJECT_ID = "43900";
+    public static String ISSUE_TYPE_ID = "10000";
 
+    private HttpClient client;
 
     public JiraApi(HttpClient client) {
         this.client = client;
     }
 
-    public void createStory() throws IOException, InterruptedException {
-        final String uri = JIRA_BASE_URI + BULK_ENDPOINT;
-        String body = "{\n" +
-                "    \"issueUpdates\": [\n" +
-                "        {\n" +
-                "            \"fields\": {\n" +
-                "                \"project\": {\n" +
-                "                    \"id\": \"43900\"\n" +
-                "                },\n" +
-                "                \"summary\": \"something's very wrong\"\n" +
-                "            }\n" +
-                "        }\n" +
-                "    ]\n" +
-                "}";
-
+    public HttpResponse<String> createStory() throws IOException, InterruptedException {
         final HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .uri(URI.create(uri))
+                .POST(HttpRequest.BodyPublishers.ofString(buildBody()))
+                .uri(URI.create(JIRA_BASE_URI + BULK_ENDPOINT))
                 .build();
 
-        client.send(request, HttpResponse.BodyHandlers.ofString());
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private String buildBody() {
+        return ""
+                + "{                                                             "
+                + "  \"issueUpdates\": [                                         "
+                + "    {                                                         "
+                + "      \"fields\": {                                           "
+                + "        \"project\": {                                        "
+                + "          \"id\": \"" + JIRA_PROJECT_ID + "\"                 "
+                + "        },                                                    "
+                + "        \"issuetype\": {                                      "
+                + "          \"id\": \"" + ISSUE_TYPE_ID + "\"                   "
+                + "        }                                                     "
+                + "      }                                                       "
+                + "    }                                                         "
+                + "  ]                                                           "
+                + "}                                                             "
+                + "";
     }
 
     @VisibleForTesting

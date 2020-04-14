@@ -28,17 +28,17 @@ public class GoogleDocumentReader {
                 .milestone(jsonParser.getMilestone().orElse(""))
                 .p1(extractP1(jsonParser, url))
                 .p2(extractP2(jsonParser))
-                .requirements(extractDecisions(jsonParser))
+                .decisions(extractDecisions(jsonParser))
                 .build();
     }
 
-    private Map<Requirement.Id, Requirement> extractDecisions(GoogleDocsJsonParser jsonParser) {
-        var map = new LinkedHashMap<Requirement.Id, Requirement>();
+    private Map<Decision.Id, Decision> extractDecisions(GoogleDocsJsonParser jsonParser) {
+        var map = new LinkedHashMap<Decision.Id, Decision>();
         jsonParser.getDecisions().forEach(decisionString -> {
             String[] split = decisionString.split("-", 2);
             if (split.length == 2) {
-                var id = new Requirement.Id(split[0].trim());
-                var requirement = new Requirement(split[1].trim(), List.of(Tdd.Id.blank()));
+                var id = new Decision.Id(split[0].trim());
+                var requirement = new Decision(split[1].trim(), List.of(Tdd.Id.blank()));
                 map.put(id, requirement);
             }
         });

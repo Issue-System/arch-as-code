@@ -12,19 +12,19 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Requirement {
+public class Decision {
     private final String text;
 
     @JsonProperty(value = "tdd-references")
     private final List<Tdd.Id> tddReferences;
 
-    public Requirement(String text, List<Tdd.Id> tddReferences) {
+    public Decision(String text, List<Tdd.Id> tddReferences) {
         this.text = text;
         this.tddReferences = tddReferences;
     }
 
-    public static Requirement blank() {
-        return new Requirement("[SAMPLE REQUIREMENT TEXT]", List.of(Tdd.Id.blank()));
+    public static Decision blank() {
+        return new Decision("[SAMPLE DECISION TEXT]", List.of(Tdd.Id.blank()));
     }
 
     @Getter
@@ -36,7 +36,7 @@ public class Requirement {
         private final String id;
 
         public static Id blank() {
-            return new Id("[SAMPLE-REQUIREMENT-ID]");
+            return new Id("[SAMPLE-DECISION-ID]");
         }
     }
 }

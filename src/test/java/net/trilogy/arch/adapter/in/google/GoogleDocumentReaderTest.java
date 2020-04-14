@@ -7,7 +7,7 @@ import com.google.api.services.docs.v1.model.Document;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.Requirement;
+import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
@@ -72,11 +72,11 @@ public class GoogleDocumentReaderTest {
 
         ArchitectureUpdate result = reader.load("url");
 
-        assertThat(result.getRequirements().size(), equalTo(totalRequirementsInFile));
+        assertThat(result.getDecisions().size(), equalTo(totalRequirementsInFile));
 
         assertThat(
-                result.getRequirements(),
-                Matchers.hasEntry(new Requirement.Id(requirementId), new Requirement(requirement, List.of(Tdd.Id.blank())))
+                result.getDecisions(),
+                Matchers.hasEntry(new Decision.Id(requirementId), new Decision(requirement, List.of(Tdd.Id.blank())))
         );
     }
 
@@ -88,8 +88,8 @@ public class GoogleDocumentReaderTest {
         List<String> expected = List.of("P2 IFD 1", "P2 IFD 2", "P2 IFD 3", "P2 ITD 4", "P1 ITD 4.1", "P2 ITD 5", "P1 ITD 5.1");
 
         int count = 0;
-        for (Map.Entry<Requirement.Id, Requirement> entry : result.getRequirements().entrySet()) {
-            Requirement.Id k = entry.getKey();
+        for (Map.Entry<Decision.Id, Decision> entry : result.getDecisions().entrySet()) {
+            Decision.Id k = entry.getKey();
             assertThat(expected.get(count), equalTo(k.getId()));
             count++;
         }

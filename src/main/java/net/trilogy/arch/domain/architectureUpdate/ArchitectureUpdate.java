@@ -22,20 +22,18 @@ import java.util.Map;
         "P1",
         "useful-links",
         "milestone-dependencies",
-        "requirements",
+        "decisions",
         "TDDs",
-        "E2Es",
-        "epic"
+        "functional-requirements",
+        "capabilities"
 })
 public class ArchitectureUpdate {
     private final String name;
     private final String milestone;
     private final List<Person> authors;
     private final List<Person> PCAs;
-    private final Map<Requirement.Id, Requirement> requirements;
+    private final Map<Decision.Id, Decision> decisions;
     private final Map<Tdd.ComponentReference, List<Tdd>> TDDs;
-    private final List<String> E2Es;
-    private final Epic epic;
 
     @JsonProperty(value = "P2")
     private final P2 p2;
@@ -49,16 +47,33 @@ public class ArchitectureUpdate {
     @JsonProperty(value = "milestone-dependencies")
     private final List<MilestoneDependency> milestoneDependencies;
 
+    @JsonProperty(value = "functional-requirements")
+    private final Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements;
+
+    @JsonProperty(value = "capabilities")
+    private final CapabilitiesContainer capabilityContainer;
+
     @Builder
-    public ArchitectureUpdate(String name, String milestone, List<Person> authors, List<Person> PCAs, Map<Requirement.Id, Requirement> requirements, Map<Tdd.ComponentReference, List<Tdd>> TDDs, List<String> E2Es, Epic epic, P2 p2, P1 p1, List<Link> usefulLinks, List<MilestoneDependency> milestoneDependencies) {
+    public ArchitectureUpdate(String name,
+                              String milestone,
+                              List<Person> authors,
+                              List<Person> PCAs,
+                              Map<Decision.Id, Decision> decisions,
+                              Map<Tdd.ComponentReference, List<Tdd>> TDDs,
+                              Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements,
+                              CapabilitiesContainer capabilityContainer,
+                              P2 p2,
+                              P1 p1,
+                              List<Link> usefulLinks,
+                              List<MilestoneDependency> milestoneDependencies) {
         this.name = name;
         this.milestone = milestone;
         this.authors = authors;
         this.PCAs = PCAs;
-        this.requirements = requirements;
+        this.decisions = decisions;
         this.TDDs = TDDs;
-        this.E2Es = E2Es;
-        this.epic = epic;
+        this.functionalRequirements = functionalRequirements;
+        this.capabilityContainer = capabilityContainer;
         this.p2 = p2;
         this.p1 = p1;
         this.usefulLinks = usefulLinks;
@@ -71,10 +86,10 @@ public class ArchitectureUpdate {
                 .milestone("[SAMPLE MILESTONE]")
                 .authors(List.of(Person.blank()))
                 .PCAs(List.of(Person.blank()))
-                .requirements(Map.of(Requirement.Id.blank(), Requirement.blank()))
+                .decisions(Map.of(Decision.Id.blank(), Decision.blank()))
                 .TDDs(Map.of(Tdd.ComponentReference.blank(), List.of(Tdd.blank())))
-                .E2Es(List.of("[SAMPLE E2E]"))
-                .epic(Epic.blank())
+                .functionalRequirements(Map.of(FunctionalRequirement.Id.blank(), FunctionalRequirement.blank()))
+                .capabilityContainer(CapabilitiesContainer.blank())
                 .p2(P2.blank())
                 .p1(P1.blank())
                 .usefulLinks(List.of(Link.blank()))

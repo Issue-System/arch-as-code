@@ -1,7 +1,7 @@
 # Architecture Update Design
 
 ## Driving idea:
-An AU is defined as it's own branch of the arch-as-code workspace that contains a yaml documenting that AU, and has updates to the model.
+An AU is defined as its own branch of the arch-as-code workspace that contains a yaml documenting that AU, and has updates to the model.
 
 ## Key:
 ```

@@ -244,7 +244,11 @@ public class WorkspaceReader {
             result.setBusinessUnit(enterprise.getName());
         }
 
-        result.setDescription(workspace.getDescription());
+        String description = workspace.getDescription();
+        if (description == null) {
+            description = "";
+        }
+        result.setDescription(description);
         return result;
     }
 

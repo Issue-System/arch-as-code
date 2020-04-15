@@ -1,0 +1,33 @@
+{
+    "id": 53436,
+    "name": "Workspace 53436",
+    "revision": 1,
+    "lastModifiedDate": "2020-04-15T17:17:43Z",
+    "model": {
+        "softwareSystems": [],
+        "people": [],
+        "deploymentNodes": []
+    },
+    "documentation": {
+        "sections": [],
+        "decisions": [],
+        "images": []
+    },
+    "views": {
+        "configuration": {
+            "branding": {},
+            "styles": {
+                "elements": [],
+                "relationships": []
+            },
+            "terminology": {}
+        },
+        "systemLandscapeViews": [],
+        "systemContextViews": [],
+        "containerViews": [],
+        "componentViews": [],
+        "dynamicViews": [],
+        "deploymentViews": [],
+        "filteredViews": []
+    }
+}

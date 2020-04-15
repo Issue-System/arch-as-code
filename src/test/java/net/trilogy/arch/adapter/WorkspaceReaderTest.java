@@ -23,6 +23,14 @@ import static org.hamcrest.Matchers.*;
 public class WorkspaceReaderTest {
 
     @Test
+    public void shouldHaveValidDescription() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_EMPTY);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+
+        assertThat(dataStructure.getDescription(), equalTo(""));
+    }
+
+    @Test
     public void shouldReadComponent() throws Exception {
         // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
         URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);

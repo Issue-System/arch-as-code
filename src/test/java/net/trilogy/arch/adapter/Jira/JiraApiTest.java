@@ -17,11 +17,9 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import static net.trilogy.arch.adapter.Jira.JiraApi.BULK_ENDPOINT;
-import static net.trilogy.arch.adapter.Jira.JiraApi.ISSUE_TYPE_ID;
-import static net.trilogy.arch.adapter.Jira.JiraApi.JIRA_BASE_URI;
-import static net.trilogy.arch.adapter.Jira.JiraApi.JIRA_PROJECT_ID;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -37,39 +35,27 @@ public class JiraApiTest {
         jiraApi = new JiraApi(mockHttpClient);
     }
 
-    @Test
-    public void shouldUseCorrectConstants() {
-        assertThat(JIRA_BASE_URI, equalTo("http://jira.devfactory.com/rest/api/2"));
-        assertThat(BULK_ENDPOINT, equalTo("/issue/bulk"));
-        assertThat(JIRA_PROJECT_ID, equalTo("43900"));
-        assertThat(ISSUE_TYPE_ID, equalTo("10000"));
-    }
-
+    // TODO: WIP
+    @Ignore("This is WIP.")
     @Test
     public void shouldCreateStory() throws IOException, InterruptedException {
         jiraApi.createStory();
 
-        String uri = "http://jira.devfactory.com/rest/api/2/issue/bulk";
-        String body = ""
-                + "{                                                          "
-                + "    \"issueUpdates\": [                                    "
-                + "        {                                                  "
-                + "            \"fields\": {                                  "
-                + "                \"project\": {                             "
-                + "                    \"id\":\"43900\"                       "
-                + "                },                                         "
-                + "                \"issuetype\": {                           "
-                + "                    \"id\":\"10000\"                       "
-                + "                }                                          "
-                + "            }                                              "
-                + "        }                                                  "
-                + "    ]                                                      "
-                + "}                                                          "
-                + "";
+        String uri = "";
+        String body = "";
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         final HttpRequest requestMade = captor.getValue();
+
+        assertThat(
+                String.join(", ", requestMade.headers().allValues("Authorization")),
+                containsString("Basic")
+        );
+        assertThat(
+                requestMade.headers().allValues("Content-Type"),
+                contains("application/json")
+        );
 
         assertThat(
                 HttpRequestParserForTests.getBody(requestMade).replaceAll(" ", ""),

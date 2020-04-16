@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.model.DeploymentNode;
 import com.structurizr.model.Model;
 import com.structurizr.model.SoftwareSystem;
+import com.structurizr.view.AutomaticLayout;
 import com.structurizr.view.DeploymentView;
 import com.structurizr.view.ViewSet;
 import lombok.NonNull;
@@ -29,7 +30,7 @@ public class DeploymentViewEnhancer implements WorkspaceEnhancer {
         views.forEach(c4DeploymentView -> {
             DeploymentView view = createView(workspace, dataStructureModel, c4DeploymentView);
             addDeploymentNode(workspace.getModel(), dataStructure, view, c4DeploymentView);
-            view.setAutomaticLayout(true);
+            view.setAutomaticLayout(AutomaticLayout.RankDirection.TopBottom, 100, 100, 50, true);
         });
     }
 

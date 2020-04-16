@@ -84,7 +84,7 @@ functional-requirements: ( E2E steps, ACCs, ACs from P1, ACs added manually, etc
 capabilities:
     epic:
         title: "" [M]
-        jira:
+        jira:               (Potential improvement: automatically create)
             ticket: "" [M]
             link: "" [M]
     feature-stories:
@@ -101,16 +101,18 @@ capabilities:
 ```
 
 ## Things to validate:
+(KEY: E for Error, W for Warning)   
  - Decisions  
-    - must have >=1 TDD  
+   E- must have >=1 TDD  
  - TDDs  
-    - must refer to valid components  
-    - must be referred to by >=1 decision (no orphan TDDs)  
+   E- must refer to valid components  
+   E- must be referred to by >=1 decision (no orphan TDDs)  
  - Stories  
-    - must refer to >=1 valid functional requirements  
-    - must refer to >=1 valid tdds  
-    - all tdds must have >=1 story   
-    - all functional requirements must have >=1 story   
+   E- must refer to >=1 valid functional requirements  
+   E- must refer to >=1 valid tdds  
+   E- all tdds must have >=1 story   
+   E- all functional requirements must have >=1 story   
+   W- check for duplicate stories (both stories have same TDDs and requirements)
 
 ## How to visualize:
  - Some way to visualize the model in each branch is necessary

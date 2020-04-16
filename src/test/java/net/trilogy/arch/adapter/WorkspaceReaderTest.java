@@ -136,4 +136,23 @@ public class WorkspaceReaderTest {
         assertThat(actual, is(equalTo(expected)));
     }
 
+    @Test
+    public void shouldReadDeploymentViewWithNoSystem() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_NO_SYSTEM);
+        final String key = "test";
+
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+        C4DeploymentView actual = dataStructure.getViews().getDeploymentViews().stream()
+                .filter(v -> v.getKey().equals(key)).findAny().get();
+
+        C4DeploymentView expected = new C4DeploymentView().builder()
+                .key(key)
+                .environment("Default")
+                .description("")
+                .name("Deployment - Default")
+                .references(Set.of(new C4Reference("1", null)))
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
 }

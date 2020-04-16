@@ -15,7 +15,7 @@ public class C4DeploymentView extends C4View {
     private String environment;
 
     @Builder
-    public C4DeploymentView(String key, String name, @NonNull String description, Set<C4Tag> tags, Set<C4Reference> references, C4Reference system, String environment) {
+    public C4DeploymentView(String key, String name, String description, Set<C4Tag> tags, Set<C4Reference> references, C4Reference system, String environment) {
         super(key, name, description, tags, references);
         this.system = system;
         this.environment = environment;

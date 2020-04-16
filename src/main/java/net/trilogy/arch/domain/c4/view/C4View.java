@@ -18,11 +18,11 @@ import static java.util.Collections.emptySet;
 public abstract class C4View {
     private String key;
     private String name;
-    @NonNull
     private String description;
     private Set<C4Tag> tags = emptySet();
     private Set<C4Reference> references = emptySet();
 
+    // description is never null, write test
     public String getKey() {
         return Optional.ofNullable(key).orElse(getName() + "-" + getDescription());
     }

@@ -104,12 +104,17 @@ public class WorkspaceReader {
                             .map(d -> new C4Reference(d.getId(), null))
                             .collect(toSet());
 
+                    C4Reference systemRef = null;
+                    if (deploymentView.getSoftwareSystem() != null) {
+                        systemRef = new C4Reference(deploymentView.getSoftwareSystem().getId(), null);
+                    }
+
                     return C4DeploymentView.builder()
                             .key(deploymentView.getKey())
                             .name(deploymentView.getName())
                             .description(deploymentView.getDescription())
                             .environment(deploymentView.getEnvironment())
-                            .system(new C4Reference(deploymentView.getSoftwareSystem().getId(), null))
+                            .system(systemRef)
                             .references(references)
                             .build();
                 })

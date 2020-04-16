@@ -72,7 +72,6 @@ public class C4Model {
     }
 
     public C4Model addDeploymentNode(C4DeploymentNode deploymentNode) {
-        checkArgument(!deploymentNodeWithNameExists(deploymentNode), format("DeploymentNode with name '%s' already exists.", deploymentNode.getName()));
         deploymentNodes.add(deploymentNode);
 
         return this;

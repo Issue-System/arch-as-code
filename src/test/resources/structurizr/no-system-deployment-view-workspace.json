@@ -1,0 +1,115 @@
+{
+    "id": 53439,
+    "name": "Workspace 53439",
+    "description": "Deployment View.",
+    "revision": 5,
+    "lastModifiedDate": "2020-04-15T19:20:07Z",
+    "lastModifiedUser": "nsavic@thoughtworks.com",
+    "lastModifiedAgent": "structurizr-web/1847",
+    "model": {
+        "softwareSystems": [
+            {
+                "id": "2",
+                "tags": "Element,Software System",
+                "name": "BigSystem",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "3",
+                        "tags": "Element,Container",
+                        "name": "Database"
+                    }
+                ]
+            },
+            {
+                "id": "5",
+                "tags": "Element,Software System",
+                "name": "LittleSystem",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "6",
+                        "tags": "Element,Container",
+                        "name": "API"
+                    }
+                ]
+            }
+        ],
+        "deploymentNodes": [
+            {
+                "id": "1",
+                "tags": "Element,Deployment Node",
+                "name": "test",
+                "environment": "Default",
+                "instances": 1,
+                "containerInstances": [
+                    {
+                        "id": "4",
+                        "tags": "Container Instance",
+                        "environment": "Default",
+                        "containerId": "3",
+                        "instanceId": 1,
+                        "properties": {}
+                    },
+                    {
+                        "id": "7",
+                        "tags": "Container Instance",
+                        "environment": "Default",
+                        "containerId": "6",
+                        "instanceId": 1,
+                        "properties": {}
+                    }
+                ],
+                "children": []
+            }
+        ],
+        "people": []
+    },
+    "documentation": {
+        "sections": [],
+        "decisions": [],
+        "images": []
+    },
+    "views": {
+        "deploymentViews": [
+            {
+                "key": "test",
+                "paperSize": "A5_Landscape",
+                "environment": "Default",
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "4",
+                        "x": 275,
+                        "y": 615
+                    },
+                    {
+                        "id": "7",
+                        "x": 280,
+                        "y": 220
+                    }
+                ],
+                "relationships": []
+            }
+        ],
+        "configuration": {
+            "branding": {},
+            "styles": {
+                "elements": [],
+                "relationships": []
+            },
+            "terminology": {},
+            "lastSavedView": "test"
+        },
+        "systemLandscapeViews": [],
+        "systemContextViews": [],
+        "containerViews": [],
+        "componentViews": [],
+        "dynamicViews": [],
+        "filteredViews": []
+    }
+}

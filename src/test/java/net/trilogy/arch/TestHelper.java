@@ -22,6 +22,7 @@ public abstract class TestHelper {
     public static String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/BigBank.json";
     public static String JSON_STRUCTURIZR_THINK3_SOCOCO = "/structurizr/Think3-Sococo.c4model.json";
     public static String JSON_STRUCTURIZR_EMPTY = "/structurizr/empty-workspace.json";
+    public static String JSON_STRUCTURIZR_NO_SYSTEM = "/structurizr/no-system-deployment-view-workspace.json";
 
     public static String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";

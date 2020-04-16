@@ -5,12 +5,25 @@ import net.trilogy.arch.commands.ValidateCommand;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 public class ValidateCommandE2ETest {
+
+    @Test
+    public void shouldBeOkayWithMostlyEmptyImportedJson() throws Exception {
+        String jsonPath = getClass().getResource(TestHelper.JSON_STRUCTURIZR_NO_SYSTEM).getPath();
+        Path root = Files.createTempDirectory("aac").toAbsolutePath();
+
+        TestHelper.execute("import", jsonPath, root.toString());
+
+        int status = TestHelper.execute("validate", root.toString());
+        assertThat(status, equalTo(0));
+    }
 
     @Test
     public void validate() throws Exception {

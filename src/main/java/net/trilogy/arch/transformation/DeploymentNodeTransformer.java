@@ -28,7 +28,7 @@ public class DeploymentNodeTransformer {
             containerInstances.forEach(instance -> {
                 String containerId = c4Model.findEntityByReference(instance.getContainerReference()).getId();
                 idGenerator.setNext(instance.getId());
-                idGenerator.setDefaultForRelationships((r) -> r.getSourceId() + "->" + r.getDestinationId() + " " + UUID.randomUUID().toString());
+                setIdGeneratorToHandleRelationships(idGenerator);
                 deploymentNode.add((Container) Objects.requireNonNull(model.getElement(containerId)));
                 idGenerator.clearDefaultForRelationships();
             });
@@ -48,6 +48,17 @@ public class DeploymentNodeTransformer {
                 addChildren(model, c4Model, addedDeploymentNode, child, idGenerator);
             });
         }
+    }
+
+    private static void setIdGeneratorToHandleRelationships(FunctionalIdGenerator idGenerator) {
+        Map<String, Integer> idCounts = new HashMap<>();
+        idGenerator.setDefaultForRelationships((r) -> {
+            String base = r.getSourceId() + "->" + r.getDestinationId();
+            Integer count = idCounts.getOrDefault(base, 1);
+            String id = base + ":" + count++;
+            idCounts.put(base, count);
+            return id;
+        });
     }
 
     public static C4DeploymentNode toC4(DeploymentNode node) {

@@ -20,11 +20,10 @@ import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -32,6 +31,7 @@ import static net.trilogy.arch.domain.c4.C4Location.INTERNAL;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertNotNull;
 
 public class ArchitectureDataStructureTransformerTest {
@@ -39,12 +39,26 @@ public class ArchitectureDataStructureTransformerTest {
     private static final String PRODUCT_DESCRIPTION = "TestSpaces is a tool!";
 
     @Test
-    public void should_transform_a_json_with_tricky_deployment_node_scopes() throws Exception {
-        // NOTE: we need a documentationRoot to initialize the transformer. It does not actually matter for this test.
-        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
-        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
+    public void shouldHandleMultipleRelationshipsWithSameSouceAndDestination() throws Exception {
+        ArchitectureDataStructureTransformer transformer = getTransformer(TestHelper.ROOT_PATH_TO_TEST_VIEWS);
+        File structurizrJson = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_MULTIPLE_RELATIONSHIPS).getPath());
+        ArchitectureDataStructure ourYaml = new WorkspaceReader().load(structurizrJson);
 
+        Workspace exportedJson = transformer.toWorkSpace(ourYaml);
+
+        List<String> relationshipIds = exportedJson.getModel().getRelationships().stream().map(rel -> rel.getId()).sorted().collect(Collectors.toList());
+
+        System.out.println(exportedJson.getModel().getRelationships());
+
+        System.out.println(relationshipIds);
+
+        assertThat(relationshipIds, contains("10", "6->7:1", "6->7:2", "8"));
+    }
+
+    @Test
+    public void should_transform_a_json_with_tricky_deployment_node_scopes() throws Exception {
         // given
+        ArchitectureDataStructureTransformer transformer = getTransformer(TestHelper.ROOT_PATH_TO_TEST_VIEWS);
         File jsonFromStructurizr = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_TRICKY_DEPLOYMENT_NODE_SCOPES).getPath());
         ArchitectureDataStructure ourDataStructure = new WorkspaceReader().load(jsonFromStructurizr);
 
@@ -53,6 +67,11 @@ public class ArchitectureDataStructureTransformerTest {
 
         // then
         assertThat(workspace.getModel().getDeploymentNodes().size(), equalTo(3));
+    }
+
+    private ArchitectureDataStructureTransformer getTransformer(String rootPathToTestViews) {
+        File documentationRoot = new File(getClass().getResource(rootPathToTestViews).getPath());
+        return TransformerFactory.create(documentationRoot);
     }
 
     @Test
@@ -125,8 +144,7 @@ public class ArchitectureDataStructureTransformerTest {
                         .decisions(ImmutableList.of(new ImportantTechnicalDecision("1", new Date(), "title", statusString, "content")))
                         .build();
 
-        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
-        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
+        ArchitectureDataStructureTransformer transformer = getTransformer(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION);
         Workspace workspace = transformer.toWorkSpace(dataStructure);
 
         ArrayList<Decision> decisions = new ArrayList<>(workspace.getDocumentation().getDecisions());

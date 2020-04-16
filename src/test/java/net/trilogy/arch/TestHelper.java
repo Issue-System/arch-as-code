@@ -24,6 +24,7 @@ public abstract class TestHelper {
     public static String JSON_STRUCTURIZR_EMPTY = "/structurizr/empty-workspace.json";
     public static String JSON_STRUCTURIZR_NO_SYSTEM = "/structurizr/no-system-deployment-view-workspace.json";
     public static String JSON_STRUCTURIZR_TRICKY_DEPLOYMENT_NODE_SCOPES = "/structurizr/deployment-node-scopes.json";
+    public static String JSON_STRUCTURIZR_MULTIPLE_RELATIONSHIPS = "/structurizr/multiple-relationships-with-same-source-and-destination.json";
 
     public static String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";

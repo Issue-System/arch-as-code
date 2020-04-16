@@ -28,14 +28,13 @@ public class SchemaValidationTest {
     }
 
     @Test
-    public void validate_missing_system() throws Exception {
+    public void validate_missing_name_and_description() throws Exception {
         Set<ValidationMessage> validationMessageSet = getSchemaValidationMessages("missingMetadata.yml");
 
         assertThat(validationMessageSet.stream().map(ValidationMessage::getMessage).collect(Collectors.toList()),
                 containsInAnyOrder(
                         "$.name: null found, string expected",
-                        "$.description: is missing but it is required",
-                        "$.businessUnit: is missing but it is required"
+                        "$.description: is missing but it is required"
                 ));
     }
 

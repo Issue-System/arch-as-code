@@ -1,0 +1,128 @@
+{
+    "id": 53483,
+    "name": "Workspace 53483",
+    "description": "An empty workspace.",
+    "revision": 2,
+    "lastModifiedDate": "2020-04-16T21:17:43Z",
+    "lastModifiedUser": "yogesh.dhamija@thoughtworks.com",
+    "lastModifiedAgent": "structurizr-web/1848",
+    "model": {
+        "softwareSystems": [
+            {
+                "id": "3",
+                "tags": "Element,Software System",
+                "name": "System",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "4",
+                        "tags": "Element,Container",
+                        "name": "Container A",
+                        "relationships": [
+                            {
+                                "id": "10",
+                                "tags": "Relationship",
+                                "sourceId": "4",
+                                "destinationId": "5",
+                                "description": "Relationship 2",
+                                "interactionStyle": "Synchronous"
+                            },
+                            {
+                                "id": "8",
+                                "tags": "Relationship",
+                                "sourceId": "4",
+                                "destinationId": "5",
+                                "description": "Relationship 1",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5",
+                        "tags": "Element,Container",
+                        "name": "Container B"
+                    }
+                ]
+            }
+        ],
+        "deploymentNodes": [
+            {
+                "id": "1",
+                "tags": "Element,Deployment Node",
+                "name": "Node A",
+                "environment": "Default",
+                "instances": 1,
+                "containerInstances": [
+                    {
+                        "id": "6",
+                        "tags": "Container Instance",
+                        "relationships": [
+                            {
+                                "id": "9",
+                                "sourceId": "6",
+                                "destinationId": "7",
+                                "description": "Relationship 1",
+                                "interactionStyle": "Synchronous",
+                                "linkedRelationshipId": "8"
+                            },
+                            {
+                                "id": "11",
+                                "sourceId": "6",
+                                "destinationId": "7",
+                                "description": "Relationship 2",
+                                "interactionStyle": "Synchronous",
+                                "linkedRelationshipId": "10"
+                            }
+                        ],
+                        "environment": "Default",
+                        "containerId": "4",
+                        "instanceId": 1,
+                        "properties": {}
+                    }
+                ],
+                "children": []
+            },
+            {
+                "id": "2",
+                "tags": "Element,Deployment Node",
+                "name": "Node B",
+                "environment": "Default",
+                "instances": 1,
+                "containerInstances": [
+                    {
+                        "id": "7",
+                        "tags": "Container Instance",
+                        "environment": "Default",
+                        "containerId": "5",
+                        "instanceId": 1,
+                        "properties": {}
+                    }
+                ],
+                "children": []
+            }
+        ],
+        "people": []
+    },
+    "documentation": {
+        "sections": [],
+        "decisions": [],
+        "images": []
+    },
+    "views": {
+        "configuration": {
+            "branding": {},
+            "styles": {
+                "elements": [],
+                "relationships": []
+            },
+            "terminology": {}
+        },
+        "systemLandscapeViews": [],
+        "systemContextViews": [],
+        "containerViews": [],
+        "componentViews": [],
+        "dynamicViews": [],
+        "deploymentViews": [],
+        "filteredViews": []
+    }
+}

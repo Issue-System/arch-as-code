@@ -3,7 +3,11 @@ package net.trilogy.arch.integration;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.structurizr.Workspace;
-import com.structurizr.view.*;
+import com.structurizr.view.ComponentView;
+import com.structurizr.view.ContainerView;
+import com.structurizr.view.DeploymentView;
+import com.structurizr.view.RelationshipView;
+import com.structurizr.view.SystemContextView;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -97,9 +101,9 @@ public class ParsedYamlToViewIntegrationTest {
 
         assertThat(relationships.stream().map(r -> r.getId()).collect(Collectors.toList()),
                 containsInAnyOrder(
-                        "58->60",
-                        "60->57",
-                        "57->53")
+                        "58->60:1",
+                        "60->57:1",
+                        "57->53:1")
         );
         assertThat(elementNames,
                 containsInAnyOrder("Apache Tomcat",

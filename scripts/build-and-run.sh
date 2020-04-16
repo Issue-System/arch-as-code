@@ -6,6 +6,7 @@ then
     echo " - run ./gradlew clean"
     echo " - run ./gradlew distZip"
     echo " - create a demo folder where it's easy to execute the binary"
+    echo " - that folder will be as if `init` and `au init` had already been run"
 else
     COPY_INITIALIZE_FROM=$1
 
@@ -29,6 +30,8 @@ else
 
     mkdir demo-folder
     cd demo-folder
+    mkdir architecture-updates
+    touch data-structure.yml
 
     # copy .arch-as-code from repo root
     cp -r $dir/../.arch-as-code .

@@ -2,11 +2,26 @@
     "id": 49344,
     "name": "Hello World!!!",
     "description": "Architecture as code",
-    "revision": 6702,
-    "lastModifiedDate": "2020-04-16T17:53:12Z",
+    "revision": 6704,
+    "lastModifiedDate": "2020-04-16T18:44:37Z",
     "lastModifiedUser": "yogesh.dhamija@thoughtworks.com",
     "lastModifiedAgent": "structurizr-web/1848",
     "model": {
+        "softwareSystems": [
+            {
+                "id": "4",
+                "tags": "Element,Software System",
+                "name": "softwareSystem",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "5",
+                        "tags": "Element,Container",
+                        "name": "container"
+                    }
+                ]
+            }
+        ],
         "deploymentNodes": [
             {
                 "id": "1",
@@ -14,8 +29,17 @@
                 "name": "TEST",
                 "environment": "A",
                 "instances": 1,
-                "children": [],
-                "containerInstances": []
+                "containerInstances": [
+                    {
+                        "id": "8",
+                        "tags": "Container Instance",
+                        "environment": "A",
+                        "containerId": "5",
+                        "instanceId": 1,
+                        "properties": {}
+                    }
+                ],
+                "children": []
             },
             {
                 "id": "2",
@@ -32,11 +56,19 @@
                 "name": "TEST",
                 "environment": "Default",
                 "instances": 1,
-                "children": [],
-                "containerInstances": []
+                "containerInstances": [
+                    {
+                        "id": "9",
+                        "tags": "Container Instance",
+                        "environment": "Default",
+                        "containerId": "5",
+                        "instanceId": 1,
+                        "properties": {}
+                    }
+                ],
+                "children": []
             }
         ],
-        "softwareSystems": [],
         "people": []
     },
     "documentation": {
@@ -49,6 +81,7 @@
             {
                 "description": "The system landscape diagram for the entire org",
                 "key": "SystemLandscape",
+                "paperSize": "A2_Landscape",
                 "automaticLayout": {
                     "rankDirection": "TopBottom",
                     "rankSeparation": 300,
@@ -60,6 +93,26 @@
                 "elements": [],
                 "relationships": [],
                 "animations": []
+            }
+        ],
+        "deploymentViews": [
+            {
+                "key": "deploymentViewNumber1",
+                "paperSize": "A5_Landscape",
+                "environment": "A",
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "8",
+                        "x": 520,
+                        "y": 485
+                    }
+                ],
+                "relationships": []
             }
         ],
         "configuration": {
@@ -86,13 +139,12 @@
                 "relationships": []
             },
             "terminology": {},
-            "lastSavedView": "QAAutoDeployment"
+            "lastSavedView": "deploymentViewNumber1"
         },
         "systemContextViews": [],
         "containerViews": [],
         "componentViews": [],
         "dynamicViews": [],
-        "deploymentViews": [],
         "filteredViews": []
     }
 }

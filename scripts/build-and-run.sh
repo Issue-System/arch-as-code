@@ -6,8 +6,6 @@ then
     echo " - run ./gradlew clean"
     echo " - run ./gradlew distZip"
     echo " - create a demo folder where it's easy to execute the binary"
-    echo ""
-    echo "Note that you can use 'cd -' from within the demo folder to go back to the repo root."
 else
     COPY_INITIALIZE_FROM=$1
 
@@ -16,8 +14,6 @@ else
     dir="$(cd "$(dirname "$d")" && pwd)/$(basename "$d")"
     cd "$dir"
     cd ..
-
-    pwd
 
     # remove existing
     ./gradlew clean
@@ -34,14 +30,14 @@ else
     mkdir demo-folder
     cd demo-folder
 
-    # make the `cd -` command happy by going to repo root and back
-    cur=$(pwd -P)
-    cd "$dir"
-    cd ..
-    cd "$cur"
-
     # copy .arch-as-code from repo root
     cp -r $dir/../.arch-as-code .
 
-    echo "\n\nExecutable can be run with: ../arch-as-code"
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo "Demo folder created. To cd there, run:"
+    echo "   cd $(pwd)"
+    echo "In there, executable can be run with: ../arch-as-code"
 fi

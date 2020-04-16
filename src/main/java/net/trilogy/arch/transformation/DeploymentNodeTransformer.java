@@ -17,7 +17,7 @@ import java.util.*;
 public class DeploymentNodeTransformer {
     static public DeploymentNode addDeploymentNodeFromC4ToModel(C4DeploymentNode node, C4Model c4Model, Model model, FunctionalIdGenerator idGenerator) {
         idGenerator.setNext(node.getId());
-        DeploymentNode deploymentNode = model.addDeploymentNode(node.getName(), node.getDescription(), node.getTechnology(), node.getInstances());
+        DeploymentNode deploymentNode = model.addDeploymentNode(node.getEnvironment(), node.getName(), node.getDescription(), node.getTechnology(), node.getInstances());
         addChildren(model, c4Model, deploymentNode, node, idGenerator);
         return deploymentNode;
     }

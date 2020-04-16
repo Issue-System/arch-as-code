@@ -10,6 +10,7 @@ import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.in.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.C4Model;
@@ -20,6 +21,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -34,6 +37,23 @@ import static org.junit.Assert.assertNotNull;
 public class ArchitectureDataStructureTransformerTest {
     private static final String PRODUCT_NAME = "TestSpaces";
     private static final String PRODUCT_DESCRIPTION = "TestSpaces is a tool!";
+
+    @Test
+    public void should_transform_a_json_with_tricky_deployment_node_scopes() throws Exception {
+        // NOTE: we need a documentationRoot to initialize the transformer. It does not actually matter for this test.
+        File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
+        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
+
+        // given
+        File jsonFromStructurizr = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_TRICKY_DEPLOYMENT_NODE_SCOPES).getPath());
+        ArchitectureDataStructure ourDataStructure = new WorkspaceReader().load(jsonFromStructurizr);
+
+        // when
+        Workspace workspace = transformer.toWorkSpace(ourDataStructure);
+
+        // then
+        assertThat(workspace.getModel().getDeploymentNodes().size(), equalTo(3));
+    }
 
     @Test
     public void should_transform_architecture_yaml_to_structurizr_workspace() throws Exception {

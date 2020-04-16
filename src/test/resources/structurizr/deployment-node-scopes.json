@@ -1,0 +1,98 @@
+{
+    "id": 49344,
+    "name": "Hello World!!!",
+    "description": "Architecture as code",
+    "revision": 6702,
+    "lastModifiedDate": "2020-04-16T17:53:12Z",
+    "lastModifiedUser": "yogesh.dhamija@thoughtworks.com",
+    "lastModifiedAgent": "structurizr-web/1848",
+    "model": {
+        "deploymentNodes": [
+            {
+                "id": "1",
+                "tags": "Element,Deployment Node",
+                "name": "TEST",
+                "environment": "A",
+                "instances": 1,
+                "children": [],
+                "containerInstances": []
+            },
+            {
+                "id": "2",
+                "tags": "Element,Deployment Node",
+                "name": "TEST",
+                "environment": "B",
+                "instances": 1,
+                "children": [],
+                "containerInstances": []
+            },
+            {
+                "id": "3",
+                "tags": "Element,Deployment Node",
+                "name": "TEST",
+                "environment": "Default",
+                "instances": 1,
+                "children": [],
+                "containerInstances": []
+            }
+        ],
+        "softwareSystems": [],
+        "people": []
+    },
+    "documentation": {
+        "sections": [],
+        "decisions": [],
+        "images": []
+    },
+    "views": {
+        "systemLandscapeViews": [
+            {
+                "description": "The system landscape diagram for the entire org",
+                "key": "SystemLandscape",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "enterpriseBoundaryVisible": true,
+                "elements": [],
+                "relationships": [],
+                "animations": []
+            }
+        ],
+        "configuration": {
+            "branding": {},
+            "styles": {
+                "elements": [
+                    {
+                        "tag": "Software System",
+                        "background": "#1168bd",
+                        "color": "#ffffff"
+                    },
+                    {
+                        "tag": "Person",
+                        "background": "#08427b",
+                        "color": "#ffffff",
+                        "shape": "Person"
+                    },
+                    {
+                        "tag": "Container",
+                        "background": "#73f275",
+                        "color": "#ffffff"
+                    }
+                ],
+                "relationships": []
+            },
+            "terminology": {},
+            "lastSavedView": "QAAutoDeployment"
+        },
+        "systemContextViews": [],
+        "containerViews": [],
+        "componentViews": [],
+        "dynamicViews": [],
+        "deploymentViews": [],
+        "filteredViews": []
+    }
+}

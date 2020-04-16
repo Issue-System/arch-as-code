@@ -33,7 +33,7 @@ else
     mkdir demo-folder
     cd demo-folder
 
-    if [ -z "$COPY_INITIALIZE_FROM" ]
+    if [[ -z "$COPY_INITIALIZE_FROM" ]]
     then
     else
         cp -r "$COPY_INITIALIZE_FROM/.arch-as-code" .

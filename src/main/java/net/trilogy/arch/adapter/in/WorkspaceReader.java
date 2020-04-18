@@ -1,27 +1,73 @@
 package net.trilogy.arch.adapter.in;
 
 import com.structurizr.Workspace;
-import com.structurizr.model.*;
+import com.structurizr.model.Container;
+import com.structurizr.model.Element;
+import com.structurizr.model.Enterprise;
+import com.structurizr.model.Location;
+import com.structurizr.model.Model;
+import com.structurizr.model.Person;
+import com.structurizr.model.Relationship;
+import com.structurizr.model.SoftwareSystem;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.StaticView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.c4.*;
-import net.trilogy.arch.domain.c4.view.*;
+import net.trilogy.arch.domain.c4.C4Action;
+import net.trilogy.arch.domain.c4.C4Component;
+import net.trilogy.arch.domain.c4.C4Container;
+import net.trilogy.arch.domain.c4.C4DeploymentNode;
+import net.trilogy.arch.domain.c4.C4Location;
+import net.trilogy.arch.domain.c4.C4Model;
+import net.trilogy.arch.domain.c4.C4Path;
+import net.trilogy.arch.domain.c4.C4Person;
+import net.trilogy.arch.domain.c4.C4Reference;
+import net.trilogy.arch.domain.c4.C4Relationship;
+import net.trilogy.arch.domain.c4.C4SoftwareSystem;
+import net.trilogy.arch.domain.c4.C4Tag;
+import net.trilogy.arch.domain.c4.view.C4ComponentView;
+import net.trilogy.arch.domain.c4.view.C4ContainerView;
+import net.trilogy.arch.domain.c4.view.C4DeploymentView;
+import net.trilogy.arch.domain.c4.view.C4SystemView;
+import net.trilogy.arch.domain.c4.view.C4View;
+import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
+import org.sqlite.JDBC;
+import org.sqlite.SQLiteConnection;
 
 import java.io.File;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static net.trilogy.arch.domain.c4.C4Action.*;
+import static net.trilogy.arch.domain.c4.C4Action.DELIVERS;
+import static net.trilogy.arch.domain.c4.C4Action.INTERACTS_WITH;
+import static net.trilogy.arch.domain.c4.C4Action.USES;
 import static net.trilogy.arch.domain.c4.C4Path.buildPath;
 
 public class WorkspaceReader {
+
+    public void loadSql(File workspaceFile) throws Exception {
+        System.out.println("\n\n*******************\n\n");
+        Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(workspaceFile);
+        SQLiteConnection connection = JDBC.createConnection("jdbc:sqlite::memory:", new Properties());
+        connection.createStatement().executeUpdate("CREATE TABLE abcd (id INTEGER NOT NULL, first VARCHAR(255), PRIMARY KEY (id))");
+        connection.createStatement().executeUpdate("INSERT INTO abcd VALUES (1, \"Hello, World!\")");
+        ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM abcd");
+        while(resultSet.next()){
+            String string = resultSet.getString(2);
+            System.out.println(string);
+        }
+
+        connection.close();
+        System.out.println("\n\n*******************\n\n");
+    }
 
     public ArchitectureDataStructure load(File workspaceFile) throws Exception {
         Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(workspaceFile);

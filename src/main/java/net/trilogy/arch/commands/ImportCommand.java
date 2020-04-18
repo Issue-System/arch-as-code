@@ -31,6 +31,7 @@ public class ImportCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        new WorkspaceReader().loadSql(this.exportedWorkspacePath);
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
         File writeFile = this.productDocumentationRoot.toPath().resolve("data-structure.yml").toFile();
 

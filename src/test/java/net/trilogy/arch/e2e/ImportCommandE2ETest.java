@@ -6,8 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,7 +29,7 @@ public class ImportCommandE2ETest {
     }
 
     @Test
-    public void shouldImportStructurizrJsonFile() throws Exception {
+    public void shouldImportStructurizrJsonFileToYaml() throws Exception {
         File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
         final String pathToSococo = workspacePath.getAbsolutePath();
         assertThat(TestHelper.execute("import", pathToSococo, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
@@ -35,5 +37,16 @@ public class ImportCommandE2ETest {
         File file = tempProductDirectory.resolve("data-structure.yml").toFile();
         assertTrue(file.exists());
         assertTrue(Files.readString(file.toPath()).contains("Sococo Import"));
+    }
+
+    @Test
+    public void shouldImportStructurizrJsonFileToSql() throws GeneralSecurityException, IOException {
+        File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
+        final String pathToSococo = workspacePath.getAbsolutePath();
+        assertThat(TestHelper.execute("import", pathToSococo, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
+
+//        File file = tempProductDirectory.resolve("architecture.csv").toFile();
+//        assertTrue(file.exists());
+//        assertTrue(Files.readString(file.toPath()).contains("Sococo Import"));
     }
 }

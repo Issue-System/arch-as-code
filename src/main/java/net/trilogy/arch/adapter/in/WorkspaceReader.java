@@ -32,14 +32,10 @@ import net.trilogy.arch.domain.c4.view.C4SystemView;
 import net.trilogy.arch.domain.c4.view.C4View;
 import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
-import org.h2.Driver;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,11 +47,6 @@ import static net.trilogy.arch.domain.c4.C4Action.USES;
 import static net.trilogy.arch.domain.c4.C4Path.buildPath;
 
 public class WorkspaceReader {
-
-    public void loadSql(File workspaceFile, Connection connection) throws Exception {
-        connection.createStatement().executeUpdate("CREATE TABLE abcd (id INTEGER NOT NULL, first VARCHAR(255), PRIMARY KEY (id))");
-        connection.createStatement().executeUpdate("INSERT INTO abcd (id, first) VALUES (1, 'Hello, World!')");
-    }
 
     public ArchitectureDataStructure load(File workspaceFile) throws Exception {
         Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(workspaceFile);

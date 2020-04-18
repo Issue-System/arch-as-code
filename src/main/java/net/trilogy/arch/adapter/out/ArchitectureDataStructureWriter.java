@@ -21,12 +21,6 @@ public class ArchitectureDataStructureWriter {
         return export(dataStructure, tempFile);
     }
 
-    public File export(Connection connection, File writeFile) throws SQLException {
-        ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM abcd");
-        new Csv().write(writeFile.getAbsolutePath(), resultSet, "UTF-8");
-        return writeFile;
-    }
-
     public File export(ArchitectureDataStructure dataStructure, File writeFile) throws IOException {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
         mapper.writeValue(writeFile, dataStructure);

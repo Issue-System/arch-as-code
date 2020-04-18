@@ -32,11 +32,10 @@ import net.trilogy.arch.domain.c4.view.C4SystemView;
 import net.trilogy.arch.domain.c4.view.C4View;
 import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
-import org.sqlite.JDBC;
-import org.sqlite.SQLiteConnection;
+import org.h2.Driver;
 
 import java.io.File;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
@@ -53,20 +52,9 @@ import static net.trilogy.arch.domain.c4.C4Path.buildPath;
 
 public class WorkspaceReader {
 
-    public void loadSql(File workspaceFile) throws Exception {
-        System.out.println("\n\n*******************\n\n");
-        Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(workspaceFile);
-        SQLiteConnection connection = JDBC.createConnection("jdbc:sqlite::memory:", new Properties());
+    public void loadSql(File workspaceFile, Connection connection) throws Exception {
         connection.createStatement().executeUpdate("CREATE TABLE abcd (id INTEGER NOT NULL, first VARCHAR(255), PRIMARY KEY (id))");
-        connection.createStatement().executeUpdate("INSERT INTO abcd VALUES (1, \"Hello, World!\")");
-        ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM abcd");
-        while(resultSet.next()){
-            String string = resultSet.getString(2);
-            System.out.println(string);
-        }
-
-        connection.close();
-        System.out.println("\n\n*******************\n\n");
+        connection.createStatement().executeUpdate("INSERT INTO abcd (id, first) VALUES (1, 'Hello, World!')");
     }
 
     public ArchitectureDataStructure load(File workspaceFile) throws Exception {

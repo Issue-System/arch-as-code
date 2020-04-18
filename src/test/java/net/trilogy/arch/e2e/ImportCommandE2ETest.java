@@ -45,8 +45,17 @@ public class ImportCommandE2ETest {
         final String pathToSococo = workspacePath.getAbsolutePath();
         assertThat(TestHelper.execute("import", pathToSococo, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
 
-//        File file = tempProductDirectory.resolve("architecture.csv").toFile();
-//        assertTrue(file.exists());
+        File file = tempProductDirectory.resolve("architecture.csv").toFile();
+        assertTrue(file.exists());
+
+        System.out.println("\n\n*************\n\n");
+
+        String result = Files.readString(file.toPath());
+        System.out.println(result);
+
+        System.out.println("\n\n*************\n\n");
+
+
 //        assertTrue(Files.readString(file.toPath()).contains("Sococo Import"));
     }
 }

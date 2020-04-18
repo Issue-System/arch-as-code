@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     //H2
-    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     //Google
     compile 'com.google.apis:google-api-services-docs:v1-rev46-1.25.0'

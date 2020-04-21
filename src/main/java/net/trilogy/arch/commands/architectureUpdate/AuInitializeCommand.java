@@ -48,7 +48,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         if (!makeCredentialsFolder()) return 1;
         if (!createClientCredentialsFile(clientId, projectId, secret)) return 1;
 
-        logger.info(String.format("Architecture updates initialized under - %s", productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
+        logger.info(String.format("Architecture updates initialized under - %s", productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
@@ -82,7 +82,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean makeAuFolder() {
-        File auFolder = productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+        File auFolder = productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
             logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));

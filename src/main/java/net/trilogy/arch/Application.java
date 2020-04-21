@@ -3,7 +3,7 @@ package net.trilogy.arch;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.commands.*;
-import net.trilogy.arch.commands.architectureUpdate.ArchitectureUpdateCommand;
+import net.trilogy.arch.commands.architectureUpdate.AuCommand;
 import net.trilogy.arch.commands.architectureUpdate.AuInitializeCommand;
 import net.trilogy.arch.commands.architectureUpdate.AuNewCommand;
 import picocli.CommandLine;
@@ -22,7 +22,7 @@ public class Application {
                 .addSubcommand(new PublishCommand())
                 .addSubcommand(new ImportCommand())
                 .addSubcommand(
-                        new CommandLine(new ArchitectureUpdateCommand())
+                        new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade))
                 );

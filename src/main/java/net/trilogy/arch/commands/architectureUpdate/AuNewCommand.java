@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", description = "Initialize a new architecture update.")
 public class AuNewCommand implements Callable<Integer> {
-    private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
+    private static final Log logger = LogFactory.getLog(AuCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
     private final FilesFacade filesFacade;
@@ -37,7 +37,7 @@ public class AuNewCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
-        File auFolder = productDocumentationRoot.toPath().resolve(ArchitectureUpdateCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+        File auFolder = productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {
             logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));

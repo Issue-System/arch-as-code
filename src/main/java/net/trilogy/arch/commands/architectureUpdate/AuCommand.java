@@ -13,10 +13,10 @@ import java.util.concurrent.Callable;
         aliases = "au",
         description = "Parent for Architecture Update commands"
 )
-public class ArchitectureUpdateCommand implements Callable<Integer> {
+public class AuCommand implements Callable<Integer> {
     public static final String ARCHITECTURE_UPDATES_ROOT_FOLDER = "architecture-updates";
 
-    private static final Log logger = LogFactory.getLog(ArchitectureUpdateCommand.class);
+    private static final Log logger = LogFactory.getLog(AuCommand.class);
 
     @Spec
     private CommandSpec spec;

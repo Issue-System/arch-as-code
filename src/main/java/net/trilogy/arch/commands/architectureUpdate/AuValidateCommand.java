@@ -2,6 +2,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -20,15 +21,18 @@ public class AuValidateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
-        getAu();
+        ArchitectureUpdate au = getAu();
+        if (!ArchitectureUpdateValidator.isValid(au)) {
+            return 1;
+        }
         return 0;
     }
 
-    private void getAu() throws IOException {
+    private ArchitectureUpdate getAu() throws IOException {
         Path auPath = productDocumentationRoot.toPath()
                 .resolve("architecture-updates")
                 .resolve(architectureUpdateFileName)
                 .toAbsolutePath();
-        final ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
+        return new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
     }
 }

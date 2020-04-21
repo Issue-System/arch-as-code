@@ -15,7 +15,7 @@ public class AuValidateCommandTest {
     private File rootDir;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         rootDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION).getPath());
     }
 

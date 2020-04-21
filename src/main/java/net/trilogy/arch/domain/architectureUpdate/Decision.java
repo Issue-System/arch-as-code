@@ -1,8 +1,8 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,12 +13,14 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class Decision {
-    private final String text;
+    @JsonProperty(value = "text") private final String text;
+    @JsonProperty(value = "tdd-references") private final List<Tdd.Id> tddReferences;
 
-    @JsonProperty(value = "tdd-references")
-    private final List<Tdd.Id> tddReferences;
-
-    public Decision(String text, List<Tdd.Id> tddReferences) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Decision(
+            @JsonProperty("text") String text,
+            @JsonProperty("tdd-references") List<Tdd.Id> tddReferences
+    ) {
         this.text = text;
         this.tddReferences = tddReferences;
     }
@@ -30,10 +32,17 @@ public class Decision {
     @Getter
     @ToString
     @EqualsAndHashCode
-    @AllArgsConstructor
-    public static class Id{
+    public static class Id {
         @JsonValue
+        @JsonProperty(value = "id")
         private final String id;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public Id(
+                @JsonProperty("id") String id
+        ) {
+            this.id = id;
+        }
 
         public static Id blank() {
             return new Id("[SAMPLE-DECISION-ID]");

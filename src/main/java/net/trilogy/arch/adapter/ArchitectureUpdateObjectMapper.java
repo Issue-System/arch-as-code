@@ -1,5 +1,6 @@
 package net.trilogy.arch.adapter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
@@ -31,5 +32,9 @@ public class ArchitectureUpdateObjectMapper {
 
     public String writeValueAsString(ArchitectureUpdate value) throws IOException {
         return this.mapper.writeValueAsString(value);
+    }
+
+    public ArchitectureUpdate readValue(String architectureAsString) throws JsonProcessingException {
+        return this.mapper.readValue(architectureAsString, ArchitectureUpdate.class);
     }
 }

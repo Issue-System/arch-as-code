@@ -1,5 +1,7 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,11 +9,15 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class P2 {
-    private final String link;
-    private final Jira jira;
+    @JsonProperty(value = "link") private final String link;
+    @JsonProperty(value = "jira") private final Jira jira;
 
     @Builder
-    public P2(String link, Jira jira) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public P2(
+            @JsonProperty("link") String link,
+            @JsonProperty("jira") Jira jira
+    ) {
         this.link = link;
         this.jira = jira;
     }

@@ -1,13 +1,19 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 public class Link {
-    private final String description;
-    private final String link;
+    @JsonProperty(value = "description") private final String description;
+    @JsonProperty(value = "link") private final String link;
 
-    public Link(String description, String link) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Link(
+            @JsonProperty("description") String description,
+            @JsonProperty("link") String link
+    ) {
         this.description = description;
         this.link = link;
     }

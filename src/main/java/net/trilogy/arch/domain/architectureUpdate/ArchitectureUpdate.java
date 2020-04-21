@@ -1,5 +1,6 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
@@ -28,44 +29,35 @@ import java.util.Map;
         "capabilities"
 })
 public class ArchitectureUpdate {
-    private final String name;
-    private final String milestone;
-    private final List<Person> authors;
-    private final List<Person> PCAs;
-    private final Map<Decision.Id, Decision> decisions;
-    private final Map<Tdd.ComponentReference, List<Tdd>> TDDs;
-
-    @JsonProperty(value = "P2")
-    private final P2 p2;
-
-    @JsonProperty(value = "P1")
-    private final P1 p1;
-
-    @JsonProperty(value = "useful-links")
-    private final List<Link> usefulLinks;
-
-    @JsonProperty(value = "milestone-dependencies")
-    private final List<MilestoneDependency> milestoneDependencies;
-
-    @JsonProperty(value = "functional-requirements")
-    private final Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements;
-
-    @JsonProperty(value = "capabilities")
-    private final CapabilitiesContainer capabilityContainer;
+    @JsonProperty(value = "name") private final String name;
+    @JsonProperty(value = "milestone") private final String milestone;
+    @JsonProperty(value = "authors") private final List<Person> authors;
+    @JsonProperty(value = "PCAs") private final List<Person> PCAs;
+    @JsonProperty(value = "P2") private final P2 p2;
+    @JsonProperty(value = "P1") private final P1 p1;
+    @JsonProperty(value = "useful-links") private final List<Link> usefulLinks;
+    @JsonProperty(value = "milestone-dependencies") private final List<MilestoneDependency> milestoneDependencies;
+    @JsonProperty(value = "decisions") private final Map<Decision.Id, Decision> decisions;
+    @JsonProperty(value = "TDDs") private final Map<Tdd.ComponentReference, List<Tdd>> TDDs;
+    @JsonProperty(value = "functional-requirements") private final Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements;
+    @JsonProperty(value = "capabilities") private final CapabilitiesContainer capabilityContainer;
 
     @Builder
-    public ArchitectureUpdate(String name,
-                              String milestone,
-                              List<Person> authors,
-                              List<Person> PCAs,
-                              Map<Decision.Id, Decision> decisions,
-                              Map<Tdd.ComponentReference, List<Tdd>> TDDs,
-                              Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements,
-                              CapabilitiesContainer capabilityContainer,
-                              P2 p2,
-                              P1 p1,
-                              List<Link> usefulLinks,
-                              List<MilestoneDependency> milestoneDependencies) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public ArchitectureUpdate(
+            @JsonProperty("name") String name,
+            @JsonProperty("milestone") String milestone,
+            @JsonProperty("authors") List<Person> authors,
+            @JsonProperty("PCAs") List<Person> PCAs,
+            @JsonProperty("decisions") Map<Decision.Id, Decision> decisions,
+            @JsonProperty("TDDs") Map<Tdd.ComponentReference, List<Tdd>> TDDs,
+            @JsonProperty("functional-requirements") Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements,
+            @JsonProperty("capabilities") CapabilitiesContainer capabilityContainer,
+            @JsonProperty("p2") P2 p2,
+            @JsonProperty("p1") P1 p1,
+            @JsonProperty("useful-links") List<Link> usefulLinks,
+            @JsonProperty("milestone-dependencies") List<MilestoneDependency> milestoneDependencies
+    ) {
         this.name = name;
         this.milestone = milestone;
         this.authors = authors;

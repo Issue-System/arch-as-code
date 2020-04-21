@@ -1,5 +1,6 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,12 +12,14 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class CapabilitiesContainer {
-    private Epic epic;
+    @JsonProperty(value = "epic") private final Epic epic;
+    @JsonProperty(value = "feature-stories") private final List<FeatureStory> featureStories;
 
-    @JsonProperty(value = "feature-stories")
-    private final List<FeatureStory> featureStories;
-
-    public CapabilitiesContainer(Epic epic, List<FeatureStory> featureStories) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public CapabilitiesContainer(
+            @JsonProperty("epic") Epic epic,
+            @JsonProperty("feature-stories") List<FeatureStory> featureStories
+    ) {
         this.epic = epic;
         this.featureStories = featureStories;
     }

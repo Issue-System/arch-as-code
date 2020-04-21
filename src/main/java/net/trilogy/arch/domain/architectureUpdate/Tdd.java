@@ -1,7 +1,8 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,11 +11,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Tdd {
+    @JsonProperty(value = "id") private final Tdd.Id id;
+    @JsonProperty(value = "text") private final String text;
 
-    private final Tdd.Id id;
-    private final String text;
-
-    public Tdd(Id id, String text) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Tdd(
+            @JsonProperty("id") Id id,
+            @JsonProperty("text") String text
+    ) {
         this.id = id;
         this.text = text;
     }
@@ -25,10 +29,13 @@ public class Tdd {
 
     @Getter
     @EqualsAndHashCode
-    @AllArgsConstructor
     public static class Id {
         @JsonValue
         private final String id;
+
+        public Id(String id) {
+            this.id = id;
+        }
 
         public static Id blank() {
             return new Id("[SAMPLE-TDD-ID]");
@@ -37,9 +44,15 @@ public class Tdd {
 
     @Getter
     @EqualsAndHashCode
-    @AllArgsConstructor
     public static class ComponentReference {
-        private final String id;
+        @JsonProperty(value = "id") private final String id;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public ComponentReference(
+                @JsonProperty("id") String id
+        ) {
+            this.id = id;
+        }
 
         public static ComponentReference blank() {
             return new ComponentReference("[SAMPLE-COMPONENT-ID]");

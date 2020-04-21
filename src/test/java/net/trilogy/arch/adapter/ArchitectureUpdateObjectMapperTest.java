@@ -1,5 +1,6 @@
 package net.trilogy.arch.adapter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.junit.Test;
 
@@ -13,6 +14,13 @@ public class ArchitectureUpdateObjectMapperTest {
         String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank());
         String expected = getBlankYamlText();
         assertThat(actual.trim(), equalTo(expected.trim()));
+    }
+
+    @Test
+    public void shouldReadBlank() throws JsonProcessingException {
+        ArchitectureUpdate actual = new ArchitectureUpdateObjectMapper().readValue(getBlankYamlText());
+
+        assertThat(actual, equalTo(ArchitectureUpdate.blank()));
     }
 
     @Test

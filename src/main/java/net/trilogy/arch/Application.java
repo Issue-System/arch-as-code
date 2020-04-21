@@ -6,6 +6,7 @@ import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.AuCommand;
 import net.trilogy.arch.commands.architectureUpdate.AuInitializeCommand;
 import net.trilogy.arch.commands.architectureUpdate.AuNewCommand;
+import net.trilogy.arch.commands.architectureUpdate.AuValidateCommand;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Application {
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade))
+                                .addSubcommand(new AuValidateCommand())
                 );
     }
 

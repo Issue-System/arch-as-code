@@ -44,14 +44,12 @@ public class Tdd {
 
     @Getter
     @EqualsAndHashCode
+    @ToString
     public static class ComponentReference {
-        @JsonProperty(value = "id") private final String id;
+         private final String id;
 
-        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-        public ComponentReference(
-                @JsonProperty("id") String id
-        ) {
-            this.id = id;
+        public ComponentReference(String id) {
+            this.id = id.replaceFirst("Component-", "");
         }
 
         public static ComponentReference blank() {

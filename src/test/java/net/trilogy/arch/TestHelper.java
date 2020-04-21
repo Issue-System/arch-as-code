@@ -28,6 +28,7 @@ public abstract class TestHelper {
 
     public static String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
+    public static String ROOT_PATH_TO_TEST_AU_VALIDATION = "/auValidation/";
     public static String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
 
     public static Integer execute(String... args) throws Exception {

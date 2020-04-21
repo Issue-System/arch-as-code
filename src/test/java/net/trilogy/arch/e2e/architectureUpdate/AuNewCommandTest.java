@@ -66,7 +66,7 @@ public class AuNewCommandTest {
     }
 
     @Test
-    public void shouldExitWithHappyStatusWithP1_short() throws IOException, GeneralSecurityException {
+    public void shouldExitWithHappyStatusWithP1_short() throws Exception {
         mockGoogleDocsApi();
         initializeAuDirectory(rootDir.toPath());
         collector.checkThat(
@@ -76,7 +76,7 @@ public class AuNewCommandTest {
     }
 
     @Test
-    public void shouldExitWithHappyStatusWithP1_long() throws IOException, GeneralSecurityException {
+    public void shouldExitWithHappyStatusWithP1_long() throws Exception {
         mockGoogleDocsApi();
         initializeAuDirectory(rootDir.toPath());
         collector.checkThat(
@@ -197,7 +197,7 @@ public class AuNewCommandTest {
         when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
     }
 
-    private Path initializeAuDirectory(Path rootDir) throws GeneralSecurityException, IOException {
+    private Path initializeAuDirectory(Path rootDir) throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         return rootDir.resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
     }

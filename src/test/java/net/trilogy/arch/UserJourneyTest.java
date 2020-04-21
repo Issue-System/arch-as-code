@@ -124,7 +124,7 @@ public class UserJourneyTest {
         assertThat(exitCode, equalTo(0));
     }
 
-    private int init() throws GeneralSecurityException, IOException {
+    private int init() throws Exception {
         return execute("init",
                 "-i", String.valueOf(config.getWorkspaceId()),
                 "-k", config.getApiKey(),
@@ -132,7 +132,7 @@ public class UserJourneyTest {
                 workspaceRoot);
     }
 
-    private int importWorkspace() throws GeneralSecurityException, IOException {
+    private int importWorkspace() throws Exception {
         return execute("import", exportedWorkspacePath.getAbsolutePath(), workspaceRoot);
     }
 }

@@ -4,11 +4,13 @@ import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
-
     public static Results validate(ArchitectureUpdate au) {
         final Results results = new Results();
 
@@ -16,12 +18,14 @@ public class ArchitectureUpdateValidator {
             final Decision decisionBeingChecked = entry.getValue();
             final Decision.Id decisionIdBeingChecked = entry.getKey();
             if (decisionBeingChecked.getTddReferences().isEmpty()) {
-                results.add(ErrorType.decisions_must_have_at_least_one_tdd, decisionIdBeingChecked);
+                ValidationError error = new ValidationError(ErrorType.decisions_must_have_at_least_one_tdd, decisionIdBeingChecked, String.format("Decision \"%s\" must have at least one TDD reference.", decisionIdBeingChecked.getId()));
+                results.add(error);
             } else {
                 final Set<Tdd.Id> allTdds = getAllTddIds(au);
                 decisionBeingChecked.getTddReferences().forEach(tdd_ref -> {
                     if (!allTdds.contains(tdd_ref)) {
-                        results.add(ErrorType.invalid_tdd_reference, decisionIdBeingChecked);
+                        ValidationError error = new ValidationError(ErrorType.invalid_tdd_reference, decisionIdBeingChecked, String.format("Decision \"%s\" contains invalid TDD reference \"%s\".", decisionIdBeingChecked.getId(), tdd_ref.getId()));
+                        results.add(error);
                     }
                 });
             }
@@ -35,34 +39,54 @@ public class ArchitectureUpdateValidator {
     }
 
     public static class Results {
-        private final Map<ErrorType, Set<Decision.Id>> map;
+        private final Set<ValidationError> errors;
 
         private Results() {
-            map = new LinkedHashMap<>();
+            errors = new LinkedHashSet<>();
         }
 
         public boolean isValid() {
-            return map.isEmpty();
+            return errors.isEmpty();
         }
 
-        public Set<Decision.Id> getIds() {
-            return map.values()
-                    .stream()
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toSet());
+        public Set<ValidationError> getErrors() {
+            return errors;
         }
 
-        public Set<Decision.Id> getIds(ErrorType errorType) {
-            return map.get(errorType);
+        public Set<ValidationError> getErrors(ErrorType errorType) {
+            return errors.stream().filter(error -> error.getErrorType() == errorType).collect(Collectors.toSet());
         }
 
-        public Set<ErrorType> getErrors() {
-            return map.keySet();
+        public Set<ErrorType> getErrorTypes() {
+            return errors.stream().map(ValidationError::getErrorType).collect(Collectors.toSet());
         }
 
-        private void add(ErrorType errorType, Decision.Id id) {
-            map.putIfAbsent(errorType, new LinkedHashSet<>());
-            map.get(errorType).add(id);
+        private void add(ValidationError error) {
+            errors.add(error);
+        }
+    }
+
+    public static class ValidationError {
+        private final ErrorType errorType;
+        private final Decision.Id element;
+        private final String description;
+
+        private ValidationError(ErrorType errorType, Decision.Id element, String description) {
+            this.errorType = errorType;
+            this.element = element;
+            this.description = description;
+        }
+
+        public Decision.Id getElement() {
+            return element;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public ErrorType getErrorType() {
+            return errorType;
         }
     }
 

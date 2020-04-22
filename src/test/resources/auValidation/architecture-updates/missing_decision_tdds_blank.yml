@@ -28,6 +28,7 @@ milestone-dependencies:
 decisions:
   '[SAMPLE-DECISION-ID]':
     text: "[SAMPLE DECISION TEXT]"
+    tdd-references: []
 TDDs:
   Component-[SAMPLE-COMPONENT-ID]:
   - id: "[SAMPLE-TDD-ID]"

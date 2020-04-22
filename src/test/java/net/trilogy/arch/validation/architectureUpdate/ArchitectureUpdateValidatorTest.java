@@ -106,7 +106,7 @@ public class ArchitectureUpdateValidatorTest {
         var errors = result.getErrors(invalid_tdd_reference);
         collector.checkThat(errors.size(), equalTo(1));
 
-        var error = errors.stream().findAny().orElseThrow();
+        var error = errors.iterator().next();
         collector.checkThat(error.getDescription(), equalTo("Decision \"Bad-TDD-Decision\" contains invalid TDD reference \"BAD-TDD-ID\"."));
         collector.checkThat(error.getElement(), equalTo(new Decision.Id("Bad-TDD-Decision")));
         collector.checkThat(error.getErrorType(), equalTo(invalid_tdd_reference));

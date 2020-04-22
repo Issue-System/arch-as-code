@@ -33,17 +33,6 @@ public class AuInitializeCommandTest {
     }
 
     @Test
-    public void rootCommandShouldPrintUsage() throws Exception {
-        // TODO OPTIONAL: Move test to file that only has root command tests
-
-        // TODO FUTURE: Assert that usage is shown AAC-75
-        collector.checkThat(
-                execute("au"),
-                equalTo(0)
-        );
-    }
-
-    @Test
     public void shouldExitWithHappyStatus() throws Exception {
         collector.checkThat(
                 execute("au", "init", "-c c", "-p p", "-s s", str(getTempDirectory())),

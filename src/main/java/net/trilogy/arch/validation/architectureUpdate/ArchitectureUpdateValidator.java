@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
     private final ArchitectureUpdate au;
-    private final Set<Tdd.Id> allTddIds;
 
     public static Results validate(ArchitectureUpdate au) {
         return new ArchitectureUpdateValidator(au).run();
@@ -20,7 +19,6 @@ public class ArchitectureUpdateValidator {
 
     private ArchitectureUpdateValidator(ArchitectureUpdate au) {
         this.au = au;
-        this.allTddIds = getAllTddIds(au);
     }
 
     private Results run() {
@@ -40,6 +38,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getBrokenTddReferenceErrors() {
+        Set<Tdd.Id> allTddIds = getAllTddIds(au);
         return au.getDecisions()
                 .entrySet()
                 .stream()

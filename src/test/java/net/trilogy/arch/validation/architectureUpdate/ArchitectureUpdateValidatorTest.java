@@ -76,7 +76,7 @@ public class ArchitectureUpdateValidatorTest {
         var result = ArchitectureUpdateValidator.validate(invalidAu);
 
         collector.checkThat(
-                result.getErrorTypes(),
+                result.getErrorTypesEncountered(),
                 containsInAnyOrder(decisions_must_have_at_least_one_tdd, invalid_tdd_reference)
         );
     }

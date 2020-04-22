@@ -5,33 +5,31 @@ import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
     public static Results validate(ArchitectureUpdate au) {
-        final Results results = new Results();
+        final HashSet<ValidationError> errorsSoFar = new LinkedHashSet<>();
 
-        for (Map.Entry<Decision.Id, Decision> entry : au.getDecisions().entrySet()) {
-            final Decision decisionBeingChecked = entry.getValue();
-            final Decision.Id decisionIdBeingChecked = entry.getKey();
-            if (decisionBeingChecked.getTddReferences().isEmpty()) {
-                ValidationError error = new ValidationError(ErrorType.decisions_must_have_at_least_one_tdd, decisionIdBeingChecked, String.format("Decision \"%s\" must have at least one TDD reference.", decisionIdBeingChecked.getId()));
-                results.add(error);
-            } else {
-                final Set<Tdd.Id> allTdds = getAllTddIds(au);
-                decisionBeingChecked.getTddReferences().forEach(tdd_ref -> {
-                    if (!allTdds.contains(tdd_ref)) {
-                        ValidationError error = new ValidationError(ErrorType.invalid_tdd_reference, decisionIdBeingChecked, String.format("Decision \"%s\" contains invalid TDD reference \"%s\".", decisionIdBeingChecked.getId(), tdd_ref.getId()));
-                        results.add(error);
-                    }
-                });
+        final Set<Tdd.Id> idsOfAllTdds = getAllTddIds(au);
+
+        au.getDecisions().forEach((id, decision) -> {
+            if (decision.getTddReferences().isEmpty()) {
+                errorsSoFar.add(ValidationError.forMissingTddReference(id));
+                return;
             }
-        }
+            decision.getTddReferences().forEach(tdd -> {
+                if (!idsOfAllTdds.contains(tdd)) {
+                    ValidationError error = ValidationError.forInvalidTddReference(id, tdd);
+                    errorsSoFar.add(error);
+                }
+            });
+        });
 
-        return results;
+        return new Results(errorsSoFar);
     }
 
     private static Set<Tdd.Id> getAllTddIds(ArchitectureUpdate au) {
@@ -41,8 +39,8 @@ public class ArchitectureUpdateValidator {
     public static class Results {
         private final Set<ValidationError> errors;
 
-        private Results() {
-            errors = new LinkedHashSet<>();
+        private Results(Set<ValidationError> errors) {
+            this.errors = errors;
         }
 
         public boolean isValid() {
@@ -50,19 +48,15 @@ public class ArchitectureUpdateValidator {
         }
 
         public Set<ValidationError> getErrors() {
-            return errors;
+            return new HashSet<>(errors);
         }
 
         public Set<ValidationError> getErrors(ErrorType errorType) {
             return errors.stream().filter(error -> error.getErrorType() == errorType).collect(Collectors.toSet());
         }
 
-        public Set<ErrorType> getErrorTypes() {
+        public Set<ErrorType> getErrorTypesEncountered() {
             return errors.stream().map(ValidationError::getErrorType).collect(Collectors.toSet());
-        }
-
-        private void add(ValidationError error) {
-            errors.add(error);
         }
     }
 
@@ -70,6 +64,22 @@ public class ArchitectureUpdateValidator {
         private final ErrorType errorType;
         private final Decision.Id element;
         private final String description;
+
+        private static ValidationError forMissingTddReference(Decision.Id entityId) {
+            return new ValidationError(
+                    ErrorType.decisions_must_have_at_least_one_tdd,
+                    entityId,
+                    String.format("Decision \"%s\" must have at least one TDD reference.", entityId.getId())
+            );
+        }
+
+        private static ValidationError forInvalidTddReference(Decision.Id entityId, Tdd.Id tddId) {
+            return new ValidationError(
+                    ErrorType.invalid_tdd_reference,
+                    entityId,
+                    String.format("Decision \"%s\" contains invalid TDD reference \"%s\".", entityId.getId(), tddId.getId())
+            );
+        }
 
         private ValidationError(ErrorType errorType, Decision.Id element, String description) {
             this.errorType = errorType;

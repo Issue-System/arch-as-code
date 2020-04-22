@@ -22,7 +22,7 @@ public class AuValidateCommand implements Callable<Integer> {
     @Override
     public Integer call() throws IOException {
         ArchitectureUpdate au = getAu();
-        if (!ArchitectureUpdateValidator.isValid(au)) {
+        if (!ArchitectureUpdateValidator.validate(au).isValid()) {
             return 1;
         }
         return 0;

@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 
-public class ArchitectureUpdateValidatorTest {
+public class ArchitectureUpdateValidatorTest_Decisions {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
@@ -31,7 +31,7 @@ public class ArchitectureUpdateValidatorTest {
         invalidAu = ArchitectureUpdate.builderPreFilledWithBlanks()
                 .TDDs(Map.of(Tdd.ComponentReference.blank(), List.of(Tdd.blank())))
                 .decisions(Map.of(
-                        new Decision.Id("Missing-TDD-Decision-1"), new Decision("Decision-1-text", List.of()),
+                        new Decision.Id("Missing-TDD-Decision-1"), new Decision("Decision-1-text", null),
                         new Decision.Id("Missing-TDD-Decision-2"), new Decision("Decision-2-text", List.of()),
                         new Decision.Id("Bad-TDD-Decision"), new Decision("Decision-2-text", List.of(new Tdd.Id("BAD-TDD-ID"))),
                         new Decision.Id("Valid-Decision"), new Decision("Decision-3-text", List.of(Tdd.Id.blank()))

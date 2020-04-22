@@ -7,7 +7,6 @@ import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,31 +31,25 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getMissingTddReferenceErrors() {
-        final HashSet<ValidationError> errorsSoFar = new LinkedHashSet<>();
-
-        au.getDecisions().forEach((id, decision) -> {
-            if (decision.getTddReferences() == null || decision.getTddReferences().isEmpty()) {
-                errorsSoFar.add(ValidationError.forMissingTddReference(id));
-            }
-        });
-
-        return errorsSoFar;
+        return au.getDecisions()
+                .entrySet()
+                .stream()
+                .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() == null || decisionEntry.getValue().getTddReferences().isEmpty())
+                .map(decisionEntry -> ValidationError.forMissingTddReference(decisionEntry.getKey()))
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getBrokenTddReferenceErrors() {
-        final HashSet<ValidationError> errorsSoFar = new LinkedHashSet<>();
-
-        au.getDecisions().forEach((id, decision) -> {
-            if(decision.getTddReferences() == null) return;
-            decision.getTddReferences().forEach(tdd -> {
-                if (!allTddIds.contains(tdd)) {
-                    ValidationError error = ValidationError.forInvalidTddReference(id, tdd);
-                    errorsSoFar.add(error);
-                }
-            });
-        });
-
-        return errorsSoFar;
+        return au.getDecisions()
+                .entrySet()
+                .stream()
+                .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() != null)
+                .flatMap(decisionEntry ->
+                        decisionEntry.getValue().getTddReferences()
+                                .stream()
+                                .filter(tdd -> !allTddIds.contains(tdd))
+                                .map(tdd -> ValidationError.forInvalidTddReference(decisionEntry.getKey(), tdd)))
+                .collect(Collectors.toSet());
     }
 
     private static Set<Tdd.Id> getAllTddIds(ArchitectureUpdate au) {

@@ -11,10 +11,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
-    public static Results validate(ArchitectureUpdate au) {
-        final HashSet<ValidationError> errorsSoFar = new LinkedHashSet<>();
+    private final ArchitectureUpdate au;
+    private final Set<Tdd.Id> allTddIds;
 
-        final Set<Tdd.Id> idsOfAllTdds = getAllTddIds(au);
+    public static Results validate(ArchitectureUpdate au) {
+        return new ArchitectureUpdateValidator(au).run();
+    }
+
+    private ArchitectureUpdateValidator(ArchitectureUpdate au) {
+        this.au = au;
+        this.allTddIds = getAllTddIds(au);
+    }
+
+    private Results run() {
+        final HashSet<ValidationError> errorsSoFar = new LinkedHashSet<>();
 
         au.getDecisions().forEach((id, decision) -> {
             if (decision.getTddReferences().isEmpty()) {
@@ -22,7 +32,7 @@ public class ArchitectureUpdateValidator {
                 return;
             }
             decision.getTddReferences().forEach(tdd -> {
-                if (!idsOfAllTdds.contains(tdd)) {
+                if (!allTddIds.contains(tdd)) {
                     ValidationError error = ValidationError.forInvalidTddReference(id, tdd);
                     errorsSoFar.add(error);
                 }

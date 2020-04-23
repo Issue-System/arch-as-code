@@ -52,7 +52,7 @@ P1:
     executive-summary: "" [P1]
 useful-links: ??? (might not be necessary to duplicate from the P1)
 milestone-dependencies: ??? (might not be necessary to duplicate from the P1)
-decisions: ( ITDs, IFDs, SSDs, etc.)
+decisions: (ITDs, IFDs, SSDs, etc.)
     "decision-id":
         text: "" [P1] (or [M])
         TDD-references:
@@ -74,13 +74,19 @@ TDDs:
         text: "tdd-description" [M]
       - id: "TDD-id": [M]
         text: "tdd-description" [M]
-functional-requirements: ( E2E steps, ACCs, ACs from P1, ACs added manually, etc. )
+functional-requirements: (E2E steps, ACCs, ACs from P1, ACs added manually, etc.)
     "functional-requirement-id":  [M]
         text: "functional requirement text" [M]
         source: "some text, or link to functional requirement" [M]
+        TDD-references:
+          - "TDD-id" [M]
+          - "TDD-id" [M]
     "e2e-5-step-4":  [M]
         text: "must send random xml when random button is pressed" [M]
         source: "link to e2e jira ticket? or spreadsheet containing accs/e2es?" [M]
+        TDD-references:
+          - "TDD-id" [M]
+          - "TDD-id" [M]
 capabilities:
     epic:
         title: "" [M]

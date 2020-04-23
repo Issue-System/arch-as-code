@@ -107,18 +107,18 @@ capabilities:
 ```
 
 ## Things to validate:
-(KEY: E for Error, W for Warning)   
+(KEY: E for Error, W for Warning, T for validate-tdd command, S for validate-story command)   
  - Decisions  
-   E- must have >=1 TDD  
+   - [E][T] must have >=1 TDD  
  - TDDs  
-   E- must refer to valid components  
-   E- must be referred to by >=1 decision (no orphan TDDs)  
+   - [E][T] must refer to valid components  
+   - [E][T] must be referred to by >=1 decision or functional requirement (no orphan TDDs)
  - Stories  
-   E- must refer to >=1 valid functional requirements  
-   E- must refer to >=1 valid tdds  
-   E- all tdds must have >=1 story   
-   E- all functional requirements must have >=1 story   
-   W- check for duplicate stories (both stories have same TDDs and requirements)
+   - [E][S] must refer to >=1 valid functional requirements  
+   - [E][S] must refer to >=1 valid tdds  
+   - [E][S] all tdds must have >=1 story   
+   - [E][S] all functional requirements must have >=1 story   
+   - [W][S] check for duplicate stories (both stories have same TDDs and requirements)
 
 ## How to visualize:
  - Some way to visualize the model in each branch is necessary

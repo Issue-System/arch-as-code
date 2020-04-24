@@ -3,7 +3,6 @@ package net.trilogy.arch.e2e.architectureUpdate;
 import net.trilogy.arch.TestHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -13,9 +12,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class AuValidateCommandTest {
     @Rule
@@ -43,7 +40,6 @@ public class AuValidateCommandTest {
         System.setErr(originalErr);
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeFullyValid() throws Exception {
         Integer status = execute("au", "validate", "blank.yml", rootDir.getAbsolutePath());
@@ -51,7 +47,6 @@ public class AuValidateCommandTest {
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeTDDValid() throws Exception {
         Integer status = execute("architecture-update", "validate", "-t", "invalid_capabilities.yml", rootDir.getAbsolutePath());
@@ -59,7 +54,6 @@ public class AuValidateCommandTest {
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeCapabilityValid() throws Exception {
         Integer status = execute("architecture-update", "validate", "-c", "invalid_tdds.yml", rootDir.getAbsolutePath());
@@ -67,7 +61,6 @@ public class AuValidateCommandTest {
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeFullyInvalid() throws Exception {
         Integer status = execute("au", "validate", "both_invalid.yml", rootDir.getAbsolutePath());
@@ -83,7 +76,6 @@ public class AuValidateCommandTest {
         );
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeTddInvalid() throws Exception {
         Integer status = execute("au", "validate", "--TDDs", "both_invalid.yml", rootDir.getAbsolutePath());
@@ -99,7 +91,6 @@ public class AuValidateCommandTest {
         );
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldBeCapabilityInvalid() throws Exception {
         Integer status = execute("au", "validate", "--capabilities", "both_invalid.yml", rootDir.getAbsolutePath());

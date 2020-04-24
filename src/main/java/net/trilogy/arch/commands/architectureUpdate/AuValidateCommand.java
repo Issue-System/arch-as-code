@@ -3,6 +3,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
+import net.trilogy.arch.validation.architectureUpdate.ValidationError;
 import net.trilogy.arch.validation.architectureUpdate.ValidationStage;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
@@ -11,12 +12,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
-import static picocli.CommandLine.Command;
-import static picocli.CommandLine.Parameters;
-import static picocli.CommandLine.Spec;
+import static picocli.CommandLine.*;
 
 @Command(name = "validate", description = "Validate Architecture Update")
 public class AuValidateCommand implements Callable<Integer> {
@@ -41,19 +42,31 @@ public class AuValidateCommand implements Callable<Integer> {
         ArchitectureUpdate au = getAu();
         var validationResults = ArchitectureUpdateValidator.validate(au);
 
-        Optional<ValidationStage> stage = determineValidationStage(tddValidation, capabilityValidation);
+        List<ValidationStage> stages = determineValidationStage(tddValidation, capabilityValidation);
 
-        validationResults.getErrors();
+        boolean isValid = stages.stream().map(validationResults::isValid).noneMatch(result -> result == false);
 
-        spec.commandLine().getOut().println("Success, no errors found.");
+        if (!isValid) {
+            spec.commandLine().getErr().println(
+                    stages.stream()
+                            .map(validationResults::getErrors)
+                            .flatMap(Collection::stream)
+                            .map(ValidationError::getDescription)
+                            .collect(Collectors.joining())
+            );
+            return 1;
+        } else {
+            spec.commandLine().getOut().println("Success, no errors found.");
+        }
+
         return 0;
     }
 
-    private Optional<ValidationStage> determineValidationStage(boolean tddValidation, boolean capabilityValidation) {
-        if(tddValidation && capabilityValidation) return Optional.empty();
-        else if(!tddValidation && !capabilityValidation) return Optional.empty();
-        else if(tddValidation) return Optional.of(ValidationStage.TDD);
-        return Optional.of(ValidationStage.CAPABILITY);
+    private List<ValidationStage> determineValidationStage(boolean tddValidation, boolean capabilityValidation) {
+        if (tddValidation && capabilityValidation) return List.of(ValidationStage.TDD, ValidationStage.CAPABILITY);
+        if (tddValidation) return List.of(ValidationStage.TDD);
+        if (capabilityValidation) return List.of(ValidationStage.CAPABILITY);
+        return List.of(ValidationStage.values());
     }
 
     private ArchitectureUpdate getAu() throws IOException {

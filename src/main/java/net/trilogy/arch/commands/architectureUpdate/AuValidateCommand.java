@@ -4,6 +4,7 @@ import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
 import net.trilogy.arch.validation.architectureUpdate.ValidationError;
+import net.trilogy.arch.validation.architectureUpdate.ValidationResult;
 import net.trilogy.arch.validation.architectureUpdate.ValidationStage;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
@@ -12,12 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static picocli.CommandLine.*;
+import static picocli.CommandLine.Command;
+import static picocli.CommandLine.Parameters;
+import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update")
 public class AuValidateCommand implements Callable<Integer> {
@@ -36,24 +38,17 @@ public class AuValidateCommand implements Callable<Integer> {
     @Spec
     private CommandSpec spec;
 
-
     @Override
     public Integer call() throws IOException {
         ArchitectureUpdate au = getAu();
         var validationResults = ArchitectureUpdateValidator.validate(au);
 
-        List<ValidationStage> stages = determineValidationStage(tddValidation, capabilityValidation);
+        List<ValidationStage> stages = determineValidationStages(tddValidation, capabilityValidation);
+        boolean areAllStagesValid = stages.stream().allMatch(validationResults::isValid);
 
-        boolean isValid = stages.stream().map(validationResults::isValid).noneMatch(result -> result == false);
-
-        if (!isValid) {
-            spec.commandLine().getErr().println(
-                    stages.stream()
-                            .map(validationResults::getErrors)
-                            .flatMap(Collection::stream)
-                            .map(ValidationError::getDescription)
-                            .collect(Collectors.joining())
-            );
+        if (!areAllStagesValid) {
+            String resultToDisplay = getPrettyErrorsString(stages, validationResults);
+            spec.commandLine().getErr().println(resultToDisplay);
             return 1;
         } else {
             spec.commandLine().getOut().println("Success, no errors found.");
@@ -62,10 +57,29 @@ public class AuValidateCommand implements Callable<Integer> {
         return 0;
     }
 
-    private List<ValidationStage> determineValidationStage(boolean tddValidation, boolean capabilityValidation) {
-        if (tddValidation && capabilityValidation) return List.of(ValidationStage.TDD, ValidationStage.CAPABILITY);
-        if (tddValidation) return List.of(ValidationStage.TDD);
-        if (capabilityValidation) return List.of(ValidationStage.CAPABILITY);
+    private String getPrettyErrorsString(List<ValidationStage> stages, ValidationResult validationResults) {
+        return stages.stream()
+                .map(validationResults::getErrors)
+                .filter(errors -> !errors.isEmpty())
+                .map(this::getPrettyErrorStringByType)
+                .collect(Collectors.joining())
+                .trim();
+    }
+
+    private String getPrettyErrorStringByType(List<ValidationError> errors) {
+        return errors.get(0).getValidationErrorType() + ":\n    " + errors.stream().map(error -> error.getDescription() + "\n").collect(Collectors.joining());
+    }
+
+    private List<ValidationStage> determineValidationStages(boolean tddValidation, boolean capabilityValidation) {
+        if (tddValidation && capabilityValidation) {
+            return List.of(ValidationStage.TDD, ValidationStage.CAPABILITY);
+        }
+        if (tddValidation) {
+            return List.of(ValidationStage.TDD);
+        }
+        if (capabilityValidation) {
+            return List.of(ValidationStage.CAPABILITY);
+        }
         return List.of(ValidationStage.values());
     }
 

@@ -1,6 +1,7 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
 import io.vavr.collection.Stream;
+import lombok.Getter;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.EntityReference;
@@ -91,6 +92,9 @@ public class ArchitectureUpdateValidator {
         public boolean isValid() {
             return errors.isEmpty();
         }
+        public boolean isValid(ValidationStage stage) {
+            return errors.stream().noneMatch(error -> error.getErrorType().getStage() == stage);
+        }
 
         public List<ValidationError> getErrors() {
             return new ArrayList<>(errors);
@@ -153,15 +157,22 @@ public class ArchitectureUpdateValidator {
         }
     }
 
+    public enum ValidationStage {
+        TDD,
+        CAPABILITY
+    }
+
     public enum ErrorType {
-        missing_tdd("Missing TDD"),
-        missing_capability("Missing Capability"),
-        invalid_tdd_reference("Invalid TDD Reference");
+        missing_tdd("Missing TDD", ValidationStage.TDD),
+        missing_capability("Missing Capability", ValidationStage.CAPABILITY),
+        invalid_tdd_reference("Invalid TDD Reference", ValidationStage.TDD);
 
-        private final String label;
+        @Getter private final String label;
+        @Getter private final ValidationStage stage;
 
-        ErrorType(String label) {
+        ErrorType(String label, ValidationStage stage) {
             this.label = label;
+            this.stage = stage;
         }
 
         @Override

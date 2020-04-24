@@ -13,8 +13,8 @@ public class AuValidateErrorPresenter {
     static public String present(PresentationMode mode, Results validationResults) {
         return getMatchingTypes(mode)
                 .stream()
+                .filter(type -> validationResults.getErrorTypesEncountered().contains(type))
                 .map(validationResults::getErrors)
-                .filter(it -> !it.isEmpty())
                 .map(errors -> errors.get(0).getErrorType() + ":" + errors.stream().map(error -> "\n    " + error.getDescription()).collect(Collectors.joining()) + "\n")
                 .collect(Collectors.joining());
     }

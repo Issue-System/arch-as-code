@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.PrintStream;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 public class AuValidateCommandTest {
     @Rule
@@ -41,12 +43,22 @@ public class AuValidateCommandTest {
     }
 
     @Test
-    public void shouldExitWithHappyStatus() throws Exception {
-        Integer status1 = execute("architecture-update", "validate", "blank.yml", rootDir.getAbsolutePath());
-        collector.checkThat(status1, equalTo(0));
+    public void shouldExitWithHappyStatus_short() throws Exception {
+        Integer status = execute("au", "validate", "blank.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(
+                out.toString(),
+                containsString("Success, no errors found.")
+        );
+    }
 
-        Integer status2 = execute("au", "validate", "blank.yml", rootDir.getAbsolutePath());
-        collector.checkThat(status2, equalTo(0));
+    public void shouldExitWithHappyStatus_long() throws Exception {
+        Integer status = execute("architecture-update", "validate", "blank.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(
+                out.toString(),
+                containsString("Success, no errors found.")
+        );
     }
 
     @Test
@@ -60,13 +72,4 @@ public class AuValidateCommandTest {
         );
     }
 
-    @Test
-    public void shouldOutputSuccessMessage() throws Exception {
-        execute("architecture-update", "validate", "blank.yml", rootDir.getAbsolutePath());
-
-        collector.checkThat(
-                out.toString(),
-                containsString("Success, no errors found.")
-        );
-    }
 }

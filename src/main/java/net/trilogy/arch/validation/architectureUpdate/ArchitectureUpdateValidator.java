@@ -76,7 +76,7 @@ public class ArchitectureUpdateValidator {
     public static class Results {
         private final LinkedHashSet<ValidationError> errors;
 
-        public Results(Set<ValidationError> errors) {
+        public Results(Collection<ValidationError> errors) {
             this.errors = new LinkedHashSet<>(errors);
         }
 

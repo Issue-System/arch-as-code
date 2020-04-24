@@ -96,7 +96,6 @@ public class ArchitectureUpdateValidatorTest_TDDs {
         );
     }
 
-
     @Test
     public void shouldFindTDDsWithoutStories() {
         var result = ArchitectureUpdateValidator.validate(invalidAu);

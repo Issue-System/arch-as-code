@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.decisions_must_have_at_least_one_tdd;
 import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.tdd_must_have_story;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -24,7 +25,9 @@ public class ArchitectureUpdateValidatorTest_TDDs {
     @Before
     public void setUp() {
         invalidAu = ArchitectureUpdate.builderPreFilledWithBlanks()
-                .decisions(Map.of())
+                .decisions(Map.of(
+                        new Decision.Id("Decision-1"), new Decision("text", List.of())
+                ))
                 .TDDs(
                         Map.of(
                                 new Tdd.ComponentReference("Component-0"), List.of(
@@ -63,7 +66,7 @@ public class ArchitectureUpdateValidatorTest_TDDs {
     }
 
     @Test
-    public void shouldFindAllBadTDDs() {
+    public void shouldFindAllErrors() {
         var result = ArchitectureUpdateValidator.validate(invalidAu);
         Set<EntityReference> invalidElements = result
                 .getErrors()
@@ -74,6 +77,7 @@ public class ArchitectureUpdateValidatorTest_TDDs {
         collector.checkThat(
                 invalidElements,
                 containsInAnyOrder(
+                        new Decision.Id("Decision-1"),
                         new Tdd.Id("TDD 1.1"),
                         new Tdd.Id("TDD 1.2"),
                         new Tdd.Id("TDD 2.1"),
@@ -88,7 +92,28 @@ public class ArchitectureUpdateValidatorTest_TDDs {
 
         collector.checkThat(
                 result.getErrorTypesEncountered(),
-                containsInAnyOrder(tdd_must_have_story)
+                containsInAnyOrder(tdd_must_have_story, decisions_must_have_at_least_one_tdd)
+        );
+    }
+
+
+    @Test
+    public void shouldFindTDDsWithoutStories() {
+        var result = ArchitectureUpdateValidator.validate(invalidAu);
+        Set<EntityReference> invalidElements = result
+                .getErrors(tdd_must_have_story)
+                .stream()
+                .map(ArchitectureUpdateValidator.ValidationError::getElement)
+                .collect(Collectors.toSet());
+
+        collector.checkThat(
+                invalidElements,
+                containsInAnyOrder(
+                        new Tdd.Id("TDD 1.1"),
+                        new Tdd.Id("TDD 1.2"),
+                        new Tdd.Id("TDD 2.1"),
+                        new Tdd.Id("TDD 2.2")
+                )
         );
     }
 }

@@ -3,7 +3,6 @@ package net.trilogy.arch.commands.architectureUpdate;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
-import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
 import java.io.File;
@@ -37,6 +36,8 @@ public class AuValidateCommand implements Callable<Integer> {
             );
             return 1;
         }
+
+        spec.commandLine().getOut().println("Success, no errors found.");
         return 0;
     }
 

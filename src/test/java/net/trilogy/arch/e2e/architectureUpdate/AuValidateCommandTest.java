@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class AuValidateCommandTest {
     @Rule
@@ -59,6 +57,16 @@ public class AuValidateCommandTest {
         collector.checkThat(
                 err.toString(),
                 containsString("Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.")
+        );
+    }
+
+    @Test
+    public void shouldOutputSuccessMessage() throws Exception {
+        execute("architecture-update", "validate", "blank.yml", rootDir.getAbsolutePath());
+
+        collector.checkThat(
+                out.toString(),
+                containsString("Success, no errors found.")
         );
     }
 }

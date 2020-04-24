@@ -6,8 +6,10 @@ import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.EntityReference;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,22 +29,14 @@ public class ArchitectureUpdateValidator {
                 getMissingTddReferenceErrors(),
                 getBrokenTddReferenceErrors(),
                 getTDDsWithoutStoriesErrors()
-        ).collect(Collectors.toSet()));
+        ).collect(Collectors.toList()));
     }
 
     private Set<ValidationError> getTDDsWithoutStoriesErrors() {
         Set<Tdd.Id> allTddIdsInStories = getAllTddIdsReferencedByStories();
-        return getAllTddIds(au).stream()
+        return getAllTddIds().stream()
                 .filter(tdd -> !allTddIdsInStories.contains(tdd))
                 .map(ValidationError::forTddsWithoutStories)
-                .collect(Collectors.toSet());
-    }
-
-    private Set<Tdd.Id> getAllTddIdsReferencedByStories() {
-        return au.getCapabilityContainer()
-                .getFeatureStories()
-                .stream()
-                .flatMap(story -> story.getTddReferences().stream())
                 .collect(Collectors.toSet());
     }
 
@@ -56,7 +50,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getBrokenTddReferenceErrors() {
-        Set<Tdd.Id> allTddIds = getAllTddIds(au);
+        Set<Tdd.Id> allTddIds = getAllTddIds();
         return au.getDecisions()
                 .entrySet()
                 .stream()
@@ -69,9 +63,23 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
-    private static Set<Tdd.Id> getAllTddIds(ArchitectureUpdate au) {
-        return au.getTDDs().values().stream().flatMap(Collection::stream).map(Tdd::getId).collect(Collectors.toSet());
+    private Set<Tdd.Id> getAllTddIds() {
+        return au.getTDDs()
+                .values()
+                .stream()
+                .flatMap(Collection::stream)
+                .map(Tdd::getId)
+                .collect(Collectors.toSet());
     }
+
+    private Set<Tdd.Id> getAllTddIdsReferencedByStories() {
+        return au.getCapabilityContainer()
+                .getFeatureStories()
+                .stream()
+                .flatMap(story -> story.getTddReferences().stream())
+                .collect(Collectors.toSet());
+    }
+
 
     public static class Results {
         private final LinkedHashSet<ValidationError> errors;
@@ -84,12 +92,12 @@ public class ArchitectureUpdateValidator {
             return errors.isEmpty();
         }
 
-        public Set<ValidationError> getErrors() {
-            return new LinkedHashSet<>(errors);
+        public List<ValidationError> getErrors() {
+            return new ArrayList<>(errors);
         }
 
-        public Set<ValidationError> getErrors(ErrorType errorType) {
-            return errors.stream().filter(error -> error.getErrorType() == errorType).collect(Collectors.toSet());
+        public List<ValidationError> getErrors(ErrorType errorType) {
+            return errors.stream().filter(error -> error.getErrorType() == errorType).collect(Collectors.toList());
         }
 
         public Set<ErrorType> getErrorTypesEncountered() {

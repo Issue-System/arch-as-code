@@ -1,6 +1,7 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.commands.architectureUpdate.view.AuValidateErrorPresenter;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
 import picocli.CommandLine.Model.CommandSpec;
@@ -11,7 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import static picocli.CommandLine.*;
+import static net.trilogy.arch.commands.architectureUpdate.view.AuValidateErrorPresenter.PresentationMode.FULL_VALIDATION;
+import static picocli.CommandLine.Command;
+import static picocli.CommandLine.Parameters;
+import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update")
 public class AuValidateCommand implements Callable<Integer> {
@@ -31,8 +35,8 @@ public class AuValidateCommand implements Callable<Integer> {
         var validationResults = ArchitectureUpdateValidator.validate(au);
         if (!validationResults.isValid()) {
             spec.commandLine().getErr().println("Errors found!");
-            validationResults.getErrors().forEach(error ->
-                    spec.commandLine().getErr().println(error.getDescription())
+            spec.commandLine().getErr().println(
+                    AuValidateErrorPresenter.present(FULL_VALIDATION, validationResults)
             );
             return 1;
         }

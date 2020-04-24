@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.decisions_must_have_at_least_one_tdd;
-import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.tdd_must_have_story;
+import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.missing_tdd;
+import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.missing_capability;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
@@ -92,7 +92,7 @@ public class ArchitectureUpdateValidatorTest_TDDs {
 
         collector.checkThat(
                 result.getErrorTypesEncountered(),
-                containsInAnyOrder(tdd_must_have_story, decisions_must_have_at_least_one_tdd)
+                containsInAnyOrder(missing_capability, missing_tdd)
         );
     }
 
@@ -100,7 +100,7 @@ public class ArchitectureUpdateValidatorTest_TDDs {
     public void shouldFindTDDsWithoutStories() {
         var result = ArchitectureUpdateValidator.validate(invalidAu);
         Set<EntityReference> invalidElements = result
-                .getErrors(tdd_must_have_story)
+                .getErrors(missing_capability)
                 .stream()
                 .map(ArchitectureUpdateValidator.ValidationError::getElement)
                 .collect(Collectors.toSet());

@@ -7,7 +7,7 @@ import net.trilogy.arch.domain.architectureUpdate.EntityReference;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,10 +74,10 @@ public class ArchitectureUpdateValidator {
     }
 
     public static class Results {
-        private final Set<ValidationError> errors;
+        private final LinkedHashSet<ValidationError> errors;
 
-        private Results(Set<ValidationError> errors) {
-            this.errors = errors;
+        public Results(Set<ValidationError> errors) {
+            this.errors = new LinkedHashSet<>(errors);
         }
 
         public boolean isValid() {
@@ -85,7 +85,7 @@ public class ArchitectureUpdateValidator {
         }
 
         public Set<ValidationError> getErrors() {
-            return new HashSet<>(errors);
+            return new LinkedHashSet<>(errors);
         }
 
         public Set<ValidationError> getErrors(ErrorType errorType) {
@@ -102,15 +102,15 @@ public class ArchitectureUpdateValidator {
         private final EntityReference element;
         private final String description;
 
-        private static ValidationError forMissingTddReference(Decision.Id entityId) {
+        public static ValidationError forMissingTddReference(Decision.Id entityId) {
             return new ValidationError(
-                    ErrorType.decisions_must_have_at_least_one_tdd,
+                    ErrorType.missing_tdd,
                     entityId,
                     String.format("Decision \"%s\" must have at least one TDD reference.", entityId.getId())
             );
         }
 
-        private static ValidationError forInvalidTddReference(Decision.Id entityId, Tdd.Id tddId) {
+        public static ValidationError forInvalidTddReference(Decision.Id entityId, Tdd.Id tddId) {
             return new ValidationError(
                     ErrorType.invalid_tdd_reference,
                     entityId,
@@ -120,7 +120,7 @@ public class ArchitectureUpdateValidator {
 
         public static ValidationError forTddsWithoutStories(Tdd.Id entityId) {
             return new ValidationError(
-                    ErrorType.tdd_must_have_story,
+                    ErrorType.missing_capability,
                     entityId,
                     String.format("TDD \"%s\" is not referred to by a story.", entityId.getId())
             );
@@ -146,8 +146,19 @@ public class ArchitectureUpdateValidator {
     }
 
     public enum ErrorType {
-        decisions_must_have_at_least_one_tdd,
-        tdd_must_have_story,
-        invalid_tdd_reference
+        missing_tdd("Missing TDD"),
+        missing_capability("Missing Capability"),
+        invalid_tdd_reference("Invalid TDD Reference");
+
+        private final String label;
+
+        ErrorType(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }

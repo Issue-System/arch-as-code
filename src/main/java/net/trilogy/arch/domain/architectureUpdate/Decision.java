@@ -13,8 +13,10 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class Decision {
-    @JsonProperty(value = "text") private final String text;
-    @JsonProperty(value = "tdd-references") private final List<Tdd.Id> tddReferences;
+    @JsonProperty(value = "text")
+    private final String text;
+    @JsonProperty(value = "tdd-references")
+    private final List<Tdd.Id> tddReferences;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Decision(
@@ -32,7 +34,7 @@ public class Decision {
     @Getter
     @ToString
     @EqualsAndHashCode
-    public static class Id {
+    public static class Id implements EntityReference {
         @JsonValue
         @JsonProperty(value = "id")
         private final String id;

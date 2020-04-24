@@ -3,6 +3,7 @@ package net.trilogy.arch.validation.architectureUpdate;
 import io.vavr.collection.Stream;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Decision;
+import net.trilogy.arch.domain.architectureUpdate.EntityReference;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 import java.util.Collection;
@@ -24,8 +25,25 @@ public class ArchitectureUpdateValidator {
     private Results run() {
         return new Results(Stream.concat(
                 getMissingTddReferenceErrors(),
-                getBrokenTddReferenceErrors()
+                getBrokenTddReferenceErrors(),
+                getTDDsWithoutStoriesErrors()
         ).collect(Collectors.toSet()));
+    }
+
+    private Set<ValidationError> getTDDsWithoutStoriesErrors() {
+        Set<Tdd.Id> allTddIdsInStories = getAllTddIdsReferencedByStories();
+        return getAllTddIds(au).stream()
+                .filter(tdd -> !allTddIdsInStories.contains(tdd))
+                .map(ValidationError::forTddsWithoutStories)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Tdd.Id> getAllTddIdsReferencedByStories() {
+        return au.getCapabilityContainer()
+                .getFeatureStories()
+                .stream()
+                .flatMap(story -> story.getTddReferences().stream())
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getMissingTddReferenceErrors() {
@@ -81,7 +99,7 @@ public class ArchitectureUpdateValidator {
 
     public static class ValidationError {
         private final ErrorType errorType;
-        private final Decision.Id element;
+        private final EntityReference element;
         private final String description;
 
         private static ValidationError forMissingTddReference(Decision.Id entityId) {
@@ -100,13 +118,21 @@ public class ArchitectureUpdateValidator {
             );
         }
 
-        private ValidationError(ErrorType errorType, Decision.Id element, String description) {
+        public static ValidationError forTddsWithoutStories(Tdd.Id entityId) {
+            return new ValidationError(
+                    ErrorType.tdd_must_have_story,
+                    entityId,
+                    String.format("TDD \"%s\" is not referred to by a story.", entityId.getId())
+            );
+        }
+
+        private ValidationError(ErrorType errorType, EntityReference element, String description) {
             this.errorType = errorType;
             this.element = element;
             this.description = description;
         }
 
-        public Decision.Id getElement() {
+        public EntityReference getElement() {
             return element;
         }
 
@@ -121,6 +147,7 @@ public class ArchitectureUpdateValidator {
 
     public enum ErrorType {
         decisions_must_have_at_least_one_tdd,
+        tdd_must_have_story,
         invalid_tdd_reference
     }
 }

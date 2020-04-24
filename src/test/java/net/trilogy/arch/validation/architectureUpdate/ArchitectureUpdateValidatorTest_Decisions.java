@@ -2,6 +2,7 @@ package net.trilogy.arch.validation.architectureUpdate;
 
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Decision;
+import net.trilogy.arch.domain.architectureUpdate.EntityReference;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,9 +16,7 @@ import java.util.stream.Collectors;
 
 import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.decisions_must_have_at_least_one_tdd;
 import static net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator.ErrorType.invalid_tdd_reference;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 
 public class ArchitectureUpdateValidatorTest_Decisions {
@@ -55,7 +54,7 @@ public class ArchitectureUpdateValidatorTest_Decisions {
     @Test
     public void shouldFindAllBadDecisions() {
         var result = ArchitectureUpdateValidator.validate(invalidAu);
-        Set<Decision.Id> invalidElements = result
+        Set<EntityReference> invalidElements = result
                 .getErrors()
                 .stream()
                 .map(ArchitectureUpdateValidator.ValidationError::getElement)
@@ -84,7 +83,7 @@ public class ArchitectureUpdateValidatorTest_Decisions {
     @Test
     public void shouldFindDecisionsWithMissingTdds() {
         var result = ArchitectureUpdateValidator.validate(invalidAu);
-        Set<Decision.Id> invalidElements = result
+        Set<EntityReference> invalidElements = result
                 .getErrors(decisions_must_have_at_least_one_tdd)
                 .stream()
                 .map(ArchitectureUpdateValidator.ValidationError::getElement)

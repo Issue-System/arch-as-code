@@ -11,8 +11,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Tdd {
-    @JsonProperty(value = "id") private final Tdd.Id id;
-    @JsonProperty(value = "text") private final String text;
+    @JsonProperty(value = "id")
+    private final Tdd.Id id;
+    @JsonProperty(value = "text")
+    private final String text;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Tdd(
@@ -29,7 +31,7 @@ public class Tdd {
 
     @Getter
     @EqualsAndHashCode
-    public static class Id {
+    public static class Id implements EntityReference {
         @JsonValue
         private final String id;
 
@@ -45,8 +47,8 @@ public class Tdd {
     @Getter
     @EqualsAndHashCode
     @ToString
-    public static class ComponentReference {
-         private final String id;
+    public static class ComponentReference implements EntityReference {
+        private final String id;
 
         public ComponentReference(String id) {
             this.id = id.replaceFirst("Component-", "");

@@ -3,9 +3,11 @@ package net.trilogy.arch.domain.architectureUpdate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @EqualsAndHashCode
 public class FeatureStory {
     @JsonProperty(value = "title") private final String title;

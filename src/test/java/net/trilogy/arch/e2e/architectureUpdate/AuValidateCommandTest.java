@@ -3,6 +3,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 import net.trilogy.arch.TestHelper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -42,34 +43,75 @@ public class AuValidateCommandTest {
         System.setErr(originalErr);
     }
 
+    @Ignore("WIP")
     @Test
-    public void shouldExitWithHappyStatus_short() throws Exception {
+    public void shouldBeFullyValid() throws Exception {
         Integer status = execute("au", "validate", "blank.yml", rootDir.getAbsolutePath());
         collector.checkThat(status, equalTo(0));
-        collector.checkThat(
-                out.toString(),
-                containsString("Success, no errors found.")
-        );
+        collector.checkThat(out.toString(), containsString("Success, no errors found."));
     }
 
-    public void shouldExitWithHappyStatus_long() throws Exception {
-        Integer status = execute("architecture-update", "validate", "blank.yml", rootDir.getAbsolutePath());
-        collector.checkThat(status, equalTo(0));
-        collector.checkThat(
-                out.toString(),
-                containsString("Success, no errors found.")
-        );
-    }
-
+    @Ignore("WIP")
     @Test
-    public void shouldValidateAu() throws Exception {
-        Integer status = execute("au", "validate", "missing_decision_tdds_blank.yml", rootDir.getAbsolutePath());
+    public void shouldBeTDDValid() throws Exception {
+        Integer status = execute("architecture-update", "validate", "-t", "invalid_capabilities.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(out.toString(), containsString("Success, no errors found."));
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldBeCapabilityValid() throws Exception {
+        Integer status = execute("architecture-update", "validate", "-c", "invalid_tdds.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(out.toString(), containsString("Success, no errors found."));
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldBeFullyInvalid() throws Exception {
+        Integer status = execute("au", "validate", "both_invalid.yml", rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
 
         collector.checkThat(
                 err.toString(),
                 containsString("Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.")
         );
+        collector.checkThat(
+                err.toString(),
+                containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
+        );
     }
 
+    @Ignore("WIP")
+    @Test
+    public void shouldBeTddInvalid() throws Exception {
+        Integer status = execute("au", "validate", "--TDDs", "both_invalid.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+
+        collector.checkThat(
+                err.toString(),
+                containsString("Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.")
+        );
+        collector.checkThat(
+                err.toString(),
+                not(containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story."))
+        );
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldBeCapabilityInvalid() throws Exception {
+        Integer status = execute("au", "validate", "--capabilities", "both_invalid.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+
+        collector.checkThat(
+                err.toString(),
+                not(containsString("Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference."))
+        );
+        collector.checkThat(
+                err.toString(),
+                containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
+        );
+    }
 }

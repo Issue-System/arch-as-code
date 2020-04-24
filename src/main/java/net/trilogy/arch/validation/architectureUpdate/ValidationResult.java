@@ -7,16 +7,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ValidationResults {
+public class ValidationResult {
     private final LinkedHashSet<ValidationError> errors;
 
-    public ValidationResults(Collection<ValidationError> errors) {
+    public ValidationResult(Collection<ValidationError> errors) {
         this.errors = new LinkedHashSet<>(errors);
     }
 
     public boolean isValid() {
         return errors.isEmpty();
     }
+
     public boolean isValid(ValidationStage stage) {
         return errors.stream().noneMatch(error -> error.getValidationErrorType().getStage() == stage);
     }
@@ -25,11 +26,9 @@ public class ValidationResults {
         return new ArrayList<>(errors);
     }
 
-    public List<ValidationError> getErrors(ValidationErrorType validationErrorType) {
-        return errors.stream().filter(error -> error.getValidationErrorType() == validationErrorType).collect(Collectors.toList());
-    }
-
-    public Set<ValidationErrorType> getErrorTypesEncountered() {
-        return errors.stream().map(ValidationError::getValidationErrorType).collect(Collectors.toSet());
+    public List<ValidationError> getErrors(ValidationStage stage) {
+        return errors.stream()
+                .filter(error -> error.getValidationErrorType().getStage().equals(stage))
+                .collect(Collectors.toList());
     }
 }

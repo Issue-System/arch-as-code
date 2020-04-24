@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ArchitectureUpdateValidator {
     private final ArchitectureUpdate au;
 
-    public static ValidationResults validate(ArchitectureUpdate au) {
+    public static ValidationResult validate(ArchitectureUpdate au) {
         return new ArchitectureUpdateValidator(au).run();
     }
 
@@ -19,8 +19,8 @@ public class ArchitectureUpdateValidator {
         this.au = au;
     }
 
-    private ValidationResults run() {
-        return new ValidationResults(Stream.concat(
+    private ValidationResult run() {
+        return new ValidationResult(Stream.concat(
                 getMissingTddReferenceErrors(),
                 getBrokenTddReferenceErrors(),
                 getTDDsWithoutStoriesErrors()

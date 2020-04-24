@@ -39,7 +39,7 @@ public class ValidationError {
         );
     }
 
-    public ValidationError(ValidationErrorType validationErrorType, EntityReference element, String description) {
+    private ValidationError(ValidationErrorType validationErrorType, EntityReference element, String description) {
         this.validationErrorType = validationErrorType;
         this.element = element;
         this.description = description;

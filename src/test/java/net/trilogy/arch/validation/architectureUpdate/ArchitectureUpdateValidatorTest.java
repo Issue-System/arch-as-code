@@ -76,12 +76,12 @@ public class ArchitectureUpdateValidatorTest {
         collector.checkThat(
                 errors,
                 containsInAnyOrder(
-                        new ValidationError(ValidationErrorType.MISSING_TDD, new Decision.Id("Missing-TDD-Decision-1"), "Decision \"Missing-TDD-Decision-1\" must have at least one TDD reference."),
-                        new ValidationError(ValidationErrorType.MISSING_TDD, new Decision.Id("Missing-TDD-Decision-2"), "Decision \"Missing-TDD-Decision-2\" must have at least one TDD reference."),
-                        new ValidationError(ValidationErrorType.INVALID_TDD_REFERENCE, new Decision.Id("Bad-TDD-Decision"), "Decision \"Bad-TDD-Decision\" contains invalid TDD reference \"BAD-TDD-ID\"."),
-                        new ValidationError(ValidationErrorType.MISSING_CAPABILITY, new Tdd.Id("TDD 1.1"), "TDD \"TDD 1.1\" is not referred to by a story."),
-                        new ValidationError(ValidationErrorType.MISSING_CAPABILITY, new Tdd.Id("TDD 2.1"), "TDD \"TDD 2.1\" is not referred to by a story."),
-                        new ValidationError(ValidationErrorType.MISSING_CAPABILITY, new Tdd.Id("TDD 2.2"), "TDD \"TDD 2.2\" is not referred to by a story.")
+                        ValidationError.forInvalidTddReference(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
+                        ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-1")),
+                        ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-2")),
+                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 1.1")),
+                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.1")),
+                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.2"))
                 )
         );
     }

@@ -63,7 +63,8 @@ public class AuValidateCommand implements Callable<Integer> {
         return getTypes(errors).stream()
                 .map(type -> getErrorsOfType(type, errors))
                 .map(this::getPrettyStringOfErrorsInSingleType)
-                .collect(Collectors.joining());
+                .collect(Collectors.joining())
+                .trim();
     }
 
     private List<ValidationError> getErrorsOfStages(List<ValidationStage> stages, ValidationResult validationResults) {

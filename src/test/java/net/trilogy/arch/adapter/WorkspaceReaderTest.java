@@ -32,7 +32,6 @@ public class WorkspaceReaderTest {
 
     @Test
     public void shouldReadComponent() throws Exception {
-        // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
         URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);
         ArchitectureDataStructure data = new WorkspaceReader().load(new File(resource.getPath()));
 
@@ -59,7 +58,6 @@ public class WorkspaceReaderTest {
 
     @Test
     public void shouldReadCorrectNumberOfElements() throws Exception {
-        // TODO FUTURE: Probably a good idea to break out the giant .json into individual, small jsons per test with only what's needed.
         URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
 

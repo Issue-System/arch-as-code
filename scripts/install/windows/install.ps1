@@ -9,7 +9,7 @@ tar -xzv --strip-components 1 -f $HOME\arch-as-code\arch-as-code.tar.gz -C $HOME
 $Env:Path += ";$HOME\arch-as-code\bin"
 
 $path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
-$newpath = $path + ';$HOME\arch-as-code\bin'
+$newpath = $path + ";$HOME\arch-as-code\bin"
 [Environment]::SetEnvironmentVariable("Path", $newpath, 'Machine')
 
 

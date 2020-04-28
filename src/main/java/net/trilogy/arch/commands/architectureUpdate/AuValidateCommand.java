@@ -2,11 +2,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
-import net.trilogy.arch.validation.architectureUpdate.ValidationError;
-import net.trilogy.arch.validation.architectureUpdate.ValidationErrorType;
-import net.trilogy.arch.validation.architectureUpdate.ValidationResult;
-import net.trilogy.arch.validation.architectureUpdate.ValidationStage;
+import net.trilogy.arch.validation.architectureUpdate.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
@@ -18,9 +14,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static picocli.CommandLine.Command;
-import static picocli.CommandLine.Parameters;
-import static picocli.CommandLine.Spec;
+import static picocli.CommandLine.*;
 
 @Command(name = "validate", description = "Validate Architecture Update")
 public class AuValidateCommand implements Callable<Integer> {
@@ -40,9 +34,21 @@ public class AuValidateCommand implements Callable<Integer> {
     private CommandSpec spec;
 
     @Override
-    public Integer call() throws IOException {
-        ArchitectureUpdate au = getAu();
-        var validationResults = ArchitectureUpdateValidator.validate(au);
+    public Integer call() {
+        Path auPath = productDocumentationRoot.toPath()
+                .resolve("architecture-updates")
+                .resolve(architectureUpdateFileName)
+                .toAbsolutePath();
+
+        ValidationResult validationResults;
+        // TODO FUTURE: Use JSON schema validation
+        try {
+            ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
+            validationResults = ArchitectureUpdateValidator.validate(au);
+        } catch (IOException | RuntimeException e) {
+            spec.commandLine().getErr().println("Invalid structure");
+            return 1;
+        }
 
         List<ValidationStage> stages = determineValidationStages(tddValidation, capabilityValidation);
         boolean areAllStagesValid = stages.stream().allMatch(validationResults::isValid);
@@ -107,11 +113,4 @@ public class AuValidateCommand implements Callable<Integer> {
         return List.of(ValidationStage.values());
     }
 
-    private ArchitectureUpdate getAu() throws IOException {
-        Path auPath = productDocumentationRoot.toPath()
-                .resolve("architecture-updates")
-                .resolve(architectureUpdateFileName)
-                .toAbsolutePath();
-        return new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
-    }
 }

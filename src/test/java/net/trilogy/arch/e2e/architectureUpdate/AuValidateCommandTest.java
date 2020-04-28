@@ -124,4 +124,15 @@ public class AuValidateCommandTest {
                 containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
         );
     }
+
+    @Test
+    public void shouldFindAUStructureErrors() throws Exception {
+        Integer status = execute("au", "validate", "invalid_structure.yml", rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+
+        collector.checkThat(
+                err.toString(),
+                containsString("Invalid structure")
+        );
+    }
 }

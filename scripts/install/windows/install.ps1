@@ -1,6 +1,4 @@
-Set-PSDebug -Trace 2
-
-$download_url = (Invoke-WebRequest "https://api.github.com/repos/trilogy-group/arch-as-code/releases/latest" | ConvertFrom-Json).assets.browser_download_url
+$download_url = (Invoke-WebRequest "https://api.github.com/repos/trilogy-group/arch-as-code/releases/latest" | ConvertFrom-Json).assets.browser_download_url | select -first 1
 
 New-Item -ItemType Directory -Force -Path $HOME\arch-as-code
 

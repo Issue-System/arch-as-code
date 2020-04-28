@@ -102,13 +102,13 @@ public class AuValidateCommand implements Callable<Integer> {
 
     private List<ValidationStage> determineValidationStages(boolean tddValidation, boolean capabilityValidation) {
         if (tddValidation && capabilityValidation) {
-            return List.of(ValidationStage.TDD, ValidationStage.CAPABILITY);
+            return List.of(ValidationStage.TDD, ValidationStage.STORY);
         }
         if (tddValidation) {
             return List.of(ValidationStage.TDD);
         }
         if (capabilityValidation) {
-            return List.of(ValidationStage.CAPABILITY);
+            return List.of(ValidationStage.STORY);
         }
         return List.of(ValidationStage.values());
     }

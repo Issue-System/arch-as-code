@@ -66,7 +66,8 @@ public class ArchitectureUpdateValidatorTest {
                                 Epic.blank(),
                                 List.of(
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
-                                                new Tdd.Id("Valid-TDD-with-requirement-and-story")
+                                                new Tdd.Id("Valid-TDD-with-requirement-and-story"),
+                                                new Tdd.Id("Invalid-TDD-ID")
                                         ), List.of()),
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-decision-and-story"),
@@ -85,7 +86,7 @@ public class ArchitectureUpdateValidatorTest {
         var result = ArchitectureUpdateValidator.validate(au);
 
         collector.checkThat(result.isValid(), is(true));
-        collector.checkThat(result.isValid(ValidationStage.CAPABILITY), is(true));
+        collector.checkThat(result.isValid(ValidationStage.STORY), is(true));
         collector.checkThat(result.isValid(ValidationStage.TDD), is(true));
     }
 
@@ -95,8 +96,8 @@ public class ArchitectureUpdateValidatorTest {
 
         var actualErrors = ArchitectureUpdateValidator.validate(au).getErrors();
         var expectedErrors = List.of(
-                ValidationError.forInvalidTddReference(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
-                ValidationError.forInvalidTddReference(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
 
                 ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-1")),
                 ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-2")),
@@ -104,7 +105,9 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forTddWithoutStory(new Tdd.Id("TDD-unused-and-without-story")),
 
                 ValidationError.forTddWithoutCause(new Tdd.Id("TDD-unused-and-without-story")),
-                ValidationError.forTddWithoutCause(new Tdd.Id("TDD-unused-with-story"))
+                ValidationError.forTddWithoutCause(new Tdd.Id("TDD-unused-with-story")),
+
+                ValidationError.forInvalidTddReferenceInStory(new Tdd.Id("Invalid-TDD-ID"), "Feat Title")
         );
 
         collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));

@@ -33,6 +33,7 @@ public class ArchitectureUpdateValidator {
                 getMissingTddReferenceErrors(),
                 getBrokenDecisionsTddReferenceErrors(),
                 getBrokenFunctionalRequirementsTddReferenceErrors(),
+                getBrokenStoriesTddReferenceErrors(),
                 getTDDsWithoutStoriesErrors(),
                 getTDDsWithoutCauseErrors()
         ).collect(Collectors.toList()));
@@ -71,9 +72,25 @@ public class ArchitectureUpdateValidator {
                         decisionEntry.getValue().getTddReferences()
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
-                                .map(tdd -> ValidationError.forInvalidTddReference(decisionEntry.getKey(), tdd)))
+                                .map(tdd -> ValidationError.forInvalidTddReferenceInDecisionOrRequirement(decisionEntry.getKey(), tdd))
+                )
                 .collect(Collectors.toSet());
     }
+
+    private Set<ValidationError> getBrokenStoriesTddReferenceErrors() {
+        return au.getCapabilityContainer()
+                .getFeatureStories()
+                .stream()
+                .filter(story -> story.getTddReferences() != null)
+                .flatMap(story ->
+                        story.getTddReferences()
+                                .stream()
+                                .filter(tdd -> !allTddIds.contains(tdd))
+                                .map(tdd -> ValidationError.forInvalidTddReferenceInStory(tdd, story.getTitle()))
+                )
+                .collect(Collectors.toSet());
+    }
+
 
     private Set<ValidationError> getBrokenFunctionalRequirementsTddReferenceErrors() {
         return au.getFunctionalRequirements()
@@ -84,7 +101,7 @@ public class ArchitectureUpdateValidator {
                         functionalEntry.getValue().getTddReferences()
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
-                                .map(tdd -> ValidationError.forInvalidTddReference(functionalEntry.getKey(), tdd)))
+                                .map(tdd -> ValidationError.forInvalidTddReferenceInDecisionOrRequirement(functionalEntry.getKey(), tdd)))
                 .collect(Collectors.toSet());
     }
 

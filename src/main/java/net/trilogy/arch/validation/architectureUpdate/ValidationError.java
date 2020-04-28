@@ -23,9 +23,9 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forInvalidTddReference(EntityReference entityId, Tdd.Id tddId) {
+    public static ValidationError forInvalidTddReferenceInDecisionOrRequirement(EntityReference entityId, Tdd.Id tddId) {
         return new ValidationError(
-                ValidationErrorType.INVALID_TDD_REFERENCE,
+                ValidationErrorType.INVALID_TDD_REFERENCE_IN_DECISION_OR_REQUIREMENT,
                 entityId,
                 String.format("Entity \"%s\" contains TDD reference \"%s\" that does not exist.", entityId.getId(), tddId.getId())
         );
@@ -44,6 +44,14 @@ public class ValidationError {
                 ValidationErrorType.TDD_WITHOUT_CAUSE,
                 tddId,
                 String.format("TDD \"%s\" is not referred to by a decision or functional requirement.", tddId.getId())
+        );
+    }
+
+    public static ValidationError forInvalidTddReferenceInStory(Tdd.Id id, String storyTitle) {
+        return new ValidationError(
+                ValidationErrorType.INVALID_TDD_REFERENCE_IN_STORY,
+                id,
+                String.format("Story \"%s\" contains TDD reference \"%s\" that does not exist.", storyTitle, id.getId())
         );
     }
 

@@ -1,6 +1,9 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import lombok.SneakyThrows;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.*;
 import picocli.CommandLine;
@@ -43,8 +46,9 @@ public class AuValidateCommand implements Callable<Integer> {
         ValidationResult validationResults;
         // TODO FUTURE: Use JSON schema validation
         try {
+            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader().load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
-            validationResults = ArchitectureUpdateValidator.validate(au, null);
+            validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {
             spec.commandLine().getErr().println("Invalid structure.");
             return 1;

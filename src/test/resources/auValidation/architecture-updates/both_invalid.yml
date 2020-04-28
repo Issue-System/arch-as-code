@@ -30,7 +30,7 @@ decisions:
     text: "[SAMPLE DECISION TEXT]"
     tdd-references: []
 TDDs:
-  Component-[SAMPLE-COMPONENT-ID]:
+  Component-[INVALID-COMPONENT-ID]:
   - id: "[SAMPLE-TDD-ID]"
     text: "[SAMPLE TDD TEXT]"
 functional-requirements:

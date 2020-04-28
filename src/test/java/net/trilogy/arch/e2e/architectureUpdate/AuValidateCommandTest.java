@@ -73,6 +73,8 @@ public class AuValidateCommandTest {
                 equalTo("" +
                         "Missing TDD:\n" +
                         "    Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.\n" +
+                        "Invalid Component Reference:\n" +
+                        "    Component id \"[INVALID-COMPONENT-ID]\" does not exist.\n" +
                         "Missing Capability:\n" +
                         "    TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.\n" +
                         ""
@@ -93,6 +95,10 @@ public class AuValidateCommandTest {
                 err.toString(),
                 containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
         );
+        collector.checkThat(
+                err.toString(),
+                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." )
+        );
     }
 
     @Test
@@ -108,6 +114,10 @@ public class AuValidateCommandTest {
                 err.toString(),
                 not(containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story."))
         );
+        collector.checkThat(
+                err.toString(),
+                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." )
+        );
     }
 
     @Test
@@ -115,6 +125,10 @@ public class AuValidateCommandTest {
         Integer status = execute("au", "validate", "--stories", "both_invalid.yml", rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
 
+        collector.checkThat(
+                err.toString(),
+                not(containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." ))
+        );
         collector.checkThat(
                 err.toString(),
                 not(containsString("Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference."))

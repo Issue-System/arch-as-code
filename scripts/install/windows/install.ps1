@@ -8,13 +8,12 @@ tar -xzv --strip-components 1 -f $HOME\arch-as-code\arch-as-code.tar.gz -C $HOME
 
 $Env:Path += ";$HOME\arch-as-code\bin"
 
+$path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+$newpath = $path + ';$HOME\arch-as-code\bin'
+[Environment]::SetEnvironmentVariable("Path", $newpath, 'Machine')
 
-arch-as-code --help
-
-New-Item -ItemType Directory -Force -Path "$env:temp\my-awesome-product"
-cd "$env:temp\my-awesome-product"
 
 arch-as-code --version
 
-# arch-as-code init -i "$env:STRUCTURIZR_WORKSPACE_ID" -k "$env:STRUCTURIZR_API_KEY" -s "$env:STRUCTURIZR_API_SECRET" "$env:temp\my-awesome-product"
+
 

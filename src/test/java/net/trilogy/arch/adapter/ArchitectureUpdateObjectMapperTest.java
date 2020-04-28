@@ -73,6 +73,8 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "  '[SAMPLE-REQUIREMENT-ID]':"
                 , "    text: \"[SAMPLE REQUIREMENT TEXT]\""
                 , "    source: \"[SAMPLE REQUIREMENT SOURCE TEXT]\""
+                , "    tdd-references:"
+                , "    - \"[SAMPLE-TDD-ID]\""
                 , "capabilities:"
                 , "  epic:"
                 , "    title: \"[SAMPLE EPIC TITLE]\""

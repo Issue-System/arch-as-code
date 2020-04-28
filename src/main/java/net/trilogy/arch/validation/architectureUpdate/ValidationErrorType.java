@@ -7,7 +7,8 @@ public enum ValidationErrorType {
     MISSING_CAPABILITY("Missing Capability", ValidationStage.STORY),
     MISSING_TDD("Missing TDD", ValidationStage.TDD),
     TDD_WITHOUT_CAUSE("TDD without cause", ValidationStage.TDD),
-    INVALID_TDD_REFERENCE_IN_STORY("Invalid TDD Reference in Story", ValidationStage.STORY);
+    INVALID_TDD_REFERENCE_IN_STORY("Invalid TDD Reference in Story", ValidationStage.STORY),
+    INVALID_COMPONENT_REFERENCE("Invalid Component Reference", ValidationStage.TDD);
 
     @Getter private final String label;
     @Getter private final ValidationStage stage;

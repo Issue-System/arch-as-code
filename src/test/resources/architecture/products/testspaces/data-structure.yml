@@ -293,6 +293,15 @@ model:
       tags:
         - "DevSpaces API Component View"
 
+    - id: "[SAMPLE-COMPONENT-ID]"
+      alias: "c4://DevSpaces/DevSpaces API/E-mail Component Duplicate"
+      containerAlias: "c4://DevSpaces/DevSpaces API"
+      name: "DevSpaces/DevSpaces API/E-mail Component Duplicate"
+      description: "Sends emails to users"
+      technology: "Spring MVC Rest Controller"
+      tags:
+        - "DevSpaces API Component View"
+
 views:
   systemViews:
     - name: "DevSpaces"

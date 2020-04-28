@@ -1,6 +1,7 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
 import io.vavr.collection.Stream;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
@@ -10,18 +11,21 @@ import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
     private final ArchitectureUpdate au;
+    private final ArchitectureDataStructure architecture;
 
     private final Set<Tdd.Id> allTddIdsInStories;
     private final Set<Tdd.Id> allTddIds;
     private final Set<Tdd.Id> allTddIdsInDecisions;
     private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
 
-    public static ValidationResult validate(ArchitectureUpdate au) {
-        return new ArchitectureUpdateValidator(au).run();
+    public static ValidationResult validate(ArchitectureUpdate au, ArchitectureDataStructure architecture) {
+        return new ArchitectureUpdateValidator(au, architecture).run();
     }
 
-    private ArchitectureUpdateValidator(ArchitectureUpdate au) {
+    private ArchitectureUpdateValidator(ArchitectureUpdate au, ArchitectureDataStructure architecture) {
         this.au = au;
+        this.architecture = architecture;
+
         allTddIdsInStories = getAllTddIdsReferencedByStories();
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();

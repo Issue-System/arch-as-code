@@ -55,6 +55,14 @@ public class ValidationError {
         );
     }
 
+    public static ValidationError forInvalidComponentReference(Tdd.ComponentReference componentReference) {
+        return new ValidationError(
+                ValidationErrorType.INVALID_COMPONENT_REFERENCE,
+                componentReference,
+                String.format("Component id \"%s\" does not exist.", componentReference.getId())
+        );
+    }
+
     private ValidationError(ValidationErrorType validationErrorType, EntityReference element, String description) {
         this.validationErrorType = validationErrorType;
         this.element = element;

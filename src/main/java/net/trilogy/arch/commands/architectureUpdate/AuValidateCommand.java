@@ -44,7 +44,7 @@ public class AuValidateCommand implements Callable<Integer> {
         // TODO FUTURE: Use JSON schema validation
         try {
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
-            validationResults = ArchitectureUpdateValidator.validate(au);
+            validationResults = ArchitectureUpdateValidator.validate(au, null);
         } catch (IOException | RuntimeException e) {
             spec.commandLine().getErr().println("Invalid structure.");
             return 1;

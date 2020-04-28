@@ -105,7 +105,7 @@ public class ArchitectureDataStructureReaderTest {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
-        assertThat(data.getModel().getComponents().size(), is(equalTo(4)));
+        assertThat(data.getModel().getContainers().size(), is(equalTo(4)));
 
         var actual = (C4Container) data.getModel().findEntityById("11");
         var expected = C4Container.builder()
@@ -131,7 +131,7 @@ public class ArchitectureDataStructureReaderTest {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath());
         var data = new ArchitectureDataStructureReader().load(file);
 
-        assertThat(data.getModel().getComponents().size(), is(equalTo(4)));
+        assertThat(data.getModel().getComponents().size(), is(equalTo(5)));
 
         var actual = (C4Component) data.getModel().findEntityById("38");
         var expected = C4Component.builder()

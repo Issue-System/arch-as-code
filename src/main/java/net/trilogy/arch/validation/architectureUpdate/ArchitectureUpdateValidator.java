@@ -4,14 +4,18 @@ import io.vavr.collection.Stream;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.c4.BaseEntity;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
+
     private final ArchitectureUpdate au;
     private final ArchitectureDataStructure architecture;
+
+    private final Set<String> allComponentIdsInArchitecture;
 
     private final Set<Tdd.Id> allTddIdsInStories;
     private final Set<Tdd.Id> allTddIds;
@@ -26,6 +30,8 @@ public class ArchitectureUpdateValidator {
         this.au = au;
         this.architecture = architecture;
 
+        allComponentIdsInArchitecture = getAllComponentIdsInArchitecture();
+
         allTddIdsInStories = getAllTddIdsReferencedByStories();
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();
@@ -39,8 +45,18 @@ public class ArchitectureUpdateValidator {
                 getBrokenFunctionalRequirementsTddReferenceErrors(),
                 getBrokenStoriesTddReferenceErrors(),
                 getTDDsWithoutStoriesErrors(),
-                getTDDsWithoutCauseErrors()
+                getTDDsWithoutCauseErrors(),
+                getBrokenComponentReferenceErrors()
         ).collect(Collectors.toList()));
+    }
+
+    private Set<ValidationError> getBrokenComponentReferenceErrors() {
+        return au.getTDDs()
+                .keySet()
+                .stream()
+                .filter(componentReference -> ! allComponentIdsInArchitecture.contains(componentReference.getId()))
+                .map(ValidationError::forInvalidComponentReference)
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getTDDsWithoutCauseErrors() {
@@ -143,4 +159,9 @@ public class ArchitectureUpdateValidator {
                 .flatMap(decision -> decision.getTddReferences().stream())
                 .collect(Collectors.toSet());
     }
+
+    private Set<String> getAllComponentIdsInArchitecture() {
+        return this.architecture.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
+    }
+
 }

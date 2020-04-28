@@ -244,7 +244,7 @@ public class ParsedYamlToModelIntegrationTest {
 
         assertTrue(tagSet.contains("DevSpaces Container View"));
 
-        assertThat(components, hasSize(4));
+        assertThat(components, hasSize(5));
         assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Sign In Controller"));
         assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Security Component"));
         assertTrue(componentNames.contains("DevSpaces/DevSpaces API/Reset Password Controller"));

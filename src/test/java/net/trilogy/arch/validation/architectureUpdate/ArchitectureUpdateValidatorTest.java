@@ -49,7 +49,10 @@ public class ArchitectureUpdateValidatorTest {
                 .functionalRequirements(
                         Map.of(
                                 new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"),
-                                new FunctionalRequirement("Text", "Source", List.of(new Tdd.Id("BAD-TDD-ID"))),
+                                new FunctionalRequirement("Text", "Source", List.of(
+                                        new Tdd.Id("BAD-TDD-ID"),
+                                        new Tdd.Id("Tdd-with-invalid-component")
+                                )),
 
                                 new FunctionalRequirement.Id("Valid-Functional-Requirement"),
                                 new FunctionalRequirement("Text", "Source", List.of()),
@@ -81,7 +84,8 @@ public class ArchitectureUpdateValidatorTest {
                                 List.of(
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story"),
-                                                new Tdd.Id("Invalid-TDD-ID")
+                                                new Tdd.Id("Invalid-TDD-ID"),
+                                                new Tdd.Id("Tdd-with-invalid-component")
                                         ), List.of()),
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-decision-and-story"),

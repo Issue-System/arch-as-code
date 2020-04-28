@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum ValidationErrorType {
     INVALID_TDD_REFERENCE("Invalid TDD Reference", ValidationStage.TDD),
     MISSING_CAPABILITY("Missing Capability", ValidationStage.CAPABILITY),
-    MISSING_TDD("Missing TDD", ValidationStage.TDD);
+    MISSING_TDD("Missing TDD", ValidationStage.TDD),
+    TDD_WITHOUT_CAUSE("TDD without cause", ValidationStage.TDD);
 
     @Getter private final String label;
     @Getter private final ValidationStage stage;

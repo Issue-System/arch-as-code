@@ -31,11 +31,19 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forTddsWithoutStories(Tdd.Id entityId) {
+    public static ValidationError forTddWithoutStory(Tdd.Id entityId) {
         return new ValidationError(
                 ValidationErrorType.MISSING_CAPABILITY,
                 entityId,
                 String.format("TDD \"%s\" is not referred to by a story.", entityId.getId())
+        );
+    }
+
+    public static ValidationError forTddWithoutCause(Tdd.Id tddId) {
+        return new ValidationError(
+                ValidationErrorType.TDD_WITHOUT_CAUSE,
+                tddId,
+                String.format("TDD \"%s\" is not referred to by a decision or functional requirement.", tddId.getId())
         );
     }
 

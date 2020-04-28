@@ -46,7 +46,7 @@ public class AuValidateCommand implements Callable<Integer> {
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
             validationResults = ArchitectureUpdateValidator.validate(au);
         } catch (IOException | RuntimeException e) {
-            spec.commandLine().getErr().println("Invalid structure");
+            spec.commandLine().getErr().println("Invalid structure.");
             return 1;
         }
 

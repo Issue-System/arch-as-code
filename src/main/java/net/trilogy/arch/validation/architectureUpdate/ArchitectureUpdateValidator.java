@@ -11,12 +11,21 @@ import java.util.stream.Collectors;
 public class ArchitectureUpdateValidator {
     private final ArchitectureUpdate au;
 
+    private final Set<Tdd.Id> allTddIdsInStories;
+    private final Set<Tdd.Id> allTddIds;
+    private final Set<Tdd.Id> allTddIdsInDecisions;
+    private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
+
     public static ValidationResult validate(ArchitectureUpdate au) {
         return new ArchitectureUpdateValidator(au).run();
     }
 
     private ArchitectureUpdateValidator(ArchitectureUpdate au) {
         this.au = au;
+        allTddIdsInStories = getAllTddIdsReferencedByStories();
+        allTddIds = getAllTddIds();
+        allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();
+        allTddIdsInFunctionalRequirements = getAllTddIdsReferencedByFunctionalRequirements();
     }
 
     private ValidationResult run() {
@@ -24,15 +33,23 @@ public class ArchitectureUpdateValidator {
                 getMissingTddReferenceErrors(),
                 getBrokenDecisionsTddReferenceErrors(),
                 getBrokenFunctionalRequirementsTddReferenceErrors(),
-                getTDDsWithoutStoriesErrors()
+                getTDDsWithoutStoriesErrors(),
+                getTDDsWithoutCauseErrors()
         ).collect(Collectors.toList()));
     }
 
+    private Set<ValidationError> getTDDsWithoutCauseErrors() {
+        return allTddIds.stream()
+                .filter(tddId -> !allTddIdsInFunctionalRequirements.contains(tddId))
+                .filter(tddId -> !allTddIdsInDecisions.contains(tddId))
+                .map(ValidationError::forTddWithoutCause)
+                .collect(Collectors.toSet());
+    }
+
     private Set<ValidationError> getTDDsWithoutStoriesErrors() {
-        Set<Tdd.Id> allTddIdsInStories = getAllTddIdsReferencedByStories();
         return getAllTddIds().stream()
                 .filter(tdd -> !allTddIdsInStories.contains(tdd))
-                .map(ValidationError::forTddsWithoutStories)
+                .map(ValidationError::forTddWithoutStory)
                 .collect(Collectors.toSet());
     }
 
@@ -46,7 +63,6 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getBrokenDecisionsTddReferenceErrors() {
-        Set<Tdd.Id> allTddIds = getAllTddIds();
         return au.getDecisions()
                 .entrySet()
                 .stream()
@@ -60,7 +76,6 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getBrokenFunctionalRequirementsTddReferenceErrors() {
-        Set<Tdd.Id> allTddIds = getAllTddIds();
         return au.getFunctionalRequirements()
                 .entrySet()
                 .stream()
@@ -87,6 +102,24 @@ public class ArchitectureUpdateValidator {
                 .getFeatureStories()
                 .stream()
                 .flatMap(story -> story.getTddReferences().stream())
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Tdd.Id> getAllTddIdsReferencedByFunctionalRequirements() {
+        return au.getFunctionalRequirements()
+                .values()
+                .stream()
+                .filter(requirement -> requirement.getTddReferences() != null)
+                .flatMap(requirement -> requirement.getTddReferences().stream())
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Tdd.Id> getAllTddIdsReferencedByDecisions() {
+        return au.getDecisions()
+                .values()
+                .stream()
+                .filter(decision -> decision.getTddReferences() != null)
+                .flatMap(decision -> decision.getTddReferences().stream())
                 .collect(Collectors.toSet());
     }
 }

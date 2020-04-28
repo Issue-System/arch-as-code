@@ -27,7 +27,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE,
                 entityId,
-                String.format("Entity \"%s\" contains invalid TDD reference \"%s\".", entityId.getId(), tddId.getId())
+                String.format("Entity \"%s\" contains TDD reference \"%s\" that does not exist.", entityId.getId(), tddId.getId())
         );
     }
 

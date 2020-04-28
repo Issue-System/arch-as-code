@@ -27,7 +27,7 @@ public class AuValidateCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs")
     boolean tddValidation;
 
-    @CommandLine.Option(names = {"-c", "--capabilities"}, description = "Run validation for capabilities")
+    @CommandLine.Option(names = {"-s", "--stories"}, description = "Run validation for feature stories")
     boolean capabilityValidation;
 
     @Spec

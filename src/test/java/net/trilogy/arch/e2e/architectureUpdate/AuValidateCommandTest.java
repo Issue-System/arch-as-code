@@ -57,8 +57,8 @@ public class AuValidateCommandTest {
     }
 
     @Test
-    public void shouldBeCapabilityValid() throws Exception {
-        Integer status = execute("architecture-update", "validate", "-c", "invalid_tdds.yml", rootDir.getAbsolutePath());
+    public void shouldBeStoryValid() throws Exception {
+        Integer status = execute("architecture-update", "validate", "-s", "invalid_tdds.yml", rootDir.getAbsolutePath());
         collector.checkThat(status, equalTo(0));
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
     }
@@ -111,8 +111,8 @@ public class AuValidateCommandTest {
     }
 
     @Test
-    public void shouldBeCapabilityInvalid() throws Exception {
-        Integer status = execute("au", "validate", "--capabilities", "both_invalid.yml", rootDir.getAbsolutePath());
+    public void shouldBeStoryInvalid() throws Exception {
+        Integer status = execute("au", "validate", "--stories", "both_invalid.yml", rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
 
         collector.checkThat(

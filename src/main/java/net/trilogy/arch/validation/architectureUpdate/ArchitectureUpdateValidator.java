@@ -22,7 +22,8 @@ public class ArchitectureUpdateValidator {
     private ValidationResult run() {
         return new ValidationResult(Stream.concat(
                 getMissingTddReferenceErrors(),
-                getBrokenTddReferenceErrors(),
+                getBrokenDecisionsTddReferenceErrors(),
+                getBrokenFunctionalRequirementsTddReferenceErrors(),
                 getTDDsWithoutStoriesErrors()
         ).collect(Collectors.toList()));
     }
@@ -44,7 +45,7 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getBrokenTddReferenceErrors() {
+    private Set<ValidationError> getBrokenDecisionsTddReferenceErrors() {
         Set<Tdd.Id> allTddIds = getAllTddIds();
         return au.getDecisions()
                 .entrySet()
@@ -55,6 +56,20 @@ public class ArchitectureUpdateValidator {
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
                                 .map(tdd -> ValidationError.forInvalidTddReference(decisionEntry.getKey(), tdd)))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<ValidationError> getBrokenFunctionalRequirementsTddReferenceErrors() {
+        Set<Tdd.Id> allTddIds = getAllTddIds();
+        return au.getFunctionalRequirements()
+                .entrySet()
+                .stream()
+                .filter(functionalEntry -> functionalEntry.getValue().getTddReferences() != null)
+                .flatMap(functionalEntry ->
+                        functionalEntry.getValue().getTddReferences()
+                                .stream()
+                                .filter(tdd -> !allTddIds.contains(tdd))
+                                .map(tdd -> ValidationError.forInvalidTddReference(functionalEntry.getKey(), tdd)))
                 .collect(Collectors.toSet());
     }
 

@@ -37,7 +37,7 @@ public class FunctionalRequirement {
     @Getter
     @ToString
     @EqualsAndHashCode
-    public static class Id {
+    public static class Id implements EntityReference {
         @JsonValue
         private final String id;
 

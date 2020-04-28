@@ -1,12 +1,6 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
-import net.trilogy.arch.domain.architectureUpdate.Decision;
-import net.trilogy.arch.domain.architectureUpdate.Epic;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,8 +9,7 @@ import org.junit.rules.ErrorCollector;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ArchitectureUpdateValidatorTest {
     @Rule
@@ -33,6 +26,14 @@ public class ArchitectureUpdateValidatorTest {
                         new Decision.Id("Bad-TDD-Decision"), new Decision("Decision-2-text", List.of(new Tdd.Id("BAD-TDD-ID"))),
                         new Decision.Id("Valid-Decision"), new Decision("Decision-3-text", List.of(new Tdd.Id("TDD 1.1")))
                 ))
+                .functionalRequirements(
+                        Map.of(
+                                new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"),
+                                new FunctionalRequirement("Text", "Source", List.of(new Tdd.Id("BAD-TDD-ID"))),
+                                new FunctionalRequirement.Id("Valid-Functional-Requirement"),
+                                new FunctionalRequirement("Text", "Source", List.of())
+                        )
+                )
                 .TDDs(
                         Map.of(
                                 new Tdd.ComponentReference("Component-0"), List.of(
@@ -71,18 +72,20 @@ public class ArchitectureUpdateValidatorTest {
     public void shouldFindAllErrors() {
         ArchitectureUpdate au = invalidAu;
 
-        var errors = ArchitectureUpdateValidator.validate(au).getErrors();
-
-        collector.checkThat(
-                errors,
-                containsInAnyOrder(
-                        ValidationError.forInvalidTddReference(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
-                        ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-1")),
-                        ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-2")),
-                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 1.1")),
-                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.1")),
-                        ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.2"))
-                )
+        var actualErrors = ArchitectureUpdateValidator.validate(au).getErrors();
+        var expectedErrors = List.of(
+                ValidationError.forInvalidTddReference(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-1")),
+                ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-2")),
+                ValidationError.forInvalidTddReference(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 1.1")),
+                ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.1")),
+                ValidationError.forTddsWithoutStories(new Tdd.Id("TDD 2.2"))
         );
+
+        collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));
+
+        expectedErrors.forEach(e ->
+                collector.checkThat(actualErrors, hasItem(e)));
     }
 }

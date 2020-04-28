@@ -23,11 +23,11 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forInvalidTddReference(Decision.Id entityId, Tdd.Id tddId) {
+    public static ValidationError forInvalidTddReference(EntityReference entityId, Tdd.Id tddId) {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE,
                 entityId,
-                String.format("Decision \"%s\" contains invalid TDD reference \"%s\".", entityId.getId(), tddId.getId())
+                String.format("Entity \"%s\" contains invalid TDD reference \"%s\".", entityId.getId(), tddId.getId())
         );
     }
 

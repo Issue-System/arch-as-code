@@ -76,7 +76,7 @@ public class AuValidateCommandTest {
                         "Story Missing TDD:\n" +
                         "    Story \"[SAMPLE FEATURE STORY TITLE]\" must have at least one TDD reference.\n" +
                         "Missing Capability:\n" +
-                        "    TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.\n" +
+                        "    TDD \"[SAMPLE-TDD-ID]\" needs to be referenced in a story.\n" +
                         ""
                 )
         );
@@ -93,7 +93,7 @@ public class AuValidateCommandTest {
         );
         collector.checkThat(
                 err.toString(),
-                containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
+                containsString("TDD \"[SAMPLE-TDD-ID]\" needs to be referenced in a story.")
         );
         collector.checkThat(
                 err.toString(),
@@ -112,7 +112,7 @@ public class AuValidateCommandTest {
         );
         collector.checkThat(
                 err.toString(),
-                not(containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story."))
+                not(containsString("TDD \"[SAMPLE-TDD-ID]\" needs to be referenced in a story."))
         );
         collector.checkThat(
                 err.toString(),
@@ -135,7 +135,7 @@ public class AuValidateCommandTest {
         );
         collector.checkThat(
                 err.toString(),
-                containsString("TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.")
+                containsString("TDD \"[SAMPLE-TDD-ID]\" needs to be referenced in a story.")
         );
     }
 

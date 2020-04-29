@@ -42,7 +42,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.MISSING_CAPABILITY,
                 entityId,
-                String.format("%s \"%s\" is not referred to by a story.", getEntityTypeString(entityId), entityId.getId())
+                String.format("%s \"%s\" needs to be referenced in a story.", getEntityTypeString(entityId), entityId.getId())
         );
     }
 
@@ -50,7 +50,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.TDD_WITHOUT_CAUSE,
                 tddId,
-                String.format("TDD \"%s\" is not referred to by a decision or functional requirement.", tddId.getId())
+                String.format("TDD \"%s\" needs to be referenced by a decision or functional requirement.", tddId.getId())
         );
     }
 
@@ -70,20 +70,11 @@ public class ValidationError {
         );
     }
 
-    private static String getEntityTypeString(EntityReference entityId) {
-        if (entityId instanceof Tdd.Id) {
-           return "TDD";
-        } else if (entityId instanceof FunctionalRequirement.Id) {
-            return "Functional Requirement";
-        }
-        return "Entity";
-    }
-
     public static ValidationError forFunctionalRequirementsMustBeValidReferences(String storyTitle, FunctionalRequirement.Id id) {
         return new ValidationError(
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,
                 null,
-                String.format("Story \"%s\" contains Functional Requirement reference \"%s\" that does not exist.", storyTitle, id.getId())        );
+                String.format("Story \"%s\" contains functional requirement reference \"%s\" that does not exist.", storyTitle, id.getId())        );
     }
 
     public static ValidationError forStoriesMustHaveTdds(String storyTitle) {
@@ -98,7 +89,16 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.MISSING_FUNCTIONAL_REQUIREMENTS,
                 null,
-                String.format("Story \"%s\" must have at least one Functional Requirement reference.", storyTitle)
+                String.format("Story \"%s\" must have at least one functional requirement reference.", storyTitle)
         );
+    }
+
+    private static String getEntityTypeString(EntityReference entityId) {
+        if (entityId instanceof Tdd.Id) {
+            return "TDD";
+        } else if (entityId instanceof FunctionalRequirement.Id) {
+            return "Functional Requirement";
+        }
+        return "Entity";
     }
 }

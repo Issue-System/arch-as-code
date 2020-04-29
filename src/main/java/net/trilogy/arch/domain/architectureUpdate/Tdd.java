@@ -11,22 +11,18 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Tdd {
-    @JsonProperty(value = "id")
-    private final Tdd.Id id;
     @JsonProperty(value = "text")
     private final String text;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Tdd(
-            @JsonProperty("id") Id id,
             @JsonProperty("text") String text
     ) {
-        this.id = id;
         this.text = text;
     }
 
     public static Tdd blank() {
-        return new Tdd(Id.blank(), "[SAMPLE TDD TEXT]");
+        return new Tdd("[SAMPLE TDD TEXT]");
     }
 
     @Getter

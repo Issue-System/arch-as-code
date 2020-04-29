@@ -54,18 +54,18 @@ public class ArchitectureUpdateValidatorTest {
                 )
                 .TDDs(
                         Map.of(
-                                new Tdd.ComponentReference("Component-38"), List.of(
-                                        new Tdd(new Tdd.Id("Valid-TDD-with-requirement-and-story"), "text")
+                                new Tdd.ComponentReference("Component-38"), Map.of(
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("text")
                                 ),
-                                new Tdd.ComponentReference("Component-14"), List.of(
-                                        new Tdd(new Tdd.Id("TDD-unused-and-without-story"), "text")
+                                new Tdd.ComponentReference("Component-14"), Map.of(
+                                        new Tdd.Id("TDD-unused-and-without-story"), new Tdd("text")
                                 ),
-                                new Tdd.ComponentReference("Component-15"), List.of(
-                                        new Tdd(new Tdd.Id("Valid-TDD-with-decision-and-story"), "text"),
-                                        new Tdd(new Tdd.Id("TDD-unused-with-story"), "text")
+                                new Tdd.ComponentReference("Component-15"), Map.of(
+                                        new Tdd.Id("Valid-TDD-with-decision-and-story"), new Tdd("text"),
+                                        new Tdd.Id("TDD-unused-with-story"), new Tdd("text")
                                 ),
-                                new Tdd.ComponentReference("Component-Invalid-Component-Id"), List.of(
-                                        new Tdd(new Tdd.Id("Tdd-with-invalid-component"), "text")
+                                new Tdd.ComponentReference("Component-Invalid-Component-Id"), Map.of(
+                                       new Tdd.Id("Tdd-with-invalid-component"),  new Tdd("text")
                                 )
                         )
                 )

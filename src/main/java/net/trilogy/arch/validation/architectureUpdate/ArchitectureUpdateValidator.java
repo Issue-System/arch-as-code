@@ -187,8 +187,7 @@ public class ArchitectureUpdateValidator {
         return au.getTDDs()
                 .values()
                 .stream()
-                .flatMap(Collection::stream)
-                .map(Tdd::getId)
+                .flatMap(map -> map.keySet().stream())
                 .collect(Collectors.toSet());
     }
 

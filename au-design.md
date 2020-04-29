@@ -65,15 +65,15 @@ decisions: (ITDs, IFDs, SSDs, etc.)
           - "TDD-id" [M]
 TDDs:
     "Component-id":
-      - id: "TDD-id": [M]
-        text: "tdd-description" [M]
-      - id: "TDD-id": [M]
-        text: "tdd-description" [M]
+        "TDD-id": [M]
+            text: "tdd-description" [M]
+        "TDD-id": [M]
+            text: "tdd-description" [M]
     "Component-id":
-      - id: "TDD-id": [M]
-        text: "tdd-description" [M]
-      - id: "TDD-id": [M]
-        text: "tdd-description" [M]
+        "TDD-id": [M]
+            text: "tdd-description" [M]
+        "TDD-id": [M]
+            text: "tdd-description" [M]
 functional-requirements: (E2E steps, ACCs, ACs from P1, ACs added manually, etc.)
     "functional-requirement-id":  [M]
         text: "functional requirement text" [M]

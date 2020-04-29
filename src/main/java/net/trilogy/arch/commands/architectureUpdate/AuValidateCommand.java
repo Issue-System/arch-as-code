@@ -51,7 +51,8 @@ public class AuValidateCommand implements Callable<Integer> {
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {
             spec.commandLine().getErr().println("Invalid structure.");
-            return 1;
+            throw new RuntimeException(e);
+//            return 1;
         }
 
         List<ValidationStage> stages = determineValidationStages(tddValidation, capabilityValidation);

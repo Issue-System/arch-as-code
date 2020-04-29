@@ -6,7 +6,9 @@ public enum ValidationErrorType {
     INVALID_TDD_REFERENCE_IN_DECISION_OR_REQUIREMENT("Invalid TDD Reference in Decision or Requirement", ValidationStage.TDD),
     INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY("Invalid Functional Requirement Reference in Story", ValidationStage.STORY),
     MISSING_CAPABILITY("Missing Capability", ValidationStage.STORY),
-    MISSING_TDD("Missing TDD", ValidationStage.TDD),
+    DECISION_MISSING_TDD("Decision Missing TDD", ValidationStage.TDD),
+    STORY_MISSING_TDD("Story Missing TDD", ValidationStage.STORY),
+    MISSING_FUNCTIONAL_REQUIREMENTS("Story Missing Functional Requirement", ValidationStage.STORY),
     TDD_WITHOUT_CAUSE("TDD without cause", ValidationStage.TDD),
     INVALID_TDD_REFERENCE_IN_STORY("Invalid TDD Reference in Story", ValidationStage.STORY),
     INVALID_COMPONENT_REFERENCE("Invalid Component Reference", ValidationStage.TDD);

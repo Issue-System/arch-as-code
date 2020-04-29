@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class AuValidateCommandTest {
     @Rule
@@ -71,12 +69,14 @@ public class AuValidateCommandTest {
         collector.checkThat(
                 err.toString(),
                 equalTo("" +
-                        "Missing TDD:\n" +
+                        "Decision Missing TDD:\n" +
                         "    Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.\n" +
                         "Invalid Component Reference:\n" +
                         "    Component id \"[INVALID-COMPONENT-ID]\" does not exist.\n" +
                         "Missing Capability:\n" +
                         "    TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.\n" +
+                        "Story Missing TDD:\n" +
+                        "    Story \"[SAMPLE FEATURE STORY TITLE]\" must have at least one TDD reference.\n" +
                         ""
                 )
         );
@@ -97,7 +97,7 @@ public class AuValidateCommandTest {
         );
         collector.checkThat(
                 err.toString(),
-                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." )
+                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist.")
         );
     }
 
@@ -116,7 +116,7 @@ public class AuValidateCommandTest {
         );
         collector.checkThat(
                 err.toString(),
-                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." )
+                containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist.")
         );
     }
 
@@ -127,7 +127,7 @@ public class AuValidateCommandTest {
 
         collector.checkThat(
                 err.toString(),
-                not(containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist." ))
+                not(containsString("Component id \"[INVALID-COMPONENT-ID]\" does not exist."))
         );
         collector.checkThat(
                 err.toString(),

@@ -81,12 +81,20 @@ public class ArchitectureUpdateValidatorTest {
                                                 new FunctionalRequirement.Id("Valid-Functional-Requirement")
                                         )),
 
-                                        new FeatureStory("Feat Title", Jira.blank(), List.of(
+                                        new FeatureStory("Feat Title 2", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-decision-and-story"),
                                                 new Tdd.Id("TDD-unused-with-story")
                                         ), List.of(
                                                 new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"),
                                                 new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")
+                                        )),
+
+                                        new FeatureStory("Feat Title 3", Jira.blank(), List.of(
+                                                new Tdd.Id("Valid-TDD-with-decision-and-story")
+                                        ), List.of()),
+
+                                        new FeatureStory("Feat Title 4", Jira.blank(), List.of(), List.of(
+                                                new FunctionalRequirement.Id("Valid-Functional-Requirement")
                                         ))
                                 )
                         )
@@ -115,6 +123,7 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-2")),
 
                 ValidationError.forMustHaveStories(new Tdd.Id("TDD-unused-and-without-story")),
+                ValidationError.forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story")),
 
                 ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-and-without-story")),
                 ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-with-story")),
@@ -123,9 +132,11 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Component-Invalid-Component-Id")),
 
-                ValidationError.forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story")),
+                ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 
-                ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID"))
+                ValidationError.forStoriesMustHaveTdds("Feat Title 4"),
+
+                ValidationError.forStoriesMustHaveFunctionalRequirements("Feat Title 3")
         );
 
         collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));

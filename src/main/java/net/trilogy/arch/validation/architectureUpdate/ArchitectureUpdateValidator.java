@@ -51,7 +51,9 @@ public class ArchitectureUpdateValidator {
                 getErrors_StoriesFunctionalRequirementsMustBeValidReferences(),
                 getErrors_TddsMustHaveStories(),
                 getErrors_TddsMustHaveDecisionsOrRequirements(),
-                getErrors_TddsComponentsMustBeValidReferences()
+                getErrors_TddsComponentsMustBeValidReferences(),
+                getErrors_StoriesMustHaveTdds(),
+                getErrors_StoriesMustHaveFunctionalRequirements()
         ).collect(Collectors.toList()));
     }
 
@@ -106,6 +108,22 @@ public class ArchitectureUpdateValidator {
                 .stream()
                 .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() == null || decisionEntry.getValue().getTddReferences().isEmpty())
                 .map(decisionEntry -> ValidationError.forDecisionsMustHaveTdds(decisionEntry.getKey()))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<ValidationError> getErrors_StoriesMustHaveTdds() {
+        return au.getCapabilityContainer().getFeatureStories()
+                .stream()
+                .filter(story -> story.getTddReferences() == null || story.getTddReferences().isEmpty())
+                .map(story -> ValidationError.forStoriesMustHaveTdds(story.getTitle()))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<ValidationError> getErrors_StoriesMustHaveFunctionalRequirements() {
+        return au.getCapabilityContainer().getFeatureStories()
+                .stream()
+                .filter(story -> story.getRequirementReferences() == null || story.getRequirementReferences().isEmpty())
+                .map(story -> ValidationError.forStoriesMustHaveFunctionalRequirements(story.getTitle()))
                 .collect(Collectors.toSet());
     }
 

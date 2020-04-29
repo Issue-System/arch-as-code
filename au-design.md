@@ -114,8 +114,8 @@ capabilities:
    - [E][T][✓] must refer to valid components  
    - [E][T][✓] must be referred to by >=1 decision or functional requirement (no orphan TDDs)
  - Stories  
-   - [E][S][ ] must refer to >=1 valid functional requirements  
-   - [E][S][ ] must refer to >=1 valid tdds  
+   - [E][S][✓] must refer to >=1 valid functional requirements  
+   - [E][S][✓] must refer to >=1 valid tdds  
    - [E][S][✓] all tdds must have >=1 story   
    - [E][S][✓] all functional requirements must have >=1 story   
    - [W][S][ ] check for duplicate stories (both stories have same TDDs and requirements)

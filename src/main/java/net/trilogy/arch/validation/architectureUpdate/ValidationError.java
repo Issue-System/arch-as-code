@@ -24,7 +24,7 @@ public class ValidationError {
 
     public static ValidationError forDecisionsMustHaveTdds(Decision.Id entityId) {
         return new ValidationError(
-                ValidationErrorType.MISSING_TDD,
+                ValidationErrorType.DECISION_MISSING_TDD,
                 entityId,
                 String.format("Decision \"%s\" must have at least one TDD reference.", entityId.getId())
         );
@@ -84,5 +84,21 @@ public class ValidationError {
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,
                 null,
                 String.format("Story \"%s\" contains Functional Requirement reference \"%s\" that does not exist.", storyTitle, id.getId())        );
+    }
+
+    public static ValidationError forStoriesMustHaveTdds(String storyTitle) {
+        return new ValidationError(
+                ValidationErrorType.STORY_MISSING_TDD,
+                null,
+                String.format("Story \"%s\" must have at least one TDD reference.", storyTitle)
+        );
+    }
+
+    public static ValidationError forStoriesMustHaveFunctionalRequirements(String storyTitle) {
+        return new ValidationError(
+                ValidationErrorType.MISSING_FUNCTIONAL_REQUIREMENTS,
+                null,
+                String.format("Story \"%s\" must have at least one Functional Requirement reference.", storyTitle)
+        );
     }
 }

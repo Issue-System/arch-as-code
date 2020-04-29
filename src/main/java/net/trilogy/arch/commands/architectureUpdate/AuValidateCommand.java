@@ -1,11 +1,14 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
-import lombok.SneakyThrows;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.validation.architectureUpdate.*;
+import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
+import net.trilogy.arch.validation.architectureUpdate.ValidationError;
+import net.trilogy.arch.validation.architectureUpdate.ValidationErrorType;
+import net.trilogy.arch.validation.architectureUpdate.ValidationResult;
+import net.trilogy.arch.validation.architectureUpdate.ValidationStage;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
@@ -17,7 +20,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static picocli.CommandLine.*;
+import static picocli.CommandLine.Command;
+import static picocli.CommandLine.Parameters;
+import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update")
 public class AuValidateCommand implements Callable<Integer> {
@@ -50,9 +55,8 @@ public class AuValidateCommand implements Callable<Integer> {
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {
-            spec.commandLine().getErr().println("Invalid structure.");
-            throw new RuntimeException(e);
-//            return 1;
+            spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
+            return 1;
         }
 
         List<ValidationStage> stages = determineValidationStages(tddValidation, capabilityValidation);

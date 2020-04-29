@@ -1,9 +1,11 @@
 package net.trilogy.arch.adapter;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class ArchitectureUpdateObjectMapper {
                 new YAMLFactory()
                         .configure(YAMLGenerator.Feature.SPLIT_LINES, false)
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+                        .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
         );
         this.mapper.setVisibility(FIELD, ANY);
         this.mapper.setVisibility(GETTER, NONE);

@@ -30,10 +30,12 @@ else
 
     mkdir demo-folder
     cd demo-folder
-    mkdir architecture-updates
-    touch data-structure.yml
+
+    ../arch-as-code init -i i -k i -s s .
+    ../arch-as-code au init -c c -p p -s s .
 
     # copy .arch-as-code from repo root
+    rm -rf .arch-as-code
     cp -r $dir/../.arch-as-code .
 
     echo ""

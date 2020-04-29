@@ -70,7 +70,7 @@ public class ArchitectureUpdateValidator {
     private Set<ValidationError> getErrors_TddsMustHaveStories() {
         return getAllTddIds().stream()
                 .filter(tdd -> !allTddIdsInStories.contains(tdd))
-                .map(ValidationError::forTddsMustHaveStories)
+                .map(ValidationError::forMustHaveStories)
                 .collect(Collectors.toSet());
     }
 

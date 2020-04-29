@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.EntityReference;
+import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
 @ToString
@@ -14,6 +15,12 @@ public class ValidationError {
     private final ValidationErrorType validationErrorType;
     private final EntityReference element;
     private final String description;
+
+    private ValidationError(ValidationErrorType validationErrorType, EntityReference element, String description) {
+        this.validationErrorType = validationErrorType;
+        this.element = element;
+        this.description = description;
+    }
 
     public static ValidationError forDecisionsMustHaveTdds(Decision.Id entityId) {
         return new ValidationError(
@@ -27,15 +34,15 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE_IN_DECISION_OR_REQUIREMENT,
                 entityId,
-                String.format("Entity \"%s\" contains TDD reference \"%s\" that does not exist.", entityId.getId(), tddId.getId())
+                String.format("%s \"%s\" contains TDD reference \"%s\" that does not exist.", getEntityTypeString(entityId), entityId.getId(), tddId.getId())
         );
     }
 
-    public static ValidationError forTddsMustHaveStories(Tdd.Id entityId) {
+    public static ValidationError forMustHaveStories(EntityReference entityId) {
         return new ValidationError(
                 ValidationErrorType.MISSING_CAPABILITY,
                 entityId,
-                String.format("TDD \"%s\" is not referred to by a story.", entityId.getId())
+                String.format("%s \"%s\" is not referred to by a story.", getEntityTypeString(entityId), entityId.getId())
         );
     }
 
@@ -63,9 +70,13 @@ public class ValidationError {
         );
     }
 
-    private ValidationError(ValidationErrorType validationErrorType, EntityReference element, String description) {
-        this.validationErrorType = validationErrorType;
-        this.element = element;
-        this.description = description;
+    private static String getEntityTypeString(EntityReference entityId) {
+        if (entityId instanceof Tdd.Id) {
+           return "TDD";
+        } else if (entityId instanceof FunctionalRequirement.Id) {
+            return "Functional Requirement";
+        }
+        return "Entity";
     }
+
 }

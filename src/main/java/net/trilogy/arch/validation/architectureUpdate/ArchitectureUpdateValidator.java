@@ -20,6 +20,7 @@ public class ArchitectureUpdateValidator {
 
     private final Set<Tdd.Id> allTddIdsInStories;
     private final Set<Tdd.Id> allTddIds;
+    private final Set<FunctionalRequirement.Id> allFunctionalRequirementIds;
     private final Set<Tdd.Id> allTddIdsInDecisions;
     private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
 
@@ -37,6 +38,7 @@ public class ArchitectureUpdateValidator {
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();
         allTddIdsInFunctionalRequirements = getAllTddIdsReferencedByFunctionalRequirements();
+        allFunctionalRequirementIds = getAllFunctionalRequirementIds();
     }
 
     private ValidationResult run() {
@@ -46,10 +48,24 @@ public class ArchitectureUpdateValidator {
                 getErrors_FunctionalRequirementsTddsMustBeValidReferences(),
                 getErrors_FunctionalRequirementsMustHaveStories(),
                 getErrors_StoriesTddsMustBeValidReferences(),
+                getErrors_StoriesFunctionalRequirementsMustBeValidReferences(),
                 getErrors_TddsMustHaveStories(),
                 getErrors_TddsMustHaveDecisionsOrRequirements(),
                 getErrors_TddsComponentsMustBeValidReferences()
         ).collect(Collectors.toList()));
+    }
+
+    private Set<ValidationError> getErrors_StoriesFunctionalRequirementsMustBeValidReferences() {
+        return au.getCapabilityContainer().getFeatureStories()
+                .stream()
+                .filter(story -> story.getRequirementReferences() != null)
+                .flatMap(story ->
+                        story.getRequirementReferences()
+                                .stream()
+                                .filter(funcReq -> !allFunctionalRequirementIds.contains(funcReq))
+                                .map(funcReq -> ValidationError.forFunctionalRequirementsMustBeValidReferences(story.getTitle(), funcReq))
+                )
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getErrors_FunctionalRequirementsMustHaveStories() {
@@ -57,13 +73,6 @@ public class ArchitectureUpdateValidator {
         return au.getFunctionalRequirements().entrySet().stream()
                 .filter(funcReqEntry -> !storyReferencedFunctionalRequirements.contains(funcReqEntry.getKey()))
                 .map(funcReqEntry -> ValidationError.forMustHaveStories(funcReqEntry.getKey()))
-                .collect(Collectors.toSet());
-    }
-
-    private Set<FunctionalRequirement.Id> getAllFunctionalRequirementsReferencedByStories() {
-        return au.getCapabilityContainer()
-                .getFeatureStories().stream()
-                .flatMap(story -> story.getRequirementReferences().stream())
                 .collect(Collectors.toSet());
     }
 
@@ -128,7 +137,6 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
-
     private Set<ValidationError> getErrors_FunctionalRequirementsTddsMustBeValidReferences() {
         return au.getFunctionalRequirements()
                 .entrySet()
@@ -151,6 +159,10 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
+    private Set<FunctionalRequirement.Id> getAllFunctionalRequirementIds() {
+        return au.getFunctionalRequirements().keySet();
+    }
+
     private Set<Tdd.Id> getAllTddIdsReferencedByStories() {
         return au.getCapabilityContainer()
                 .getFeatureStories()
@@ -165,6 +177,13 @@ public class ArchitectureUpdateValidator {
                 .stream()
                 .filter(requirement -> requirement.getTddReferences() != null)
                 .flatMap(requirement -> requirement.getTddReferences().stream())
+                .collect(Collectors.toSet());
+    }
+
+    private Set<FunctionalRequirement.Id> getAllFunctionalRequirementsReferencedByStories() {
+        return au.getCapabilityContainer()
+                .getFeatureStories().stream()
+                .flatMap(story -> story.getRequirementReferences().stream())
                 .collect(Collectors.toSet());
     }
 

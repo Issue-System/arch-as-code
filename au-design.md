@@ -117,7 +117,7 @@ capabilities:
    - [E][S][ ] must refer to >=1 valid functional requirements  
    - [E][S][ ] must refer to >=1 valid tdds  
    - [E][S][✓] all tdds must have >=1 story   
-   - [E][S][ ] all functional requirements must have >=1 story   
+   - [E][S][✓] all functional requirements must have >=1 story   
    - [W][S][ ] check for duplicate stories (both stories have same TDDs and requirements)
 
 ## How to visualize:

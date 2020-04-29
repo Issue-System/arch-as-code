@@ -79,4 +79,10 @@ public class ValidationError {
         return "Entity";
     }
 
+    public static ValidationError forFunctionalRequirementsMustBeValidReferences(String storyTitle, FunctionalRequirement.Id id) {
+        return new ValidationError(
+                ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,
+                null,
+                String.format("Story \"%s\" contains Functional Requirement reference \"%s\" that does not exist.", storyTitle, id.getId())        );
+    }
 }

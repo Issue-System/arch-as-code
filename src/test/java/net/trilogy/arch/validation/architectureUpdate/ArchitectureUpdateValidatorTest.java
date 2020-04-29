@@ -2,14 +2,7 @@ package net.trilogy.arch.validation.architectureUpdate;
 
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
-import net.trilogy.arch.domain.architectureUpdate.Decision;
-import net.trilogy.arch.domain.architectureUpdate.Epic;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
-import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,9 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class ArchitectureUpdateValidatorTest {
     @Rule
@@ -94,7 +85,8 @@ public class ArchitectureUpdateValidatorTest {
                                                 new Tdd.Id("Valid-TDD-with-decision-and-story"),
                                                 new Tdd.Id("TDD-unused-with-story")
                                         ), List.of(
-                                                new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement")
+                                                new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"),
+                                                new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")
                                         ))
                                 )
                         )
@@ -131,7 +123,9 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Component-Invalid-Component-Id")),
 
-                ValidationError.forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story"))
+                ValidationError.forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story")),
+
+                ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID"))
         );
 
         collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));

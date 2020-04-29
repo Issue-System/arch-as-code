@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 
@@ -20,23 +21,22 @@ public class AuInitializeCommand implements Callable<Integer> {
     private final FilesFacade filesFacade;
 
     @CommandLine.Option(names = {"-c", "--client-id"}, description = "Google API client id", required = true)
-    private String clientId;
+    private String googleApiClientId;
 
     @CommandLine.Option(names = {"-p", "--project-id"}, description = "Google API project id", required = true)
-    private String projectId;
+    private String googleApiProjectId;
 
     @CommandLine.Option(names = {"-s", "--secret"}, description = "Google API secret", required = true)
-    private String secret;
-
+    private String googleApiSecret;
 
     @Parameters(index = "0", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    private final String authUri = "https://accounts.google.com/o/oauth2/auth";
-    private final String tokenUri = "https://oauth2.googleapis.com/token";
-    private final String authProviderCertUrl = "https://www.googleapis.com/oauth2/v1/certs";
-    private final String redirectUrn = "urn:ietf:wg:oauth:2.0:oob";
-    private final String redirectUri = "http://localhost";
+    private final String INITIAL_GOOGLE_API_AUTH_URI = "https://accounts.google.com/o/oauth2/auth";
+    private final String INITIAL_GOOGLE_API_TOKEN_URI = "https://oauth2.googleapis.com/token";
+    private final String INITIAL_GOOGLE_API_AUTH_PROVIDER_CERT_URL = "https://www.googleapis.com/oauth2/v1/certs";
+    private final String INITIAL_GOOGLE_API_REDIRECT_URN = "urn:ietf:wg:oauth:2.0:oob";
+    private final String INITIAL_GOOGLE_API_REDIRECT_URI = "http://localhost";
 
     public AuInitializeCommand(FilesFacade filesFacade) {
         this.filesFacade = filesFacade;
@@ -45,14 +45,27 @@ public class AuInitializeCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         if (!makeAuFolder()) return 1;
-        if (!makeCredentialsFolder()) return 1;
-        if (!createClientCredentialsFile(clientId, projectId, secret)) return 1;
+        if (!makeJiraSettingsFile()) return 1;
+        if (!makeGoogleApiCredentialsFolder()) return 1;
+        if (!createGoogleApiClientCredentialsFile(googleApiClientId, googleApiProjectId, googleApiSecret)) return 1;
 
         logger.info(String.format("Architecture updates initialized under - %s", productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
-    private boolean createClientCredentialsFile(String clientId, String projectId, String secret) {
+    private boolean makeJiraSettingsFile() {
+        File file = productDocumentationRoot.toPath().resolve(JIRA_API_SETTINGS_FILE_PATH).toFile();
+        if (!file.getParentFile().mkdirs()) return false;
+        try {
+            filesFacade.writeString(file.toPath(), "jira");
+            return true;
+        } catch (IOException e) {
+            logger.error(String.format("Unable to create %s", file.getAbsolutePath()));
+            return false;
+        }
+    }
+
+    private boolean createGoogleApiClientCredentialsFile(String clientId, String projectId, String secret) {
         File file = productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME).toFile();
         String credentialJsonString = buildCredentialJsonString(clientId, projectId, secret);
         try {
@@ -69,13 +82,13 @@ public class AuInitializeCommand implements Callable<Integer> {
                 "  \"installed\": {\n" +
                 "    \"client_id\": \"" + clientId.strip() + "\",\n" +
                 "    \"project_id\": \"" + projectId.strip() + "\",\n" +
-                "    \"auth_uri\": \"" + authUri + "\",\n" +
-                "    \"token_uri\": \"" + tokenUri + "\",\n" +
-                "    \"auth_provider_x509_cert_url\": \"" + authProviderCertUrl + "\",\n" +
+                "    \"auth_uri\": \"" + INITIAL_GOOGLE_API_AUTH_URI + "\",\n" +
+                "    \"token_uri\": \"" + INITIAL_GOOGLE_API_TOKEN_URI + "\",\n" +
+                "    \"auth_provider_x509_cert_url\": \"" + INITIAL_GOOGLE_API_AUTH_PROVIDER_CERT_URL + "\",\n" +
                 "    \"client_secret\": \"" + secret.strip() + "\",\n" +
                 "    \"redirect_uris\": [\n" +
-                "      \"" + redirectUrn + "\",\n" +
-                "      \"" + redirectUri + "\"\n" +
+                "      \"" + INITIAL_GOOGLE_API_REDIRECT_URN + "\",\n" +
+                "      \"" + INITIAL_GOOGLE_API_REDIRECT_URI + "\"\n" +
                 "    ]\n" +
                 "  }\n" +
                 "}";
@@ -91,7 +104,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         return true;
     }
 
-    private boolean makeCredentialsFolder() {
+    private boolean makeGoogleApiCredentialsFolder() {
         File auCredentialFolder = productDocumentationRoot.toPath()
                 .resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toFile();
 

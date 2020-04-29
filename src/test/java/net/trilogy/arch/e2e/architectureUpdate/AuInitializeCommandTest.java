@@ -13,10 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
+import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -93,7 +96,87 @@ public class AuInitializeCommandTest {
     }
 
     @Test
-    public void shouldFailIfCreatingCredentialsFileFails() throws Exception {
+    public void shouldCreateJiraSettingsFile() throws Exception {
+        Path tempDirPath = getTempDirectory();
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " file does not exist. (Precondition check)",
+                Files.exists(tempDirPath.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                is(false)
+        );
+
+        int status = execute("architecture-update", "initialize", "--client-id", "c", "--project-id", "p", "--secret", "s", str(tempDirPath));
+
+        collector.checkThat(status, is(equalTo(0)));
+
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " file was created.",
+                Files.exists(tempDirPath.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                is(true)
+        );
+
+        // TODO: Create correct settings
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " file contents are correct.",
+                Files.readString(tempDirPath.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                equalTo("jira")
+        );
+    }
+
+    @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void shouldNotOverwriteExistingJiraSettingsFile() throws Exception {
+        // GIVEN:
+        Path root = getTempDirectory();
+        root.resolve(JIRA_API_SETTINGS_FILE_PATH).toFile().getParentFile().mkdirs();
+        Files.writeString(root.resolve(JIRA_API_SETTINGS_FILE_PATH), "EXISTING CONTENTS");
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " file contains some existing contents. (Precondition check)",
+                Files.readString(root.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                equalTo("EXISTING CONTENTS")
+        );
+
+        // WHEN:
+        int status = execute("architecture-update", "initialize", "--client-id", "c", "--project-id", "p", "--secret", "s", str(root));
+
+        // THEN:
+        collector.checkThat(status, not(equalTo(0)));
+
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " file was not overridden.",
+                Files.readString(root.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                equalTo("EXISTING CONTENTS")
+        );
+    }
+
+    @Test
+    public void shouldFailIfCreatingJiraSettingsFileFails() throws Exception {
+        // GIVEN:
+        Path rootDir = getTempDirectory();
+
+        collector.checkThat(
+                JIRA_API_SETTINGS_FILE_PATH + " folder does not exist. (Precondition check)",
+                Files.exists(rootDir.resolve(JIRA_API_SETTINGS_FILE_PATH)),
+                is(false)
+        );
+
+        var mockedFilesFacade = mock(FilesFacade.class);
+        when(
+                mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.contains("jira"))
+        ).thenThrow(
+                new IOException("Something horrible has happened. Maybe we ran out of bytes.")
+        );
+
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
+
+        // WHEN:
+        int status = execute(app, "au init -c c -p p -s s " + str(rootDir));
+
+        // THEN:
+        collector.checkThat(status, not(equalTo(0)));
+    }
+
+    @Test
+    public void shouldFailIfCreatingGoogleCredentialsFileFails() throws Exception {
         // Given
         Path tempDirPath = getTempDirectory();
         collector.checkThat(
@@ -103,7 +186,7 @@ public class AuInitializeCommandTest {
         );
         var mockedFilesFacade = mock(FilesFacade.class);
         when(
-                mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any())
+                mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.contains("google"))
         ).thenThrow(
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
@@ -148,7 +231,7 @@ public class AuInitializeCommandTest {
     }
 
     @Test
-    public void shouldCreateClientCredentialsFile() throws Exception {
+    public void shouldCreateGoogleApiClientCredentialsFile() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", str(rootDir), "-c " + client_id, "-p " + project_id, "-s " + secret);
 
@@ -174,7 +257,7 @@ public class AuInitializeCommandTest {
     }
 
     @Test
-    public void shouldNotOverrideExistingCredentialsFolder() throws Exception {
+    public void shouldNotOverrideExistingGoogleApiCredentialsFolder() throws Exception {
         Path rootDir = getTempDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
         final Path auClientCredentialsFile = rootDir.resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME);

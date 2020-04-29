@@ -7,11 +7,17 @@ import java.net.http.HttpClient;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
+import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class JiraApiFactoryTest {
+
+    @Test
+    public void shouldUseTheRightConstants() {
+        assertThat(JIRA_API_SETTINGS_FILE_PATH, equalTo(".arch-as-code/jira/settings.json"));
+    }
 
     @Test
     public void shouldCreateJiraApiWithCorrectClient() {

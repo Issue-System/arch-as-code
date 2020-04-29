@@ -3,6 +3,7 @@ package net.trilogy.arch.validation.architectureUpdate;
 import io.vavr.collection.Stream;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import net.trilogy.arch.domain.c4.BaseEntity;
 
@@ -43,6 +44,7 @@ public class ArchitectureUpdateValidator {
                 getErrors_DecisionsMustHaveTdds(),
                 getErrors_DecisionsTddsMustBeValidReferences(),
                 getErrors_FunctionalRequirementsTddsMustBeValidReferences(),
+                getErrors_FunctionalRequirementsMustHaveStories(),
                 getErrors_StoriesTddsMustBeValidReferences(),
                 getErrors_TddsMustHaveStories(),
                 getErrors_TddsMustHaveDecisionsOrRequirements(),
@@ -50,11 +52,26 @@ public class ArchitectureUpdateValidator {
         ).collect(Collectors.toList()));
     }
 
+    private Set<ValidationError> getErrors_FunctionalRequirementsMustHaveStories() {
+        var storyReferencedFunctionalRequirements = getAllFunctionalRequirementsReferencedByStories();
+        return au.getFunctionalRequirements().entrySet().stream()
+                .filter(funcReqEntry -> !storyReferencedFunctionalRequirements.contains(funcReqEntry.getKey()))
+                .map(funcReqEntry -> ValidationError.forMustHaveStories(funcReqEntry.getKey()))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<FunctionalRequirement.Id> getAllFunctionalRequirementsReferencedByStories() {
+        return au.getCapabilityContainer()
+                .getFeatureStories().stream()
+                .flatMap(story -> story.getRequirementReferences().stream())
+                .collect(Collectors.toSet());
+    }
+
     private Set<ValidationError> getErrors_TddsComponentsMustBeValidReferences() {
         return au.getTDDs()
                 .keySet()
                 .stream()
-                .filter(componentReference -> ! allComponentIdsInArchitecture.contains(componentReference.getId()))
+                .filter(componentReference -> !allComponentIdsInArchitecture.contains(componentReference.getId()))
                 .map(ValidationError::forTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
     }
@@ -68,7 +85,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_TddsMustHaveStories() {
-        return getAllTddIds().stream()
+        return allTddIds.stream()
                 .filter(tdd -> !allTddIdsInStories.contains(tdd))
                 .map(ValidationError::forMustHaveStories)
                 .collect(Collectors.toSet());

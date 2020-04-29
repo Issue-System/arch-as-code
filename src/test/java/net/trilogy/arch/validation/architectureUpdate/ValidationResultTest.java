@@ -26,8 +26,8 @@ public class ValidationResultTest {
     @Test
     public void shouldBeInvalid() {
         ValidationResult result = new ValidationResult(Set.of(
-                ValidationError.forMissingTddReference(new Decision.Id("ANY")),
-                ValidationError.forTddWithoutStory(new Tdd.Id("ANY"))
+                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("ANY")),
+                ValidationError.forTddsMustHaveStories(new Tdd.Id("ANY"))
         ));
 
         collector.checkThat(result.isValid(), is(false));
@@ -38,7 +38,7 @@ public class ValidationResultTest {
     @Test
     public void shouldBeInvalidForTddErrors() {
         ValidationResult result = new ValidationResult(Set.of(
-                ValidationError.forMissingTddReference(new Decision.Id("ANY"))
+                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("ANY"))
         ));
 
         collector.checkThat(result.isValid(), is(false));
@@ -50,7 +50,7 @@ public class ValidationResultTest {
     @Test
     public void shouldBeInvalidForCapabilityErrors() {
         ValidationResult result = new ValidationResult(Set.of(
-                ValidationError.forTddWithoutStory(new Tdd.Id("ANY"))
+                ValidationError.forTddsMustHaveStories(new Tdd.Id("ANY"))
         ));
 
         collector.checkThat(result.isValid(), is(false));
@@ -62,9 +62,9 @@ public class ValidationResultTest {
     @Test
     public void shouldGetAllErrors() {
         Set<ValidationError> errors = Set.of(
-                ValidationError.forTddWithoutStory(Tdd.Id.blank()),
-                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(Decision.Id.blank(), Tdd.Id.blank()),
-                ValidationError.forMissingTddReference(Decision.Id.blank())
+                ValidationError.forTddsMustHaveStories(Tdd.Id.blank()),
+                ValidationError.forTddsMustBeValidReferences(Decision.Id.blank(), Tdd.Id.blank()),
+                ValidationError.forDecisionsMustHaveTdds(Decision.Id.blank())
         );
 
         collector.checkThat(
@@ -76,16 +76,16 @@ public class ValidationResultTest {
     @Test
     public void shouldGetAllTddErrors() {
         Set<ValidationError> errors = Set.of(
-                ValidationError.forTddWithoutStory(Tdd.Id.blank()),
-                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(Decision.Id.blank(), Tdd.Id.blank()),
-                ValidationError.forMissingTddReference(Decision.Id.blank())
+                ValidationError.forTddsMustHaveStories(Tdd.Id.blank()),
+                ValidationError.forTddsMustBeValidReferences(Decision.Id.blank(), Tdd.Id.blank()),
+                ValidationError.forDecisionsMustHaveTdds(Decision.Id.blank())
         );
 
         collector.checkThat(
                 new ValidationResult(errors).getErrors(ValidationStage.TDD),
                 containsInAnyOrder(
-                        ValidationError.forInvalidTddReferenceInDecisionOrRequirement(Decision.Id.blank(), Tdd.Id.blank()),
-                        ValidationError.forMissingTddReference(Decision.Id.blank())
+                        ValidationError.forTddsMustBeValidReferences(Decision.Id.blank(), Tdd.Id.blank()),
+                        ValidationError.forDecisionsMustHaveTdds(Decision.Id.blank())
                 )
         );
     }
@@ -93,15 +93,15 @@ public class ValidationResultTest {
     @Test
     public void shouldGetAllCapabilityErrors() {
         Set<ValidationError> errors = Set.of(
-                ValidationError.forTddWithoutStory(Tdd.Id.blank()),
-                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(Decision.Id.blank(), Tdd.Id.blank()),
-                ValidationError.forMissingTddReference(Decision.Id.blank())
+                ValidationError.forTddsMustHaveStories(Tdd.Id.blank()),
+                ValidationError.forTddsMustBeValidReferences(Decision.Id.blank(), Tdd.Id.blank()),
+                ValidationError.forDecisionsMustHaveTdds(Decision.Id.blank())
         );
 
         collector.checkThat(
                 new ValidationResult(errors).getErrors(ValidationStage.STORY),
                 containsInAnyOrder(
-                        ValidationError.forTddWithoutStory(Tdd.Id.blank())
+                        ValidationError.forTddsMustHaveStories(Tdd.Id.blank())
                 )
         );
     }

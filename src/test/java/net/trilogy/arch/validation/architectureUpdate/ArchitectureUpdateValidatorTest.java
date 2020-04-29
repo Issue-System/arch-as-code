@@ -111,20 +111,20 @@ public class ArchitectureUpdateValidatorTest {
         var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure).getErrors();
 
         var expectedErrors = List.of(
-                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
-                ValidationError.forInvalidTddReferenceInDecisionOrRequirement(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forTddsMustBeValidReferences(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
+                ValidationError.forTddsMustBeValidReferences(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
 
-                ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-1")),
-                ValidationError.forMissingTddReference(new Decision.Id("Missing-TDD-Decision-2")),
+                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-1")),
+                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-2")),
 
-                ValidationError.forTddWithoutStory(new Tdd.Id("TDD-unused-and-without-story")),
+                ValidationError.forTddsMustHaveStories(new Tdd.Id("TDD-unused-and-without-story")),
 
-                ValidationError.forTddWithoutCause(new Tdd.Id("TDD-unused-and-without-story")),
-                ValidationError.forTddWithoutCause(new Tdd.Id("TDD-unused-with-story")),
+                ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-and-without-story")),
+                ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-with-story")),
 
-                ValidationError.forInvalidTddReferenceInStory(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
+                ValidationError.forStoriesTddsMustBeValidReferences(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
 
-                ValidationError.forInvalidComponentReference(new Tdd.ComponentReference("Component-Invalid-Component-Id"))
+                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Component-Invalid-Component-Id"))
         );
 
         collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));

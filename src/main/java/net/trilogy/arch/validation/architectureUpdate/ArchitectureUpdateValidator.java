@@ -40,50 +40,50 @@ public class ArchitectureUpdateValidator {
 
     private ValidationResult run() {
         return new ValidationResult(Stream.concat(
-                getMissingTddReferenceErrors(),
-                getBrokenDecisionsTddReferenceErrors(),
-                getBrokenFunctionalRequirementsTddReferenceErrors(),
-                getBrokenStoriesTddReferenceErrors(),
-                getTDDsWithoutStoriesErrors(),
-                getTDDsWithoutCauseErrors(),
-                getBrokenComponentReferenceErrors()
+                getErrors_DecisionsMustHaveTdds(),
+                getErrors_DecisionsTddsMustBeValidReferences(),
+                getErrors_FunctionalRequirementsTddsMustBeValidReferences(),
+                getErrors_StoriesTddsMustBeValidReferences(),
+                getErrors_TddsMustHaveStories(),
+                getErrors_TddsMustHaveDecisionsOrRequirements(),
+                getErrors_TddsComponentsMustBeValidReferences()
         ).collect(Collectors.toList()));
     }
 
-    private Set<ValidationError> getBrokenComponentReferenceErrors() {
+    private Set<ValidationError> getErrors_TddsComponentsMustBeValidReferences() {
         return au.getTDDs()
                 .keySet()
                 .stream()
                 .filter(componentReference -> ! allComponentIdsInArchitecture.contains(componentReference.getId()))
-                .map(ValidationError::forInvalidComponentReference)
+                .map(ValidationError::forTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getTDDsWithoutCauseErrors() {
+    private Set<ValidationError> getErrors_TddsMustHaveDecisionsOrRequirements() {
         return allTddIds.stream()
                 .filter(tddId -> !allTddIdsInFunctionalRequirements.contains(tddId))
                 .filter(tddId -> !allTddIdsInDecisions.contains(tddId))
-                .map(ValidationError::forTddWithoutCause)
+                .map(ValidationError::forTddsMustHaveDecisionsOrRequirements)
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getTDDsWithoutStoriesErrors() {
+    private Set<ValidationError> getErrors_TddsMustHaveStories() {
         return getAllTddIds().stream()
                 .filter(tdd -> !allTddIdsInStories.contains(tdd))
-                .map(ValidationError::forTddWithoutStory)
+                .map(ValidationError::forTddsMustHaveStories)
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getMissingTddReferenceErrors() {
+    private Set<ValidationError> getErrors_DecisionsMustHaveTdds() {
         return au.getDecisions()
                 .entrySet()
                 .stream()
                 .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() == null || decisionEntry.getValue().getTddReferences().isEmpty())
-                .map(decisionEntry -> ValidationError.forMissingTddReference(decisionEntry.getKey()))
+                .map(decisionEntry -> ValidationError.forDecisionsMustHaveTdds(decisionEntry.getKey()))
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getBrokenDecisionsTddReferenceErrors() {
+    private Set<ValidationError> getErrors_DecisionsTddsMustBeValidReferences() {
         return au.getDecisions()
                 .entrySet()
                 .stream()
@@ -92,12 +92,12 @@ public class ArchitectureUpdateValidator {
                         decisionEntry.getValue().getTddReferences()
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
-                                .map(tdd -> ValidationError.forInvalidTddReferenceInDecisionOrRequirement(decisionEntry.getKey(), tdd))
+                                .map(tdd -> ValidationError.forTddsMustBeValidReferences(decisionEntry.getKey(), tdd))
                 )
                 .collect(Collectors.toSet());
     }
 
-    private Set<ValidationError> getBrokenStoriesTddReferenceErrors() {
+    private Set<ValidationError> getErrors_StoriesTddsMustBeValidReferences() {
         return au.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
@@ -106,13 +106,13 @@ public class ArchitectureUpdateValidator {
                         story.getTddReferences()
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
-                                .map(tdd -> ValidationError.forInvalidTddReferenceInStory(tdd, story.getTitle()))
+                                .map(tdd -> ValidationError.forStoriesTddsMustBeValidReferences(tdd, story.getTitle()))
                 )
                 .collect(Collectors.toSet());
     }
 
 
-    private Set<ValidationError> getBrokenFunctionalRequirementsTddReferenceErrors() {
+    private Set<ValidationError> getErrors_FunctionalRequirementsTddsMustBeValidReferences() {
         return au.getFunctionalRequirements()
                 .entrySet()
                 .stream()
@@ -121,7 +121,7 @@ public class ArchitectureUpdateValidator {
                         functionalEntry.getValue().getTddReferences()
                                 .stream()
                                 .filter(tdd -> !allTddIds.contains(tdd))
-                                .map(tdd -> ValidationError.forInvalidTddReferenceInDecisionOrRequirement(functionalEntry.getKey(), tdd)))
+                                .map(tdd -> ValidationError.forTddsMustBeValidReferences(functionalEntry.getKey(), tdd)))
                 .collect(Collectors.toSet());
     }
 

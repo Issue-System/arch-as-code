@@ -15,7 +15,7 @@ public class ValidationError {
     private final EntityReference element;
     private final String description;
 
-    public static ValidationError forMissingTddReference(Decision.Id entityId) {
+    public static ValidationError forDecisionsMustHaveTdds(Decision.Id entityId) {
         return new ValidationError(
                 ValidationErrorType.MISSING_TDD,
                 entityId,
@@ -23,7 +23,7 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forInvalidTddReferenceInDecisionOrRequirement(EntityReference entityId, Tdd.Id tddId) {
+    public static ValidationError forTddsMustBeValidReferences(EntityReference entityId, Tdd.Id tddId) {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE_IN_DECISION_OR_REQUIREMENT,
                 entityId,
@@ -31,7 +31,7 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forTddWithoutStory(Tdd.Id entityId) {
+    public static ValidationError forTddsMustHaveStories(Tdd.Id entityId) {
         return new ValidationError(
                 ValidationErrorType.MISSING_CAPABILITY,
                 entityId,
@@ -39,7 +39,7 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forTddWithoutCause(Tdd.Id tddId) {
+    public static ValidationError forTddsMustHaveDecisionsOrRequirements(Tdd.Id tddId) {
         return new ValidationError(
                 ValidationErrorType.TDD_WITHOUT_CAUSE,
                 tddId,
@@ -47,7 +47,7 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forInvalidTddReferenceInStory(Tdd.Id id, String storyTitle) {
+    public static ValidationError forStoriesTddsMustBeValidReferences(Tdd.Id id, String storyTitle) {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE_IN_STORY,
                 id,
@@ -55,7 +55,7 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forInvalidComponentReference(Tdd.ComponentReference componentReference) {
+    public static ValidationError forTddsComponentsMustBeValidReferences(Tdd.ComponentReference componentReference) {
         return new ValidationError(
                 ValidationErrorType.INVALID_COMPONENT_REFERENCE,
                 componentReference,

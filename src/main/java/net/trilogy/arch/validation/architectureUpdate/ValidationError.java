@@ -93,6 +93,14 @@ public class ValidationError {
         );
     }
 
+    public static ValidationError forDuplicatedTdd(Tdd.Id id) {
+        return new ValidationError(
+                ValidationErrorType.DUPLICATE_ID,
+                id,
+                String.format("TDD \"%s\" is duplicated.", id.getId())
+        );
+    }
+
     private static String getEntityTypeString(EntityReference entityId) {
         if (entityId instanceof Tdd.Id) {
             return "TDD";

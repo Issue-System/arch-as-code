@@ -8,6 +8,8 @@ import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import net.trilogy.arch.domain.c4.BaseEntity;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +21,7 @@ public class ArchitectureUpdateValidator {
     private final Set<String> allComponentIdsInArchitecture;
 
     private final Set<Tdd.Id> allTddIdsInStories;
-    private final Set<Tdd.Id> allTddIds;
+    private final List<Tdd.Id> allTddIds;
     private final Set<FunctionalRequirement.Id> allFunctionalRequirementIds;
     private final Set<Tdd.Id> allTddIdsInDecisions;
     private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
@@ -43,6 +45,7 @@ public class ArchitectureUpdateValidator {
 
     private ValidationResult run() {
         return new ValidationResult(Stream.concat(
+
                 // Decisions must have >=1 valid TDD
                 getErrors_DecisionsMustHaveTdds(),
                 getErrors_DecisionsTddsMustBeValidReferences(),
@@ -68,8 +71,18 @@ public class ArchitectureUpdateValidator {
                 getErrors_FunctionalRequirementsMustHaveStories(),
 
                 // If Functional Requirements have TDDs, they must be valid
-                getErrors_FunctionalRequirementsTddsMustBeValidReferences()
+                getErrors_FunctionalRequirementsTddsMustBeValidReferences(),
+
+                // TDDs in different components must not share the same id
+                getErrors_TddsMustHaveUniqueIds()
+
         ).collect(Collectors.toList()));
+    }
+
+    private Set<ValidationError> getErrors_TddsMustHaveUniqueIds() {
+        return findDuplicates(allTddIds).stream()
+                .map(ValidationError::forDuplicatedTdd)
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getErrors_StoriesFunctionalRequirementsMustBeValidReferences() {
@@ -183,12 +196,12 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
-    private Set<Tdd.Id> getAllTddIds() {
+    private List<Tdd.Id> getAllTddIds() {
         return au.getTDDs()
                 .values()
                 .stream()
                 .flatMap(map -> map.keySet().stream())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     private Set<FunctionalRequirement.Id> getAllFunctionalRequirementIds() {
@@ -232,4 +245,11 @@ public class ArchitectureUpdateValidator {
         return this.architecture.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
     }
 
+    private <T> Set<T> findDuplicates(Collection<T> collection) {
+        Set<T> uniques = new HashSet<>();
+        return collection
+                .stream()
+                .filter(t -> !uniques.add(t))
+                .collect(Collectors.toSet());
+    }
 }

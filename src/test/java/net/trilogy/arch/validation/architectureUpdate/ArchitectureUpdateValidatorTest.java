@@ -2,7 +2,14 @@ package net.trilogy.arch.validation.architectureUpdate;
 
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.architectureUpdate.*;
+import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
+import net.trilogy.arch.domain.architectureUpdate.Decision;
+import net.trilogy.arch.domain.architectureUpdate.Epic;
+import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
+import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
+import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 public class ArchitectureUpdateValidatorTest {
     @Rule
@@ -65,7 +74,8 @@ public class ArchitectureUpdateValidatorTest {
                                         new Tdd.Id("TDD-unused-with-story"), new Tdd("text")
                                 ),
                                 new Tdd.ComponentReference("Component-Invalid-Component-Id"), Map.of(
-                                       new Tdd.Id("Tdd-with-invalid-component"),  new Tdd("text")
+                                        new Tdd.Id("Tdd-with-invalid-component"), new Tdd("text"),
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("INVALID BECAUSE DUPLICATED ID")
                                 )
                         )
                 )
@@ -136,7 +146,9 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forStoriesMustHaveTdds("Feat Title 4"),
 
-                ValidationError.forStoriesMustHaveFunctionalRequirements("Feat Title 3")
+                ValidationError.forStoriesMustHaveFunctionalRequirements("Feat Title 3"),
+
+                ValidationError.forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story"))
         );
 
         collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));

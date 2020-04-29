@@ -113,6 +113,8 @@ capabilities:
  - TDDs  
    - [E][T][✓] must refer to valid components  
    - [E][T][✓] must be referred to by >=1 decision or functional requirement (no orphan TDDs)
+ - Functional Requirements
+   - [E][T][✓] if they have TDDs, those TDDs must be valid
  - Stories  
    - [E][S][✓] must refer to >=1 valid functional requirements  
    - [E][S][✓] must refer to >=1 valid tdds  

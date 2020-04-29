@@ -43,17 +43,32 @@ public class ArchitectureUpdateValidator {
 
     private ValidationResult run() {
         return new ValidationResult(Stream.concat(
+                // Decisions must have >=1 valid TDD
                 getErrors_DecisionsMustHaveTdds(),
                 getErrors_DecisionsTddsMustBeValidReferences(),
-                getErrors_FunctionalRequirementsTddsMustBeValidReferences(),
-                getErrors_FunctionalRequirementsMustHaveStories(),
-                getErrors_StoriesTddsMustBeValidReferences(),
-                getErrors_StoriesFunctionalRequirementsMustBeValidReferences(),
-                getErrors_TddsMustHaveStories(),
-                getErrors_TddsMustHaveDecisionsOrRequirements(),
+
+                // TDDs must refer to valid components
                 getErrors_TddsComponentsMustBeValidReferences(),
+
+                // TDDs must be referred to by >= 1 decision or requirement (no orphan TDDs)
+                getErrors_TddsMustHaveDecisionsOrRequirements(),
+
+                // Stories must refer to >= 1 valid functional requirements
+                getErrors_StoriesMustHaveFunctionalRequirements(),
+                getErrors_StoriesFunctionalRequirementsMustBeValidReferences(),
+
+                // Stories must refer to >=1 valid TDDs
                 getErrors_StoriesMustHaveTdds(),
-                getErrors_StoriesMustHaveFunctionalRequirements()
+                getErrors_StoriesTddsMustBeValidReferences(),
+
+                // All TDDs must have >=1 story
+                getErrors_TddsMustHaveStories(),
+
+                // All functional requirements have >=1 story
+                getErrors_FunctionalRequirementsMustHaveStories(),
+
+                // If Functional Requirements have TDDs, they must be valid
+                getErrors_FunctionalRequirementsTddsMustBeValidReferences()
         ).collect(Collectors.toList()));
     }
 

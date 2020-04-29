@@ -73,10 +73,10 @@ public class AuValidateCommandTest {
                         "    Decision \"[SAMPLE-DECISION-ID]\" must have at least one TDD reference.\n" +
                         "Invalid Component Reference:\n" +
                         "    Component id \"[INVALID-COMPONENT-ID]\" does not exist.\n" +
-                        "Missing Capability:\n" +
-                        "    TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.\n" +
                         "Story Missing TDD:\n" +
                         "    Story \"[SAMPLE FEATURE STORY TITLE]\" must have at least one TDD reference.\n" +
+                        "Missing Capability:\n" +
+                        "    TDD \"[SAMPLE-TDD-ID]\" is not referred to by a story.\n" +
                         ""
                 )
         );

@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FilesFacade {
-    public Path writeString(Path path, String credentialJsonString) throws IOException {
-        return Files.writeString(path, credentialJsonString);
+    public Path writeString(Path path, String toWrite) throws IOException {
+        return Files.writeString(path, toWrite);
     }
 }

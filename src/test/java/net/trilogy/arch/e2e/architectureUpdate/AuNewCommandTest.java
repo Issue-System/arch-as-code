@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import static net.trilogy.arch.TestHelper.execute;
@@ -44,7 +44,7 @@ public class AuNewCommandTest {
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
         var filesFacade = new FilesFacade();
-        app = new Application(googleDocsApiFactoryMock, filesFacade);
+        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacade);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class AuNewCommandTest {
         when(mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new IOException("No disk space!"));
 
-        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
+        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade);
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));

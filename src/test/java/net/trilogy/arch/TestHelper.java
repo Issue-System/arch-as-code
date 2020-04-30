@@ -1,10 +1,8 @@
 package net.trilogy.arch;
 
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 public abstract class TestHelper {
     public static Long TEST_WORKSPACE_ID = 49344L;
@@ -34,7 +32,8 @@ public abstract class TestHelper {
     public static Integer execute(String... args) throws Exception {
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
         var filesFacade = new FilesFacade();
-        return new Application(googleDocsApiFactory, filesFacade).execute(args);
+        var jiraApiFactory = new JiraApiFactory();
+        return new Application(googleDocsApiFactory, jiraApiFactory, filesFacade).execute(args);
     }
 
     public static Integer execute(Application application, String command) {

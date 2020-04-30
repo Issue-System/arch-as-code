@@ -47,9 +47,9 @@ public class JiraApiFactoryTest {
 
     @Test
     public void shouldCreateJiraApiWithCorrectClient() throws IOException {
-        final JiraApiFactory factory = new JiraApiFactory(mockedFiles);
-        HttpClient client = factory.getClient();
-        JiraApi jiraApi = factory.create();
+        final JiraApiFactory factory = new JiraApiFactory();
+        HttpClient client = factory.createClient();
+        JiraApi jiraApi = factory.create(mockedFiles);
 
         collector.checkThat(jiraApi.getHttpClient(), is(client));
         collector.checkThat(jiraApi.getBaseUri(), equalTo(expectedBaseUri));
@@ -60,9 +60,9 @@ public class JiraApiFactoryTest {
     @Test
     public void shouldCreateCorrectClient() throws NoSuchAlgorithmException, IOException {
 
-        final JiraApiFactory factory = new JiraApiFactory(mockedFiles);
+        final JiraApiFactory factory = new JiraApiFactory();
 
-        HttpClient client = factory.getClient();
+        HttpClient client = factory.createClient();
 
         assertThat(client.connectTimeout(), equalTo(Optional.empty()));
         assertThat(client.authenticator(), equalTo(Optional.empty()));

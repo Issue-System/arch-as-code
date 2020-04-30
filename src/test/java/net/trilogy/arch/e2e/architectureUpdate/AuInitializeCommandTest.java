@@ -2,6 +2,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import org.junit.Rule;
 import org.junit.Test;
@@ -167,7 +168,7 @@ public class AuInitializeCommandTest {
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
 
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade);
 
         // WHEN:
         int status = execute(app, "au init -c c -p p -s s " + str(rootDir));
@@ -191,7 +192,7 @@ public class AuInitializeCommandTest {
         ).thenThrow(
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mockedFilesFacade);
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade);
 
         // when
         Integer status = execute(app, "au init -c c -p p -s s " + str(tempDirPath));

@@ -68,7 +68,7 @@ public class JiraApiTest {
     @Test
     @Ignore("This is not a test. This is used to actually hit the Jira API for manual testing purposes.")
     public void NotATest_UtilToSendAnActualJiraRequest() throws IOException, InterruptedException {
-        HttpResponse<String> response = new JiraApiFactory(new FilesFacade()).create().createStory();
+        HttpResponse<String> response = new JiraApiFactory().create(new FilesFacade()).createStory();
         System.out.println("\n********** STATUS **********");
         System.out.println("STATUS: \n" + response.statusCode());
         System.out.println("HEADERS: \n" + response.headers());

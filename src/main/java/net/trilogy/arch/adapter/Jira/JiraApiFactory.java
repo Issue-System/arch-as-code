@@ -12,33 +12,25 @@ public class JiraApiFactory {
     public static final String JIRA_API_SETTINGS_FILE_PATH = ".arch-as-code/jira/settings.json";
 
     private HttpClient client;
-    private String baseUri;
-    private String bulkCreateEndpoint;
 
-    public JiraApiFactory(FilesFacade files) throws IOException {
+    public JiraApi create(FilesFacade files) throws IOException {
         var rawContents = files.readString(Path.of(JIRA_API_SETTINGS_FILE_PATH));
         final ObjectMapper objectMapper = new ObjectMapper();
-        this.baseUri = objectMapper.readTree(rawContents).get("base_uri").textValue();
-        this.bulkCreateEndpoint = objectMapper.readTree(rawContents).get("bulk_create_endpoint").textValue();
+        String baseUri = objectMapper.readTree(rawContents).get("base_uri").textValue();
+        String bulkCreateEndpoint = objectMapper.readTree(rawContents).get("bulk_create_endpoint").textValue();
         this.client = createClient();
+
+        return new JiraApi(this.client, baseUri, bulkCreateEndpoint);
     }
 
-    public JiraApi create() {
-        return new JiraApi(this.client, this.baseUri, this.bulkCreateEndpoint);
-    }
-
-    private HttpClient createClient() {
+    @VisibleForTesting
+    HttpClient createClient() {
         if (client == null) {
             client = HttpClient.newBuilder()
                     .followRedirects(HttpClient.Redirect.NORMAL)
                     .build();
         }
 
-        return client;
-    }
-
-    @VisibleForTesting
-    public HttpClient getClient() {
         return client;
     }
 }

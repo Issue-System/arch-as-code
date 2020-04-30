@@ -24,10 +24,11 @@ public class JiraApi {
         String stakeholder_name = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_name.txt")).trim();
         String stakeholder_key = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_key.txt")).trim();
         String stakeholder_email = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_email.txt")).trim();
-        String jira_base_uri = Files.readString(Paths.get("/tmp/arch-as-code-secret/jira_base_uri.txt")).trim();
-        String bulk_endpoint = Files.readString(Paths.get("/tmp/arch-as-code-secret/bulk_endpoint.txt")).trim();
         String jira_project_id = Files.readString(Paths.get("/tmp/arch-as-code-secret/jira_project_id.txt")).trim();
         String issue_type_id = Files.readString(Paths.get("/tmp/arch-as-code-secret/issue_type_id.txt")).trim();
+
+        String jira_base_uri = Files.readString(Paths.get("/tmp/arch-as-code-secret/jira_base_uri.txt")).trim();
+        String bulk_endpoint = Files.readString(Paths.get("/tmp/arch-as-code-secret/bulk_endpoint.txt")).trim();
 
         Base64.Encoder encoder = Base64.getEncoder();
         String encodedAuth = encoder.encodeToString((username + ":" + password).getBytes());

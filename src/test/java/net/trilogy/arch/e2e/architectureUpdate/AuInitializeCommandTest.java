@@ -17,9 +17,7 @@ import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FIL
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -114,11 +112,14 @@ public class AuInitializeCommandTest {
                 is(true)
         );
 
-        // TODO: Create correct settings
+        final String expectedJiraSettingsJson = "{\n" +
+                "    \"base_uri\": \"http://jira.devfactory.com/rest/api/2\",\n" +
+                "    \"bulk_create_endpoint\": \"/issue/bulk\",\n" +
+                "}";
         collector.checkThat(
                 JIRA_API_SETTINGS_FILE_PATH + " file contents are correct.",
                 Files.readString(tempDirPath.resolve(JIRA_API_SETTINGS_FILE_PATH)),
-                equalTo("jira")
+                equalTo(expectedJiraSettingsJson)
         );
     }
 

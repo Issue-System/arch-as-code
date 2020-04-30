@@ -1,5 +1,6 @@
 package net.trilogy.arch.adapter.Jira;
 
+import net.trilogy.arch.adapter.FilesFacade;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class JiraApiTest {
     @Before
     public void setUp() {
         mockHttpClient = mock(HttpClient.class);
-        jiraApi = new JiraApi(mockHttpClient);
+        jiraApi = new JiraApi(mockHttpClient, "base-uri", "bulk-create-endpoint");
     }
 
     // TODO: WIP
@@ -67,7 +68,7 @@ public class JiraApiTest {
     @Test
     @Ignore("This is not a test. This is used to actually hit the Jira API for manual testing purposes.")
     public void NotATest_UtilToSendAnActualJiraRequest() throws IOException, InterruptedException {
-        HttpResponse<String> response = new JiraApiFactory().create().createStory();
+        HttpResponse<String> response = new JiraApiFactory(new FilesFacade()).create().createStory();
         System.out.println("\n********** STATUS **********");
         System.out.println("STATUS: \n" + response.statusCode());
         System.out.println("HEADERS: \n" + response.headers());

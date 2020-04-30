@@ -114,7 +114,7 @@ public class AuInitializeCommandTest {
 
         final String expectedJiraSettingsJson = "{\n" +
                 "    \"base_uri\": \"http://jira.devfactory.com/rest/api/2\",\n" +
-                "    \"bulk_create_endpoint\": \"/issue/bulk\",\n" +
+                "    \"bulk_create_endpoint\": \"/issue/bulk\"\n" +
                 "}";
         collector.checkThat(
                 JIRA_API_SETTINGS_FILE_PATH + " file contents are correct.",

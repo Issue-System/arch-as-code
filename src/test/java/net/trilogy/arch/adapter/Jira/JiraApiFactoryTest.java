@@ -1,9 +1,15 @@
 package net.trilogy.arch.adapter.Jira;
 
+import net.trilogy.arch.adapter.FilesFacade;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 import javax.net.ssl.SSLContext;
+import java.io.IOException;
 import java.net.http.HttpClient;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
@@ -11,8 +17,28 @@ import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FIL
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class JiraApiFactoryTest {
+    @Rule
+    public final ErrorCollector collector = new ErrorCollector();
+    private FilesFacade mockedFiles;
+    private final String expectedBaseUri = "BASE-URI";
+    private final String expectedBulkCreateEndpoint = "BULK-CREATE-ENDPOINT";
+
+    @Before
+    public void setUp() throws Exception {
+        String json = "" +
+                "{\n" +
+                "    \"base_uri\": \"" + expectedBaseUri + "\",\n" +
+                "    \"bulk_create_endpoint\": \"" + expectedBulkCreateEndpoint + "\"\n" +
+                "}";
+        mockedFiles = mock(FilesFacade.class);
+        when(
+                mockedFiles.readString(Path.of(JIRA_API_SETTINGS_FILE_PATH))
+        ).thenReturn(json);
+    }
 
     @Test
     public void shouldUseTheRightConstants() {
@@ -20,20 +46,23 @@ public class JiraApiFactoryTest {
     }
 
     @Test
-    public void shouldCreateJiraApiWithCorrectClient() {
-        final JiraApiFactory factory = new JiraApiFactory();
-
-        HttpClient client = factory.createClient();
+    public void shouldCreateJiraApiWithCorrectClient() throws IOException {
+        final JiraApiFactory factory = new JiraApiFactory(mockedFiles);
+        HttpClient client = factory.getClient();
         JiraApi jiraApi = factory.create();
 
-        assertThat(jiraApi.getHttpClient(), is(client));
+        collector.checkThat(jiraApi.getHttpClient(), is(client));
+        collector.checkThat(jiraApi.getBaseUri(), equalTo(expectedBaseUri));
+        collector.checkThat(jiraApi.getBulkCreateEndpoint(), equalTo(expectedBulkCreateEndpoint));
     }
 
-    @Test
-    public void shouldCreateCorrectClient() throws NoSuchAlgorithmException {
-        final JiraApiFactory factory = new JiraApiFactory();
 
-        HttpClient client = factory.createClient();
+    @Test
+    public void shouldCreateCorrectClient() throws NoSuchAlgorithmException, IOException {
+
+        final JiraApiFactory factory = new JiraApiFactory(mockedFiles);
+
+        HttpClient client = factory.getClient();
 
         assertThat(client.connectTimeout(), equalTo(Optional.empty()));
         assertThat(client.authenticator(), equalTo(Optional.empty()));

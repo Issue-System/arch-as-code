@@ -82,7 +82,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private String buildJiraSettingsJsonString() {
         return "{\n" +
                 "    \"base_uri\": \"" + INITIAL_JIRA_BASE_URI + "\",\n" +
-                "    \"bulk_create_endpoint\": \"" + INITIAL_JIRA_BULK_CREATE_ENDPOINT + "\",\n" +
+                "    \"bulk_create_endpoint\": \"" + INITIAL_JIRA_BULK_CREATE_ENDPOINT + "\"\n" +
                 "}";
 
     }

@@ -8,4 +8,8 @@ public class FilesFacade {
     public Path writeString(Path path, String toWrite) throws IOException {
         return Files.writeString(path, toWrite);
     }
+
+    public String readString(Path path) throws IOException {
+        return Files.readString(path);
+    }
 }

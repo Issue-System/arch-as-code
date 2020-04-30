@@ -13,9 +13,13 @@ import java.util.Base64;
 
 public class JiraApi {
     private final HttpClient client;
+    private final String baseUri;
+    private final String bulkCreateEndpoint;
 
-    public JiraApi(HttpClient client) {
+    public JiraApi(HttpClient client, String baseUri, String bulkCreateEndpoint) {
         this.client = client;
+        this.baseUri = baseUri;
+        this.bulkCreateEndpoint = bulkCreateEndpoint;
     }
 
     public HttpResponse<String> createStory() throws IOException, InterruptedException {
@@ -55,11 +59,11 @@ public class JiraApi {
                 + "        },                                                                                             "
                 + "        \"summary\": \"Hello\",                                                                        "
                 + "        \"customfield_10401\": {                                                                       "
-                + "           \"self\": \""+jira_base_uri+"/user?username="+stakeholder_key+"\",                          "
-                + "           \"name\": \""+stakeholder_key+"\",                                                          "
-                + "           \"key\": \""+stakeholder_key+"\",                                                           "
-                + "           \"emailAddress\": \""+stakeholder_email+"\",                                                "
-                + "           \"displayName\": \""+stakeholder_name+"\",                                                  "
+                + "           \"self\": \"" + jira_base_uri + "/user?username=" + stakeholder_key + "\",                          "
+                + "           \"name\": \"" + stakeholder_key + "\",                                                          "
+                + "           \"key\": \"" + stakeholder_key + "\",                                                           "
+                + "           \"emailAddress\": \"" + stakeholder_email + "\",                                                "
+                + "           \"displayName\": \"" + stakeholder_name + "\",                                                  "
                 + "           \"active\": true,                                                                           "
                 + "           \"timeZone\": \"UTC\"                                                                       "
                 + "        },                                                                                             "
@@ -79,5 +83,15 @@ public class JiraApi {
     @VisibleForTesting
     HttpClient getHttpClient() {
         return client;
+    }
+
+    @VisibleForTesting
+    String getBaseUri() {
+        return baseUri;
+    }
+
+    @VisibleForTesting
+    String getBulkCreateEndpoint() {
+        return bulkCreateEndpoint;
     }
 }

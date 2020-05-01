@@ -1,0 +1,16 @@
+name: "Product 1"
+businessUnit: "DevFactory"
+description: "Architecture as code"
+decisions: []
+model:
+  people: []
+  systems: []
+  containers: []
+  components:
+    - id: "[SAMPLE-COMPONENT-ID]"
+  deploymentNodes: []
+views:
+  systemViews: []
+  containerViews: []
+  componentViews: []
+  deploymentViews: []

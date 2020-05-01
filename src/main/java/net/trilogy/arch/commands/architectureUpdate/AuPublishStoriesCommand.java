@@ -6,6 +6,7 @@ import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -56,9 +57,13 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         }
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade);
-        jiraApi.createStories(getFeatureStories(au));
+        jiraApi.createStories(getFeatureStories(au), getJira(au));
 
         return 0;
+    }
+
+    private Jira getJira(ArchitectureUpdate au) {
+        return au.getCapabilityContainer().getEpic().getJira();
     }
 
     private List<JiraStory> getFeatureStories(ArchitectureUpdate au) {

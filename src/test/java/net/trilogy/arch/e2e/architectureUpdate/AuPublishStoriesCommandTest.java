@@ -8,6 +8,7 @@ import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +41,9 @@ public class AuPublishStoriesCommandTest {
     public void shouldCreateJiraStories() throws IOException, InterruptedException {
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        var expected = List.of(getJiraStory());
-        verify(mockedJiraApi).createStories(expected);
+        Jira expectedEpic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
+        var expectedJiras = List.of(getJiraStory());
+        verify(mockedJiraApi).createStories(expectedJiras, expectedEpic);
     }
 
     private JiraStory getJiraStory() {

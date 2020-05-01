@@ -1,6 +1,7 @@
 package net.trilogy.arch.adapter.Jira;
 
 import com.google.common.annotations.VisibleForTesting;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +24,7 @@ public class JiraApi {
         this.bulkCreateEndpoint = bulkCreateEndpoint;
     }
 
-    public HttpResponse<String> createStories(List<JiraStory> jiraStories) throws IOException, InterruptedException {
+    public HttpResponse<String> createStories(List<JiraStory> jiraStories, Jira epic) throws IOException, InterruptedException {
         String username = Files.readString(Paths.get("/tmp/arch-as-code-secret/username.txt")).trim();
         String password = Files.readString(Paths.get("/tmp/arch-as-code-secret/password.txt")).trim();
         String stakeholder_name = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_name.txt")).trim();

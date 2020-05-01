@@ -40,7 +40,7 @@ public class JiraApiTest {
     @Ignore("This is WIP.")
     @Test
     public void shouldCreateStory() throws IOException, InterruptedException {
-        jiraApi.createStories(null);
+        jiraApi.createStories(null, null);
 
         String uri = "";
         String body = "";
@@ -68,7 +68,7 @@ public class JiraApiTest {
     @Test
     @Ignore("This is not a test. This is used to actually hit the Jira API for manual testing purposes.")
     public void NotATest_UtilToSendAnActualJiraRequest() throws IOException, InterruptedException {
-        HttpResponse<String> response = new JiraApiFactory().create(new FilesFacade()).createStories(null);
+        HttpResponse<String> response = new JiraApiFactory().create(new FilesFacade()).createStories(null, null);
         System.out.println("\n********** STATUS **********");
         System.out.println("STATUS: \n" + response.statusCode());
         System.out.println("HEADERS: \n" + response.headers());

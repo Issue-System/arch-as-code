@@ -24,7 +24,7 @@ public class JiraApi {
         this.bulkCreateEndpoint = bulkCreateEndpoint;
     }
 
-    public HttpResponse<String> createStories(List<JiraStory> jiraStories, Jira epic) throws IOException, InterruptedException {
+    public HttpResponse<String> createStories(List<JiraStory> jiraStories, JiraQueryResult epicInformation) throws IOException, InterruptedException {
         String username = Files.readString(Paths.get("/tmp/arch-as-code-secret/username.txt")).trim();
         String password = Files.readString(Paths.get("/tmp/arch-as-code-secret/password.txt")).trim();
         String stakeholder_name = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_name.txt")).trim();
@@ -95,5 +95,9 @@ public class JiraApi {
     @VisibleForTesting
     String getBulkCreateEndpoint() {
         return bulkCreateEndpoint;
+    }
+
+    public JiraQueryResult getStory(Jira expectedEpic) {
+        return new JiraQueryResult();
     }
 }

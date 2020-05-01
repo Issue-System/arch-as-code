@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 
 public class JiraApi {
     private final HttpClient client;
@@ -22,7 +23,7 @@ public class JiraApi {
         this.bulkCreateEndpoint = bulkCreateEndpoint;
     }
 
-    public HttpResponse<String> createStory() throws IOException, InterruptedException {
+    public HttpResponse<String> createStories(List<JiraStory> jiraStories) throws IOException, InterruptedException {
         String username = Files.readString(Paths.get("/tmp/arch-as-code-secret/username.txt")).trim();
         String password = Files.readString(Paths.get("/tmp/arch-as-code-secret/password.txt")).trim();
         String stakeholder_name = Files.readString(Paths.get("/tmp/arch-as-code-secret/stakeholder_name.txt")).trim();

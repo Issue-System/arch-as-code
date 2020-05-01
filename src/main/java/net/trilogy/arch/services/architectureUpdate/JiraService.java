@@ -24,7 +24,10 @@ public class JiraService {
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {
-        return au.getCapabilityContainer().getFeatureStories().stream()
-                .map(fs -> new JiraStory(au, fs)).collect(Collectors.toList());
+        return au.getCapabilityContainer()
+            .getFeatureStories()
+            .stream()
+            .map(fs -> new JiraStory(au, fs))
+            .collect(Collectors.toList());
     }
 }

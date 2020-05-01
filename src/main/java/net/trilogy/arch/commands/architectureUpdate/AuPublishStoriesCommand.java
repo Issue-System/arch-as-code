@@ -7,7 +7,6 @@ import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     private final FilesFacade filesFacade;
 
     @CommandLine.Parameters(index = "0", description = "File name of architecture update to validate")
-    private String architectureUpdateFileName;
+    private File architectureUpdateFileName;
 
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
@@ -45,9 +44,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
     public Integer call() throws IOException, InterruptedException {
 
-        Path auPath = productDocumentationRoot.toPath()
-                .resolve(architectureUpdateFileName)
-                .toAbsolutePath();
+        Path auPath = architectureUpdateFileName.toPath();
 
         try {
             ArchitectureDataStructure architecture = new ArchitectureDataStructureReader()
@@ -57,7 +54,6 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
             spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
             return 1;
         }
-
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade);
         jiraApi.createStory();

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static org.mockito.Mockito.*;
@@ -34,8 +35,9 @@ public class AuPublishStoriesCommandTest {
 
     @Test
     public void shouldCreateJiraStories() throws IOException, InterruptedException {
-        execute(app, "au publish -u user -p password architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
+        var expected = List.of();
         verify(mockedJiraApi).createStory();
     }
 }

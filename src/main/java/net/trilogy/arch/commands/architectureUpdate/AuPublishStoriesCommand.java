@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.services.architectureUpdate.JiraService;
@@ -52,7 +53,8 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
             return 1;
         }
 
-        final JiraService jiraService = new JiraService(jiraApiFactory.create(filesFacade));
+        final JiraApi jiraApi = jiraApiFactory.create(filesFacade);
+        final JiraService jiraService = new JiraService(jiraApi);
         jiraService.createStories(au);
         return 0;
     }

@@ -24,8 +24,8 @@ public class JiraApi {
         throw new UnsupportedOperationException();
     }
 
-    public JiraQueryResult getStory(Jira expectedEpic) {
-        throw new UnsupportedOperationException();
+    public JiraQueryResult getStory(Jira jira) {
+        return new JiraQueryResult();
     }
 
     @VisibleForTesting

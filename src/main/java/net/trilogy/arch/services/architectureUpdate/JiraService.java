@@ -20,6 +20,7 @@ public class JiraService {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket);
 
+        // TODO: don't pass the API the results without parsing into primitives
         this.api.createStories(getFeatureStories(au), informationAboutTheEpic);
     }
 

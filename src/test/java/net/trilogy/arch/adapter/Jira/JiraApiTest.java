@@ -1,11 +1,12 @@
 package net.trilogy.arch.adapter.Jira;
 
-import net.trilogy.arch.adapter.FilesFacade;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -18,12 +19,14 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+
+import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 
 public class JiraApiTest {
 
@@ -36,7 +39,20 @@ public class JiraApiTest {
         jiraApi = new JiraApi(mockHttpClient, "base-uri", "bulk-create-endpoint");
     }
 
-    // TODO: WIP
+    @Test
+    public void shouldGetStory() {
+        // GIVEN:
+        final Jira jiraToQuery = Jira.blank();
+        
+        // WHEN:
+        final JiraQueryResult result = jiraApi.getStory(jiraToQuery);
+
+        // THEN:
+        // TODO: assert that result is what we want.
+        assertNotNull(result);
+    }
+
+    // TODO: Make Jira actually create stories
     @Ignore("This is WIP.")
     @Test
     public void shouldCreateStory() throws IOException, InterruptedException {
@@ -64,7 +80,7 @@ public class JiraApiTest {
         );
     }
 
-    // TODO: Remove when no longer needed
+    // TODO [TEST UTIL]: Remove when no longer needed
     @Test
     @Ignore("This is not a test. This is used to actually hit the Jira API for manual testing purposes.")
     public void NotATest_UtilToSendAnActualJiraRequest() throws IOException, InterruptedException {

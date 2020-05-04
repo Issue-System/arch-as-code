@@ -57,7 +57,7 @@ public class AuPublishStoriesCommandTest {
     @Test
     public void shouldTellJiraToCreateStories() throws IOException, InterruptedException {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
-        List<JiraStory> jiraStories = List.of(getJiraStory());
+        List<JiraStory> jiraStories = List.of(createSampleJiraStory());
 
         final JiraQueryResult epicInformation = new JiraQueryResult();
         when(mockedJiraApi.getStory(epic)).thenReturn(epicInformation);
@@ -67,7 +67,7 @@ public class AuPublishStoriesCommandTest {
         verify(mockedJiraApi).createStories(jiraStories, epicInformation);
     }
 
-    private JiraStory getJiraStory() {
+    private JiraStory createSampleJiraStory() {
         return new JiraStory(
                 "[SAMPLE FEATURE STORY TITLE]",
                 List.of(

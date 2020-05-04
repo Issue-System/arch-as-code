@@ -24,7 +24,8 @@ public class JiraApi {
         throw new UnsupportedOperationException();
     }
 
-    public JiraQueryResult getStory(Jira jira) {
+    public JiraQueryResult getStory(Jira jira) throws IOException, InterruptedException {
+        this.client.send(null, HttpResponse.BodyHandlers.ofString());
         return new JiraQueryResult();
     }
 

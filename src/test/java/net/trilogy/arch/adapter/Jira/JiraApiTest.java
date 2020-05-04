@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +41,7 @@ public class JiraApiTest {
     }
 
     @Test
-    public void shouldGetStory() {
+    public void shouldGetStory() throws Exception {
         // GIVEN:
         final Jira jiraToQuery = Jira.blank();
         
@@ -48,8 +49,8 @@ public class JiraApiTest {
         final JiraQueryResult result = jiraApi.getStory(jiraToQuery);
 
         // THEN:
-        // TODO: assert that result is what we want.
-        assertNotNull(result);
+        var captor = ArgumentCaptor.forClass(HttpRequest.class);
+        verify(mockHttpClient).send(captor.capture(), any());
     }
 
     // TODO: Make Jira actually create stories

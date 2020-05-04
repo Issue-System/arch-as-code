@@ -1,11 +1,5 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.Callable;
-
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
@@ -13,6 +7,12 @@ import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.services.architectureUpdate.JiraService;
 import picocli.CommandLine;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.")
 public class AuPublishStoriesCommand implements Callable<Integer> {
@@ -26,10 +26,10 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    @CommandLine.Option(names = { "-u", "--username" }, description = "Username")
-    private File username;
+    @CommandLine.Option(names = {"-u", "--username"}, description = "Username")
+    private String username;
 
-    @CommandLine.Option(names = { "-p", "--password" }, arity = "0..1", interactive = true)
+    @CommandLine.Option(names = {"-p", "--password"}, arity = "0..1", interactive = true)
     private char[] password;
 
     @CommandLine.Spec
@@ -55,7 +55,8 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade);
         final JiraService jiraService = new JiraService(jiraApi);
-        jiraService.createStories(au);
+        jiraService.createStories(au, username, password);
+
         return 0;
     }
 }

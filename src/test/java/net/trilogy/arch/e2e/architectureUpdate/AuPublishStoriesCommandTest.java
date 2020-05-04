@@ -1,17 +1,5 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
-import static net.trilogy.arch.TestHelper.execute;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.FilesFacade;
@@ -23,6 +11,15 @@ import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import static net.trilogy.arch.TestHelper.execute;
+import static org.mockito.Mockito.*;
 
 public class AuPublishStoriesCommandTest {
 
@@ -41,7 +38,7 @@ public class AuPublishStoriesCommandTest {
         final JiraApiFactory mockedJiraApiFactory = mock(JiraApiFactory.class);
         mockedJiraApi = mock(JiraApi.class);
         when(mockedJiraApiFactory.create(files)).thenReturn(mockedJiraApi);
-        
+
         app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, files);
     }
 
@@ -51,7 +48,7 @@ public class AuPublishStoriesCommandTest {
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        verify(mockedJiraApi).getStory(epic);
+        verify(mockedJiraApi).getStory(epic, "user", "password".toCharArray());
     }
 
     @Test
@@ -60,7 +57,7 @@ public class AuPublishStoriesCommandTest {
         List<JiraStory> jiraStories = List.of(createSampleJiraStory());
 
         final JiraQueryResult epicInformation = new JiraQueryResult();
-        when(mockedJiraApi.getStory(epic)).thenReturn(epicInformation);
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 

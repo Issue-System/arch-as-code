@@ -1,13 +1,14 @@
 package net.trilogy.arch.adapter.Jira;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -20,16 +21,14 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class JiraApiTest {
+    @Rule
+    public final ErrorCollector collector = new ErrorCollector();
 
     private HttpClient mockHttpClient;
     private JiraApi jiraApi;
@@ -37,21 +36,37 @@ public class JiraApiTest {
     @Before
     public void setUp() {
         mockHttpClient = mock(HttpClient.class);
-        jiraApi = new JiraApi(mockHttpClient, "base-uri", "bulk-create-endpoint");
+        jiraApi = new JiraApi(mockHttpClient, "base-uri", "/bulk-create-endpoint");
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldGetStory() throws Exception {
         // GIVEN:
         final Jira jiraToQuery = Jira.blank();
-        
+
         // WHEN:
-        final JiraQueryResult result = jiraApi.getStory(jiraToQuery);
+        final JiraQueryResult result = jiraApi.getStory(jiraToQuery, "username", "password".toCharArray());
 
         // THEN:
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), any());
+
+        final HttpRequest requestMade = captor.getValue();
+
+        collector.checkThat(
+                requestMade.method(),
+                equalTo("GET")
+        );
+
+        collector.checkThat(
+                String.join(", ", requestMade.headers().allValues("Authorization")),
+                containsString("Basic dXNlcm5hbWU6cGFzc3dvcmQ=")
+        );
+
+        collector.checkThat(
+                requestMade.uri().toString(),
+                equalTo("http://localhost")
+        );
     }
 
     // TODO: Make Jira actually create stories
@@ -67,16 +82,16 @@ public class JiraApiTest {
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         final HttpRequest requestMade = captor.getValue();
 
-        assertThat(
+        collector.checkThat(
                 String.join(", ", requestMade.headers().allValues("Authorization")),
                 containsString("Basic")
         );
-        assertThat(
+        collector.checkThat(
                 requestMade.headers().allValues("Content-Type"),
                 contains("application/json")
         );
 
-        assertThat(
+        collector.checkThat(
                 HttpRequestParserForTests.getBody(requestMade).replaceAll(" ", ""),
                 equalTo(body.replaceAll(" ", ""))
         );

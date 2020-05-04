@@ -1,12 +1,12 @@
 package net.trilogy.arch.services.architectureUpdate;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JiraService {
 
@@ -16,9 +16,9 @@ public class JiraService {
         this.api = jiraApi;
     }
 
-    public void createStories(final ArchitectureUpdate au) throws IOException, InterruptedException {
+    public void createStories(final ArchitectureUpdate au, String username, char[] password) throws IOException, InterruptedException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
-        final var informationAboutTheEpic = this.api.getStory(epicJiraTicket);
+        final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
 
         // TODO: don't pass the API the results without parsing into primitives
         this.api.createStories(getFeatureStories(au), informationAboutTheEpic);
@@ -26,9 +26,9 @@ public class JiraService {
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {
         return au.getCapabilityContainer()
-            .getFeatureStories()
-            .stream()
-            .map(fs -> new JiraStory(au, fs))
-            .collect(Collectors.toList());
+                .getFeatureStories()
+                .stream()
+                .map(fs -> new JiraStory(au, fs))
+                .collect(Collectors.toList());
     }
 }

@@ -8,13 +8,15 @@ then
     echo " - create a demo folder where it's easy to execute the binary"
     echo " - that folder will be as if `init` and `au init` had already been run"
 else
-    COPY_INITIALIZE_FROM=$1
-
     # find and go to repo root dir
     d="$(dirname "${BASH_SOURCE[0]}")"
     dir="$(cd "$(dirname "$d")" && pwd)/$(basename "$d")"
     cd "$dir"
     cd ..
+
+    rm -rf $dir/../demo-folder/.arch-as-code
+    rm -rf $dir/../demo-folder/.install
+    mkdir -p $dir/../demo-folder/.install
 
     # remove existing
     ./gradlew clean
@@ -26,17 +28,20 @@ else
     unzip *.zip
     rm *.zip
     cd *
-    cd bin
+    mv ./* $dir/../demo-folder/.install/
 
-    mkdir demo-folder
-    cd demo-folder
+    cd $dir/../demo-folder
 
-    ../arch-as-code init -i i -k i -s s .
-    ../arch-as-code au init -c c -p p -s s .
+    .install/bin/arch-as-code init -i i -k i -s s .
+    .install/bin/arch-as-code au init -c c -p p -s s .
 
     # copy .arch-as-code from repo root
     rm -rf .arch-as-code
     cp -r $dir/../.arch-as-code .
+
+    # add executable to folder
+    echo 'd="$(dirname "${BASH_SOURCE[0]}")"; dir="$(cd "$(dirname "$d")" && pwd)/$(basename "$d")"; "${dir}"/.install/bin/arch-as-code "$@";' > arch-as-code.sh
+    chmod +x arch-as-code.sh
 
     echo ""
     echo ""
@@ -44,5 +49,5 @@ else
     echo ""
     echo "Demo folder created. To cd there, run:"
     echo "   cd $(pwd)"
-    echo "In there, executable can be run with: ../arch-as-code"
+    echo "Run .arch-as-code.sh as an alias for the execcutable"
 fi

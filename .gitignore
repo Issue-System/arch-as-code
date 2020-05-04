@@ -16,3 +16,4 @@ bin/
 credentials.json
 
 .arch-as-code/
+demo-folder/*

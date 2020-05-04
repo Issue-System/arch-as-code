@@ -64,6 +64,11 @@ public class JiraApiTest {
         );
 
         collector.checkThat(
+                String.join(", ", requestMade.headers().allValues("Content-Type")),
+                containsString("application/json")
+        );
+
+        collector.checkThat(
                 requestMade.uri().toString(),
                 equalTo("http://base-uri/get-story-endpoint/" + jiraToQuery.getTicket())
         );

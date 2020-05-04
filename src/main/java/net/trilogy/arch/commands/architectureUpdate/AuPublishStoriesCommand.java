@@ -26,10 +26,10 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    @CommandLine.Option(names = {"-u", "--username"}, description = "Username")
+    @CommandLine.Option(names = {"-u", "--username"}, description = "Username", required = true)
     private String username;
 
-    @CommandLine.Option(names = {"-p", "--password"}, arity = "0..1", interactive = true)
+    @CommandLine.Option(names = {"-p", "--password"}, arity = "0..1", interactive = true, required = true)
     private char[] password;
 
     @CommandLine.Spec

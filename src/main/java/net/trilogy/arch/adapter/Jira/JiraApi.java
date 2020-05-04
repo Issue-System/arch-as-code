@@ -1,9 +1,11 @@
 package net.trilogy.arch.adapter.Jira;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,24 +26,32 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public HttpResponse<String> createStories(List<JiraStory> jiraStories, JiraQueryResult epicInformation) throws IOException, InterruptedException {
+    public void createStories(List<JiraStory> jiraStories, String projectId, String projectKey) {
         throw new UnsupportedOperationException();
     }
 
-    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws IOException, InterruptedException {
+    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {
         String encodedAuth = getEncodeAuth(username, password);
         final String ticket = jira.getTicket();
         final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
-        this.client.send(request, HttpResponse.BodyHandlers.ofString());
-        return new JiraQueryResult();
+        try {
+            HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+            return parseResponse(response);
+        } catch (Exception e) {
+            throw new GetStoryException(e);
+        }
+    }
+
+    private JiraQueryResult parseResponse(HttpResponse<String> response) throws JsonProcessingException {
+        JsonNode json = new ObjectMapper().readValue(response.body(), JsonNode.class);
+        String projectId = json.get("fields").get("project").get("id").asText();
+        String projectKey = json.get("fields").get("project").get("key").asText();
+        return new JiraQueryResult(projectId, projectKey);
     }
 
     private String getEncodeAuth(String username, char[] password) {
-        final Base64.Encoder encoder = Base64.getEncoder();
         final String s = username + ":" + String.valueOf(password);
-        final String result = encoder.encodeToString(s.getBytes());
-
-        return result;
+        return Base64.getEncoder().encodeToString(s.getBytes());
     }
 
     private HttpRequest createGetStoryRequest(String encodedAuth, String ticket) {
@@ -51,7 +61,6 @@ public class JiraApi {
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Basic " + encodedAuth)
                 .uri(URI.create(baseUri + getStoryEndpoint + ticket))
-
                 .build();
     }
 
@@ -73,5 +82,9 @@ public class JiraApi {
     @VisibleForTesting
     String getBulkCreateEndpoint() {
         return bulkCreateEndpoint;
+    }
+
+    public static class GetStoryException extends Exception {
+        public GetStoryException(Throwable cause) { super(cause); }
     }
 }

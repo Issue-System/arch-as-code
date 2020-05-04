@@ -1,6 +1,5 @@
 package net.trilogy.arch.adapter.Jira;
 
-import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,10 +20,16 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import static org.hamcrest.Matchers.*;
+import static net.trilogy.arch.TestHelper.JSON_JIRA_GET_EPIC;
+import static net.trilogy.arch.TestHelper.JSON_STRUCTURIZR_BIG_BANK;
+import static net.trilogy.arch.TestHelper.loadResource;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JiraApiTest {
     @Rule
@@ -40,12 +45,15 @@ public class JiraApiTest {
     }
 
     @Test
-    public void shouldGetStory() throws Exception {
+    public void shouldMakeRequestToGetJiraStory() throws Exception {
         // GIVEN:
+        @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_JIRA_GET_EPIC));
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
         final Jira jiraToQuery = new Jira("JIRA-TICKET-123", "http://link");
 
         // WHEN:
-        final JiraQueryResult result = jiraApi.getStory(jiraToQuery, "username", "password".toCharArray());
+        jiraApi.getStory(jiraToQuery, "username", "password".toCharArray());
 
         // THEN:
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
@@ -74,11 +82,33 @@ public class JiraApiTest {
         );
     }
 
+    @Test
+    public void shouldParseResponseWhenGetJiraStory() throws Exception {
+        // GIVEN:
+        @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_JIRA_GET_EPIC));
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        final JiraQueryResult result = jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+
+        collector.checkThat(result.getProjectId(), equalTo("10809"));
+        collector.checkThat(result.getProjectKey(), equalTo("MOFE-12"));
+    }
+
+    @Test(expected = JiraApi.GetStoryException.class)
+    public void shouldThrowPresentableExceptionIfGetStoryFails() throws Exception {
+        @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_STRUCTURIZR_BIG_BANK)); // <-- this is the wrong response
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+    }
+
     // TODO: Make Jira actually create stories
     @Ignore("This is WIP.")
     @Test
     public void shouldCreateStory() throws IOException, InterruptedException {
-        jiraApi.createStories(null, null);
+        jiraApi.createStories(null, null, null);
 
         String uri = "";
         String body = "";
@@ -101,19 +131,6 @@ public class JiraApiTest {
                 equalTo(body.replaceAll(" ", ""))
         );
     }
-
-    // TODO [TEST UTIL]: Remove when no longer needed
-    @Test
-    @Ignore("This is not a test. This is used to actually hit the Jira API for manual testing purposes.")
-    public void NotATest_UtilToSendAnActualJiraRequest() throws IOException, InterruptedException {
-        HttpResponse<String> response = new JiraApiFactory().create(new FilesFacade(), null).createStories(null, null);
-        System.out.println("\n********** STATUS **********");
-        System.out.println("STATUS: \n" + response.statusCode());
-        System.out.println("HEADERS: \n" + response.headers());
-        System.out.println("BODY: \n" + response.body());
-        System.out.println("********** STATUS **********\n");
-    }
-
 
     // https://stackoverflow.com/questions/59342963/how-to-test-java-net-http-java-11-requests-bodypublisher
     private static class HttpRequestParserForTests<T> implements Flow.Subscriber<T> {

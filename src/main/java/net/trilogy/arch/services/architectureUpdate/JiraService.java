@@ -1,5 +1,6 @@
 package net.trilogy.arch.services.architectureUpdate;
 
+import lombok.SneakyThrows;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -16,12 +17,11 @@ public class JiraService {
         this.api = jiraApi;
     }
 
+    @SneakyThrows // TODO
     public void createStories(final ArchitectureUpdate au, String username, char[] password) throws IOException, InterruptedException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
-
-        // TODO: don't pass the API the results without parsing into primitives
-        this.api.createStories(getFeatureStories(au), informationAboutTheEpic);
+        this.api.createStories(getFeatureStories(au), null , null);
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {

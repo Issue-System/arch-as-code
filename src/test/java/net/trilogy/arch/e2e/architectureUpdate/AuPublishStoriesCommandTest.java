@@ -43,7 +43,7 @@ public class AuPublishStoriesCommandTest {
     }
 
     @Test
-    public void shouldQueryJiraForEpic() throws IOException, InterruptedException {
+    public void shouldQueryJiraForEpic() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
@@ -52,16 +52,16 @@ public class AuPublishStoriesCommandTest {
     }
 
     @Test
-    public void shouldTellJiraToCreateStories() throws IOException, InterruptedException {
+    public void shouldTellJiraToCreateStories() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
         List<JiraStory> jiraStories = List.of(createSampleJiraStory());
 
-        final JiraQueryResult epicInformation = new JiraQueryResult();
+        final JiraQueryResult epicInformation = new JiraQueryResult(null, null);
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        verify(mockedJiraApi).createStories(jiraStories, epicInformation);
+        verify(mockedJiraApi).createStories(jiraStories, epicInformation.getProjectId(), epicInformation.getProjectKey());
     }
 
     private JiraStory createSampleJiraStory() {

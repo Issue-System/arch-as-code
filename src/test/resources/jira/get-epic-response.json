@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "project": {
+      "self": "https://jira.example.com/rest/api/2/project/10809",
+      "id": "10809",
+      "key": "MOFE-12",
+      "name": "My Own Fancy Enterprise",
+      "avatarUrls": {
+        "48x48": "https://jira.example.com/secure/projectavatar?avatarId=12312",
+        "24x24": "https://jira.example.com/secure/projectavatar?size=small&avatarId=12312",
+        "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&avatarId=12312",
+        "32x32": "https://jira.example.com/secure/projectavatar?size=medium&avatarId=12312"
+      }
+    }
+  }
+}

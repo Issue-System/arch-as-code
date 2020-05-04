@@ -37,7 +37,7 @@ public class AuPublishStoriesCommandTest {
 
         final JiraApiFactory mockedJiraApiFactory = mock(JiraApiFactory.class);
         mockedJiraApi = mock(JiraApi.class);
-        when(mockedJiraApiFactory.create(files)).thenReturn(mockedJiraApi);
+        when(mockedJiraApiFactory.create(files, rootDir.toPath())).thenReturn(mockedJiraApi);
 
         app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, files);
     }

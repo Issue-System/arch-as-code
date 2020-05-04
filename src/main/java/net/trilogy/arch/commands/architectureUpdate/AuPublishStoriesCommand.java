@@ -48,12 +48,11 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         try {
             au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
         } catch (IOException | RuntimeException e) {
-            spec.commandLine().getErr().println("Invalid structure. Error thrown: \n"
-                    + e.getMessage() + "\nCause: " + e.getCause());
+            spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
             return 1;
         }
 
-        final JiraApi jiraApi = jiraApiFactory.create(filesFacade);
+        final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
         final JiraService jiraService = new JiraService(jiraApi);
         jiraService.createStories(au, username, password);
 

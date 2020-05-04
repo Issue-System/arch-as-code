@@ -13,8 +13,8 @@ public class JiraApiFactory {
 
     private HttpClient client;
 
-    public JiraApi create(FilesFacade files) throws IOException {
-        var rawContents = files.readString(Path.of(JIRA_API_SETTINGS_FILE_PATH));
+    public JiraApi create(FilesFacade files, Path rootDir) throws IOException {
+        var rawContents = files.readString(rootDir.resolve(JIRA_API_SETTINGS_FILE_PATH));
         final ObjectMapper objectMapper = new ObjectMapper();
         String baseUri = objectMapper.readTree(rawContents).get("base_uri").textValue();
         String getStoryEndpoint = objectMapper.readTree(rawContents).get("get_story_endpoint").textValue();

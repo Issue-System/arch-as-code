@@ -8,7 +8,9 @@ import org.junit.rules.ErrorCollector;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -27,9 +29,11 @@ public class JiraApiFactoryTest {
     private final String expectedBaseUri = "BASE-URI/";
     private final String expectedGetStoryEndpoint = "GET-STORY-ENDPOINT/";
     private final String expectedBulkCreateEndpoint = "BULK-CREATE-ENDPOINT/";
+    private Path rootDir;
 
     @Before
     public void setUp() throws Exception {
+        rootDir = Path.of("a", "random", "root", "directory");
         String json = "" +
                 "{\n" +
                 "    \"base_uri\": \"" + expectedBaseUri + "\",\n" +
@@ -38,7 +42,7 @@ public class JiraApiFactoryTest {
                 "}";
         mockedFiles = mock(FilesFacade.class);
         when(
-                mockedFiles.readString(Path.of(JIRA_API_SETTINGS_FILE_PATH))
+                mockedFiles.readString(rootDir.resolve(JIRA_API_SETTINGS_FILE_PATH))
         ).thenReturn(json);
     }
 
@@ -51,7 +55,7 @@ public class JiraApiFactoryTest {
     public void shouldCreateJiraApiWithCorrectClient() throws IOException {
         final JiraApiFactory factory = new JiraApiFactory();
         HttpClient client = factory.createClient();
-        JiraApi jiraApi = factory.create(mockedFiles);
+        JiraApi jiraApi = factory.create(mockedFiles, rootDir);
 
         collector.checkThat(jiraApi.getHttpClient(), is(client));
         collector.checkThat(jiraApi.getBaseUri(), equalTo(expectedBaseUri));

@@ -115,6 +115,7 @@ public class AuInitializeCommandTest {
 
         final String expectedJiraSettingsJson = "{\n" +
                 "    \"base_uri\": \"http://jira.devfactory.com/rest/api/2\",\n" +
+                "    \"get_story_endpoint\": \"/issue/\",\n" +
                 "    \"bulk_create_endpoint\": \"/issue/bulk\"\n" +
                 "}";
         collector.checkThat(

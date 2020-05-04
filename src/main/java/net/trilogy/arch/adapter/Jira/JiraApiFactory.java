@@ -17,10 +17,11 @@ public class JiraApiFactory {
         var rawContents = files.readString(Path.of(JIRA_API_SETTINGS_FILE_PATH));
         final ObjectMapper objectMapper = new ObjectMapper();
         String baseUri = objectMapper.readTree(rawContents).get("base_uri").textValue();
+        String getStoryEndpoint = objectMapper.readTree(rawContents).get("get_story_endpoint").textValue();
         String bulkCreateEndpoint = objectMapper.readTree(rawContents).get("bulk_create_endpoint").textValue();
         this.client = createClient();
 
-        return new JiraApi(this.client, baseUri, bulkCreateEndpoint);
+        return new JiraApi(this.client, baseUri, getStoryEndpoint, bulkCreateEndpoint);
     }
 
     @VisibleForTesting

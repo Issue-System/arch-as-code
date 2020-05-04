@@ -36,13 +36,13 @@ public class JiraApiTest {
     @Before
     public void setUp() {
         mockHttpClient = mock(HttpClient.class);
-        jiraApi = new JiraApi(mockHttpClient, "base-uri", "/bulk-create-endpoint");
+        jiraApi = new JiraApi(mockHttpClient, "http://base-uri/", "/get-story-endpoint/", "/bulk-create-endpoint");
     }
 
     @Test
     public void shouldGetStory() throws Exception {
         // GIVEN:
-        final Jira jiraToQuery = Jira.blank();
+        final Jira jiraToQuery = new Jira("JIRA-TICKET-123", "http://link");
 
         // WHEN:
         final JiraQueryResult result = jiraApi.getStory(jiraToQuery, "username", "password".toCharArray());
@@ -65,7 +65,7 @@ public class JiraApiTest {
 
         collector.checkThat(
                 requestMade.uri().toString(),
-                equalTo("http://localhost")
+                equalTo("http://base-uri/get-story-endpoint/" + jiraToQuery.getTicket())
         );
     }
 

@@ -8,22 +8,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
 public class JiraApi {
     private final HttpClient client;
     private final String baseUri;
+    private final String getStoryEndpoint;
     private final String bulkCreateEndpoint;
 
-    public JiraApi(HttpClient client, String baseUri, String bulkCreateEndpoint) {
+    public JiraApi(HttpClient client, String baseUri, String getStoryEndpoint, String bulkCreateEndpoint) {
         this.client = client;
-        this.baseUri = baseUri;
-        this.bulkCreateEndpoint = bulkCreateEndpoint;
+        this.baseUri = baseUri.replaceAll("/$", "") + "/";
+        this.bulkCreateEndpoint = bulkCreateEndpoint.replaceAll("(^/|/$)", "") + "/";
+        this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
     public HttpResponse<String> createStories(List<JiraStory> jiraStories, JiraQueryResult epicInformation) throws IOException, InterruptedException {
@@ -32,7 +30,8 @@ public class JiraApi {
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws IOException, InterruptedException {
         String encodedAuth = getEncodeAuth(username, password);
-        final HttpRequest request = createGetStoryRequest(encodedAuth);
+        final String ticket = jira.getTicket();
+        final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
         this.client.send(request, HttpResponse.BodyHandlers.ofString());
         return new JiraQueryResult();
     }
@@ -45,17 +44,17 @@ public class JiraApi {
         return result;
     }
 
-    private HttpRequest createGetStoryRequest(String encodedAuth) {
+    private HttpRequest createGetStoryRequest(String encodedAuth, String ticket) {
         return HttpRequest
                 .newBuilder()
                 .GET()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Basic " + encodedAuth)
-                .uri(URI.create("http://localhost"))
+                .uri(URI.create(baseUri + getStoryEndpoint + ticket))
+
                 .build();
     }
 
-    //    public String
     @VisibleForTesting
     HttpClient getHttpClient() {
         return client;
@@ -64,6 +63,11 @@ public class JiraApi {
     @VisibleForTesting
     String getBaseUri() {
         return baseUri;
+    }
+
+    @VisibleForTesting
+    String getGetStoryEndpoint() {
+        return getStoryEndpoint;
     }
 
     @VisibleForTesting

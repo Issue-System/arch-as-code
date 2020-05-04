@@ -38,6 +38,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private final String INITIAL_GOOGLE_API_REDIRECT_URN = "urn:ietf:wg:oauth:2.0:oob";
     private final String INITIAL_GOOGLE_API_REDIRECT_URI = "http://localhost";
     private final String INITIAL_JIRA_BASE_URI = "http://jira.devfactory.com/rest/api/2";
+    private final String INITIAL_JIRA_GET_STORY_ENDPOINT = "/issue/";
     private final String INITIAL_JIRA_BULK_CREATE_ENDPOINT = "/issue/bulk";
 
     public AuInitializeCommand(FilesFacade filesFacade) {
@@ -82,6 +83,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private String buildJiraSettingsJsonString() {
         return "{\n" +
                 "    \"base_uri\": \"" + INITIAL_JIRA_BASE_URI + "\",\n" +
+                "    \"get_story_endpoint\": \"" + INITIAL_JIRA_GET_STORY_ENDPOINT + "\",\n" +
                 "    \"bulk_create_endpoint\": \"" + INITIAL_JIRA_BULK_CREATE_ENDPOINT + "\"\n" +
                 "}";
 

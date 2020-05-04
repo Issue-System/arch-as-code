@@ -24,14 +24,16 @@ public class JiraApiFactoryTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
     private FilesFacade mockedFiles;
-    private final String expectedBaseUri = "BASE-URI";
-    private final String expectedBulkCreateEndpoint = "BULK-CREATE-ENDPOINT";
+    private final String expectedBaseUri = "BASE-URI/";
+    private final String expectedGetStoryEndpoint = "GET-STORY-ENDPOINT/";
+    private final String expectedBulkCreateEndpoint = "BULK-CREATE-ENDPOINT/";
 
     @Before
     public void setUp() throws Exception {
         String json = "" +
                 "{\n" +
                 "    \"base_uri\": \"" + expectedBaseUri + "\",\n" +
+                "    \"get_story_endpoint\": \"" + expectedGetStoryEndpoint + "\",\n" +
                 "    \"bulk_create_endpoint\": \"" + expectedBulkCreateEndpoint + "\"\n" +
                 "}";
         mockedFiles = mock(FilesFacade.class);
@@ -53,6 +55,7 @@ public class JiraApiFactoryTest {
 
         collector.checkThat(jiraApi.getHttpClient(), is(client));
         collector.checkThat(jiraApi.getBaseUri(), equalTo(expectedBaseUri));
+        collector.checkThat(jiraApi.getGetStoryEndpoint(), equalTo(expectedGetStoryEndpoint));
         collector.checkThat(jiraApi.getBulkCreateEndpoint(), equalTo(expectedBulkCreateEndpoint));
     }
 

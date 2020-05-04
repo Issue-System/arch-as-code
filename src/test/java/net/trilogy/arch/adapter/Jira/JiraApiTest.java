@@ -40,6 +40,7 @@ public class JiraApiTest {
         jiraApi = new JiraApi(mockHttpClient, "base-uri", "bulk-create-endpoint");
     }
 
+    @Ignore("WIP")
     @Test
     public void shouldGetStory() throws Exception {
         // GIVEN:

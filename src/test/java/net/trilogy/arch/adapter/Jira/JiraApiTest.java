@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -109,43 +108,41 @@ public class JiraApiTest {
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
-        JiraStory sampleJiraStory = createSampleJiraStory();
-
-        jiraApi.createStories(List.of(sampleJiraStory), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+        jiraApi.createStories(createSampleJiraStories(), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         String body = HttpRequestParserForTests.getBody(captor.getValue());
 
-
         collector.checkThat(
                 new ObjectMapper().readValue(body, JsonNode.class),
-                equalTo(new ObjectMapper().readValue(""
-                        + "{                                                                           "
-                        + "  \"issueUpdates\": [                                                       "
-                        + "    {                                                                       "
-                        + "      \"fields\": {                                                         "
-                        + "        \"project\": {                                                      "
-                        + "          \"id\": \"PROJECT ID\"                                            "
-                        + "        },                                                                  "
-                        + "        \"summary\": \"STORY TITLE\",                                       "
-                        + "        \"issuetype\": {                                                    "
-                        + "          \"name\": \"Feature Story\"                                       "
-                        + "        },                                                                  "
-                        + "        \"description\": \"NA\"                                             "
-                        + "      }                                                                     "
-                        + "    }                                                                       "
-                        + "  ]                                                                         "
-                        + "}                                                                           "
-                , JsonNode.class))
+                equalTo(new ObjectMapper().readValue(
+                        ""
+                                + "{                                            "
+                                + "  \"issueUpdates\": [                        "
+                                + "    {                                        "
+                                + "      \"fields\": {                          "
+                                + "        \"project\": {                       "
+                                + "          \"id\": \"PROJECT ID\"             "
+                                + "        },                                   "
+                                + "        \"summary\": \"STORY TITLE 1\",      "
+                                + "        \"issuetype\": {                     "
+                                + "          \"name\": \"Feature Story\"        "
+                                + "        },                                   "
+                                + "        \"description\": \"NA\"              "
+                                + "      }                                      "
+                                + "    }                                        "
+                                + "  ]                                          "
+                                + "}                                            "
+                                + "",
+                        JsonNode.class
+                ))
         );
     }
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectHeaders() throws Exception {
-        JiraStory sampleJiraStory = createSampleJiraStory();
-
-        jiraApi.createStories(List.of(sampleJiraStory), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+        jiraApi.createStories(createSampleJiraStories(), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
@@ -164,16 +161,39 @@ public class JiraApiTest {
         );
     }
 
-    private JiraStory createSampleJiraStory() {
-        var jiraTdd = new JiraStory.JiraTdd(new Tdd.Id("TDD ID"), new Tdd("TDD text"),
-                new Tdd.ComponentReference("COMPONENT ID"));
+    private List<JiraStory> createSampleJiraStories() {
+        var jiraTdd1 = new JiraStory.JiraTdd(
+                new Tdd.Id("TDD ID 1"),
+                new Tdd("TDD TEXT 1"),
+                new Tdd.ComponentReference("COMPONENT ID 1")
+        );
+        var jiraTdd2 = new JiraStory.JiraTdd(
+                new Tdd.Id("TDD ID 2"),
+                new Tdd("TDD TEXT 2"),
+                new Tdd.ComponentReference("COMPONENT ID 2")
+        );
 
-        var jiraFunctionalRequirement = new JiraStory.JiraFunctionalRequirement(
-                new FunctionalRequirement.Id("FUNCTIONAL REQUIREMENT ID"),
-                new FunctionalRequirement("FUNCTIONAL REQUIREMENT TEXT",
-                        "FUNCTIONAL REQUIREMENT SOURCE", List.of(new Tdd.Id("TDD REFERENCE"))));
+        var jiraFunctionalRequirement1 = new JiraStory.JiraFunctionalRequirement(
+                new FunctionalRequirement.Id("FUNCTIONAL REQUIREMENT ID 1"),
+                new FunctionalRequirement(
+                        "FUNCTIONAL REQUIREMENT TEXT 1",
+                        "FUNCTIONAL REQUIREMENT SOURCE 1",
+                        List.of(new Tdd.Id("TDD REFERENCE 1"))
+                )
+        );
+        var jiraFunctionalRequirement2 = new JiraStory.JiraFunctionalRequirement(
+                new FunctionalRequirement.Id("FUNCTIONAL REQUIREMENT ID 2"),
+                new FunctionalRequirement(
+                        "FUNCTIONAL REQUIREMENT TEXT 2",
+                        "FUNCTIONAL REQUIREMENT SOURCE 2",
+                        List.of(new Tdd.Id("TDD REFERENCE 2"))
+                )
+        );
 
-        return new JiraStory("STORY TITLE", List.of(jiraTdd), List.of(jiraFunctionalRequirement));
+        return List.of(
+                new JiraStory("STORY TITLE 1", List.of(jiraTdd1), List.of()),
+                new JiraStory("STORY TITLE 2", List.of(jiraTdd1, jiraTdd2), List.of(jiraFunctionalRequirement1, jiraFunctionalRequirement2))
+        );
     }
 
     /**

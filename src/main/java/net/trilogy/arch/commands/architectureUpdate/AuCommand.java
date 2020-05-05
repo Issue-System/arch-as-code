@@ -11,7 +11,8 @@ import java.util.concurrent.Callable;
 @Command(
         name = "architecture-update",
         aliases = "au",
-        description = "Parent for Architecture Update commands"
+        description = "Parent command for Architecture Update commands. It itself does nothing.",
+        mixinStandardHelpOptions=true
 )
 public class AuCommand implements Callable<Integer> {
     public static final String ARCHITECTURE_UPDATES_ROOT_FOLDER = "architecture-updates";

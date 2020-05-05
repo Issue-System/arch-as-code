@@ -24,7 +24,7 @@ import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 import static picocli.CommandLine.Spec;
 
-@Command(name = "validate", description = "Validate Architecture Update")
+@Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
 public class AuValidateCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "File name of architecture update to validate")
     private String architectureUpdateFileName;
@@ -32,10 +32,10 @@ public class AuValidateCommand implements Callable<Integer> {
     @Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs")
+    @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs only")
     boolean tddValidation;
 
-    @CommandLine.Option(names = {"-s", "--stories"}, description = "Run validation for feature stories")
+    @CommandLine.Option(names = {"-s", "--stories"}, description = "Run validation for feature stories only")
     boolean capabilityValidation;
 
     @Spec

@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "publish", description = "Publishes to structurizr")
+@CommandLine.Command(name = "publish", mixinStandardHelpOptions = true, description = "Publish architecture to structurizr.")
 public class PublishCommand implements Callable<Integer> {
     private final String manifestFileName;
 

@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "new", description = "Initialize a new architecture update.")
+@CommandLine.Command(name = "new", mixinStandardHelpOptions = true, description = "Create a new architecture update.")
 public class AuNewCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(AuCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
@@ -27,7 +27,7 @@ public class AuNewCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Document", required = false)
+    @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Google Document, used to import decisions and other data", required = false)
     private String p1GoogleDocUrl;
 
     public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade) {

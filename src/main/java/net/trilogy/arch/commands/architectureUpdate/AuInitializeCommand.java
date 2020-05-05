@@ -15,7 +15,7 @@ import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FIL
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 
-@Command(name = "initialize", aliases = "init", description = "Initialize the architecture updates work space.")
+@Command(name = "initialize", aliases = "init", mixinStandardHelpOptions = true, description = "Initialize the architecture updates work space within a single product's existing workspace. Sets up Google API credentials to import P1 documents.")
 public class AuInitializeCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(AuInitializeCommand.class);
     private final FilesFacade filesFacade;
@@ -29,7 +29,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-s", "--secret"}, description = "Google API secret", required = true)
     private String googleApiSecret;
 
-    @Parameters(index = "0", description = "Product documentation root directory")
+    @Parameters(index = "0", description = "Product workspace directory, containng the product's architecture")
     private File productDocumentationRoot;
 
     private final String INITIAL_GOOGLE_API_AUTH_URI = "https://accounts.google.com/o/oauth2/auth";

@@ -10,11 +10,11 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "import", description = "Imports existing structurizr workspace")
+@CommandLine.Command(name = "import", mixinStandardHelpOptions = true, description = "Imports existing structurizr workspace, overwriting the existing product architecture.")
 public class ImportCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureDataStructureWriter.class);
 
-    @CommandLine.Parameters(index = "0", paramLabel = "EXPORTED_WORKSPACE", description = "Exported structurizr workspace location.")
+    @CommandLine.Parameters(index = "0", paramLabel = "EXPORTED_WORKSPACE", description = "Exported structurizr workspace json file location.")
     private File exportedWorkspacePath;
 
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")

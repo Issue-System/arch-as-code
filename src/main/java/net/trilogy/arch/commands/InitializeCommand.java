@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 import static net.trilogy.arch.adapter.Credentials.createCredentials;
 
-@CommandLine.Command(name = "init", description = "Initializes workspace")
+@CommandLine.Command(name = "init", description = "Initializes a new workspace directory to contain a single project architecture, AUs, documentation, and credentials for Structurizr imports and exports. This is generally the first command to be run.", mixinStandardHelpOptions = true)
 public class InitializeCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(InitializeCommand.class);
 
@@ -25,7 +25,7 @@ public class InitializeCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-s", "--workspace-api-secret"}, description = "Structurizr workspace api secret", required = true)
     private String apiSecret;
 
-    @CommandLine.Parameters(index = "0", description = "Product documentation root directory")
+    @CommandLine.Parameters(index = "0", description = "Directory to initialize")
     private File productDocumentationRoot;
 
     // for testing purposes

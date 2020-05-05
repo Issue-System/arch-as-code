@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "publish", description = "Publish stories.")
+@CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
 public class AuPublishStoriesCommand implements Callable<Integer> {
 
     private final JiraApiFactory jiraApiFactory;

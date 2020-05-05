@@ -17,11 +17,10 @@ public class JiraService {
         this.api = jiraApi;
     }
 
-    @SneakyThrows // TODO
-    public void createStories(final ArchitectureUpdate au, String username, char[] password) throws IOException, InterruptedException {
+    public void createStories(final ArchitectureUpdate au, String username, char[] password) throws JiraApi.GetStoryException, JiraApi.CreateStoriesException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
-        this.api.createStories(getFeatureStories(au), null , null);
+        this.api.createStories(getFeatureStories(au), null , null, username, password);
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {

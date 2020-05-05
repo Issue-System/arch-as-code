@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -26,8 +27,18 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public void createStories(List<JiraStory> jiraStories, String projectId, String projectKey) {
-        throw new UnsupportedOperationException();
+    public void createStories(List<JiraStory> jiraStories, String project_id, String projectKey, String username, char[] password) throws CreateStoriesException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .header("Authorization", "Basic " + getEncodeAuth(username, password))
+                .header("Content-Type", "application/json")
+                .uri(URI.create(baseUri + bulkCreateEndpoint))
+                .build();
+        try {
+            this.client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new CreateStoriesException(e);
+        }
     }
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {
@@ -86,5 +97,8 @@ public class JiraApi {
 
     public static class GetStoryException extends Exception {
         public GetStoryException(Throwable cause) { super(cause); }
+    }
+    public static class CreateStoriesException extends Exception {
+        public CreateStoriesException(Throwable cause) { super(cause); }
     }
 }

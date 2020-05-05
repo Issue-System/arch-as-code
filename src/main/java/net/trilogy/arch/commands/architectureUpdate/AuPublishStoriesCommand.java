@@ -40,7 +40,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         this.filesFacade = filesFacade;
     }
 
-    public Integer call() throws IOException, InterruptedException {
+    public Integer call() throws IOException, JiraApi.GetStoryException, JiraApi.CreateStoriesException {
 
         Path auPath = architectureUpdateFileName.toPath();
 

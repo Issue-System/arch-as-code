@@ -1,6 +1,8 @@
 package net.trilogy.arch.adapter.Jira;
 
+import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
+import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -104,38 +106,62 @@ public class JiraApiTest {
         jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
     }
 
-    // TODO: Make Jira actually create stories
-    @Ignore("This is WIP.")
+    @Ignore("WIP")
     @Test
-    public void shouldCreateStory() throws IOException, InterruptedException {
-        jiraApi.createStories(null, null, null);
+    public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
+        JiraStory sampleJiraStory = createSampleJiraStory();
 
-        String uri = "";
-        String body = "";
+        jiraApi.createStories(List.of(sampleJiraStory), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         final HttpRequest requestMade = captor.getValue();
 
+        collector.addError(new RuntimeException("TODO: Check Body"));
+    }
+
+    @Test
+    public void shouldMakeCreateStoryRequestWithCorrectHeaders() throws Exception {
+        JiraStory sampleJiraStory = createSampleJiraStory();
+
+        jiraApi.createStories(List.of(sampleJiraStory), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+
+        var captor = ArgumentCaptor.forClass(HttpRequest.class);
+        verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
+        final HttpRequest requestMade = captor.getValue();
+
+        collector.checkThat(requestMade.method(), equalTo("POST"));
+
         collector.checkThat(
                 String.join(", ", requestMade.headers().allValues("Authorization")),
-                containsString("Basic")
+                containsString("Basic dXNlcm5hbWU6cGFzc3dvcmQ=")
         );
+
         collector.checkThat(
                 requestMade.headers().allValues("Content-Type"),
                 contains("application/json")
         );
-
-        collector.checkThat(
-                HttpRequestParserForTests.getBody(requestMade).replaceAll(" ", ""),
-                equalTo(body.replaceAll(" ", ""))
-        );
     }
 
-    // https://stackoverflow.com/questions/59342963/how-to-test-java-net-http-java-11-requests-bodypublisher
+    private JiraStory createSampleJiraStory() {
+        var jiraTdd = new JiraStory.JiraTdd(new Tdd.Id("TDD ID"), new Tdd("TDD text"),
+                new Tdd.ComponentReference("COMPONENT ID"));
+
+        var jiraFunctionalRequirement = new JiraStory.JiraFunctionalRequirement(
+                new FunctionalRequirement.Id("FUNCTIONAL REQUIREMENT ID"),
+                new FunctionalRequirement("FUNCTIONAL REQUIREMENT TEXT",
+                        "FUNCTIONAL REQUIREMENT SOURCE", List.of(new Tdd.Id("TDD REFERENCE"))));
+
+        return new JiraStory("Story", List.of(jiraTdd), List.of(jiraFunctionalRequirement));
+    }
+
+    /**
+     * Used for parsing request objects, to ensure in tests we're creating the right ones.
+     * See: https://stackoverflow.com/questions/59342963/how-to-test-java-net-http-java-11-requests-bodypublisher
+     */
     private static class HttpRequestParserForTests<T> implements Flow.Subscriber<T> {
         private final CountDownLatch latch = new CountDownLatch(1);
-        private List<T> bodyItems = new ArrayList<>();
+        private final List<T> bodyItems = new ArrayList<>();
 
         public static String getBody(HttpRequest fromHttpRequest) {
             final Optional<HttpRequest.BodyPublisher> maybeBodyPublisher = fromHttpRequest.bodyPublisher();

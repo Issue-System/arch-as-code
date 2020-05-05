@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
@@ -61,7 +60,7 @@ public class AuPublishStoriesCommandTest {
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        verify(mockedJiraApi).createStories(jiraStories, epicInformation.getProjectId(), epicInformation.getProjectKey());
+        verify(mockedJiraApi).createStories(jiraStories, epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
     private JiraStory createSampleJiraStory() {

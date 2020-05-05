@@ -55,7 +55,7 @@ public class AuPublishStoriesCommandTest {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
         List<JiraStory> jiraStories = List.of(createSampleJiraStory());
 
-        final JiraQueryResult epicInformation = new JiraQueryResult(null, null);
+        final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());

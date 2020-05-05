@@ -22,16 +22,11 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import static net.trilogy.arch.TestHelper.JSON_JIRA_GET_EPIC;
-import static net.trilogy.arch.TestHelper.JSON_STRUCTURIZR_BIG_BANK;
-import static net.trilogy.arch.TestHelper.loadResource;
+import static net.trilogy.arch.TestHelper.*;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class JiraApiTest {
     @Rule
@@ -167,6 +162,7 @@ public class JiraApiTest {
                 new Tdd("TDD TEXT 1"),
                 new Tdd.ComponentReference("COMPONENT ID 1")
         );
+
         var jiraTdd2 = new JiraStory.JiraTdd(
                 new Tdd.Id("TDD ID 2"),
                 new Tdd("TDD TEXT 2"),

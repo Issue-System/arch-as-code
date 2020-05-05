@@ -67,7 +67,7 @@ public class JiraApi {
         try {
             HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
             return parseResponse(response);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             throw new GetStoryException(e);
         }
     }

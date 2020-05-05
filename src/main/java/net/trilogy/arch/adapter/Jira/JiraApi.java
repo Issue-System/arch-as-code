@@ -15,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JiraApi {
     private final HttpClient client;
@@ -54,21 +55,18 @@ public class JiraApi {
     }
 
     private String generateBodyForCreateStories(String epicKey, List<JiraStory> jiraStories, String projectId) {
-        var fields = new JSONObject(Map.of(
-                "fields", Map.of(
-                        "customfield_10002", epicKey,
-                        "project", Map.of("id", projectId),
-                        "summary", jiraStories.stream().findAny().map(JiraStory::getTitle).orElse("NA"),
-                        "issuetype", Map.of("name", "Feature Story"),
-                        "description", "NA"
-                )
-        ));
-        var body = new JSONObject(
+        return new JSONObject(
                 Map.of("issueUpdates", new JSONArray(
-                        List.of(fields)
+                        jiraStories.stream().map(story -> new JSONObject(Map.of(
+                                "fields", Map.of(
+                                        "customfield_10002", epicKey,
+                                        "project", Map.of("id", projectId),
+                                        "summary", story.getTitle(),
+                                        "issuetype", Map.of("name", "Feature Story"),
+                                        "description", "NA"
+                                )))).collect(Collectors.toList())
                 ))
-        );
-        return body.toString();
+        ).toString();
     }
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {

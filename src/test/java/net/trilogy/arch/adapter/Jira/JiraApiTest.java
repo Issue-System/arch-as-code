@@ -1,17 +1,18 @@
 package net.trilogy.arch.adapter.Jira;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
-import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -106,7 +107,6 @@ public class JiraApiTest {
         jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
         JiraStory sampleJiraStory = createSampleJiraStory();
@@ -115,9 +115,30 @@ public class JiraApiTest {
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
-        final HttpRequest requestMade = captor.getValue();
+        String body = HttpRequestParserForTests.getBody(captor.getValue());
 
-        collector.addError(new RuntimeException("TODO: Check Body"));
+
+        collector.checkThat(
+                new ObjectMapper().readValue(body, JsonNode.class),
+                equalTo(new ObjectMapper().readValue(""
+                        + "{                                                                           "
+                        + "  \"issueUpdates\": [                                                       "
+                        + "    {                                                                       "
+                        + "      \"fields\": {                                                         "
+                        + "        \"project\": {                                                      "
+                        + "          \"id\": \"PROJECT ID\"                                            "
+                        + "        },                                                                  "
+                        + "        \"summary\": \"STORY TITLE\",                                       "
+                        + "        \"issuetype\": {                                                    "
+                        + "          \"name\": \"Feature Story\"                                       "
+                        + "        },                                                                  "
+                        + "        \"description\": \"NA\"                                             "
+                        + "      }                                                                     "
+                        + "    }                                                                       "
+                        + "  ]                                                                         "
+                        + "}                                                                           "
+                , JsonNode.class))
+        );
     }
 
     @Test
@@ -152,7 +173,7 @@ public class JiraApiTest {
                 new FunctionalRequirement("FUNCTIONAL REQUIREMENT TEXT",
                         "FUNCTIONAL REQUIREMENT SOURCE", List.of(new Tdd.Id("TDD REFERENCE"))));
 
-        return new JiraStory("Story", List.of(jiraTdd), List.of(jiraFunctionalRequirement));
+        return new JiraStory("STORY TITLE", List.of(jiraTdd), List.of(jiraFunctionalRequirement));
     }
 
     /**
@@ -164,14 +185,18 @@ public class JiraApiTest {
         private final List<T> bodyItems = new ArrayList<>();
 
         public static String getBody(HttpRequest fromHttpRequest) {
-            final Optional<HttpRequest.BodyPublisher> maybeBodyPublisher = fromHttpRequest.bodyPublisher();
-            if (maybeBodyPublisher.isEmpty()) return "";
-            final HttpRequest.BodyPublisher bodyPublisherOfRequestMade = maybeBodyPublisher.get();
-            HttpRequestParserForTests<ByteBuffer> httpRequestParserForTests = new HttpRequestParserForTests<>();
-            bodyPublisherOfRequestMade.subscribe(httpRequestParserForTests);
-            final List<ByteBuffer> bodyItems = httpRequestParserForTests.getBodyItems();
-            final byte[] array = bodyItems.get(0).array();
-            return new String(array);
+            try {
+                final Optional<HttpRequest.BodyPublisher> maybeBodyPublisher = fromHttpRequest.bodyPublisher();
+                if (maybeBodyPublisher.isEmpty()) return "";
+                final HttpRequest.BodyPublisher bodyPublisherOfRequestMade = maybeBodyPublisher.get();
+                HttpRequestParserForTests<ByteBuffer> httpRequestParserForTests = new HttpRequestParserForTests<>();
+                bodyPublisherOfRequestMade.subscribe(httpRequestParserForTests);
+                final List<ByteBuffer> bodyItems = httpRequestParserForTests.getBodyItems();
+                final byte[] array = bodyItems.get(0).array();
+                return new String(array);
+            } catch (Throwable e) {
+                throw new RuntimeException("Unable to parse body", e);
+            }
         }
 
         private List<T> getBodyItems() {

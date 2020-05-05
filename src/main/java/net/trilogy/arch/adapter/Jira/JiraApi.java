@@ -5,14 +5,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 public class JiraApi {
     private final HttpClient client;
@@ -29,7 +31,7 @@ public class JiraApi {
 
     public void createStories(List<JiraStory> jiraStories, String project_id, String projectKey, String username, char[] password) throws CreateStoriesException {
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.noBody())
+                .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(jiraStories, project_id)))
                 .header("Authorization", "Basic " + getEncodeAuth(username, password))
                 .header("Content-Type", "application/json")
                 .uri(URI.create(baseUri + bulkCreateEndpoint))
@@ -39,6 +41,23 @@ public class JiraApi {
         } catch (Exception e) {
             throw new CreateStoriesException(e);
         }
+    }
+
+    private String generateBodyForCreateStories(List<JiraStory> jiraStories, String projectId) {
+        var fields = new JSONObject(Map.of(
+                "fields", Map.of(
+                        "project", Map.of("id", projectId),
+                        "summary", jiraStories.stream().findAny().map(JiraStory::getTitle).orElse("NA"),
+                        "issuetype", Map.of("name", "Feature Story"),
+                        "description", "NA"
+                )
+        ));
+        var body = new JSONObject(
+                Map.of("issueUpdates", new JSONArray(
+                        List.of(fields)
+                ))
+        );
+        return body.toString();
     }
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {

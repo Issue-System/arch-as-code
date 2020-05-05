@@ -56,6 +56,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.2'
     implementation 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.10.2'
 
+    //json
+    implementation 'org.json:json:20180130'
+
     //logging
     implementation 'org.slf4j:slf4j-nop:1.7.30'
 

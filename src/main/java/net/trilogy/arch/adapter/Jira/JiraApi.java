@@ -29,23 +29,34 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public void createStories(List<JiraStory> jiraStories, String project_id, String projectKey, String username, char[] password) throws CreateStoriesException {
+    public void createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws CreateStoriesException {
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(jiraStories, project_id)))
+                .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(epicKey, jiraStories, projectId)))
                 .header("Authorization", "Basic " + getEncodeAuth(username, password))
                 .header("Content-Type", "application/json")
                 .uri(URI.create(baseUri + bulkCreateEndpoint))
                 .build();
         try {
-            this.client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
+            final HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            try {
+                System.out.println("\n********** CREATE STORIES *********");
+                System.out.println("STATUS: \n" + response.statusCode());
+                System.out.println("HEADERS: \n" + response.headers());
+                System.out.println("BODY: \n" + response.body());
+                System.out.println("********** CREATE STORIES *********\n");
+            } catch (Throwable e) {
+            }
+
+        } catch (Throwable e) {
             throw new CreateStoriesException(e);
         }
     }
 
-    private String generateBodyForCreateStories(List<JiraStory> jiraStories, String projectId) {
+    private String generateBodyForCreateStories(String epicKey, List<JiraStory> jiraStories, String projectId) {
         var fields = new JSONObject(Map.of(
                 "fields", Map.of(
+                        "customfield_10002", epicKey,
                         "project", Map.of("id", projectId),
                         "summary", jiraStories.stream().findAny().map(JiraStory::getTitle).orElse("NA"),
                         "issuetype", Map.of("name", "Feature Story"),
@@ -66,6 +77,15 @@ public class JiraApi {
         final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
         try {
             HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            try {
+                System.out.println("\n********** GET STORY *********");
+                System.out.println("STATUS: \n" + response.statusCode());
+                System.out.println("HEADERS: \n" + response.headers());
+                System.out.println("BODY: \n" + response.body());
+                System.out.println("********** GET STORY *********\n");
+            } catch (Throwable e) {
+            }
             return parseResponse(response);
         } catch (Throwable e) {
             throw new GetStoryException(e);
@@ -115,9 +135,14 @@ public class JiraApi {
     }
 
     public static class GetStoryException extends Exception {
-        public GetStoryException(Throwable cause) { super(cause); }
+        public GetStoryException(Throwable cause) {
+            super(cause);
+        }
     }
+
     public static class CreateStoriesException extends Exception {
-        public CreateStoriesException(Throwable cause) { super(cause); }
+        public CreateStoriesException(Throwable cause) {
+            super(cause);
+        }
     }
 }

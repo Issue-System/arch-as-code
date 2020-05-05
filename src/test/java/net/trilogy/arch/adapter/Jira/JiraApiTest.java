@@ -103,7 +103,7 @@ public class JiraApiTest {
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
-        jiraApi.createStories(createSampleJiraStories(), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+        jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
@@ -113,22 +113,23 @@ public class JiraApiTest {
                 new ObjectMapper().readValue(body, JsonNode.class),
                 equalTo(new ObjectMapper().readValue(
                         ""
-                                + "{                                            "
-                                + "  \"issueUpdates\": [                        "
-                                + "    {                                        "
-                                + "      \"fields\": {                          "
-                                + "        \"project\": {                       "
-                                + "          \"id\": \"PROJECT ID\"             "
-                                + "        },                                   "
-                                + "        \"summary\": \"STORY TITLE 1\",      "
-                                + "        \"issuetype\": {                     "
-                                + "          \"name\": \"Feature Story\"        "
-                                + "        },                                   "
-                                + "        \"description\": \"NA\"              "
-                                + "      }                                      "
-                                + "    }                                        "
-                                + "  ]                                          "
-                                + "}                                            "
+                                + "{                                                   "
+                                + "  \"issueUpdates\": [                               "
+                                + "    {                                               "
+                                + "      \"fields\": {                                 "
+                                + "        \"customfield_10002\": \"EPIC KEY\","
+                                + "        \"project\": {                              "
+                                + "          \"id\": \"PROJECT ID\"                    "
+                                + "        },                                          "
+                                + "        \"summary\": \"STORY TITLE 1\",             "
+                                + "        \"issuetype\": {                            "
+                                + "          \"name\": \"Feature Story\"               "
+                                + "        },                                          "
+                                + "        \"description\": \"NA\"                     "
+                                + "      }                                             "
+                                + "    }                                               "
+                                + "  ]                                                 "
+                                + "}                                                   "
                                 + "",
                         JsonNode.class
                 ))
@@ -137,7 +138,7 @@ public class JiraApiTest {
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectHeaders() throws Exception {
-        jiraApi.createStories(createSampleJiraStories(), "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+        jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());

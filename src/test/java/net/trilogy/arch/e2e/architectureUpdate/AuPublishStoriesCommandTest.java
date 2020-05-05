@@ -60,7 +60,7 @@ public class AuPublishStoriesCommandTest {
 
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        verify(mockedJiraApi).createStories(jiraStories, epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
+        verify(mockedJiraApi).createStories(jiraStories, "[SAMPLE JIRA TICKET]", epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
     private JiraStory createSampleJiraStory() {

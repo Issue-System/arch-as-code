@@ -49,5 +49,5 @@ else
     echo ""
     echo "Demo folder created. To cd there, run:"
     echo "   cd $(pwd)"
-    echo "Run .arch-as-code.sh as an alias for the execcutable"
+    echo "Run ./arch-as-code.sh as an alias for the execcutable"
 fi

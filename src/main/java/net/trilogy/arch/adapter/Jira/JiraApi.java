@@ -46,7 +46,7 @@ public class JiraApi {
                 System.out.println("HEADERS: \n" + response.headers());
                 System.out.println("BODY: \n" + response.body());
                 System.out.println("********** CREATE STORIES *********\n");
-            } catch (Throwable e) {
+            } catch (Throwable ignored) {
             }
 
         } catch (Throwable e) {
@@ -79,14 +79,14 @@ public class JiraApi {
         Map<String, List<JiraStory.JiraTdd>> compMap = story.getTdds()
                 .stream()
                 .collect(
-                        Collectors.groupingBy(jiraTdd -> jiraTdd.getComponent().toString())
+                        Collectors.groupingBy(JiraStory.JiraTdd::getComponent)
                 );
 
         return "h3. Technical Design:\n" +
                 compMap.entrySet().stream().map(
                         entry -> "h4. Component: " + entry.getKey() + "\n||TDD||Description||\n" +
                                 entry.getValue().stream().map(
-                                        tdd -> "| " + tdd.getId() + " | {noformat}" + tdd.getTdd().getText() + "{noformat} |\n"
+                                        tdd -> "| " + tdd.getId() + " | {noformat}" + tdd.getText() + "{noformat} |\n"
                                 ).collect(Collectors.joining())
                 ).collect(Collectors.joining()) +
                 "";
@@ -104,8 +104,8 @@ public class JiraApi {
     private String makeFunctionalRequiremntRow(JiraStory.JiraFunctionalRequirement funcReq) {
         return ""
                 + "| " + funcReq.getId() + " | "
-                + funcReq.getFunctionalRequirement().getSource()
-                + " | {noformat}" + funcReq.getFunctionalRequirement().getText() + "{noformat} |\n"
+                + funcReq.getSource()
+                + " | {noformat}" + funcReq.getText() + "{noformat} |\n"
                 + "";
 
     }
@@ -123,7 +123,7 @@ public class JiraApi {
                 System.out.println("HEADERS: \n" + response.headers());
                 System.out.println("BODY: \n" + response.body());
                 System.out.println("********** GET STORY *********\n");
-            } catch (Throwable e) {
+            } catch (Throwable ignored) {
             }
             return parseResponse(response);
         } catch (Throwable e) {

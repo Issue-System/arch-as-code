@@ -53,7 +53,6 @@ public class JiraStory {
                 .collect(Collectors.toList());
     }
 
-    @Getter
     @ToString
     @EqualsAndHashCode
     @RequiredArgsConstructor
@@ -61,14 +60,37 @@ public class JiraStory {
         private final Tdd.Id id;
         private final Tdd tdd;
         private final Tdd.ComponentReference component;
+
+        public String getId() {
+            return id.toString();
+        }
+
+        public String getComponent() {
+            return component.toString();
+        }
+
+        public String getText() {
+            return tdd.getText();
+        }
     }
 
-    @Getter
     @ToString
     @EqualsAndHashCode
     @RequiredArgsConstructor
     public static class JiraFunctionalRequirement {
         private final FunctionalRequirement.Id id;
         private final FunctionalRequirement functionalRequirement;
+
+        public String getId() {
+            return id.toString();
+        }
+
+        public String getText() {
+            return functionalRequirement.getText();
+        }
+
+        public String getSource() {
+            return functionalRequirement.getSource();
+        }
     }
 }

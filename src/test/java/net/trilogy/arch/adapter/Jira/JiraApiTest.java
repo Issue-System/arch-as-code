@@ -22,11 +22,17 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
-import static net.trilogy.arch.TestHelper.*;
+import static net.trilogy.arch.TestHelper.JSON_JIRA_CREATE_STORIES_REQUEST_EXPECTED_BODY;
+import static net.trilogy.arch.TestHelper.JSON_JIRA_GET_EPIC;
+import static net.trilogy.arch.TestHelper.JSON_STRUCTURIZR_BIG_BANK;
+import static net.trilogy.arch.TestHelper.loadResource;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JiraApiTest {
     @Rule
@@ -103,50 +109,23 @@ public class JiraApiTest {
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
-        jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+        // GIVEN:
+        List<JiraStory> sampleJiraStories = createSampleJiraStories();
 
+        // WHEN:
+        jiraApi.createStories(sampleJiraStories, "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
+
+        // THEN:
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
-        String body = HttpRequestParserForTests.getBody(captor.getValue());
 
-        collector.checkThat(
-                new ObjectMapper().readValue(body, JsonNode.class),
-                equalTo(new ObjectMapper().readValue(
-                        ""
-                                + "{                                                   "
-                                + "  \"issueUpdates\": [                               "
-                                + "    {                                               "
-                                + "      \"fields\": {                                 "
-                                + "        \"customfield_10002\": \"EPIC KEY\","
-                                + "        \"project\": {                              "
-                                + "          \"id\": \"PROJECT ID\"                    "
-                                + "        },                                          "
-                                + "        \"summary\": \"STORY TITLE 1\",             "
-                                + "        \"issuetype\": {                            "
-                                + "          \"name\": \"Feature Story\"               "
-                                + "        },                                          "
-                                + "        \"description\": \"h3. Implements functionality:\\n||Id||Source||Description||\\nh3. Technical Design:\\nh4. Component: COMPONENT ID 1\\n||TDD||Description||\\n| TDD ID 1 | {noformat}TDD TEXT 1{noformat} |\\n\"                     "
-                                + "      }                                             "
-                                + "    },                                              "
-                                + "    {                                               "
-                                + "      \"fields\": {                                 "
-                                + "        \"customfield_10002\": \"EPIC KEY\","
-                                + "        \"project\": {                              "
-                                + "          \"id\": \"PROJECT ID\"                    "
-                                + "        },                                          "
-                                + "        \"summary\": \"STORY TITLE 2\",             "
-                                + "        \"issuetype\": {                            "
-                                + "          \"name\": \"Feature Story\"               "
-                                + "        },                                          "
-                                + "        \"description\": \"h3. Implements functionality:\\n||Id||Source||Description||\\n| FUNCTIONAL REQUIREMENT ID 1 | FUNCTIONAL REQUIREMENT SOURCE 1 | {noformat}FUNCTIONAL REQUIREMENT TEXT 1{noformat} |\\n| FUNCTIONAL REQUIREMENT ID 2 | FUNCTIONAL REQUIREMENT SOURCE 2 | {noformat}FUNCTIONAL REQUIREMENT TEXT 2{noformat} |\\nh3. Technical Design:\\nh4. Component: COMPONENT ID 1\\n||TDD||Description||\\n| TDD ID 1 | {noformat}TDD TEXT 1{noformat} |\\nh4. Component: COMPONENT ID 2\\n||TDD||Description||\\n| TDD ID 2 | {noformat}TDD TEXT 2{noformat} |\\n\"                     "
-                                + "      }                                             "
-                                + "    }                                               "
-                                + "  ]                                                 "
-                                + "}                                                   "
-                                + "",
-                        JsonNode.class
-                ))
-        );
+        String expectedBody = loadResource(getClass(), JSON_JIRA_CREATE_STORIES_REQUEST_EXPECTED_BODY);
+        String actualBody = HttpRequestParserForTests.getBody(captor.getValue());
+
+        var expectedBodyJson = new ObjectMapper().readValue(expectedBody, JsonNode.class);
+        var actualBodyJson = new ObjectMapper().readValue(actualBody, JsonNode.class);
+
+        collector.checkThat(actualBodyJson, equalTo(expectedBodyJson));
     }
 
     @Test

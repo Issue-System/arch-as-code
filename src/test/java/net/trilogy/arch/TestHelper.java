@@ -28,6 +28,7 @@ public abstract class TestHelper {
     public static final String JSON_STRUCTURIZR_MULTIPLE_RELATIONSHIPS = "/structurizr/multiple-relationships-with-same-source-and-destination.json";
 
     public static final String JSON_JIRA_GET_EPIC = "/jira/get-epic-response.json";
+    public static final String JSON_JIRA_CREATE_STORIES_REQUEST_EXPECTED_BODY = "/jira/create-stories-request-expected-body.json";
 
     public static final String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static final String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";

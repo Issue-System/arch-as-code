@@ -26,6 +26,8 @@ import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
 public class AuValidateCommand implements Callable<Integer> {
+
+    // TODO: change to File to allow terminal autocompletion
     @Parameters(index = "0", description = "File name of architecture update to validate")
     private String architectureUpdateFileName;
 

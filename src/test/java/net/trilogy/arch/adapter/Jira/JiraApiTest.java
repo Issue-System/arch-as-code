@@ -6,6 +6,7 @@ import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -105,6 +106,12 @@ public class JiraApiTest {
         when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldParseJiraResponseOfCreateStories() {
+        collector.addError(new RuntimeException("WIP"));
     }
 
     @Test

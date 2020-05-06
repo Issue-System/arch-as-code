@@ -41,6 +41,7 @@ public class JiraApi {
             final HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
             try {
+                // TODO: Remove
                 System.out.println("\n********** CREATE STORIES *********");
                 System.out.println("STATUS: \n" + response.statusCode());
                 System.out.println("HEADERS: \n" + response.headers());
@@ -118,6 +119,7 @@ public class JiraApi {
             HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
             try {
+                // TODO: Remove
                 System.out.println("\n********** GET STORY *********");
                 System.out.println("STATUS: \n" + response.statusCode());
                 System.out.println("HEADERS: \n" + response.headers());

@@ -54,6 +54,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
         final JiraService jiraService = new JiraService(jiraApi);
+
         jiraService.createStories(au, username, password);
 
         return 0;

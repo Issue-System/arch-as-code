@@ -12,12 +12,14 @@ import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class AuPublishStoriesCommandTest {
@@ -61,6 +63,26 @@ public class AuPublishStoriesCommandTest {
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
         verify(mockedJiraApi).createStories(jiraStories, "[SAMPLE JIRA TICKET]", epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldUpdateAuWithNewJiraTickets() {
+        // NOTE: even if partially failed
+        fail("WIP");
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldDisplayCreateStoryErrorsFromJira() {
+        // NOTE: handle partials
+        fail("WIP");
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldDisplayGetStoryErrorsFromJira() {
+        fail("WIP");
     }
 
     private JiraStory createSampleJiraStory() {

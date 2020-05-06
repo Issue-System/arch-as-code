@@ -110,6 +110,18 @@ public class JiraApiTest {
 
     @Ignore("TODO")
     @Test
+    public void shouldFailIfJiraDoesNotRespondWith2xxForCreateStory() {
+        collector.addError(new RuntimeException("WIP"));
+    }
+
+    @Ignore("TODO")
+    @Test
+    public void shouldFailIfJiraDoesNotRespondWith2xxForGetStory() {
+        collector.addError(new RuntimeException("WIP"));
+    }
+
+    @Ignore("TODO")
+    @Test
     public void shouldParseJiraResponseOfCreateStories() {
         collector.addError(new RuntimeException("WIP"));
     }

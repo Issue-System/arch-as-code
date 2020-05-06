@@ -110,7 +110,7 @@ public class ArchitectureUpdateValidator {
         return au.getTDDs()
                 .keySet()
                 .stream()
-                .filter(componentReference -> !allComponentIdsInArchitecture.contains(componentReference.asString()))
+                .filter(componentReference -> !allComponentIdsInArchitecture.contains(componentReference.toString()))
                 .map(ValidationError::forTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
     }

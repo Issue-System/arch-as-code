@@ -38,13 +38,12 @@ public class Tdd {
             return new Id("[SAMPLE-TDD-ID]");
         }
 
-        public String asString() {
+        public String toString() {
             return this.id;
         }
     }
 
     @EqualsAndHashCode
-    @ToString
     public static class ComponentReference implements EntityReference {
         private final String id;
 
@@ -61,7 +60,7 @@ public class Tdd {
             return "Component-" + id;
         }
 
-        public String asString() {
+        public String toString() {
             return this.id;
         }
     }

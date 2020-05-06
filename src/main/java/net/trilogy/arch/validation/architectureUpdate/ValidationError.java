@@ -26,7 +26,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.DECISION_MISSING_TDD,
                 entityId,
-                String.format("Decision \"%s\" must have at least one TDD reference.", entityId.asString())
+                String.format("Decision \"%s\" must have at least one TDD reference.", entityId.toString())
         );
     }
 
@@ -34,7 +34,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE_IN_DECISION_OR_REQUIREMENT,
                 entityId,
-                String.format("%s \"%s\" contains TDD reference \"%s\" that does not exist.", getEntityTypeString(entityId), entityId.asString(), tddId.asString())
+                String.format("%s \"%s\" contains TDD reference \"%s\" that does not exist.", getEntityTypeString(entityId), entityId.toString(), tddId.toString())
         );
     }
 
@@ -42,7 +42,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.MISSING_CAPABILITY,
                 entityId,
-                String.format("%s \"%s\" needs to be referenced in a story.", getEntityTypeString(entityId), entityId.asString())
+                String.format("%s \"%s\" needs to be referenced in a story.", getEntityTypeString(entityId), entityId.toString())
         );
     }
 
@@ -50,7 +50,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.TDD_WITHOUT_CAUSE,
                 tddId,
-                String.format("TDD \"%s\" needs to be referenced by a decision or functional requirement.", tddId.asString())
+                String.format("TDD \"%s\" needs to be referenced by a decision or functional requirement.", tddId.toString())
         );
     }
 
@@ -58,7 +58,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_TDD_REFERENCE_IN_STORY,
                 id,
-                String.format("Story \"%s\" contains TDD reference \"%s\" that does not exist.", storyTitle, id.asString())
+                String.format("Story \"%s\" contains TDD reference \"%s\" that does not exist.", storyTitle, id.toString())
         );
     }
 
@@ -66,7 +66,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_COMPONENT_REFERENCE,
                 componentReference,
-                String.format("Component id \"%s\" does not exist.", componentReference.asString())
+                String.format("Component id \"%s\" does not exist.", componentReference.toString())
         );
     }
 
@@ -74,7 +74,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,
                 null,
-                String.format("Story \"%s\" contains functional requirement reference \"%s\" that does not exist.", storyTitle, id.asString())        );
+                String.format("Story \"%s\" contains functional requirement reference \"%s\" that does not exist.", storyTitle, id.toString())        );
     }
 
     public static ValidationError forStoriesMustHaveTdds(String storyTitle) {
@@ -97,7 +97,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.DUPLICATE_ID,
                 id,
-                String.format("TDD \"%s\" is duplicated.", id.asString())
+                String.format("TDD \"%s\" is duplicated.", id.toString())
         );
     }
 

@@ -90,7 +90,7 @@ public class GoogleDocumentReaderTest {
         int count = 0;
         for (Map.Entry<Decision.Id, Decision> entry : result.getDecisions().entrySet()) {
             Decision.Id k = entry.getKey();
-            assertThat(expected.get(count), equalTo(k.asString()));
+            assertThat(expected.get(count), equalTo(k.toString()));
             count++;
         }
     }

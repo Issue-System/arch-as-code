@@ -34,7 +34,6 @@ public class FunctionalRequirement {
         return new FunctionalRequirement("[SAMPLE REQUIREMENT TEXT]", "[SAMPLE REQUIREMENT SOURCE TEXT]", List.of(Tdd.Id.blank()));
     }
 
-    @ToString
     @EqualsAndHashCode
     public static class Id implements EntityReference {
         @JsonValue
@@ -48,7 +47,7 @@ public class FunctionalRequirement {
             return new Id("[SAMPLE-REQUIREMENT-ID]");
         }
 
-        public String asString() {
+        public String toString() {
             return this.id;
         }
     }

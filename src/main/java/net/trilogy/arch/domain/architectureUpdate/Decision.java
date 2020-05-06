@@ -31,7 +31,6 @@ public class Decision {
         return new Decision("[SAMPLE DECISION TEXT]", List.of(Tdd.Id.blank()));
     }
 
-    @ToString
     @EqualsAndHashCode
     public static class Id implements EntityReference {
         @JsonValue
@@ -49,7 +48,7 @@ public class Decision {
             return new Id("[SAMPLE-DECISION-ID]");
         }
 
-        public String asString() {
+        public String toString() {
             return this.id;
         }
     }

@@ -65,21 +65,21 @@ public class AuPublishStoriesCommandTest {
         verify(mockedJiraApi).createStories(jiraStories, "[SAMPLE JIRA TICKET]", epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
-    @Ignore("WIP")
+    @Ignore("TODO")
     @Test
     public void shouldUpdateAuWithNewJiraTickets() {
         // NOTE: even if partially failed
         fail("WIP");
     }
 
-    @Ignore("WIP")
+    @Ignore("TODO")
     @Test
     public void shouldDisplayCreateStoryErrorsFromJira() {
         // NOTE: handle partials
         fail("WIP");
     }
 
-    @Ignore("WIP")
+    @Ignore("TODO")
     @Test
     public void shouldDisplayGetStoryErrorsFromJira() {
         fail("WIP");

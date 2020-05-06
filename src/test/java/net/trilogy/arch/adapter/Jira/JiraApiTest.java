@@ -108,7 +108,7 @@ public class JiraApiTest {
         jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
     }
 
-    @Ignore("WIP")
+    @Ignore("TODO")
     @Test
     public void shouldParseJiraResponseOfCreateStories() {
         collector.addError(new RuntimeException("WIP"));

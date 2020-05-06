@@ -31,7 +31,6 @@ public class Decision {
         return new Decision("[SAMPLE DECISION TEXT]", List.of(Tdd.Id.blank()));
     }
 
-    @Getter
     @ToString
     @EqualsAndHashCode
     public static class Id implements EntityReference {
@@ -48,6 +47,10 @@ public class Decision {
 
         public static Id blank() {
             return new Id("[SAMPLE-DECISION-ID]");
+        }
+
+        public String asString() {
+            return this.id;
         }
     }
 }

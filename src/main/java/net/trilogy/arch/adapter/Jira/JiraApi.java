@@ -79,14 +79,14 @@ public class JiraApi {
         Map<String, List<JiraStory.JiraTdd>> compMap = story.getTdds()
                 .stream()
                 .collect(
-                        Collectors.groupingBy(jiraTdd -> jiraTdd.getComponent().getId())
+                        Collectors.groupingBy(jiraTdd -> jiraTdd.getComponent().asString())
                 );
 
         return "h3. Technical Design:\n" +
                 compMap.entrySet().stream().map(
                         entry -> "h4. Component: " + entry.getKey() + "\n||TDD||Description||\n" +
                                 entry.getValue().stream().map(
-                                        tdd -> "| " + tdd.getId().getId() + " | {noformat}" + tdd.getTdd().getText() + "{noformat} |\n"
+                                        tdd -> "| " + tdd.getId().asString() + " | {noformat}" + tdd.getTdd().getText() + "{noformat} |\n"
                                 ).collect(Collectors.joining())
                 ).collect(Collectors.joining()) +
                 "";
@@ -103,7 +103,7 @@ public class JiraApi {
 
     private String makeFunctionalRequiremntRow(JiraStory.JiraFunctionalRequirement funcReq) {
         return ""
-                + "| " + funcReq.getId().getId() + " | "
+                + "| " + funcReq.getId().asString() + " | "
                 + funcReq.getFunctionalRequirement().getSource()
                 + " | {noformat}" + funcReq.getFunctionalRequirement().getText() + "{noformat} |\n"
                 + "";

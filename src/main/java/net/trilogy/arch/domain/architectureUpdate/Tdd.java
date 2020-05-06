@@ -25,7 +25,6 @@ public class Tdd {
         return new Tdd("[SAMPLE TDD TEXT]");
     }
 
-    @Getter
     @EqualsAndHashCode
     public static class Id implements EntityReference {
         @JsonValue
@@ -38,9 +37,12 @@ public class Tdd {
         public static Id blank() {
             return new Id("[SAMPLE-TDD-ID]");
         }
+
+        public String asString() {
+            return this.id;
+        }
     }
 
-    @Getter
     @EqualsAndHashCode
     @ToString
     public static class ComponentReference implements EntityReference {
@@ -57,6 +59,10 @@ public class Tdd {
         @JsonValue
         public String asJson() {
             return "Component-" + id;
+        }
+
+        public String asString() {
+            return this.id;
         }
     }
 }

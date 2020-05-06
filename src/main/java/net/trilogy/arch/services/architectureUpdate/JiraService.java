@@ -15,10 +15,17 @@ public class JiraService {
         this.api = jiraApi;
     }
 
-    public void createStories(final ArchitectureUpdate au, String username, char[] password) throws JiraApi.GetStoryException, JiraApi.CreateStoriesException {
+    public void createStories(final ArchitectureUpdate au,
+                              String username,
+                              char[] password) throws JiraApi.GetStoryException, JiraApi.CreateStoriesException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
-        this.api.createStories(getFeatureStories(au), epicJiraTicket.getTicket(), informationAboutTheEpic.getProjectId(), informationAboutTheEpic.getProjectKey(), username, password);
+        this.api.createStories(getFeatureStories(au),
+                epicJiraTicket.getTicket(),
+                informationAboutTheEpic.getProjectId(),
+                informationAboutTheEpic.getProjectKey(),
+                username,
+                password);
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {

@@ -63,10 +63,51 @@ public class JiraApi {
                                         "project", Map.of("id", projectId),
                                         "summary", story.getTitle(),
                                         "issuetype", Map.of("name", "Feature Story"),
-                                        "description", "NA"
+                                        "description", makeDescription(story)
                                 )))).collect(Collectors.toList())
                 ))
         ).toString();
+    }
+
+    private String makeDescription(JiraStory story) {
+        return "" +
+                makeFunctionalRequirementTable(story) +
+                makeTddTablesByComponent(story);
+    }
+
+    private String makeTddTablesByComponent(JiraStory story) {
+        Map<String, List<JiraStory.JiraTdd>> compMap = story.getTdds()
+                .stream()
+                .collect(
+                        Collectors.groupingBy(jiraTdd -> jiraTdd.getComponent().getId())
+                );
+
+        return "h3. Technical Design:\n" +
+                compMap.entrySet().stream().map(
+                        entry -> "h4. Component: " + entry.getKey() + "\n||TDD||Description||\n" +
+                                entry.getValue().stream().map(
+                                        tdd -> "| " + tdd.getId().getId() + " | {noformat}" + tdd.getTdd().getText() + "{noformat} |\n"
+                                ).collect(Collectors.joining())
+                ).collect(Collectors.joining()) +
+                "";
+    }
+
+    private String makeFunctionalRequirementTable(JiraStory story) {
+        return "h3. Implements functionality:\n" +
+                "||Id||Source||Description||\n" +
+                story.getFunctionalRequirements()
+                        .stream()
+                        .map(this::makeFunctionalRequiremntRow)
+                        .collect(Collectors.joining());
+    }
+
+    private String makeFunctionalRequiremntRow(JiraStory.JiraFunctionalRequirement funcReq) {
+        return ""
+                + "| " + funcReq.getId().getId() + " | "
+                + funcReq.getFunctionalRequirement().getSource()
+                + " | {noformat}" + funcReq.getFunctionalRequirement().getText() + "{noformat} |\n"
+                + "";
+
     }
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -13,6 +14,7 @@ import org.junit.rules.ErrorCollector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -30,6 +32,9 @@ import static net.trilogy.arch.TestHelper.loadResource;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -99,10 +104,11 @@ public class JiraApiTest {
         collector.checkThat(result.getProjectKey(), equalTo("MOFE-12"));
     }
 
-    @Test(expected = JiraApi.GetStoryException.class)
+    @Test(expected = JiraApi.JiraApiException.class)
     public void shouldThrowPresentableExceptionIfGetStoryFails() throws Exception {
         @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
         when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_STRUCTURIZR_BIG_BANK)); // <-- this is the wrong response
+        when(mockedResponse.statusCode()).thenReturn(200);
         when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
@@ -114,10 +120,20 @@ public class JiraApiTest {
         collector.addError(new RuntimeException("WIP"));
     }
 
-    @Ignore("TODO")
     @Test
-    public void shouldFailIfJiraDoesNotRespondWith2xxForGetStory() {
-        collector.addError(new RuntimeException("WIP"));
+    public void shouldThrowProperExceptionIfUnauthorized() throws Exception {
+        HttpResponse<Object> mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(401); // unauthorized
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        try {
+            jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+            fail("Exception not thrown.");
+        } catch( JiraApi.JiraApiException e ){
+            collector.checkThat(e.getMessage(), equalTo("Failed to log into Jira. Please check your credentials."));
+            collector.checkThat(e.getCause(), is(nullValue()));
+            collector.checkThat(e.getResponse(), is(mockedResponse));
+        }
     }
 
     @Ignore("TODO")

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +33,7 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public void createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws CreateStoriesException {
+    public void createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(epicKey, jiraStories, projectId)))
                 .header("Authorization", "Basic " + getEncodeAuth(username, password))
@@ -51,7 +54,7 @@ public class JiraApi {
             // }
 
         } catch (Throwable e) {
-            throw new CreateStoriesException(e);
+            throw JiraApiException.builder().build();
         }
     }
 
@@ -111,26 +114,22 @@ public class JiraApi {
 
     }
 
-    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws GetStoryException {
+    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws JiraApiException {
         String encodedAuth = getEncodeAuth(username, password);
         final String ticket = jira.getTicket();
         final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
+
+        HttpResponse<String> response = null;
         try {
-            HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // try {
-            //     // TODO: Remove
-            //     System.out.println("\n********** GET STORY *********");
-            //     System.out.println("STATUS: \n" + response.statusCode());
-            //     System.out.println("HEADERS: \n" + response.headers());
-            //     System.out.println("BODY: \n" + response.body());
-            //     System.out.println("********** GET STORY *********\n");
-            // } catch (Throwable ignored) {
-            // }
-
+            response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 401) {
+                throw JiraApiException.builder().message("Failed to log into Jira. Please check your credentials.").response(response).build();
+            }
             return parseResponse(response);
+        } catch(JiraApiException e) {
+            throw e;
         } catch (Throwable e) {
-            throw new GetStoryException(e);
+            throw JiraApiException.builder().cause(e).response(response).message("Unknown error occurred").build();
         }
     }
 
@@ -176,15 +175,17 @@ public class JiraApi {
         return bulkCreateEndpoint;
     }
 
-    public static class GetStoryException extends Exception {
-        public GetStoryException(Throwable cause) {
-            super(cause);
-        }
-    }
+    @Getter
+    public static class JiraApiException extends Exception {
+        @NonNull private final String message;
+        private final Throwable cause;
+        private final HttpResponse<?> response;
 
-    public static class CreateStoriesException extends Exception {
-        public CreateStoriesException(Throwable cause) {
-            super(cause);
+        @Builder
+        private JiraApiException(@NonNull String message, Throwable cause, HttpResponse<?> response) {
+            this.message = message;
+            this.cause = cause;
+            this.response = response;
         }
     }
 }

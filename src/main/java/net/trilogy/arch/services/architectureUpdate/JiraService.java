@@ -17,7 +17,7 @@ public class JiraService {
 
     public void createStories(final ArchitectureUpdate au,
                               String username,
-                              char[] password) throws JiraApi.GetStoryException, JiraApi.CreateStoriesException {
+                              char[] password) throws JiraApi.JiraApiException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
         this.api.createStories(getFeatureStories(au),

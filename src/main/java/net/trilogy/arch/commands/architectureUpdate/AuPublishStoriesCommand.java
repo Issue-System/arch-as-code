@@ -64,6 +64,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
             jiraService.createStories(au, username, password);
         } catch (JiraApi.JiraApiException e) {
             spec.commandLine().getErr().println("ERROR: " + e.getMessage());
+            return 1;
         }
 
         return 0;

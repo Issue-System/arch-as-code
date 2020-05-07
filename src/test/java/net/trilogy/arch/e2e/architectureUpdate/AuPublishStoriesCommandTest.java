@@ -24,8 +24,12 @@ import java.util.List;
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AuPublishStoriesCommandTest {
 
@@ -95,9 +99,20 @@ public class AuPublishStoriesCommandTest {
 
     @Ignore("TODO")
     @Test
-    public void shouldDisplayCreateStoryErrorsFromJira() {
-        // NOTE: handle partials
+    public void shouldDisplayPartialErrorsWhenCreatingStories() {
         fail("WIP");
+    }
+
+    @Test
+    public void shouldDisplayNiceErrorIfCreatingStoriesCrashes() throws JiraApi.JiraApiException {
+        when(mockedJiraApi.getStory(any(), any(), any())).thenReturn(new JiraQueryResult("ABC", "DEF"));
+        when(mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
+
+        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+
+        assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
+        assertThat(out.toString(), equalTo(""));
+        assertThat(statusCode, not(equalTo(0)));
     }
 
     @Test
@@ -106,12 +121,11 @@ public class AuPublishStoriesCommandTest {
 
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
 
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        assertThat(
-                err.toString(),
-                equalTo("ERROR: OOPS!\n")
-        );
+        assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
+        assertThat(out.toString(), equalTo(""));
+        assertThat(statusCode, not(equalTo(0)));
     }
 
     private JiraStory createSampleJiraStory() {

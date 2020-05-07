@@ -1,8 +1,5 @@
 package net.trilogy.arch.adapter.Jira;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +30,7 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public JiraCreateStoriesResult createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
+    public List<JiraCreateStoryStatus> createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(epicKey, jiraStories, projectId)))
                 .header("Authorization", "Basic " + getEncodeAuth(username, password))
@@ -50,6 +47,7 @@ public class JiraApi {
                         .build();
             }
 
+            return parseCreateStoriesResponse(response.body());
         } catch (JiraApiException e) {
             throw e;
         } catch (Throwable e) {
@@ -57,7 +55,56 @@ public class JiraApi {
                     .message("Unknown exception occurred.")
                     .build();
         }
-        return new JiraCreateStoriesResult();
+    }
+
+    private List<JiraCreateStoryStatus> parseCreateStoriesResponse(String response) {
+        final JSONArray successfulItems = new JSONObject(response).getJSONArray("issues");
+        final JSONArray failedItems = new JSONObject(response).getJSONArray("errors");
+
+        final int totalElements = successfulItems.length() + failedItems.length();
+
+        JiraCreateStoryStatus[] result = new JiraCreateStoryStatus[totalElements];
+
+        for (int i = 0; i < failedItems.length(); ++i) {
+            int indexOfFailedItem = failedItems.getJSONObject(i).getInt("failedElementNumber");
+            String error = extractErrorFromJiraCreateStoryResult(failedItems.getJSONObject(i));
+            result[indexOfFailedItem] = JiraCreateStoryStatus.failed(error);
+        }
+
+        for (int i = 0; i < successfulItems.length(); ++i) {
+            JiraCreateStoryStatus item = JiraCreateStoryStatus.succeeded(successfulItems.getJSONObject(i).getString("key"));
+            insertInNextAvailableSpot(result, totalElements, item);
+        }
+
+        return List.of(result);
+    }
+
+    private void insertInNextAvailableSpot(Object[] arrayToInsertInto, int sizeOfArray, Object itemToInsert) {
+        for (int j = 0; j < sizeOfArray; ++j) {
+            if (arrayToInsertInto[j] == null) {
+                arrayToInsertInto[j] = itemToInsert;
+                break;
+            }
+        }
+    }
+
+    private String extractErrorFromJiraCreateStoryResult(JSONObject jiraErrorObj) {
+        final String errorMessages = jiraErrorObj.getJSONObject("elementErrors")
+                .getJSONArray("errorMessages")
+                .toList()
+                .stream()
+                .map(it -> it + "\n")
+                .collect(Collectors.joining());
+
+        JSONObject mappedErrorsAsJson = jiraErrorObj.getJSONObject("elementErrors")
+                .getJSONObject("errors");
+
+        String mappedErrorMessages = mappedErrorsAsJson.keySet()
+                .stream()
+                .map(it -> it + ": " + mappedErrorsAsJson.getString(it) + "\n")
+                .collect(Collectors.joining());
+
+        return errorMessages + mappedErrorMessages;
     }
 
     public JiraQueryResult getStory(Jira jira, String username, char[] password) throws JiraApiException {

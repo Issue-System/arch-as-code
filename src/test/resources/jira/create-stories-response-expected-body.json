@@ -1,0 +1,41 @@
+{
+  "issues": [
+    {
+      "id": "102489028403",
+      "key": "ABC-121",
+      "self": "https://jira.example.com/rest/api/2/issue/102489028403"
+    },
+    {
+      "id": "84583495",
+      "key": "ABC-123",
+      "self": "https://jira.example.com/rest/api/2/issue/84583495"
+    }
+  ],
+  "errors": [
+    {
+      "status": 400,
+      "elementErrors": {
+        "errorMessages": [
+          "error-message-1",
+          "error-message-2"
+        ],
+        "errors": {
+          "error-title-1": "inner-error-message-1",
+          "error-title-2": "inner-error-message-2"
+        }
+      },
+      "failedElementNumber": 2
+    },
+    {
+      "status": 400,
+      "elementErrors": {
+        "errorMessages": [],
+        "errors": {
+          "customfield_1123": "Field 'customfield_1123' cannot be set. It is not on the appropriate screen, or unknown."
+        }
+      },
+      "failedElementNumber": 0
+    }
+  ]
+}
+

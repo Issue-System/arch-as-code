@@ -20,6 +20,7 @@ public class JiraService {
                               char[] password) throws JiraApi.JiraApiException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
+
         this.api.createStories(getFeatureStories(au),
                 epicJiraTicket.getTicket(),
                 informationAboutTheEpic.getProjectId(),

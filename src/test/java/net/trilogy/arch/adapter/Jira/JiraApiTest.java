@@ -2,10 +2,10 @@ package net.trilogy.arch.adapter.Jira;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -14,7 +14,6 @@ import org.junit.rules.ErrorCollector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
-import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -26,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
 
 import static net.trilogy.arch.TestHelper.JSON_JIRA_CREATE_STORIES_REQUEST_EXPECTED_BODY;
+import static net.trilogy.arch.TestHelper.JSON_JIRA_CREATE_STORIES_RESPONSE_EXPECTED_BODY;
 import static net.trilogy.arch.TestHelper.JSON_JIRA_GET_EPIC;
 import static net.trilogy.arch.TestHelper.JSON_STRUCTURIZR_BIG_BANK;
 import static net.trilogy.arch.TestHelper.loadResource;
@@ -34,7 +34,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -187,17 +186,37 @@ public class JiraApiTest {
         }
     }
 
-    @Ignore("WIP")
     @Test
-    public void shouldParseJiraResponseOfCreateStories() {
-        collector.addError(new RuntimeException("WIP"));
+    public void shouldParseJiraResponseOfCreateStories() throws Exception {
+        HttpResponse<Object> mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(201);
+        when(mockedResponse.body()).thenReturn(TestHelper.loadResource(getClass(), JSON_JIRA_CREATE_STORIES_RESPONSE_EXPECTED_BODY));
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        var actual = jiraApi.createStories(List.of(new JiraStory("", List.of(), List.of())), "", "", "", "", "".toCharArray());
+
+        var expected = List.of(
+                JiraCreateStoryStatus.failed("customfield_1123: Field 'customfield_1123' cannot be set. It is not on the appropriate screen, or unknown.\n"),
+                JiraCreateStoryStatus.succeeded("ABC-121"),
+                JiraCreateStoryStatus.failed(
+                        "error-message-1\n" +
+                                "error-message-2\n" +
+                                "error-title-1: inner-error-message-1\n" +
+                                "error-title-2: inner-error-message-2\n"
+                ),
+                JiraCreateStoryStatus.succeeded("ABC-123")
+        );
+        collector.checkThat(actual, equalTo(expected));
     }
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
         // GIVEN:
         List<JiraStory> sampleJiraStories = createSampleJiraStories();
-        when(mockHttpClient.send(any(), any())).thenReturn(mock(HttpResponse.class));
+        var mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(201);
+        when(mockedResponse.body()).thenReturn(TestHelper.loadResource(getClass(), JSON_JIRA_CREATE_STORIES_RESPONSE_EXPECTED_BODY));
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         // WHEN:
         jiraApi.createStories(sampleJiraStories, "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
@@ -218,7 +237,10 @@ public class JiraApiTest {
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectHeaders() throws Exception {
         // GIVEN:
-        when(mockHttpClient.send(any(), any())).thenReturn(mock(HttpResponse.class));
+        var mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(201);
+        when(mockedResponse.body()).thenReturn(TestHelper.loadResource(getClass(), JSON_JIRA_CREATE_STORIES_RESPONSE_EXPECTED_BODY));
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         // WHEN:
         jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());

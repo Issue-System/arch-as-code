@@ -32,7 +32,9 @@ import static net.trilogy.arch.TestHelper.loadResource;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -104,14 +106,45 @@ public class JiraApiTest {
         collector.checkThat(result.getProjectKey(), equalTo("MOFE-12"));
     }
 
-    @Test(expected = JiraApi.JiraApiException.class)
+    @Ignore("TODO")
+    @Test
+    public void shouldThrowPresentableExceptionIfCreateStoryFails() throws Exception {
+        @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_STRUCTURIZR_BIG_BANK)); // <-- this is the wrong response
+        when(mockedResponse.statusCode()).thenReturn(200);
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        try {
+            // WHEN:
+            jiraApi.createStories(null, null, null, null, null, null);
+
+            //THEN:
+            fail("Exception not thrown.");
+        } catch( JiraApi.JiraApiException e ){
+            collector.checkThat(e.getMessage(), equalTo("Unknown error occurred"));
+            collector.checkThat(e.getCause(), is(instanceOf(Exception.class)));
+            collector.checkThat(e.getResponse(), is(mockedResponse));
+        }
+    }
+
+    @Test
     public void shouldThrowPresentableExceptionIfGetStoryFails() throws Exception {
         @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
         when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_STRUCTURIZR_BIG_BANK)); // <-- this is the wrong response
         when(mockedResponse.statusCode()).thenReturn(200);
         when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
-        jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+        try {
+            // WHEN:
+            jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+
+            //THEN:
+            fail("Exception not thrown.");
+        } catch( JiraApi.JiraApiException e ){
+            collector.checkThat(e.getMessage(), equalTo("Unknown error occurred"));
+            collector.checkThat(e.getCause(), is(instanceOf(Exception.class)));
+            collector.checkThat(e.getResponse(), is(mockedResponse));
+        }
     }
 
     @Ignore("TODO")
@@ -121,13 +154,37 @@ public class JiraApiTest {
     }
 
     @Test
-    public void shouldThrowProperExceptionIfUnauthorized() throws Exception {
+    public void shouldThrowProperExceptionIfUnauthorizedForCreateStory() throws Exception {
+        // GIVEN:
         HttpResponse<Object> mockedResponse = mock(HttpResponse.class);
         when(mockedResponse.statusCode()).thenReturn(401); // unauthorized
         when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         try {
-            jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+            // WHEN:
+            jiraApi.createStories(List.of(new JiraStory("", List.of(), List.of())), "", "", "", "", "".toCharArray());
+
+            //THEN:
+            fail("Exception not thrown.");
+        } catch( JiraApi.JiraApiException e ){
+            collector.checkThat(e.getMessage(), equalTo("Failed to log into Jira. Please check your credentials."));
+            collector.checkThat(e.getCause(), is(nullValue()));
+            collector.checkThat(e.getResponse(), is(mockedResponse));
+        }
+    }
+
+    @Test
+    public void shouldThrowProperExceptionIfUnauthorizedForGetStory() throws Exception {
+        // GIVEN:
+        HttpResponse<Object> mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(401); // unauthorized
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        try {
+            // WHEN:
+            jiraApi.getStory(new Jira("TICKET_ID", "TICKET LINK"), "username", "password".toCharArray());
+
+            //THEN:
             fail("Exception not thrown.");
         } catch( JiraApi.JiraApiException e ){
             collector.checkThat(e.getMessage(), equalTo("Failed to log into Jira. Please check your credentials."));
@@ -146,6 +203,7 @@ public class JiraApiTest {
     public void shouldMakeCreateStoryRequestWithCorrectBody() throws Exception {
         // GIVEN:
         List<JiraStory> sampleJiraStories = createSampleJiraStories();
+        when(mockHttpClient.send(any(), any())).thenReturn(mock(HttpResponse.class));
 
         // WHEN:
         jiraApi.createStories(sampleJiraStories, "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
@@ -165,8 +223,13 @@ public class JiraApiTest {
 
     @Test
     public void shouldMakeCreateStoryRequestWithCorrectHeaders() throws Exception {
+        // GIVEN:
+        when(mockHttpClient.send(any(), any())).thenReturn(mock(HttpResponse.class));
+
+        // WHEN:
         jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
+        // THEN:
         var captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(mockHttpClient).send(captor.capture(), ArgumentMatchers.any());
         final HttpRequest requestMade = captor.getValue();

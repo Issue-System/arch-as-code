@@ -43,18 +43,19 @@ public class JiraApi {
         try {
             final HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // try {
-            //     // TODO: Remove
-            //     System.out.println("\n********** CREATE STORIES *********");
-            //     System.out.println("STATUS: \n" + response.statusCode());
-            //     System.out.println("HEADERS: \n" + response.headers());
-            //     System.out.println("BODY: \n" + response.body());
-            //     System.out.println("********** CREATE STORIES *********\n");
-            // } catch (Throwable ignored) {
-            // }
+            if (response.statusCode() == 401) {
+                throw JiraApiException.builder()
+                        .message("Failed to log into Jira. Please check your credentials.")
+                        .response(response)
+                        .build();
+            }
 
+        } catch (JiraApiException e) {
+            throw e;
         } catch (Throwable e) {
-            throw JiraApiException.builder().build();
+            throw JiraApiException.builder()
+                    .message("Unknown exception occurred.")
+                    .build();
         }
     }
 
@@ -129,7 +130,11 @@ public class JiraApi {
         } catch(JiraApiException e) {
             throw e;
         } catch (Throwable e) {
-            throw JiraApiException.builder().cause(e).response(response).message("Unknown error occurred").build();
+            throw JiraApiException.builder()
+                    .cause(e)
+                    .response(response)
+                    .message("Unknown error occurred")
+                    .build();
         }
     }
 

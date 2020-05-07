@@ -148,12 +148,10 @@ project.test {
 
     afterTest { 
         TestDescriptor td, TestResult tr ->
-            if ((tr.resultType == TestResult.ResultType.FAILURE ||
-                tr.resultType == TestResult.ResultType.SKIPPED) 
-               ) {
+            if (tr.resultType == TestResult.ResultType.FAILURE) {
                 println()
-                    println(" Output of ${td.className}.${td.name}:")
-                    outputCache.each { print(" > $it") }
+                println(" Output of ${td.className}.${td.name}:")
+                outputCache.each { print(" > $it") }
             }
     }
 }

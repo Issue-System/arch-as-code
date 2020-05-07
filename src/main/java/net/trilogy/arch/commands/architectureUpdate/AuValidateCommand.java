@@ -27,9 +27,8 @@ import static picocli.CommandLine.Spec;
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
 public class AuValidateCommand implements Callable<Integer> {
 
-    // TODO: change to File to allow terminal autocompletion
     @Parameters(index = "0", description = "File name of architecture update to validate")
-    private String architectureUpdateFileName;
+    private File architectureUpdateFilePath;
 
     @Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
@@ -45,16 +44,11 @@ public class AuValidateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        Path auPath = productDocumentationRoot.toPath()
-                .resolve("architecture-updates")
-                .resolve(architectureUpdateFileName)
-                .toAbsolutePath();
-
         ValidationResult validationResults;
         // TODO FUTURE: Use JSON schema validation
         try {
             ArchitectureDataStructure architecture = new ArchitectureDataStructureReader().load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
-            ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
+            ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {
             spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());

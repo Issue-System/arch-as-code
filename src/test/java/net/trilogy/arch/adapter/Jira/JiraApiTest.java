@@ -105,17 +105,16 @@ public class JiraApiTest {
         collector.checkThat(result.getProjectKey(), equalTo("MOFE-12"));
     }
 
-    @Ignore("TODO: waiting until happy path complete.")
     @Test
     public void shouldThrowPresentableExceptionIfCreateStoryFails() throws Exception {
-        @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
+        var mockedResponse = mock(HttpResponse.class);
         when(mockedResponse.body()).thenReturn(loadResource(getClass(), JSON_STRUCTURIZR_BIG_BANK)); // <-- this is the wrong response
-        when(mockedResponse.statusCode()).thenReturn(200);
+        when(mockedResponse.statusCode()).thenReturn(201);
         when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
 
         try {
             // WHEN:
-            jiraApi.createStories(null, null, null, null, null, null);
+            jiraApi.createStories(createSampleJiraStories(), "EPIC KEY", "PROJECT ID", "PROJECT KEY", "username", "password".toCharArray());
 
             //THEN:
             fail("Exception not thrown.");

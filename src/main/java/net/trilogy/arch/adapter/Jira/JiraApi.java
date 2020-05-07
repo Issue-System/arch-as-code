@@ -37,8 +37,10 @@ public class JiraApi {
                 .header("Content-Type", "application/json")
                 .uri(URI.create(baseUri + bulkCreateEndpoint))
                 .build();
+
+        HttpResponse<String> response = null;
         try {
-            final HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 401) {
                 throw JiraApiException.builder()
@@ -52,7 +54,9 @@ public class JiraApi {
             throw e;
         } catch (Throwable e) {
             throw JiraApiException.builder()
-                    .message("Unknown exception occurred.")
+                    .cause(e)
+                    .response(response)
+                    .message("Unknown error occurred")
                     .build();
         }
     }

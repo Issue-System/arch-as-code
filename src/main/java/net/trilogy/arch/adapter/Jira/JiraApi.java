@@ -40,15 +40,15 @@ public class JiraApi {
         try {
             final HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            try {
-                // TODO: Remove
-                System.out.println("\n********** CREATE STORIES *********");
-                System.out.println("STATUS: \n" + response.statusCode());
-                System.out.println("HEADERS: \n" + response.headers());
-                System.out.println("BODY: \n" + response.body());
-                System.out.println("********** CREATE STORIES *********\n");
-            } catch (Throwable ignored) {
-            }
+            // try {
+            //     // TODO: Remove
+            //     System.out.println("\n********** CREATE STORIES *********");
+            //     System.out.println("STATUS: \n" + response.statusCode());
+            //     System.out.println("HEADERS: \n" + response.headers());
+            //     System.out.println("BODY: \n" + response.body());
+            //     System.out.println("********** CREATE STORIES *********\n");
+            // } catch (Throwable ignored) {
+            // }
 
         } catch (Throwable e) {
             throw new CreateStoriesException(e);
@@ -118,15 +118,16 @@ public class JiraApi {
         try {
             HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            try {
-                // TODO: Remove
-                System.out.println("\n********** GET STORY *********");
-                System.out.println("STATUS: \n" + response.statusCode());
-                System.out.println("HEADERS: \n" + response.headers());
-                System.out.println("BODY: \n" + response.body());
-                System.out.println("********** GET STORY *********\n");
-            } catch (Throwable ignored) {
-            }
+            // try {
+            //     // TODO: Remove
+            //     System.out.println("\n********** GET STORY *********");
+            //     System.out.println("STATUS: \n" + response.statusCode());
+            //     System.out.println("HEADERS: \n" + response.headers());
+            //     System.out.println("BODY: \n" + response.body());
+            //     System.out.println("********** GET STORY *********\n");
+            // } catch (Throwable ignored) {
+            // }
+
             return parseResponse(response);
         } catch (Throwable e) {
             throw new GetStoryException(e);

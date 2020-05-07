@@ -1,18 +1,21 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
-import net.trilogy.arch.TestHelper;
+import static net.trilogy.arch.TestHelper.execute;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-
-import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.*;
+import net.trilogy.arch.TestHelper;
 
 public class AuValidateCommandTest {
     @Rule

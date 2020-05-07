@@ -106,7 +106,7 @@ public class JiraApiTest {
         collector.checkThat(result.getProjectKey(), equalTo("MOFE-12"));
     }
 
-    @Ignore("TODO")
+    @Ignore("TODO: waiting until happy path complete.")
     @Test
     public void shouldThrowPresentableExceptionIfCreateStoryFails() throws Exception {
         @SuppressWarnings("rawtypes") HttpResponse mockedResponse = mock(HttpResponse.class);
@@ -187,7 +187,7 @@ public class JiraApiTest {
         }
     }
 
-    @Ignore("TODO")
+    @Ignore("WIP")
     @Test
     public void shouldParseJiraResponseOfCreateStories() {
         collector.addError(new RuntimeException("WIP"));

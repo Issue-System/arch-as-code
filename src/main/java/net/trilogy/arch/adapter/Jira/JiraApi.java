@@ -33,7 +33,7 @@ public class JiraApi {
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
     }
 
-    public void createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
+    public JiraCreateStoriesResult createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(generateBodyForCreateStories(epicKey, jiraStories, projectId)))
                 .header("Authorization", "Basic " + getEncodeAuth(username, password))
@@ -55,6 +55,30 @@ public class JiraApi {
         } catch (Throwable e) {
             throw JiraApiException.builder()
                     .message("Unknown exception occurred.")
+                    .build();
+        }
+        return new JiraCreateStoriesResult();
+    }
+
+    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws JiraApiException {
+        String encodedAuth = getEncodeAuth(username, password);
+        final String ticket = jira.getTicket();
+        final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
+
+        HttpResponse<String> response = null;
+        try {
+            response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 401) {
+                throw JiraApiException.builder().message("Failed to log into Jira. Please check your credentials.").response(response).build();
+            }
+            return new JiraQueryResult(response);
+        } catch(JiraApiException e) {
+            throw e;
+        } catch (Throwable e) {
+            throw JiraApiException.builder()
+                    .cause(e)
+                    .response(response)
+                    .message("Unknown error occurred")
                     .build();
         }
     }
@@ -113,36 +137,6 @@ public class JiraApi {
                 + " | {noformat}" + funcReq.getText() + "{noformat} |\n"
                 + "";
 
-    }
-
-    public JiraQueryResult getStory(Jira jira, String username, char[] password) throws JiraApiException {
-        String encodedAuth = getEncodeAuth(username, password);
-        final String ticket = jira.getTicket();
-        final HttpRequest request = createGetStoryRequest(encodedAuth, ticket);
-
-        HttpResponse<String> response = null;
-        try {
-            response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() == 401) {
-                throw JiraApiException.builder().message("Failed to log into Jira. Please check your credentials.").response(response).build();
-            }
-            return parseResponse(response);
-        } catch(JiraApiException e) {
-            throw e;
-        } catch (Throwable e) {
-            throw JiraApiException.builder()
-                    .cause(e)
-                    .response(response)
-                    .message("Unknown error occurred")
-                    .build();
-        }
-    }
-
-    private JiraQueryResult parseResponse(HttpResponse<String> response) throws JsonProcessingException {
-        JsonNode json = new ObjectMapper().readValue(response.body(), JsonNode.class);
-        String projectId = json.get("fields").get("project").get("id").asText();
-        String projectKey = json.get("fields").get("project").get("key").asText();
-        return new JiraQueryResult(projectId, projectKey);
     }
 
     private String getEncodeAuth(String username, char[] password) {

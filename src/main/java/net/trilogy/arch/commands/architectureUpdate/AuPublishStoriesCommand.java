@@ -4,8 +4,11 @@ import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
+import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.services.architectureUpdate.JiraService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -16,6 +19,8 @@ import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
 public class AuPublishStoriesCommand implements Callable<Integer> {
+
+    private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
 
     private final JiraApiFactory jiraApiFactory;
     private final FilesFacade filesFacade;
@@ -40,7 +45,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         this.filesFacade = filesFacade;
     }
 
-    public Integer call() throws IOException, JiraApi.JiraApiException {
+    public Integer call() throws IOException {
 
         Path auPath = architectureUpdateFileName.toPath();
 
@@ -55,7 +60,11 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
         final JiraService jiraService = new JiraService(jiraApi);
 
-        jiraService.createStories(au, username, password);
+        try {
+            jiraService.createStories(au, username, password);
+        } catch (JiraApi.JiraApiException e) {
+            spec.commandLine().getErr().println("ERROR: " + e.getMessage());
+        }
 
         return 0;
     }

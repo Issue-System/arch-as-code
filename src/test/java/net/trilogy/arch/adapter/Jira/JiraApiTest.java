@@ -147,12 +147,6 @@ public class JiraApiTest {
         }
     }
 
-    @Ignore("TODO")
-    @Test
-    public void shouldFailIfJiraDoesNotRespondWith2xxForCreateStory() {
-        collector.addError(new RuntimeException("WIP"));
-    }
-
     @Test
     public void shouldThrowProperExceptionIfUnauthorizedForCreateStory() throws Exception {
         // GIVEN:

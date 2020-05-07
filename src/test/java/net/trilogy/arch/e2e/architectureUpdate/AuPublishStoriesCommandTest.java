@@ -11,14 +11,19 @@ import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -28,8 +33,24 @@ public class AuPublishStoriesCommandTest {
     private JiraApi mockedJiraApi;
     private Application app;
 
+    final PrintStream originalOut = System.out;
+    final PrintStream originalErr = System.err;
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    final ByteArrayOutputStream err = new ByteArrayOutputStream();
+
+    @After
+    public void tearDown() {
+        System.setOut(originalOut);
+        System.setErr(originalErr);
+    }
+
     @Before
     public void setUp() throws Exception {
+        out.reset();
+        err.reset();
+        System.setOut(new PrintStream(out));
+        System.setErr(new PrintStream(err));
+
         FilesFacade files = new FilesFacade();
 
         rootDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_PUBLISH).getPath());
@@ -79,10 +100,18 @@ public class AuPublishStoriesCommandTest {
         fail("WIP");
     }
 
-    @Ignore("TODO")
     @Test
-    public void shouldDisplayGetStoryErrorsFromJira() {
-        fail("WIP");
+    public void shouldDisplayGetStoryErrorsFromJira() throws JiraApi.JiraApiException {
+        Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
+
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
+
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+
+        assertThat(
+                err.toString(),
+                equalTo("ERROR: OOPS!\n")
+        );
     }
 
     private JiraStory createSampleJiraStory() {

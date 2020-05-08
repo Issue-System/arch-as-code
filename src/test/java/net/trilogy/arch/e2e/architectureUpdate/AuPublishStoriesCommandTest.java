@@ -92,6 +92,13 @@ public class AuPublishStoriesCommandTest {
 
     @Ignore("TODO")
     @Test
+    public void shouldNotTellJiraToReCreateStories() throws Exception {
+        // NOTE: make sure it's displayed back to the user
+        fail("WIP");
+    }
+
+    @Ignore("TODO")
+    @Test
     public void shouldUpdateAuWithNewJiraTickets() {
         // NOTE: even if partially failed
         fail("WIP");

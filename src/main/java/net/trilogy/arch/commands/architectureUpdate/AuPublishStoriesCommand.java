@@ -6,7 +6,7 @@ import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.services.architectureUpdate.JiraService;
+import net.trilogy.arch.services.architectureUpdate.StoryPublishingService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
@@ -60,7 +60,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
         var stdOut = spec.commandLine().getOut();
-        final JiraService jiraService = new JiraService(stdOut, jiraApi);
+        final StoryPublishingService jiraService = new StoryPublishingService(stdOut, jiraApi);
 
         final ArchitectureUpdate updatedAu;
         try {

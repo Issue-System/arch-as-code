@@ -11,12 +11,12 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JiraService {
+public class StoryPublishingService {
 
     private final JiraApi api;
     private final PrintWriter out;
 
-    public JiraService(final PrintWriter out, final JiraApi jiraApi) {
+    public StoryPublishingService(final PrintWriter out, final JiraApi jiraApi) {
         this.out = out;
         this.api = jiraApi;
     }
@@ -84,7 +84,7 @@ public class JiraService {
         return au.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
-                .filter(JiraService::shouldCreateStory)
+                .filter(StoryPublishingService::shouldCreateStory)
                 .collect(Collectors.toList());
     }
 

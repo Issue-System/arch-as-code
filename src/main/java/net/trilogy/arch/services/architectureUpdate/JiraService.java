@@ -23,10 +23,15 @@ public class JiraService {
     public void createStories(final ArchitectureUpdate au,
             String username,
             char[] password) throws JiraApi.JiraApiException {
+
+        printStoriesNotToBeSent(au);
+
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
 
         var storiesToCreate = getFeatureStories(au);
+
+        printStoriesThatWereSent(storiesToCreate);
 
         var createStoriesResults = this.api.createStories(storiesToCreate,
                 epicJiraTicket.getTicket(),
@@ -34,23 +39,25 @@ public class JiraService {
                 informationAboutTheEpic.getProjectKey(),
                 username,
                 password);
-
-        printStoriesThatWereSent(storiesToCreate);
-        printStoriesThatWereNotSent(au);
     }
 
-    private void printStoriesThatWereNotSent(final ArchitectureUpdate au) {
-        out.println("Did not re-create stories:");
-        au.getCapabilityContainer()
+    private void printStoriesNotToBeSent(final ArchitectureUpdate au) {
+        String stories = au.getCapabilityContainer()
             .getFeatureStories()
             .stream()
             .filter(story -> !shouldCreateStory(story))
-            .forEach(story -> out.println("  - " + story.getTitle()));
+            .map(story -> "  - " + story.getTitle())
+            .collect(Collectors.joining("\n"));
+        if(!stories.isBlank()) {
+            out.println("Not re-creating stories:\n" + stories);
+        }
     }
 
     private void printStoriesThatWereSent(final List<JiraStory> stories) {
-        out.println("Created Stories:");
-        stories.forEach(story -> out.println("  - " + story.getTitle()));
+        String sent = stories.stream().map(story -> "  - " + story.getTitle()).collect(Collectors.joining("\n"));
+        if(!sent.isBlank()) {
+            out.println("Attempting to create stories:\n" + sent);
+        }
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {

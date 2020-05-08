@@ -106,7 +106,7 @@ public class AuPublishStoriesCommandTest {
         // THEN:
         assertThat(
             out.toString(), 
-            equalTo("Created Stories:\n  - story that should be created\nDid not re-create stories:\n  - story that should not be created\n")
+            equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n")
         );
     }
 

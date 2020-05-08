@@ -143,7 +143,8 @@ public class AuPublishStoriesCommandTest {
         String originalAuAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test.yml"));
         ArchitectureUpdate originalAu = new ArchitectureUpdateObjectMapper().readValue(originalAuAsString);
         ArchitectureUpdate expectedAu = originalAu.addJiraToFeatureStory(
-                originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "TODO")
+                // TODO: make sure that jira link is correct
+                originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "")
         );
             
         collector.checkThat( actualAu, equalTo(expectedAu));

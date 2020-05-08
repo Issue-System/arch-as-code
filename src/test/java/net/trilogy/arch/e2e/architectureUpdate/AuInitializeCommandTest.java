@@ -114,9 +114,10 @@ public class AuInitializeCommandTest {
         );
 
         final String expectedJiraSettingsJson = "{\n" +
-                "    \"base_uri\": \"http://jira.devfactory.com/rest/api/2\",\n" +
-                "    \"get_story_endpoint\": \"/issue/\",\n" +
-                "    \"bulk_create_endpoint\": \"/issue/bulk\"\n" +
+                "    \"base_uri\": \"http://jira.devfactory.com\",\n" +
+                "    \"endpoint_to_create_link_from_key\": \"/browse/\",\n" +
+                "    \"get_story_endpoint\": \"/rest/api/2/issue/\",\n" +
+                "    \"bulk_create_endpoint\": \"/rest/api/2/issue/bulk\"\n" +
                 "}";
         collector.checkThat(
                 JIRA_API_SETTINGS_FILE_PATH + " file contents are correct.",

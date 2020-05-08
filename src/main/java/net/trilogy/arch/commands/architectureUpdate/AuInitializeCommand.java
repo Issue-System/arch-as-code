@@ -38,7 +38,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private final String INITIAL_GOOGLE_API_REDIRECT_URN = "urn:ietf:wg:oauth:2.0:oob";
     private final String INITIAL_GOOGLE_API_REDIRECT_URI = "http://localhost";
     private final String INITIAL_JIRA_BASE_URI = "http://jira.devfactory.com";
-    private final String INITIAL_JIRA_ENDPOINT_TO_CREATE_LINK_FROM_KEY = "/browse/";
+    private final String INITIAL_JIRA_LINK_PREFIX = "/browse/";
     private final String INITIAL_JIRA_GET_STORY_ENDPOINT = "/rest/api/2/issue/";
     private final String INITIAL_JIRA_BULK_CREATE_ENDPOINT = "/rest/api/2/issue/bulk";
 
@@ -84,7 +84,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private String buildJiraSettingsJsonString() {
         return "{\n" +
                 "    \"base_uri\": \"" + INITIAL_JIRA_BASE_URI + "\",\n" +
-                "    \"endpoint_to_create_link_from_key\": \"" + INITIAL_JIRA_ENDPOINT_TO_CREATE_LINK_FROM_KEY + "\",\n" +
+                "    \"link_prefix\": \"" + INITIAL_JIRA_LINK_PREFIX + "\",\n" +
                 "    \"get_story_endpoint\": \"" + INITIAL_JIRA_GET_STORY_ENDPOINT + "\",\n" +
                 "    \"bulk_create_endpoint\": \"" + INITIAL_JIRA_BULK_CREATE_ENDPOINT + "\"\n" +
                 "}";

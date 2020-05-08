@@ -22,12 +22,14 @@ public class JiraApi {
     private final String baseUri;
     private final String getStoryEndpoint;
     private final String bulkCreateEndpoint;
+    private final String linkPrefix;
 
-    public JiraApi(HttpClient client, String baseUri, String getStoryEndpoint, String bulkCreateEndpoint) {
+    public JiraApi(HttpClient client, String baseUri, String getStoryEndpoint, String bulkCreateEndpoint, String linkPrefix) {
         this.client = client;
         this.baseUri = baseUri.replaceAll("/$", "") + "/";
         this.bulkCreateEndpoint = bulkCreateEndpoint.replaceAll("(^/|/$)", "") + "/";
         this.getStoryEndpoint = getStoryEndpoint.replaceAll("(^/|/$)", "") + "/";
+        this.linkPrefix = linkPrefix.replaceAll("(^/|/$)", "") + "/";
     }
 
     public List<JiraCreateStoryStatus> createStories(List<JiraStory> jiraStories, String epicKey, String projectId, String projectKey, String username, char[] password) throws JiraApiException {
@@ -223,6 +225,11 @@ public class JiraApi {
     @VisibleForTesting
     String getBulkCreateEndpoint() {
         return bulkCreateEndpoint;
+    }
+
+    @VisibleForTesting
+    String getLinkPrefix() {
+        return linkPrefix;
     }
 
     @Getter

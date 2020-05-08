@@ -51,7 +51,7 @@ public class JiraApiTest {
     @Before
     public void setUp() {
         mockHttpClient = mock(HttpClient.class);
-        jiraApi = new JiraApi(mockHttpClient, "http://base-uri/", "/get-story-endpoint/", "/bulk-create-endpoint");
+        jiraApi = new JiraApi(mockHttpClient, "http://base-uri/", "/get-story-endpoint/", "/bulk-create-endpoint", "/browse");
     }
 
     @Test

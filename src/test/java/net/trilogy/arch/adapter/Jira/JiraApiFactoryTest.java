@@ -29,6 +29,7 @@ public class JiraApiFactoryTest {
     private final String expectedBaseUri = "BASE-URI/";
     private final String expectedGetStoryEndpoint = "GET-STORY-ENDPOINT/";
     private final String expectedBulkCreateEndpoint = "BULK-CREATE-ENDPOINT/";
+    private final String expectedLinkPrefix = "LINK-PREFIX/";
     private Path rootDir;
 
     @Before
@@ -37,6 +38,7 @@ public class JiraApiFactoryTest {
         String json = "" +
                 "{\n" +
                 "    \"base_uri\": \"" + expectedBaseUri + "\",\n" +
+                "    \"link_prefix\": \"" + expectedLinkPrefix + "\",\n" +
                 "    \"get_story_endpoint\": \"" + expectedGetStoryEndpoint + "\",\n" +
                 "    \"bulk_create_endpoint\": \"" + expectedBulkCreateEndpoint + "\"\n" +
                 "}";
@@ -61,6 +63,7 @@ public class JiraApiFactoryTest {
         collector.checkThat(jiraApi.getBaseUri(), equalTo(expectedBaseUri));
         collector.checkThat(jiraApi.getGetStoryEndpoint(), equalTo(expectedGetStoryEndpoint));
         collector.checkThat(jiraApi.getBulkCreateEndpoint(), equalTo(expectedBulkCreateEndpoint));
+        collector.checkThat(jiraApi.getLinkPrefix(), equalTo(expectedLinkPrefix));
     }
 
 

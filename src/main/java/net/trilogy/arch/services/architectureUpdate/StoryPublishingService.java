@@ -15,9 +15,11 @@ public class StoryPublishingService {
 
     private final JiraApi api;
     private final PrintWriter out;
+    private final PrintWriter err;
 
-    public StoryPublishingService(final PrintWriter out, final JiraApi jiraApi) {
+    public StoryPublishingService(final PrintWriter out, final PrintWriter err, final JiraApi jiraApi) {
         this.out = out;
+        this.err = err;
         this.api = jiraApi;
     }
 
@@ -45,7 +47,21 @@ public class StoryPublishingService {
                 password
         );
 
+        printStoriesThatFailed(stories, createStoriesResults);
+
         return updateJiraTicketsInAu(au, stories, createStoriesResults);
+    }
+
+    private void printStoriesThatFailed(List<FeatureStory> stories, List<JiraCreateStoryStatus> createStoriesResults) {
+        String errors = "";
+        for(int i = 0; i < createStoriesResults.size(); ++i) {
+            if(createStoriesResults.get(i).isSucceeded()) continue;
+            errors += stories.get(i).getTitle() + ":\n  - " + createStoriesResults.get(i).getError();
+        }
+        String heading = "Error! Some stories failed to publish. Please retry. Errors reported by Jira:";
+        if(!errors.isBlank()){
+            err.println("\n" + heading + "\n\n" + errors);
+        }
     }
 
     private static ArchitectureUpdate updateJiraTicketsInAu(ArchitectureUpdate au, List<FeatureStory> stories, List<JiraCreateStoryStatus> createStoriesResults) {

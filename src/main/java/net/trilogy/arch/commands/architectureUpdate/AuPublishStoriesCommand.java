@@ -60,7 +60,8 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
         var stdOut = spec.commandLine().getOut();
-        final StoryPublishingService jiraService = new StoryPublishingService(stdOut, jiraApi);
+        var stdErr = spec.commandLine().getErr();
+        final StoryPublishingService jiraService = new StoryPublishingService(stdOut, stdErr, jiraApi);
 
         final ArchitectureUpdate updatedAu;
         try {

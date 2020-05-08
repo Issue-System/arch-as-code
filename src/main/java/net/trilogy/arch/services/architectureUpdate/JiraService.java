@@ -4,6 +4,7 @@ import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraCreateStoryStatus;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,19 @@ public class JiraService {
         return au.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
+                .filter(JiraService::shouldCreateStory)
                 .map(fs -> new JiraStory(au, fs))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean shouldCreateStory(FeatureStory story) {
+        return ! isStoryAlreadyCreated(story);
+    }
+
+    private static boolean isStoryAlreadyCreated(FeatureStory story) {
+        return !(
+            story.getJira().getTicket().isBlank() && 
+            story.getJira().getLink().isBlank()
+        );
     }
 }

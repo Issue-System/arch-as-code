@@ -1,3 +1,8 @@
+
+
+# NOTE: Assertions are against the Feature Story section, at the bottom.
+
+
 name: "[SAMPLE NAME]"
 milestone: "[SAMPLE MILESTONE]"
 authors:
@@ -46,11 +51,22 @@ capabilities:
     jira:
       ticket: "[SAMPLE JIRA TICKET]"
       link: "[SAMPLE JIRA TICKET LINK]"
-  feature-stories:
-    - title: "[SAMPLE FEATURE STORY TITLE]"
+
+  feature-stories:  # NOTE: assertions are against this section
+
+    - title: "story that should be created"
       jira:
-        ticket: "[SAMPLE JIRA TICKET]"
-        link: "[SAMPLE JIRA TICKET LINK]"
+        ticket: ""
+        link: ""
+      tdd-references:
+        - "[SAMPLE-TDD-ID]"
+      functional-requirement-references:
+        - "[SAMPLE-REQUIREMENT-ID]"
+
+    - title: "story that should not be created"
+      jira:
+        ticket: "already existing jira ticket"
+        link: "link to already existing jira ticket"
       tdd-references:
         - "[SAMPLE-TDD-ID]"
       functional-requirement-references:

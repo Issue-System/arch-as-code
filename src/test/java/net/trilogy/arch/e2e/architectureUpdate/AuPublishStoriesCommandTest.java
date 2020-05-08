@@ -79,21 +79,22 @@ public class AuPublishStoriesCommandTest {
 
     @Test
     public void shouldTellJiraToCreateStories() throws Exception {
-        Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
-        List<JiraStory> jiraStories = List.of(createSampleJiraStory());
-
+        // GIVEN:
+        Jira epic = Jira.blank();
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
+        // WHEN:
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
-        verify(mockedJiraApi).createStories(jiraStories, "[SAMPLE JIRA TICKET]", epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
+        // THEN:
+        List<JiraStory> expected = List.of(getExpectedJiraStoriesToCreate());
+        verify(mockedJiraApi).createStories(expected, epic.getTicket(), epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
     @Ignore("TODO")
     @Test
-    public void shouldNotTellJiraToReCreateStories() throws Exception {
-        // NOTE: make sure it's displayed back to the user
+    public void shouldDisplayStoriesThatWereAlreadyCreated() {
         fail("WIP");
     }
 
@@ -135,9 +136,9 @@ public class AuPublishStoriesCommandTest {
         assertThat(statusCode, not(equalTo(0)));
     }
 
-    private JiraStory createSampleJiraStory() {
+    private JiraStory getExpectedJiraStoriesToCreate() {
         return new JiraStory(
-                "[SAMPLE FEATURE STORY TITLE]",
+                "story that should be created",
                 List.of(
                         new JiraStory.JiraTdd(
                                 new Tdd.Id("[SAMPLE-TDD-ID]"),

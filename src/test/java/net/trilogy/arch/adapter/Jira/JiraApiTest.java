@@ -196,14 +196,14 @@ public class JiraApiTest {
 
         var expected = List.of(
                 JiraCreateStoryStatus.failed("customfield_1123: Field 'customfield_1123' cannot be set. It is not on the appropriate screen, or unknown.\n"),
-                JiraCreateStoryStatus.succeeded("ABC-121"),
+                JiraCreateStoryStatus.succeeded("ABC-121", "http://base-uri/browse/ABC-121"),
                 JiraCreateStoryStatus.failed(
                         "error-message-1\n" +
                                 "error-message-2\n" +
                                 "error-title-1: inner-error-message-1\n" +
                                 "error-title-2: inner-error-message-2\n"
                 ),
-                JiraCreateStoryStatus.succeeded("ABC-123")
+                JiraCreateStoryStatus.succeeded("ABC-123", "http://base-uri/browse/ABC-123")
         );
         collector.checkThat(actual, equalTo(expected));
     }

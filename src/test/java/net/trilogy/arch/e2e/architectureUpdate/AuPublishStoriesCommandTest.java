@@ -130,7 +130,7 @@ public class AuPublishStoriesCommandTest {
         when(
                 mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())
         ).thenReturn(List.of(
-                JiraCreateStoryStatus.succeeded("ABC-123"),
+                JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
                 JiraCreateStoryStatus.failed("error-message")
         ));
 
@@ -143,8 +143,7 @@ public class AuPublishStoriesCommandTest {
         String originalAuAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test.yml"));
         ArchitectureUpdate originalAu = new ArchitectureUpdateObjectMapper().readValue(originalAuAsString);
         ArchitectureUpdate expectedAu = originalAu.addJiraToFeatureStory(
-                // TODO: make sure that jira link is correct
-                originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "")
+                originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "link-to-ABC-123")
         );
             
         collector.checkThat( actualAu, equalTo(expectedAu));

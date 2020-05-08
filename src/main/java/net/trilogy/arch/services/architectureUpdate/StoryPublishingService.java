@@ -54,8 +54,7 @@ public class StoryPublishingService {
             if (createStoriesResults.get(i).isSucceeded()) {
                 resultingAu = resultingAu.addJiraToFeatureStory(
                         stories.get(i),
-                        // TODO: make sure that jira link is correct
-                        new Jira(createStoriesResults.get(i).getIssueKey(), "")
+                        new Jira(createStoriesResults.get(i).getIssueKey(), createStoriesResults.get(i).getIssueLink())
                 );
             }
         }

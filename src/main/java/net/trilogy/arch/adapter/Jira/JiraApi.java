@@ -78,7 +78,8 @@ public class JiraApi {
         }
 
         for (int i = 0; i < successfulItems.length(); ++i) {
-            JiraCreateStoryStatus item = JiraCreateStoryStatus.succeeded(successfulItems.getJSONObject(i).getString("key"));
+            String key = successfulItems.getJSONObject(i).getString("key");
+            JiraCreateStoryStatus item = JiraCreateStoryStatus.succeeded(key, this.baseUri + this.linkPrefix + key);
             insertInNextAvailableSpot(result, totalElements, item);
         }
 

@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @ToString
@@ -90,6 +91,20 @@ public class ArchitectureUpdate {
     }
 
     public ArchitectureUpdate addJiraToFeatureStory(FeatureStory storyToChange, Jira jiraToAdd) {
-        return this.toBuilder().name("CHANGED").build();
+        return this.toBuilder().capabilityContainer(
+                this.getCapabilityContainer().toBuilder()
+                    .featureStories(
+                        this.getCapabilityContainer().getFeatureStories().stream()
+                            .map(story -> {
+                                if(story.equals(storyToChange)) {
+                                    return story.toBuilder().jira(jiraToAdd).build();
+                                }
+                                return story;
+                            })
+                            .collect(Collectors.toList())
+                    )
+                    .build()
+            )
+            .build();
     }
 }

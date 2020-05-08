@@ -140,12 +140,13 @@ public class AuPublishStoriesCommandTest {
         ArchitectureUpdate actualAu = new ArchitectureUpdateObjectMapper().readValue(actualAuAsstring);
 
         // THEN:
-        String expectedAuAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test.yml"));
-        ArchitectureUpdate expectedAu = new ArchitectureUpdateObjectMapper()
-            .readValue(expectedAuAsString)
-            .addJiraToFeatureStory(actualAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "TODO"));
+        String originalAuAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test.yml"));
+        ArchitectureUpdate originalAu = new ArchitectureUpdateObjectMapper().readValue(originalAuAsString);
+        ArchitectureUpdate expectedAu = originalAu.addJiraToFeatureStory(
+                originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "TODO")
+        );
             
-        collector.checkThat(actualAu, equalTo(expectedAu));
+        collector.checkThat( actualAu, equalTo(expectedAu));
     }
 
     @Ignore("TODO")

@@ -1,15 +1,46 @@
 package net.trilogy.arch.domain.architectureUpdate;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Ignore;
+import java.util.List;
+
 import org.junit.Test;
 
 public class ArchitectureUpdateTest {
 
-    @Ignore("TODO")
     @Test
     public void shouldAddJiraToFeatureStory() {
-        fail("WIP");
+        // GIVEN:
+        final var storyToChange = FeatureStory.blank().toBuilder().jira(new Jira("OLD JIRA TICKET 2", "OLD JIRA LINK 2")).build();
+
+        final var originalAu = getAuWithStories(
+            List.of(
+                FeatureStory.blank().toBuilder().jira(new Jira("OLD JIRA TICKET 1", "OLD JIRA LINK 1")).build(),
+                storyToChange,
+                FeatureStory.blank().toBuilder().jira(new Jira("OLD JIRA TICKET 3", "OLD JIRA LINK 3")).build()
+            )
+        );
+
+        // WHEN:
+        final var actual = originalAu.addJiraToFeatureStory(storyToChange, new Jira("NEW JIRA TICKET", "NEW JIRA LINK"));
+
+        // THEN:
+        final var expected = getAuWithStories(
+            List.of(
+                FeatureStory.blank().toBuilder().jira(new Jira("OLD JIRA TICKET 1", "OLD JIRA LINK 1")).build(),
+                FeatureStory.blank().toBuilder().jira(new Jira("NEW JIRA TICKET", "NEW JIRA LINK")).build(),
+                FeatureStory.blank().toBuilder().jira(new Jira("OLD JIRA TICKET 3", "OLD JIRA LINK 3")).build()
+            )
+        );
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    private ArchitectureUpdate getAuWithStories(List<FeatureStory> stories) {
+        return ArchitectureUpdate.builderPreFilledWithBlanks()
+                .capabilityContainer(
+                        CapabilitiesContainer.blank().toBuilder().featureStories(stories).build())
+                .build();
     }
 }

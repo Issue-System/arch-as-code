@@ -6,30 +6,51 @@ import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class JiraService {
 
     private final JiraApi api;
+    private final PrintWriter out;
 
-    public JiraService(final JiraApi jiraApi) {
+    public JiraService(final PrintWriter out, final JiraApi jiraApi) {
+        this.out = out;
         this.api = jiraApi;
     }
 
     public void createStories(final ArchitectureUpdate au,
-                              String username,
-                              char[] password) throws JiraApi.JiraApiException {
+            String username,
+            char[] password) throws JiraApi.JiraApiException {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
 
         var storiesToCreate = getFeatureStories(au);
+
         var createStoriesResults = this.api.createStories(storiesToCreate,
                 epicJiraTicket.getTicket(),
                 informationAboutTheEpic.getProjectId(),
                 informationAboutTheEpic.getProjectKey(),
                 username,
                 password);
+
+        printStoriesThatWereSent(storiesToCreate);
+        printStoriesThatWereNotSent(au);
+    }
+
+    private void printStoriesThatWereNotSent(final ArchitectureUpdate au) {
+        out.println("Did not re-create stories:");
+        au.getCapabilityContainer()
+            .getFeatureStories()
+            .stream()
+            .filter(story -> !shouldCreateStory(story))
+            .forEach(story -> out.println("  - " + story.getTitle()));
+    }
+
+    private void printStoriesThatWereSent(final List<JiraStory> stories) {
+        out.println("Created Stories:");
+        stories.forEach(story -> out.println("  - " + story.getTitle()));
     }
 
     private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {

@@ -7,6 +7,7 @@ import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraQueryResult;
 import net.trilogy.arch.adapter.Jira.JiraStory;
+import net.trilogy.arch.adapter.Jira.JiraApi.JiraApiException;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
@@ -92,10 +93,21 @@ public class AuPublishStoriesCommandTest {
         verify(mockedJiraApi).createStories(expected, epic.getTicket(), epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
-    @Ignore("TODO")
     @Test
-    public void shouldDisplayStoriesThatWereAlreadyCreated() {
-        fail("WIP");
+    public void shouldOutputResult() throws Exception {
+        // GIVEN:
+        Jira epic = Jira.blank();
+        final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+
+        // WHEN:
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+
+        // THEN:
+        assertThat(
+            out.toString(), 
+            equalTo("Created Stories:\n  - story that should be created\nDid not re-create stories:\n  - story that should not be created\n")
+        );
     }
 
     @Ignore("TODO")

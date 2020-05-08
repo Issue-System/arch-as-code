@@ -177,11 +177,11 @@ public class AuPublishStoriesCommandTest {
     @Test
     public void shouldDisplayNiceErrorIfCreatingStoriesCrashes() throws JiraApi.JiraApiException {
         when(mockedJiraApi.getStory(any(), any(), any())).thenReturn(new JiraQueryResult("ABC", "DEF"));
-        when(mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
+        when(mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").cause(new RuntimeException("Details")).build());
 
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
-        assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
+        assertThat(err.toString(), equalTo("ERROR: OOPS!\n\nDetails\n\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
@@ -194,7 +194,7 @@ public class AuPublishStoriesCommandTest {
 
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
-        assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
+        assertThat(err.toString(), equalTo("ERROR: OOPS!\n\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n"));
         assertThat(statusCode, not(equalTo(0)));
     }

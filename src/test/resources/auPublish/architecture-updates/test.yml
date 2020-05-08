@@ -71,3 +71,13 @@ capabilities:
         - "[SAMPLE-TDD-ID]"
       functional-requirement-references:
         - "[SAMPLE-REQUIREMENT-ID]"
+
+    - title: "story that failed to be created"
+      jira:
+        ticket: ""
+        link: ""
+      tdd-references:
+        - "[SAMPLE-TDD-ID]"
+      functional-requirement-references:
+        - "[SAMPLE-REQUIREMENT-ID]"
+

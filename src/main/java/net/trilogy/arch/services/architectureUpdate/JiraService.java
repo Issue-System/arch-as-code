@@ -1,10 +1,10 @@
 package net.trilogy.arch.services.architectureUpdate;
 
 import net.trilogy.arch.adapter.Jira.JiraApi;
-import net.trilogy.arch.adapter.Jira.JiraCreateStoryStatus;
 import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
+import net.trilogy.arch.domain.architectureUpdate.Jira;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -20,16 +20,20 @@ public class JiraService {
         this.api = jiraApi;
     }
 
-    public void createStories(final ArchitectureUpdate au,
+    public ArchitectureUpdate createStories(
+            final ArchitectureUpdate au,
             String username,
-            char[] password) throws JiraApi.JiraApiException {
+            char[] password
+    ) throws JiraApi.JiraApiException {
 
         printStoriesNotToBeSent(au);
 
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
 
-        var storiesToCreate = getJiraStoriesToCreate(au);
+        var storiesToCreate = getFeatureStoriesToCreate(au).stream()
+                .map(fs -> new JiraStory(au, fs))
+                .collect(Collectors.toList());
 
         printStoriesThatWereSent(storiesToCreate);
 
@@ -42,13 +46,17 @@ public class JiraService {
                 password
         );
 
-        // au.toBuilder()
-        //     .capabilityContainer(
-        //             au.getCapabilityContainer().toBuilder().featureStories(newFeatureStories)
-        //     )
-        //     .build();
+        ArchitectureUpdate resultingAu = au;
+        for (int i = 0; i < createStoriesResults.size(); ++i) {
+            if (createStoriesResults.get(i).isSucceeded()) {
+                resultingAu = resultingAu.addJiraToFeatureStory(
+                        getFeatureStoriesToCreate(au).get(i),
+                        new Jira(createStoriesResults.get(i).getIssueKey(), "TODO")
+                );
+            }
+        }
 
-        // for(int i = 0; i < 
+        return resultingAu;
     }
 
     private void printStoriesNotToBeSent(final ArchitectureUpdate au) {
@@ -70,12 +78,11 @@ public class JiraService {
         }
     }
 
-    private List<JiraStory> getJiraStoriesToCreate(final ArchitectureUpdate au) {
+    private List<FeatureStory> getFeatureStoriesToCreate(final ArchitectureUpdate au) {
         return au.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
                 .filter(JiraService::shouldCreateStory)
-                .map(fs -> new JiraStory(au, fs))
                 .collect(Collectors.toList());
     }
 
@@ -90,3 +97,4 @@ public class JiraService {
         );
     }
 }
+

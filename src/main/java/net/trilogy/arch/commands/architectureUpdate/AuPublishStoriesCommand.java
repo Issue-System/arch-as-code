@@ -24,6 +24,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
     private final JiraApiFactory jiraApiFactory;
     private final FilesFacade filesFacade;
+    private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
 
     @CommandLine.Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFileName;
@@ -43,15 +44,15 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     public AuPublishStoriesCommand(JiraApiFactory jiraApiFactory, FilesFacade filesFacade) {
         this.jiraApiFactory = jiraApiFactory;
         this.filesFacade = filesFacade;
+        this.architectureUpdateObjectMapper = new ArchitectureUpdateObjectMapper();
     }
 
     public Integer call() throws IOException {
-
         Path auPath = architectureUpdateFileName.toPath();
 
         ArchitectureUpdate au;
         try {
-            au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(auPath));
+            au = architectureUpdateObjectMapper.readValue(Files.readString(auPath));
         } catch (IOException | RuntimeException e) {
             spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
             return 1;
@@ -61,12 +62,15 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         var stdOut = spec.commandLine().getOut();
         final JiraService jiraService = new JiraService(stdOut, jiraApi);
 
+        final ArchitectureUpdate updatedAu;
         try {
-            jiraService.createStories(au, username, password);
+            updatedAu = jiraService.createStories(au, username, password);
         } catch (JiraApi.JiraApiException e) {
             spec.commandLine().getErr().println("ERROR: " + e.getMessage());
             return 1;
         }
+
+       filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
     }

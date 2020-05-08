@@ -12,7 +12,7 @@ public class Epic {
     @JsonProperty(value = "title") private final String title;
     @JsonProperty(value = "jira") private final Jira jira;
 
-    @Builder
+    @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Epic(
             @JsonProperty("title") String title,

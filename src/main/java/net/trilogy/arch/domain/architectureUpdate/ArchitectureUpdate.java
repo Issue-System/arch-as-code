@@ -39,7 +39,7 @@ public class ArchitectureUpdate {
     @JsonProperty(value = "functional-requirements") private final Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements;
     @JsonProperty(value = "capabilities") private final CapabilitiesContainer capabilityContainer;
 
-    @Builder
+    @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public ArchitectureUpdate(
             @JsonProperty("name") String name,
@@ -89,4 +89,7 @@ public class ArchitectureUpdate {
         return builderPreFilledWithBlanks().build();
     }
 
+    public ArchitectureUpdate addJiraToFeatureStory(FeatureStory storyToChange, Jira jiraToAdd) {
+        return this.toBuilder().name("CHANGED").build();
+    }
 }

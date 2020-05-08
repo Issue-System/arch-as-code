@@ -2,6 +2,8 @@ package net.trilogy.arch.domain.architectureUpdate;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -15,6 +17,7 @@ public class FeatureStory {
     @JsonProperty(value = "tdd-references") private final List<Tdd.Id> tddReferences;
     @JsonProperty(value = "functional-requirement-references") private final List<FunctionalRequirement.Id> requirementReferences;
 
+    @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public FeatureStory(
             @JsonProperty("title") String title,

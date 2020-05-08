@@ -29,16 +29,26 @@ public class JiraService {
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
 
-        var storiesToCreate = getFeatureStories(au);
+        var storiesToCreate = getJiraStoriesToCreate(au);
 
         printStoriesThatWereSent(storiesToCreate);
 
-        var createStoriesResults = this.api.createStories(storiesToCreate,
+        var createStoriesResults = this.api.createStories(
+                storiesToCreate,
                 epicJiraTicket.getTicket(),
                 informationAboutTheEpic.getProjectId(),
                 informationAboutTheEpic.getProjectKey(),
                 username,
-                password);
+                password
+        );
+
+        // au.toBuilder()
+        //     .capabilityContainer(
+        //             au.getCapabilityContainer().toBuilder().featureStories(newFeatureStories)
+        //     )
+        //     .build();
+
+        // for(int i = 0; i < 
     }
 
     private void printStoriesNotToBeSent(final ArchitectureUpdate au) {
@@ -60,7 +70,7 @@ public class JiraService {
         }
     }
 
-    private List<JiraStory> getFeatureStories(final ArchitectureUpdate au) {
+    private List<JiraStory> getJiraStoriesToCreate(final ArchitectureUpdate au) {
         return au.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()

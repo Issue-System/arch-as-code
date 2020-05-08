@@ -12,6 +12,7 @@ import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.adapter.Jira.JiraApi.JiraApiException;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
@@ -135,23 +136,16 @@ public class AuPublishStoriesCommandTest {
 
         // WHEN:
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        String actualAuAsstring = Files.readString(rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
+        ArchitectureUpdate actualAu = new ArchitectureUpdateObjectMapper().readValue(actualAuAsstring);
 
         // THEN:
-        String auAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
-        ArchitectureUpdate result = new ArchitectureUpdateObjectMapper().readValue(auAsString);
-
-        collector.checkThat(
-            result.getCapabilityContainer().getFeatureStories().get(0).getJira(),
-            equalTo( new Jira("ABC-123", "TODO"))
-        );
-        collector.checkThat(
-            result.getCapabilityContainer().getFeatureStories().get(1).getJira(),
-            equalTo( new Jira("already existing jira ticket", "link to already existing jira ticket"))
-        );
-        collector.checkThat(
-            result.getCapabilityContainer().getFeatureStories().get(2).getJira(),
-            equalTo( new Jira("", ""))
-        );
+        String expectedAuAsString = Files.readString(rootDir.toPath().resolve("architecture-updates/test.yml"));
+        ArchitectureUpdate expectedAu = new ArchitectureUpdateObjectMapper()
+            .readValue(expectedAuAsString)
+            .addJiraToFeatureStory(actualAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "TODO"));
+            
+        collector.checkThat(actualAu, equalTo(expectedAu));
     }
 
     @Ignore("TODO")

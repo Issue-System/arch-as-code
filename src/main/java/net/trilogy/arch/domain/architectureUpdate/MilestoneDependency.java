@@ -12,7 +12,7 @@ public class MilestoneDependency {
     @JsonProperty(value = "description") private final String description;
     @JsonProperty(value = "links") private final List<Link> links;
 
-    @Builder
+    @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public MilestoneDependency(
             @JsonProperty("description") String description,

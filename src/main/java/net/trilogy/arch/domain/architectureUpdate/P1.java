@@ -13,7 +13,7 @@ public class P1 {
     @JsonProperty(value = "jira") private final Jira jira;
     @JsonProperty(value = "executive-summary") private final String executiveSummary;
 
-    @Builder
+    @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public P1(
             @JsonProperty("link") String link,

@@ -131,7 +131,7 @@ public class AuPublishStoriesCommandTest {
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
-        assertThat(out.toString(), equalTo(""));
+        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
 
@@ -144,7 +144,7 @@ public class AuPublishStoriesCommandTest {
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
-        assertThat(out.toString(), equalTo(""));
+        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
 

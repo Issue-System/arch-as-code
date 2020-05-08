@@ -25,6 +25,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.List;
@@ -53,9 +54,11 @@ public class AuPublishStoriesCommandTest {
     final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         System.setOut(originalOut);
         System.setErr(originalErr);
+
+        Files.deleteIfExists(rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }
 
     @Before
@@ -76,13 +79,15 @@ public class AuPublishStoriesCommandTest {
         when(mockedJiraApiFactory.create(files, rootDir.toPath())).thenReturn(mockedJiraApi);
 
         app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, files);
+
+        Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }
 
     @Test
     public void shouldQueryJiraForEpic() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
 
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         verify(mockedJiraApi).getStory(epic, "user", "password".toCharArray());
     }
@@ -95,7 +100,7 @@ public class AuPublishStoriesCommandTest {
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
         // WHEN:
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
         List<JiraStory> expected = getExpectedJiraStoriesToCreate();
@@ -110,7 +115,7 @@ public class AuPublishStoriesCommandTest {
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
         // WHEN:
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
         assertThat(
@@ -122,8 +127,6 @@ public class AuPublishStoriesCommandTest {
     @Test
     public void shouldUpdateAuWithNewJiraTickets() throws Exception {
         // GIVEN:
-        Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
-
         Jira epic = Jira.blank();
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
@@ -151,8 +154,25 @@ public class AuPublishStoriesCommandTest {
 
     @Ignore("TODO")
     @Test
-    public void shouldDisplayPartialErrorsWhenCreatingStories() {
-        fail("WIP");
+    public void shouldDisplayPartialErrorsWhenCreatingStories() throws Exception {
+        // GIVEN:
+        Jira epic = Jira.blank();
+        final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+        when(
+                mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())
+        ).thenReturn(List.of(
+                JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
+                JiraCreateStoryStatus.failed("error-message")
+        ));
+
+        // WHEN:
+        int statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+
+        // THEN:
+        assertThat(err.toString(), equalTo("\nError! Some stories failed to publish. Please retry. Cause (reported by Jira):\n\nerror-message\n"));
+        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
+        assertThat(statusCode, not(equalTo(0)));
     }
 
     @Test
@@ -160,7 +180,7 @@ public class AuPublishStoriesCommandTest {
         when(mockedJiraApi.getStory(any(), any(), any())).thenReturn(new JiraQueryResult("ABC", "DEF"));
         when(mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
 
-        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
@@ -173,7 +193,7 @@ public class AuPublishStoriesCommandTest {
 
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
 
-        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n"));

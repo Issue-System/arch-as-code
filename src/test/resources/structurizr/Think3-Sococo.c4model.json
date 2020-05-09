@@ -2252,7 +2252,7 @@
             },
             {
                 "elementId": "12",
-                "id": "1",
+                "id": "3",
                 "date": "2019-12-23T14:30:24Z",
                 "title": "Sococo AVC is an in-house backup AVC system",
                 "status": "Superseded",
@@ -2266,6 +2266,15 @@
                 "title": "Deploy Single Page Application container build onto CDN",
                 "status": "Proposed",
                 "content": "## Context\nSingle Page Application is written in Angular and supports webpack builds. Currently the application is served by RocketShorts server. It can and should be deployed as a webpack build onto a CDN to become an isolated container. This will greatly improve loading speed and will reduce the amount of servers, will allow RocketShorts to be deployed as microservices and will separate concerns for CI/CD.\n\n## Decision\nTBD\n\n## Consequences",
+                "format": "Markdown"
+            },
+            {
+                "elementId": "4",
+                "id": "4",
+                "date": "2020-01-12T09:36:04Z",
+                "title": "Deploy Single Page Application container build onto CDN",
+                "status": "Proposed",
+                "content": "## Context\nSingle Page Application is written in Angular and supports webpack builds.\n\n## Decision\nTBD\n\n## Consequences",
                 "format": "Markdown"
             }
         ],

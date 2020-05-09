@@ -3,6 +3,7 @@ package net.trilogy.arch.adapter;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.in.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import org.hamcrest.MatcherAssert;
@@ -10,9 +11,13 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import static java.time.ZoneOffset.UTC;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static net.trilogy.arch.domain.c4.C4Action.USES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -122,7 +127,7 @@ public class WorkspaceReaderTest {
         C4DeploymentView actual = dataStructure.getViews().getDeploymentViews().stream()
                 .filter(v -> v.getKey().equals("DevelopmentDeployment")).findAny().get();
 
-        C4DeploymentView expected = new C4DeploymentView().builder()
+        C4DeploymentView expected = C4DeploymentView.builder()
                 .key("DevelopmentDeployment")
                 .name("Internet Banking System - Deployment - Development")
                 .system(new C4Reference("2", null))
@@ -143,7 +148,7 @@ public class WorkspaceReaderTest {
         C4DeploymentView actual = dataStructure.getViews().getDeploymentViews().stream()
                 .filter(v -> v.getKey().equals(key)).findAny().get();
 
-        C4DeploymentView expected = new C4DeploymentView().builder()
+        C4DeploymentView expected = C4DeploymentView.builder()
                 .key(key)
                 .environment("Default")
                 .description("")
@@ -153,4 +158,27 @@ public class WorkspaceReaderTest {
 
         assertThat(actual, is(equalTo(expected)));
     }
+
+    @Test
+    public void shouldReadDecisions() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO);
+        String id = "4";
+
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+        List<ImportantTechnicalDecision> decisions = dataStructure.getDecisions();
+
+        assertThat(decisions.size(), is(equalTo(4)));
+        ImportantTechnicalDecision actual = decisions.stream().filter(d -> d.getId().equals(id)).findFirst().get();
+
+        ImportantTechnicalDecision expected = ImportantTechnicalDecision.builder()
+                .id(id)
+                .title("Deploy Single Page Application container build onto CDN")
+                .date(Date.from(LocalDateTime.parse("2020-01-12T09:36:04Z", ISO_DATE_TIME).toInstant(UTC)))
+                .content("## Context\nSingle Page Application is written in Angular and supports webpack builds.\n\n## Decision\nTBD\n\n## Consequences")
+                .status("Proposed")
+                .build();
+
+        assertThat(actual, is(equalTo(expected)));
+    }
+
 }

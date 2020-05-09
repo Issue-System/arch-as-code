@@ -1,14 +1,11 @@
 package net.trilogy.arch.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.Date;
 
+@EqualsAndHashCode
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class ImportantTechnicalDecision {
     @NonNull private String id;
@@ -16,4 +13,13 @@ public class ImportantTechnicalDecision {
     @NonNull private String title;
     @NonNull private String status;
     @NonNull private String content;
+
+    @Builder
+    public ImportantTechnicalDecision(@NonNull String id, @NonNull Date date, @NonNull String title, @NonNull String status, @NonNull String content) {
+        this.id = id;
+        this.date = date;
+        this.title = title;
+        this.status = status;
+        this.content = content;
+    }
 }

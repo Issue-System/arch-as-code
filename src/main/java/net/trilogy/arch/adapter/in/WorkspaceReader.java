@@ -1,11 +1,13 @@
 package net.trilogy.arch.adapter.in;
 
 import com.structurizr.Workspace;
+import com.structurizr.documentation.Decision;
 import com.structurizr.model.*;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.StaticView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.*;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.structurizr.documentation.DecisionStatus.Proposed;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static net.trilogy.arch.domain.c4.C4Action.*;
@@ -43,6 +47,10 @@ public class WorkspaceReader {
         views.setComponentViews(componentViews(workspaceViews));
         views.setDeploymentViews(deploymentViews(workspaceViews, architectureDataStructure.getModel()));
         architectureDataStructure.setViews(views);
+
+        List<ImportantTechnicalDecision> decisions = decisions(workspace);
+        architectureDataStructure.setDecisions(decisions);
+
         return architectureDataStructure;
     }
 
@@ -288,4 +296,15 @@ public class WorkspaceReader {
         return action;
     }
 
+    private List<ImportantTechnicalDecision> decisions(Workspace workspace) {
+        Set<Decision> decisions = workspace.getDocumentation().getDecisions();
+        return decisions.stream().map(d -> ImportantTechnicalDecision.builder()
+                .content(d.getContent())
+                .date(d.getDate())
+                .id(d.getId())
+                .status(ofNullable(d.getStatus()).orElse(Proposed).toString())
+                .title(d.getTitle())
+                .build())
+                .collect(toList());
+    }
 }

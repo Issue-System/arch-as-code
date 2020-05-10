@@ -11,6 +11,8 @@ build
 .project
 .settings/
 bin/
+# Ignore vim
+.vim/
 
 # Ignore credentials.json
 credentials.json

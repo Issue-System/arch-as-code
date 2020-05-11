@@ -56,7 +56,7 @@ public class StoryPublishingService {
         String errors = "";
         for(int i = 0; i < createStoriesResults.size(); ++i) {
             if(createStoriesResults.get(i).isSucceeded()) continue;
-            errors += stories.get(i).getTitle() + ":\n  - " + createStoriesResults.get(i).getError();
+            errors += "Story: \"" + stories.get(i).getTitle() + "\":\n  - " + createStoriesResults.get(i).getError();
         }
         String heading = "Error! Some stories failed to publish. Please retry. Errors reported by Jira:";
         if(!errors.isBlank()){

@@ -169,7 +169,7 @@ public class AuPublishStoriesCommandTest {
         int statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
-        assertThat(err.toString(), equalTo("\nError! Some stories failed to publish. Please retry. Errors reported by Jira:\n\nstory that failed to be created:\n  - error-message\n"));
+        assertThat(err.toString(), equalTo("\nError! Some stories failed to publish. Please retry. Errors reported by Jira:\n\nStory: \"story that failed to be created\":\n  - error-message\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
         assertThat(statusCode, equalTo(0));
     }

@@ -35,10 +35,12 @@ public class StoryPublishingService {
             throw new NoStoriesToCreateException();
         }
 
-        out.println("\nAttempting to create stories...\n");
+        out.println("Checking epic...\n");
 
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
+
+        out.println("Attempting to create stories...\n");
 
         var createStoriesResults = this.api.createStories(
                 stories.stream()
@@ -105,7 +107,7 @@ public class StoryPublishingService {
                 .map(story -> "  - " + story.getTitle())
                 .collect(Collectors.joining("\n"));
         if (!stories.isBlank()) {
-            out.println("Not re-creating stories:\n" + stories);
+            out.println("Not re-creating stories:\n" + stories + "\n");
         }
     }
 

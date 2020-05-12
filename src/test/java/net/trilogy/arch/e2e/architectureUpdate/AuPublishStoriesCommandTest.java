@@ -124,6 +124,7 @@ public class AuPublishStoriesCommandTest {
                 out.toString(),
                 equalTo(
                         "Not re-creating stories:\n  - story that should not be created\n\n" +
+                                "Checking epic...\n\n" + 
                                 "Attempting to create stories...\n\n" +
                                 "Successfully created:\n  - story that should be created\n  - story that failed to be created\n"
                 )
@@ -185,7 +186,9 @@ public class AuPublishStoriesCommandTest {
         assertThat(
                 out.toString(),
                 equalTo(
-                        "Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\nSuccessfully created:\n  - story that should be created\n"
+                        "Not re-creating stories:\n  - story that should not be created\n\n" +
+                        "Checking epic...\n\n" + 
+                        "Attempting to create stories...\n\nSuccessfully created:\n  - story that should be created\n"
                 )
         );
         assertThat(statusCode, equalTo(0));
@@ -202,7 +205,9 @@ public class AuPublishStoriesCommandTest {
         assertThat(
                 out.toString(),
                 equalTo(
-                        "Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\n"
+                        "Not re-creating stories:\n  - story that should not be created\n\n" +
+                        "Checking epic...\n\n" + 
+                        "Attempting to create stories...\n\n"
                 )
         );
         assertThat(statusCode, not(equalTo(0)));
@@ -217,7 +222,7 @@ public class AuPublishStoriesCommandTest {
         collector.checkThat(
                 out.toString(),
                 equalTo(
-                        "Not re-creating stories:\n  - story that should not be created\n"
+                        "Not re-creating stories:\n  - story that should not be created\n\n"
                 )
         );
         collector.checkThat(statusCode, not(equalTo(0)));
@@ -232,7 +237,7 @@ public class AuPublishStoriesCommandTest {
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n\n"));
-        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\n"));
+        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nChecking epic...\n\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
 

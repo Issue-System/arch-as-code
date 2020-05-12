@@ -72,9 +72,12 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
                 spec.commandLine().getErr().println(e.getCause().getMessage() + "\n");
             }
             return 1;
+        } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
+            spec.commandLine().getErr().println("ERROR: No stories to create.");
+            return 1;
         }
 
-       filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
+        filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
     }

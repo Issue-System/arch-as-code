@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class AuPublishStoriesCommandTest {
@@ -205,6 +206,21 @@ public class AuPublishStoriesCommandTest {
                 )
         );
         assertThat(statusCode, not(equalTo(0)));
+    }
+
+    @Test
+    public void shouldHandleNoStoriesToCreate() {
+        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/no-stories-to-create.yml " + rootDir.getAbsolutePath());
+
+        verifyNoMoreInteractions(mockedJiraApi);
+        collector.checkThat(err.toString(), equalTo("ERROR: No stories to create.\n"));
+        collector.checkThat(
+                out.toString(),
+                equalTo(
+                        "Not re-creating stories:\n  - story that should not be created\n"
+                )
+        );
+        collector.checkThat(statusCode, not(equalTo(0)));
     }
 
     @Test

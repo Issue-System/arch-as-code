@@ -27,14 +27,18 @@ public class StoryPublishingService {
             final ArchitectureUpdate au,
             String username,
             char[] password
-    ) throws JiraApi.JiraApiException {
+    ) throws JiraApi.JiraApiException, NoStoriesToCreateException {
         printStoriesNotToBeSent(au);
+
+        final var stories = getFeatureStoriesToCreate(au);
+        if (stories.size() == 0) {
+            throw new NoStoriesToCreateException();
+        }
 
         out.println("\nAttempting to create stories...\n");
 
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
-        final var stories = getFeatureStoriesToCreate(au);
 
         var createStoriesResults = this.api.createStories(
                 stories.stream()
@@ -114,14 +118,16 @@ public class StoryPublishingService {
     }
 
     private static boolean shouldCreateStory(FeatureStory story) {
-        return ! isStoryAlreadyCreated(story);
+        return !isStoryAlreadyCreated(story);
     }
 
     private static boolean isStoryAlreadyCreated(FeatureStory story) {
         return !(
-            story.getJira().getTicket().isBlank() && 
-            story.getJira().getLink().isBlank()
+                story.getJira().getTicket().isBlank() &&
+                        story.getJira().getLink().isBlank()
         );
     }
+
+    public static class NoStoriesToCreateException extends Exception {}
 }
 

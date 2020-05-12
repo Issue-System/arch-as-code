@@ -9,23 +9,19 @@ import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraCreateStoryStatus;
 import net.trilogy.arch.adapter.Jira.JiraQueryResult;
 import net.trilogy.arch.adapter.Jira.JiraStory;
-import net.trilogy.arch.adapter.Jira.JiraApi.JiraApiException;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.List;
@@ -34,7 +30,6 @@ import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -113,15 +108,26 @@ public class AuPublishStoriesCommandTest {
         Jira epic = Jira.blank();
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+        when(
+                mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())
+        ).thenReturn(List.of(
+                JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
+                JiraCreateStoryStatus.succeeded("ABC-223", "link-to-ABC-223")
+        ));
 
         // WHEN:
         execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
-        assertThat(
-            out.toString(), 
-            equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n")
+        collector.checkThat(
+                out.toString(),
+                equalTo(
+                        "Not re-creating stories:\n  - story that should not be created\n\n" +
+                                "Attempting to create stories...\n\n" +
+                                "Successfully created:\n  - story that should be created\n  - story that failed to be created\n"
+                )
         );
+        collector.checkThat(err.toString(), equalTo(""));
     }
 
     @Test
@@ -169,8 +175,18 @@ public class AuPublishStoriesCommandTest {
         int statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
-        assertThat(err.toString(), equalTo("\nError! Some stories failed to publish. Please retry. Errors reported by Jira:\n\nStory: \"story that failed to be created\":\n  - error-message\n"));
-        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
+        assertThat(
+                err.toString(),
+                equalTo(
+                        "\nError! Some stories failed to publish. Please retry. Errors reported by Jira:\n\nStory: \"story that failed to be created\":\n  - error-message\n"
+                )
+        );
+        assertThat(
+                out.toString(),
+                equalTo(
+                        "Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\nSuccessfully created:\n  - story that should be created\n"
+                )
+        );
         assertThat(statusCode, equalTo(0));
     }
 
@@ -182,7 +198,12 @@ public class AuPublishStoriesCommandTest {
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n\nDetails\n\n"));
-        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\nAttempting to create stories:\n  - story that should be created\n  - story that failed to be created\n"));
+        assertThat(
+                out.toString(),
+                equalTo(
+                        "Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\n"
+                )
+        );
         assertThat(statusCode, not(equalTo(0)));
     }
 
@@ -195,7 +216,7 @@ public class AuPublishStoriesCommandTest {
         Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n\n"));
-        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n"));
+        assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nAttempting to create stories...\n\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
 

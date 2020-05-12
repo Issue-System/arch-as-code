@@ -30,11 +30,11 @@ public class StoryPublishingService {
     ) throws JiraApi.JiraApiException {
         printStoriesNotToBeSent(au);
 
+        out.println("\nAttempting to create stories...\n");
+
         final var epicJiraTicket = au.getCapabilityContainer().getEpic().getJira();
         final var informationAboutTheEpic = this.api.getStory(epicJiraTicket, username, password);
         final var stories = getFeatureStoriesToCreate(au);
-
-        printStoriesThatWereSent(stories);
 
         var createStoriesResults = this.api.createStories(
                 stories.stream()
@@ -47,19 +47,35 @@ public class StoryPublishingService {
                 password
         );
 
+        printStoriesThatSucceeded(stories, createStoriesResults);
         printStoriesThatFailed(stories, createStoriesResults);
 
         return updateJiraTicketsInAu(au, stories, createStoriesResults);
     }
 
+    private void printStoriesThatSucceeded(List<FeatureStory> stories, List<JiraCreateStoryStatus> createStoriesResults) {
+        StringBuilder successfulStories = new StringBuilder();
+
+        for(int i = 0; i < createStoriesResults.size(); ++i) {
+            if(!createStoriesResults.get(i).isSucceeded()) continue;
+            successfulStories.append("\n  - ").append(stories.get(i).getTitle());
+        }
+
+        String heading = "Successfully created:";
+
+        if(!successfulStories.toString().isBlank()){
+            out.println(heading + successfulStories);
+        }
+    }
+
     private void printStoriesThatFailed(List<FeatureStory> stories, List<JiraCreateStoryStatus> createStoriesResults) {
-        String errors = "";
+        StringBuilder errors = new StringBuilder();
         for(int i = 0; i < createStoriesResults.size(); ++i) {
             if(createStoriesResults.get(i).isSucceeded()) continue;
-            errors += "Story: \"" + stories.get(i).getTitle() + "\":\n  - " + createStoriesResults.get(i).getError();
+            errors.append("Story: \"").append(stories.get(i).getTitle()).append("\":\n  - ").append(createStoriesResults.get(i).getError());
         }
         String heading = "Error! Some stories failed to publish. Please retry. Errors reported by Jira:";
-        if(!errors.isBlank()){
+        if(!errors.toString().isBlank()){
             err.println("\n" + heading + "\n\n" + errors);
         }
     }
@@ -86,13 +102,6 @@ public class StoryPublishingService {
                 .collect(Collectors.joining("\n"));
         if (!stories.isBlank()) {
             out.println("Not re-creating stories:\n" + stories);
-        }
-    }
-
-    private void printStoriesThatWereSent(final List<FeatureStory> stories) {
-        String sent = stories.stream().map(story -> "  - " + story.getTitle()).collect(Collectors.joining("\n"));
-        if (!sent.isBlank()) {
-            out.println("Attempting to create stories:\n" + sent);
         }
     }
 

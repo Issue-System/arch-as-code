@@ -122,9 +122,20 @@ public class JiraApi {
         HttpResponse<String> response = null;
         try {
             response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+
             if(response.statusCode() == 401) {
-                throw JiraApiException.builder().message("Failed to log into Jira. Please check your credentials.").response(response).build();
+                throw JiraApiException.builder()
+                    .message("Failed to log into Jira. Please check your credentials.")
+                    .response(response)
+                    .build();
             }
+            if(response.statusCode() == 404) {
+                throw JiraApiException.builder()
+                    .message("Story \""+ jira.getTicket() +"\" not found. URL: " + request.uri().toURL().toString())
+                    .response(response)
+                    .build();
+            }
+
             return new JiraQueryResult(response);
         } catch(JiraApiException e) {
             throw e;

@@ -14,6 +14,7 @@ import org.junit.rules.ErrorCollector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -141,6 +142,26 @@ public class JiraApiTest {
         } catch( JiraApi.JiraApiException e ){
             collector.checkThat(e.getMessage(), equalTo("Unknown error occurred"));
             collector.checkThat(e.getCause(), is(instanceOf(Exception.class)));
+            collector.checkThat(e.getResponse(), is(mockedResponse));
+        }
+    }
+
+    @Test
+    public void shouldThrowProperExceptionIfGetStoryNotFound() throws Exception {
+        // GIVEN:
+        HttpResponse<Object> mockedResponse = mock(HttpResponse.class);
+        when(mockedResponse.statusCode()).thenReturn(404); // not found
+        when(mockHttpClient.send(any(), any())).thenReturn(mockedResponse);
+
+        try {
+            // WHEN:
+            jiraApi.getStory(new Jira("A", "B"), "u", "p".toCharArray());
+
+            //THEN:
+            fail("Exception not thrown.");
+        } catch( JiraApi.JiraApiException e ){
+            collector.checkThat(e.getMessage(), equalTo("Story \"A\" not found. URL: " + jiraApi.getBaseUri() + jiraApi.getGetStoryEndpoint() + "A"));
+            collector.checkThat(e.getCause(), is(nullValue()));
             collector.checkThat(e.getResponse(), is(mockedResponse));
         }
     }

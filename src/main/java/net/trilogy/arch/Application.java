@@ -28,6 +28,7 @@ public class Application {
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade))
                                 .addSubcommand(new AuValidateCommand())
                                 .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade))
+                                .addSubcommand(new AuAnnotateCommand(filesFacade))
                 );
     }
 

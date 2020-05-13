@@ -4,6 +4,7 @@ import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -36,6 +37,7 @@ public abstract class TestHelper {
     public static final String ROOT_PATH_TO_TEST_AU_VALIDATION = "/auValidation/";
     public static final String ROOT_PATH_TO_TEST_AU_PUBLISH = "/auPublish/";
     public static final String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
+    public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";
 
     public static Integer execute(String... args) throws Exception {
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
@@ -46,6 +48,10 @@ public abstract class TestHelper {
 
     public static Integer execute(Application application, String command) {
         return application.execute(command.split(" "));
+    }
+
+    public static Path getPath(Class<?> getClassOfCallingClass, String file){
+        return new File(getClassOfCallingClass.getResource(file).getPath()).toPath();
     }
 
     public static String loadResource(Class<?> getClassOfCallingClass, String file) throws Exception {

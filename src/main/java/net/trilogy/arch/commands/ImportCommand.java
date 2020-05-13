@@ -10,6 +10,8 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.concurrent.Callable;
 
+import com.google.common.annotations.VisibleForTesting;
+
 @CommandLine.Command(name = "import", mixinStandardHelpOptions = true, description = "Imports existing structurizr workspace, overwriting the existing product architecture.")
 public class ImportCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ArchitectureDataStructureWriter.class);
@@ -21,7 +23,7 @@ public class ImportCommand implements Callable<Integer> {
     private File productDocumentationRoot;
 
 
-    // Only for testing purposes
+    @VisibleForTesting
     public ImportCommand(File exportedWorkspacePath) {
         this.exportedWorkspacePath = exportedWorkspacePath;
     }
@@ -30,6 +32,7 @@ public class ImportCommand implements Callable<Integer> {
     }
 
     @Override
+    // TODO: [TESTING] Sad path
     public Integer call() throws Exception {
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
         File writeFile = this.productDocumentationRoot.toPath().resolve("data-structure.yml").toFile();

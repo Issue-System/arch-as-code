@@ -44,6 +44,7 @@ public class InitializeCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         logger.info(String.format("Architecture as code initialized under - %s\n", productDocumentationRoot.getAbsolutePath()));
 
+        // TODO [TESTING]: Add sad path e2e testing
         createCredentials(productDocumentationRoot, workspaceId, apiKey, apiSecret);
         createManifest();
 

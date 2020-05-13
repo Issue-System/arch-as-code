@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.google.common.annotations.VisibleForTesting;
+
 @CommandLine.Command(name = "validate", mixinStandardHelpOptions = true, description = "Validate a product's architecture")
 public class ValidateCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ValidateCommand.class);
@@ -18,18 +20,18 @@ public class ValidateCommand implements Callable<Integer> {
     File productDocumentationRoot;
     private final String manifestFileName;
 
-    // Only for testing purposes
+    @VisibleForTesting
     public ValidateCommand(File productDocumentationRoot, String manifestFileName) {
         this.productDocumentationRoot = productDocumentationRoot;
         this.manifestFileName = manifestFileName;
     }
 
-    // For production
     public ValidateCommand() {
         this.manifestFileName = "data-structure.yml";
     }
 
     @Override
+    // TODO [TESTING] [IMPORTANT]: add sad path coverage e2e tests
     public Integer call() throws IOException {
         List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productDocumentationRoot, this.manifestFileName);
 

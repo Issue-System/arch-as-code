@@ -37,6 +37,7 @@ public abstract class Credentials {
                 .build();
     }
 
+    // TODO [TESTING]: Add unit tests
     public static void createCredentials(File productDocumentationRoot, String workspaceId, String apiKey, String apiSecret) throws IOException {
         String configPath = String.format("%s%s%s", productDocumentationRoot.getAbsolutePath(), File.separator, STRUCTURIZR_PATH);
         checkArgument(new File(configPath).mkdirs(), String.format("Unable to create directory %s.", configPath));

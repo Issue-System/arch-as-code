@@ -28,10 +28,14 @@ public class ImportCommandE2ETest {
 
     @Test
     public void shouldImportStructurizrJsonFile() throws Exception {
+        // Given
         File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
         final String pathToSococo = workspacePath.getAbsolutePath();
+        
+        // When
         assertThat(TestHelper.execute("import", pathToSococo, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
 
+        // Then
         File file = tempProductDirectory.resolve("data-structure.yml").toFile();
         assertTrue(file.exists());
         assertTrue(Files.readString(file.toPath()).contains("Sococo Import"));

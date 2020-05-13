@@ -17,6 +17,7 @@ public class ParentCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        // TODO [ENHANCEMENT] Should show usage
         logger.info("Arch as code");
         return 0;
     }

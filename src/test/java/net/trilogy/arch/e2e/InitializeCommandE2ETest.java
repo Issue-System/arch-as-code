@@ -1,5 +1,6 @@
 package net.trilogy.arch.e2e;
 
+
 import net.trilogy.arch.commands.InitializeCommand;
 import org.junit.After;
 import org.junit.Before;

@@ -16,6 +16,7 @@ public class ImportExportRoundtripTest {
     File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
 
     @Test
+    // TODO [CLEANUP]: Delete? This is a test with no assertions.
     public void ids_should_not_mutate_on_entity_rename() throws Exception {
         // Import    json->yaml
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(workspacePath);

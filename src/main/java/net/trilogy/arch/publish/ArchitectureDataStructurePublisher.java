@@ -38,6 +38,7 @@ public class ArchitectureDataStructurePublisher {
         this.manifestFileName = manifestFileName;
     }
 
+    // TODO [TESTING] [OVERHAUL] [OPTIONAL]: Make testing not require real connection to Structurizr.
     public void publish() throws StructurizrClientException, IOException {
         Workspace workspace = getWorkspace(productDocumentationRoot, manifestFileName);
         structurizrAdapter.publish(workspace);

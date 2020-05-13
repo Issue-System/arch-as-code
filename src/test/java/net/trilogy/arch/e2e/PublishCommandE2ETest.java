@@ -19,6 +19,7 @@ public class PublishCommandE2ETest {
 
         Integer statusCode = publishCommand.call();
 
+        // TODO [TESTING]: Ensure publish called
         assertThat(statusCode, equalTo(0));
     }
 
@@ -29,6 +30,8 @@ public class PublishCommandE2ETest {
 
         Integer statusCode = publishCommand.call();
 
+        // TODO [TESTING]: Ensure publish NOT called
+        // TODO [TESTING]: Ensure validation output displayed
         assertThat(statusCode, not(equalTo(0)));
     }
 }

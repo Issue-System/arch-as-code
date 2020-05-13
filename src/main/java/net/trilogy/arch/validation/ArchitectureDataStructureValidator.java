@@ -24,6 +24,9 @@ public class ArchitectureDataStructureValidator {
         this.dataStructureReader = dataStructureReader;
     }
 
+    // TODO [TESTING] [IMPORTANT]: Add unit tests
+        // Test 1: run this method, make sure some errors are caught (we're just testing that it's catching _something_, proving that it's using the schema validator, which is already tested)
+        // Test 2: run this method, make sure schema validator is called (but don't have strict assertions-- any call is fine)
     public List<String> validate(File productDocumentationRoot, String manifestFileName) throws IOException {
         File manifestFile = new File(productDocumentationRoot.getAbsolutePath() + File.separator + manifestFileName);
         checkArgument(manifestFile.exists(), String.format("Product Architecture manifest file %s does not exist.", manifestFile.getAbsolutePath()));

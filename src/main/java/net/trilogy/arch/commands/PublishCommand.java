@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.structurizr.api.StructurizrClientException;
 import net.trilogy.arch.publish.ArchitectureDataStructurePublisher;
 import picocli.CommandLine;
@@ -15,7 +16,7 @@ public class PublishCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_DOCUMENTATION_PATH", description = "Product documentation root where data-structure.yml is located.")
     private File productDocumentationRoot;
 
-    // Only for testing purposes
+    @VisibleForTesting
     public PublishCommand(File productDocumentationRoot, String manifestFileName) {
         this.productDocumentationRoot = productDocumentationRoot;
         this.manifestFileName = manifestFileName;
@@ -26,6 +27,7 @@ public class PublishCommand implements Callable<Integer> {
     }
 
     @Override
+    // TODO: [TESTING] Sad path
     public Integer call() throws IOException, StructurizrClientException {
         if (new ValidateCommand(productDocumentationRoot, manifestFileName).call() == 0) {
             ArchitectureDataStructurePublisher.create(productDocumentationRoot, manifestFileName).publish();

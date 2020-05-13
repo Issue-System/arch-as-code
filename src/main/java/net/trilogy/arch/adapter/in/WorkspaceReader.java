@@ -129,6 +129,7 @@ public class WorkspaceReader {
                 .collect(Collectors.toList());
     }
 
+    // TODO [TESTING]: Mutation testing reveals lack of coverage here.
     private void mapCommonViewAttributes(StaticView view, C4View c4View) {
         c4View.setKey(view.getKey());
         c4View.setName(view.getName());

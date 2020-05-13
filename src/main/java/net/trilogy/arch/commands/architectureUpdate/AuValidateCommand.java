@@ -45,7 +45,7 @@ public class AuValidateCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         ValidationResult validationResults;
-        // TODO FUTURE: Use JSON schema validation
+        // TODO [ENHANCEMENT]: Use JSON schema validation
         try {
             ArchitectureDataStructure architecture = new ArchitectureDataStructureReader().load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));

@@ -27,8 +27,9 @@ public class GoogleDocsApiInterface {
 
         Document doc = api.documents().get(getDocumentId(url)).execute();
 
-        // TODO FUTURE: We wouldn't normally do this, but we're forced to while we wait for Google
-        // to resolve this issue, https://issuetracker.google.com/issues/152645656
+        // TODO [OPTIONAL] [TECHNINCAL ENHANCEMENT]: We are converting Google's API response to JSON 
+            // instead of using their API methods to make testing easier. This could be changed.
+            // Related issue: https://issuetracker.google.com/issues/152645656
         final ObjectMapper mapper = new ObjectMapper();
         final String jsonString = mapper.writeValueAsString(doc);
         final JsonNode jsonNode = mapper.readValue(jsonString, JsonNode.class);

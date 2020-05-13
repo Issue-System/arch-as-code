@@ -31,7 +31,7 @@ public class ValidateCommand implements Callable<Integer> {
     }
 
     @Override
-    // TODO [TESTING] [IMPORTANT]: add sad path coverage e2e tests
+    // TODO [TESTING]: add sad path coverage e2e tests
     public Integer call() throws IOException {
         List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productDocumentationRoot, this.manifestFileName);
 

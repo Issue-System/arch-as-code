@@ -141,7 +141,7 @@ public class GoogleDocsAuthorizedApiFactoryTest {
     private GoogleAuthorizationCodeFlow mockGoogleCodeFlow() {
         var mockedCodeFlowBuilder = Mockito.mock(GoogleAuthorizationCodeFlow.Builder.class);
 
-        // TODO FUTURE: Replace any() to assert that the right credential data store is being used.
+        // TODO [TESTING] [MINOR]: Replace any() to assert that the right credential data store is being used.
         Mockito.when(mockedCodeFlowBuilder.setCredentialDataStore(any())).thenReturn(mockedCodeFlowBuilder);
 
         Mockito.when(

@@ -31,12 +31,15 @@ decisions:
     tdd-references:
     - "[SAMPLE-TDD-ID]"
 TDDs:
-  Component-38:
+  'Component-31':
     'TDD 1.1':
       text: "[SAMPLE TDD TEXT]"
     'TDD 1.2':
       text: "[SAMPLE TDD TEXT]"
-  Component-16:
+  "Component-34":
+    'TDD 2.1':
+      text: "[SAMPLE TDD TEXT]"
+  Component-30:
     'TDD 2.1':
       text: "[SAMPLE TDD TEXT]"
 functional-requirements:

@@ -5,7 +5,6 @@ import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -19,8 +18,8 @@ public class ArchitectureDataStructureReader {
         checkNotNull(manifest, "Manifest must not be null.");
         checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
 
-
-        return new ArchitectureDataStructureObjectMapper().readValue(new FileInputStream(manifest));
+        final String archAsString = filesFacade.readString(manifest.toPath());
+        return new ArchitectureDataStructureObjectMapper().readValue(archAsString);
     }
 
     public ArchitectureDataStructureReader(FilesFacade filesFacade) {

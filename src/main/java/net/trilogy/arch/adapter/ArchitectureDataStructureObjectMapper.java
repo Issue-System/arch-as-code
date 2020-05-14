@@ -42,8 +42,8 @@ public class ArchitectureDataStructureObjectMapper {
         return this.mapper.readTree(in);
     }
 
-    public ArchitectureDataStructure readValue(@NotNull InputStream src) throws IOException {
-        return this.mapper.readValue(src, ArchitectureDataStructure.class);
+    public ArchitectureDataStructure readValue(String architectureAsString) throws IOException {
+        return this.mapper.readValue(architectureAsString, ArchitectureDataStructure.class);
     }
 
     private SimpleModule buildModule() {

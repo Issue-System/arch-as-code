@@ -72,6 +72,7 @@ public class AuAnnotateCommand implements Callable<Integer> {
             return 2;
         }
 
+        spec.commandLine().getOut().println("AU has been annotated with component paths.");
         return 0;
     }
 

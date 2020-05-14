@@ -81,6 +81,7 @@ public class AuAnnotateCommandTest {
                 .replaceFirst("\"Component-34\":",
                         "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
 
+        collector.checkThat(out.toString(), equalTo("AU has been annotated with component paths.\n"));
         collector.checkThat(status, equalTo(0));
         collector.checkThat(actual, equalTo(expected));
     }
@@ -123,6 +124,7 @@ public class AuAnnotateCommandTest {
         // THEN
         var expected = Files.readString(originalAuWithoutComponentsPath);
 
+        collector.checkThat(out.toString(), equalTo("AU has been annotated with component paths.\n"));
         collector.checkThat(actual, equalTo(expected));
         collector.checkThat(status, equalTo(0));
     }
@@ -146,6 +148,7 @@ public class AuAnnotateCommandTest {
                 .replaceFirst("\"Component-34\":",
                         "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
 
+        collector.checkThat(out.toString(), equalTo("AU has been annotated with component paths.\n"));
         collector.checkThat(actual, equalTo(expected));
         collector.checkThat(status, equalTo(0));
     }

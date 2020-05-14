@@ -48,7 +48,7 @@ public class AuAnnotateCommand implements Callable<Integer> {
 
         final ArchitectureDataStructure architecture;
         try {
-            architecture = new ArchitectureDataStructureReader()
+            architecture = new ArchitectureDataStructureReader(new FilesFacade())
                     .load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
         } catch (Exception e) {
             spec.commandLine().getErr().println("Unable to load Architecture data-structure.yml." +

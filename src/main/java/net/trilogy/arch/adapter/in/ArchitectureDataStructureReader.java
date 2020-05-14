@@ -1,6 +1,7 @@
 package net.trilogy.arch.adapter.in;
 
 import net.trilogy.arch.adapter.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;
@@ -12,12 +13,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ArchitectureDataStructureReader {
 
+    final private FilesFacade filesFacade;
+
     public ArchitectureDataStructure load(File manifest) throws IOException {
         checkNotNull(manifest, "Manifest must not be null.");
         checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
 
 
         return new ArchitectureDataStructureObjectMapper().readValue(new FileInputStream(manifest));
-
     }
+
+    public ArchitectureDataStructureReader(FilesFacade filesFacade) {
+        this.filesFacade = filesFacade;
+    }
+
 }

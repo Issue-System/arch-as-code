@@ -9,6 +9,7 @@ import com.structurizr.view.DeploymentView;
 import com.structurizr.view.RelationshipView;
 import com.structurizr.view.SystemContextView;
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
@@ -119,7 +120,7 @@ public class ParsedYamlToViewIntegrationTest {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VIEWS).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
 
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(manifestFile);
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         return transformer.toWorkSpace(dataStructure);
     }

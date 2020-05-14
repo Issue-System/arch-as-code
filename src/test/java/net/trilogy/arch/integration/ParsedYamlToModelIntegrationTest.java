@@ -3,6 +3,7 @@ package net.trilogy.arch.integration;
 import com.structurizr.Workspace;
 import com.structurizr.model.*;
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
@@ -353,7 +354,7 @@ public class ParsedYamlToModelIntegrationTest {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
 
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(manifestFile);
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         return transformer.toWorkSpace(dataStructure);
     }

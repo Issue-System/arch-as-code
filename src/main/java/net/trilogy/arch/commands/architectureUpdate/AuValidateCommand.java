@@ -1,6 +1,7 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -47,7 +48,7 @@ public class AuValidateCommand implements Callable<Integer> {
         ValidationResult validationResults;
         // TODO [ENHANCEMENT]: Use JSON schema validation
         try {
-            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader().load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
+            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {

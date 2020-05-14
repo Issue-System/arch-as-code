@@ -1,6 +1,7 @@
 package net.trilogy.arch.adapter.out;
 
 import net.trilogy.arch.adapter.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +20,7 @@ public class ArchitectureDataStructureWriter {
 
     public File export(ArchitectureDataStructure dataStructure, File writeFile) throws IOException {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
-        mapper.writeValue(writeFile, dataStructure);
+        new FilesFacade().writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
         logger.info(String.format("Architecture data structure written to - %s", writeFile.getAbsolutePath()));
         return writeFile;
     }

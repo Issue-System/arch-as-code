@@ -2,6 +2,7 @@ package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.StructurizrAdapter;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -52,7 +53,7 @@ public class ArchitectureDataStructurePublisher {
     }
 
     public static ArchitectureDataStructurePublisher create(File productDocumentationRoot, String manifestFileName) {
-        ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader();
+        ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader(new FilesFacade());
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productDocumentationRoot);
         StructurizrAdapter adapter = new StructurizrAdapter();
 

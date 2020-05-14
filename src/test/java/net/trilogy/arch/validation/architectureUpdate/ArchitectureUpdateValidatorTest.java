@@ -1,5 +1,6 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -34,7 +35,7 @@ public class ArchitectureUpdateValidatorTest {
 
     @Before
     public void setUp() throws IOException {
-        validDataStructure = new ArchitectureDataStructureReader()
+        validDataStructure = new ArchitectureDataStructureReader(new FilesFacade())
                 .load(new File(
                         getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath()
                 ));

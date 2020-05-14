@@ -9,6 +9,7 @@ import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.in.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -79,7 +80,7 @@ public class ArchitectureDataStructureTransformerTest {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(getClass().getResource(TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
 
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(manifestFile);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(manifestFile);
 
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         Workspace workspace = transformer.toWorkSpace(dataStructure);

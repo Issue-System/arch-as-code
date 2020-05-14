@@ -3,6 +3,7 @@ package net.trilogy.arch.e2e;
 import com.structurizr.Workspace;
 import com.structurizr.model.Element;
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
@@ -75,7 +76,7 @@ public class IdGenerationTest {
     private ArchitectureDataStructure getDataStructure() throws IOException {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "data-structure.yml");
-        return new ArchitectureDataStructureReader().load(manifestFile);
+        return new ArchitectureDataStructureReader(new FilesFacade()).load(manifestFile);
     }
 
     private Workspace getWorkspace(ArchitectureDataStructure dataStructure) {

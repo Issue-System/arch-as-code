@@ -1,10 +1,7 @@
 package net.trilogy.arch.adapter;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
@@ -12,7 +9,6 @@ import net.trilogy.arch.adapter.out.serialize.DateSerializer;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -38,8 +34,8 @@ public class ArchitectureDataStructureObjectMapper {
         this.mapper.setSerializationInclusion(NON_NULL);
     }
 
-    public void writeValue(@NotNull File resultFile, ArchitectureDataStructure value) throws IOException {
-        this.mapper.writeValue(resultFile, value);
+    public String writeValueAsString(ArchitectureDataStructure value) throws IOException {
+        return this.mapper.writeValueAsString(value);
     }
 
     public JsonNode readTree(@NotNull InputStream in) throws IOException {

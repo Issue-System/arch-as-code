@@ -1,6 +1,7 @@
 package net.trilogy.arch.adapter.out;
 
 import lombok.SneakyThrows;
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteHumanReadableDates() throws Exception {
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
 
@@ -35,7 +36,7 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws Exception {
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader().load(existingYamlFile);
+        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(existingYamlFile);
 
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
 
@@ -74,8 +75,8 @@ public class ArchitectureDataStructureWriterTest {
     }
 
     private void assertYamlContentsEqual(File actual, File expected) throws IOException {
-        ArchitectureDataStructure actualData = new ArchitectureDataStructureReader().load(actual);
-        ArchitectureDataStructure expectedData = new ArchitectureDataStructureReader().load(expected);
+        ArchitectureDataStructure actualData = new ArchitectureDataStructureReader(new FilesFacade()).load(actual);
+        ArchitectureDataStructure expectedData = new ArchitectureDataStructureReader(new FilesFacade()).load(expected);
         assertThat(actualData, is(equalTo(expectedData)));
     }
 

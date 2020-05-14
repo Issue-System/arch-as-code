@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain;
 
 
+import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
@@ -28,7 +29,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadMetaData() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_METADATA).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getName(), is(equalTo("TestSpaces")));
         assertThat(data.getBusinessUnit(), is(equalTo("DevFactory")));
@@ -38,7 +39,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadDecisions() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_DECISIONS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getDecisions().size(), is(equalTo(2)));
 
@@ -54,7 +55,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadPeople() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_PEOPLE).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getModel().getPeople().size(), equalTo(4));
 
@@ -80,7 +81,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadSystems() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getModel().getSystems().size(), is(equalTo(5)));
 
@@ -103,7 +104,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadContainers() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getModel().getContainers().size(), is(equalTo(4)));
 
@@ -129,7 +130,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadComponents() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getModel().getComponents().size(), is(equalTo(5)));
 
@@ -154,7 +155,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadDeploymentNodes() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getModel().getDeploymentNodes().size(), is(equalTo(1)));
         assertThat(data.getModel().getDeploymentNodesRecursively().size(), is(equalTo(6)));
@@ -194,7 +195,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadSystemViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getViews().getSystemViews().size(), is(equalTo(1)));
 
@@ -218,7 +219,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadContainerViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getViews().getContainerViews().size(), is(equalTo(1)));
 
@@ -246,7 +247,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadComponentViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getViews().getComponentViews().size(), is(equalTo(1)));
 
@@ -277,7 +278,7 @@ public class ArchitectureDataStructureReaderTest {
     @Test
     public void shouldReadDeploymentViews() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
-        var data = new ArchitectureDataStructureReader().load(file);
+        var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getViews().getDeploymentViews().size(), is(equalTo(1)));
 

@@ -39,8 +39,7 @@ public class AuAnnotateCommand implements Callable<Integer> {
         try {
             au = filesFacade.readString(architectureUpdateFilePath.toPath());
         } catch (Exception e) {
-            spec.commandLine().getErr().println("Unable to load Architecture Update." +
-                    "\nError: " + e + "\nCause: " + e.getCause());
+            printError(e, "Unable to load Architecture Update.");
             return 2;
         }
 
@@ -48,30 +47,40 @@ public class AuAnnotateCommand implements Callable<Integer> {
 
         final ArchitectureDataStructure architecture;
         try {
-            architecture = new ArchitectureDataStructureReader(filesFacade)
-                    .load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
+            architecture = new ArchitectureDataStructureReader(filesFacade).load(
+                    productDocumentationRoot.toPath().resolve("data-structure.yml").toFile()
+            );
         } catch (Exception e) {
-            spec.commandLine().getErr().println("Unable to load Architecture data-structure.yml." +
-                    "\nError: " + e + "\nCause: " + e.getCause());
+            printError(e, "Unable to load Architecture data-structure.yml.");
             return 2;
         }
 
         while (matcher.find()) {
-            au = matcher.replaceAll((res) -> res.group(1) + res.group(2) + res.group(3) + getComponentPathComment(res.group(2), architecture) + res.group(4));
+            au = matcher.replaceAll((res) -> {
+                return res.group(1) + res.group(2) + res.group(3) + getComponentPathComment(res.group(2), architecture) + res.group(4);
+            });
         }
 
         try {
             filesFacade.writeString(architectureUpdateFilePath.toPath(), au);
         } catch (Exception e) {
-            spec.commandLine().getErr().println("Unable to write annotations to Architecture Update." +
-                    "\nError: " + e + "\nCause: " + e.getCause());
+            printError(e, "Unable to write annotations to Architecture Update.");
             return 2;
         }
 
         return 0;
     }
 
+    private void printError(Exception e, String s) {
+        spec.commandLine().getErr().println(s +
+                "\nError: " + e + "\nCause: " + e.getCause());
+    }
+
     private String getComponentPathComment(String id, ArchitectureDataStructure architecture) {
-        return "  # " + architecture.getModel().findEntityById(id).getPath().getPath();
+        try {
+            return "  # " + architecture.getModel().findEntityById(id).getPath().getPath();
+        } catch (Exception ignored) {
+            return "";
+        }
     }
 }

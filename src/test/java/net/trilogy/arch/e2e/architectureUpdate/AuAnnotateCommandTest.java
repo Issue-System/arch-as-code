@@ -86,6 +86,33 @@ public class AuAnnotateCommandTest {
     }
 
     @Test
+    public void shouldRefreshAnnotations() throws Exception {
+        // GIVEN
+        TestHelper.execute(new Application(null, null, new FilesFacade()),
+                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+
+        Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-29"));
+
+        // WHEN
+        int status = TestHelper.execute(new Application(null, null, new FilesFacade()),
+                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+
+        var actual = Files.readString(changedAuWithComponentsPath);
+
+        // THEN
+        var expected = Files.readString(originalAuWithComponentsPath)
+                .replaceFirst("'Component-31':",
+                        "'Component-29':  # c4://Internet Banking System/API Application/Sign In Controller")
+                .replaceFirst("Component-30:",
+                        "Component-30:  # c4://Internet Banking System/API Application/Accounts Summary Controller")
+                .replaceFirst("\"Component-34\":",
+                        "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
+
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(actual, equalTo(expected));
+    }
+
+    @Test
     public void shouldHandleNoComponents() throws Exception {
         // WHEN
         int status = TestHelper.execute(new Application(null, null, new FilesFacade()),

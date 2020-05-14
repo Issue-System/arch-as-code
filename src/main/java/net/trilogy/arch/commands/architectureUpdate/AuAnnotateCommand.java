@@ -33,7 +33,7 @@ public class AuAnnotateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        var regexToGetComponentReferences = Pattern.compile("(\\n\\s+['\"]?Component-)(\\d+)(['\"]?:)(\\n)");
+        var regexToGetComponentReferences = Pattern.compile("(\\n\\s+['\"]?Component-)(\\d+)(['\"]?:)[^\\n]*(\\n)");
 
         String au = null;
         try {
@@ -56,9 +56,13 @@ public class AuAnnotateCommand implements Callable<Integer> {
         }
 
         while (matcher.find()) {
-            au = matcher.replaceAll((res) -> {
-                return res.group(1) + res.group(2) + res.group(3) + getComponentPathComment(res.group(2), architecture) + res.group(4);
-            });
+            au = matcher.replaceAll((res) -> 
+                    res.group(1) + 
+                    res.group(2) + 
+                    res.group(3) + 
+                    getComponentPathComment(res.group(2), architecture) + 
+                    res.group(4)
+            );
         }
 
         try {

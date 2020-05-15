@@ -91,8 +91,9 @@ public class AuPublishStoriesCommandTest {
         Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
         doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(auPath));
 
-        execute(app, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
+        int status = execute(app, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
 
+        collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), equalTo("Unable to load architecture update.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: DETAILS\n"));
     }
@@ -101,8 +102,9 @@ public class AuPublishStoriesCommandTest {
     public void shouldFailGracefullyIfFailToLoadArchitecture() throws Exception {
         doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("data-structure.yml")));
 
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        int status = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
+        collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), equalTo("Unable to load architecture.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: DETAILS\n"));
     }

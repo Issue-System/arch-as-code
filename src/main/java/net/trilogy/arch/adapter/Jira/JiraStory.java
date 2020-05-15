@@ -9,10 +9,11 @@ import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.c4.C4Path;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Getter
 @ToString
@@ -29,39 +30,49 @@ public class JiraStory {
         this.functionalRequirements = getFunctionalRequirements(au, featureStory);
     }
 
-    // TODO [TESTING]: unit test, especially that exceptions are thrown
-    private List<JiraFunctionalRequirement> getFunctionalRequirements(ArchitectureUpdate au, FeatureStory featureStory) {
-        return featureStory
-                .getRequirementReferences()
-                .stream()
-                .map(reqId -> new JiraFunctionalRequirement(reqId, au.getFunctionalRequirements().get(reqId)))
-                .collect(Collectors.toList());
+    private List<JiraFunctionalRequirement> getFunctionalRequirements(ArchitectureUpdate au, FeatureStory featureStory) throws InvalidStoryException {
+
+        final var requirements = new ArrayList<JiraFunctionalRequirement>();
+        for (var reqId : featureStory.getRequirementReferences()) {
+            if (!au.getFunctionalRequirements().containsKey(reqId))
+                throw new InvalidStoryException();
+
+            requirements.add(new JiraFunctionalRequirement(reqId,
+                    au.getFunctionalRequirements().get(reqId)));
+        }
+        return requirements;
     }
 
-    // TODO [TESTING]: unit test, especially that exceptions are thrown
     private List<JiraTdd> getTdds(
-            ArchitectureUpdate au, 
+            ArchitectureUpdate au,
             ArchitectureDataStructure architecture,
             FeatureStory featureStory
     ) throws InvalidStoryException {
 
         List<JiraTdd> tdds = new ArrayList<>();
-        for(var tddId : featureStory.getTddReferences()){
+        for (var tddId : featureStory.getTddReferences()) {
             var tdd = au.getTDDs()
-                .entrySet()
-                .stream()
-                .filter(componentEntry -> componentEntry.getValue().containsKey(tddId))
-                .map(componentEntry -> new JiraTdd(
-                            tddId,
-                            componentEntry.getValue().get(tddId),
-                            architecture.getModel().findEntityById(componentEntry.getKey().toString()).getPath().getPath()
-                            ))
-                .findAny()
-                .orElseThrow(() -> new InvalidStoryException());
+                    .entrySet()
+                    .stream()
+                    .filter(componentEntry -> componentEntry.getValue().containsKey(tddId))
+                    .filter(componentReferenceMapEntry -> fetchPath(architecture, componentReferenceMapEntry) != null)
+                    .map(componentEntry -> {
+                        return new JiraTdd(
+                                tddId,
+                                componentEntry.getValue().get(tddId),
+                                fetchPath(architecture, componentEntry).getPath()
+                        );
+                    })
+                    .findAny()
+                    .orElseThrow(() -> new InvalidStoryException());
             tdds.add(tdd);
         }
 
         return tdds;
+    }
+
+    private C4Path fetchPath(ArchitectureDataStructure architecture, Map.Entry<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> componentReferenceMapEntry) {
+        return architecture.getModel().findEntityById(componentReferenceMapEntry.getKey().toString()).getPath();
     }
 
     @ToString
@@ -105,6 +116,7 @@ public class JiraStory {
         }
     }
 
-    public static class InvalidStoryException extends Exception {}
+    public static class InvalidStoryException extends Exception {
+    }
 }
 

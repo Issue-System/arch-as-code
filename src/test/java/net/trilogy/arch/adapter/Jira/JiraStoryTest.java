@@ -1,4 +1,4 @@
-package nett.trilogy.arch.adapter.Jira;
+package net.trilogy.arch.adapter.Jira;
 
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.FilesFacade;

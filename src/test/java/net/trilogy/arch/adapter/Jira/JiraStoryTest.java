@@ -9,7 +9,6 @@ import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -26,30 +25,40 @@ public class JiraStoryTest {
     @Test(expected = InvalidStoryException.class)
     public void shouldThrowIfInvalidRequirement() throws Exception {
         // GIVEN
-        var au = changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank())
-                .toBuilder().functionalRequirements(
-                        Map.of(
-                                new FunctionalRequirement.Id("different id than the reference in the story"),
-                                new FunctionalRequirement("any text", "any source", List.of())
-                        )
-                ).build();
-
-        var architecture = new ArchitectureDataStructureReader(new FilesFacade())
-                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
-
+        var au = getAuWithInvalidRequirement();
+        var architecture = getArchitecture();
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN:
         new JiraStory(au, architecture, featureStory);
+
+        // THEN raise exception.
+    }
+
+    private ArchitectureDataStructure getArchitecture() throws Exception {
+        return new ArchitectureDataStructureReader(new FilesFacade())
+                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
+    }
+
+    private ArchitectureUpdate getAu() {
+        return changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
+    }
+
+    private ArchitectureUpdate getAuWithInvalidRequirement() {
+        return getAu().toBuilder().functionalRequirements(
+                Map.of(new FunctionalRequirement.Id("different id than the reference in the story"),
+                        new FunctionalRequirement("any text", "any source", List.of())))
+                .build();
     }
 
     @Test(expected = InvalidStoryException.class)
     public void shouldThrowIfComponentHasNoPath() throws Exception {
         // GIVEN
-        var au = changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
-        ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade())
-                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
-        removePathsFromComponents(architecture);
+        var au = getAu();
+        ArchitectureDataStructure architecture = getArchitecture();
+
+        architecture.getModel().getComponents().forEach(c -> c.setPath(null));
+
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN
@@ -68,11 +77,8 @@ public class JiraStoryTest {
     @Test
     public void ShouldConstructJiraStory() throws Exception {
         // GIVEN:
-        var au = changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
-
-        var architecture = new ArchitectureDataStructureReader(new FilesFacade())
-                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
-
+        var au = getAu();
+        var architecture = getArchitecture();
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN:
@@ -81,38 +87,26 @@ public class JiraStoryTest {
         // THEN:
         final JiraStory expected = new JiraStory(
                 "[SAMPLE FEATURE STORY TITLE]",
-                List.of(
-                        new JiraStory.JiraTdd(
-                                new Tdd.Id("[SAMPLE-TDD-ID]"),
-                                new Tdd("[SAMPLE TDD TEXT]"),
-                                "c4://Internet Banking System/API Application/Reset Password Controller"
-                        )
-                ),
-                List.of(
-                        new JiraStory.JiraFunctionalRequirement(
-                                new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
-                                new FunctionalRequirement(
-                                        "[SAMPLE REQUIREMENT TEXT]",
-                                        "[SAMPLE REQUIREMENT SOURCE TEXT]",
-                                        List.of(new Tdd.Id("[SAMPLE-TDD-ID]"))
-                                )
-                        )
-                )
+                List.of(new JiraStory.JiraTdd(new Tdd.Id("[SAMPLE-TDD-ID]"),
+                        new Tdd("[SAMPLE TDD TEXT]"),
+                        "c4://Internet Banking System/API Application/Reset Password Controller")),
+                List.of(new JiraStory.JiraFunctionalRequirement(
+                        new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
+                        new FunctionalRequirement("[SAMPLE REQUIREMENT TEXT]",
+                                "[SAMPLE REQUIREMENT SOURCE TEXT]",
+                                List.of(new Tdd.Id("[SAMPLE-TDD-ID]")))))
         );
 
         assertThat(actual, equalTo(expected));
     }
 
-    private ArchitectureUpdate changeAllTddsToBeUnderComponent(String newComponentId, ArchitectureUpdate au) {
+    private ArchitectureUpdate changeAllTddsToBeUnderComponent(String newComponentId,
+                                                               ArchitectureUpdate au) {
         final Map<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> newTdds = new LinkedHashMap<>();
         for (var oldTdd : au.getTDDs().values()) {
             newTdds.put(new Tdd.ComponentReference(newComponentId), oldTdd);
         }
         return au.toBuilder().TDDs(newTdds).build();
-    }
-
-    private void removePathsFromComponents(ArchitectureDataStructure architecture) {
-        architecture.getModel().getComponents().forEach(c -> c.setPath(null));
     }
 }
 

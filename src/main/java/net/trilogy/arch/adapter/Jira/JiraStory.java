@@ -31,14 +31,10 @@ public class JiraStory {
     }
 
     private List<JiraFunctionalRequirement> getFunctionalRequirements(ArchitectureUpdate au, FeatureStory featureStory) throws InvalidStoryException {
-
         final var requirements = new ArrayList<JiraFunctionalRequirement>();
         for (var reqId : featureStory.getRequirementReferences()) {
-            if (!au.getFunctionalRequirements().containsKey(reqId))
-                throw new InvalidStoryException();
-
-            requirements.add(new JiraFunctionalRequirement(reqId,
-                    au.getFunctionalRequirements().get(reqId)));
+            if (!au.getFunctionalRequirements().containsKey(reqId)) throw new InvalidStoryException();
+            requirements.add(new JiraFunctionalRequirement(reqId, au.getFunctionalRequirements().get(reqId)));
         }
         return requirements;
     }

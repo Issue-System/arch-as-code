@@ -4,6 +4,7 @@ import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
+import net.trilogy.arch.adapter.Jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -84,6 +85,9 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
             return 1;
         } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
             spec.commandLine().getErr().println("ERROR: No stories to create.");
+            return 1;
+        } catch (InvalidStoryException e) {
+            spec.commandLine().getErr().println("ERROR: Some stories are invalid. Please run 'au validate' command.");
             return 1;
         }
 

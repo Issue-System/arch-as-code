@@ -109,10 +109,24 @@ public class AuPublishStoriesCommandTest {
         collector.checkThat(err.toString(), equalTo("Unable to load architecture.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: DETAILS\n"));
     }
 
-    @Ignore("TODO")
     @Test
     public void shouldFailGracefullyIfUnableToCreateJiraStoryDTO() throws Exception {
-        fail("WIP");
+        Jira epic = Jira.blank();
+        final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+
+        int status = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/invalid-story.yml " + rootDir.getAbsolutePath());
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(
+                out.toString(),
+                equalTo(
+                        "Not re-creating stories:\n  - story that should not be created\n\n" +
+                                "Checking epic...\n\n" + 
+                                "Attempting to create stories...\n\n"
+                )
+        );
+        collector.checkThat(err.toString(), equalTo("ERROR: Some stories are invalid. Please run 'au validate' command.\n"));
     }
 
     @Test

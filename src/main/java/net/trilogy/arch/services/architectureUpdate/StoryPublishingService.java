@@ -9,6 +9,7 @@ import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class StoryPublishingService {
             final ArchitectureDataStructure architecture,
             String username,
             char[] password
-    ) throws JiraApi.JiraApiException, NoStoriesToCreateException {
+    ) throws JiraApi.JiraApiException, NoStoriesToCreateException, JiraStory.InvalidStoryException {
         printStoriesNotToBeSent(au);
 
         final var stories = getFeatureStoriesToCreate(au);
@@ -44,10 +45,13 @@ public class StoryPublishingService {
 
         out.println("Attempting to create stories...\n");
 
+        List<JiraStory> jiraStories = new ArrayList<>();
+        for(var story : stories) {
+            jiraStories.add(new JiraStory(au, architecture, story));
+        }
+
         var createStoriesResults = this.api.createStories(
-                stories.stream()
-                        .map(fs -> new JiraStory(au, architecture, fs))
-                        .collect(Collectors.toList()),
+                jiraStories,
                 epicJiraTicket.getTicket(),
                 informationAboutTheEpic.getProjectId(),
                 informationAboutTheEpic.getProjectKey(),

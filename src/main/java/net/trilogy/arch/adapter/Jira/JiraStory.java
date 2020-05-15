@@ -10,6 +10,7 @@ import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,12 +23,13 @@ public class JiraStory {
     private final List<JiraTdd> tdds;
     private final List<JiraFunctionalRequirement> functionalRequirements;
 
-    public JiraStory(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) {
+    public JiraStory(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) throws InvalidStoryException {
         this.title = featureStory.getTitle();
         this.tdds = getTdds(au, architecture, featureStory);
         this.functionalRequirements = getFunctionalRequirements(au, featureStory);
     }
 
+    // TODO [TESTING]: unit test, especially that exceptions are thrown
     private List<JiraFunctionalRequirement> getFunctionalRequirements(ArchitectureUpdate au, FeatureStory featureStory) {
         return featureStory
                 .getRequirementReferences()
@@ -36,22 +38,30 @@ public class JiraStory {
                 .collect(Collectors.toList());
     }
 
-    private List<JiraTdd> getTdds(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) {
-        return featureStory.getTddReferences().stream()
-                .map(tddId ->
-                        au.getTDDs()
-                                .entrySet()
-                                .stream()
-                                .filter(componentEntry -> componentEntry.getValue().containsKey(tddId))
-                                .map(componentEntry -> new JiraTdd(
-                                        tddId,
-                                        componentEntry.getValue().get(tddId),
-                                        architecture.getModel().findEntityById(componentEntry.getKey().toString()).getPath().getPath()
-                                ))
-                                .findAny()
-                                .orElseThrow()
-                )
-                .collect(Collectors.toList());
+    // TODO [TESTING]: unit test, especially that exceptions are thrown
+    private List<JiraTdd> getTdds(
+            ArchitectureUpdate au, 
+            ArchitectureDataStructure architecture,
+            FeatureStory featureStory
+    ) throws InvalidStoryException {
+
+        List<JiraTdd> tdds = new ArrayList<>();
+        for(var tddId : featureStory.getTddReferences()){
+            var tdd = au.getTDDs()
+                .entrySet()
+                .stream()
+                .filter(componentEntry -> componentEntry.getValue().containsKey(tddId))
+                .map(componentEntry -> new JiraTdd(
+                            tddId,
+                            componentEntry.getValue().get(tddId),
+                            architecture.getModel().findEntityById(componentEntry.getKey().toString()).getPath().getPath()
+                            ))
+                .findAny()
+                .orElseThrow(() -> new InvalidStoryException());
+            tdds.add(tdd);
+        }
+
+        return tdds;
     }
 
     @ToString
@@ -94,5 +104,7 @@ public class JiraStory {
             return functionalRequirement.getSource();
         }
     }
+
+    public static class InvalidStoryException extends Exception {}
 }
 

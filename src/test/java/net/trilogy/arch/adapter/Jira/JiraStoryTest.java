@@ -22,6 +22,32 @@ import static org.junit.Assert.fail;
 
 public class JiraStoryTest {
 
+    @Test
+    public void ShouldConstructJiraStory() throws Exception {
+        // GIVEN:
+        var au = getAu();
+        var architecture = getArchitecture();
+        var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
+
+        // WHEN:
+        final JiraStory actual = new JiraStory(au, architecture, featureStory);
+
+        // THEN:
+        final JiraStory expected = new JiraStory(
+                "[SAMPLE FEATURE STORY TITLE]",
+                List.of(new JiraStory.JiraTdd(new Tdd.Id("[SAMPLE-TDD-ID]"),
+                        new Tdd("[SAMPLE TDD TEXT]"),
+                        "c4://Internet Banking System/API Application/Reset Password Controller")),
+                List.of(new JiraStory.JiraFunctionalRequirement(
+                        new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
+                        new FunctionalRequirement("[SAMPLE REQUIREMENT TEXT]",
+                                "[SAMPLE REQUIREMENT SOURCE TEXT]",
+                                List.of(new Tdd.Id("[SAMPLE-TDD-ID]")))))
+        );
+
+        assertThat(actual, equalTo(expected));
+    }
+
     @Test(expected = InvalidStoryException.class)
     public void shouldThrowIfInvalidRequirement() throws Exception {
         // GIVEN
@@ -33,22 +59,6 @@ public class JiraStoryTest {
         new JiraStory(au, architecture, featureStory);
 
         // THEN raise exception.
-    }
-
-    private ArchitectureDataStructure getArchitecture() throws Exception {
-        return new ArchitectureDataStructureReader(new FilesFacade())
-                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
-    }
-
-    private ArchitectureUpdate getAu() {
-        return changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
-    }
-
-    private ArchitectureUpdate getAuWithInvalidRequirement() {
-        return getAu().toBuilder().functionalRequirements(
-                Map.of(new FunctionalRequirement.Id("different id than the reference in the story"),
-                        new FunctionalRequirement("any text", "any source", List.of())))
-                .build();
     }
 
     @Test(expected = InvalidStoryException.class)
@@ -83,34 +93,41 @@ public class JiraStoryTest {
         // Raise Error
     }
 
+    @Test(expected = InvalidStoryException.class)
+    public void shouldThrowIfInvalidTdd() throws Exception {
+        // GIVEN
+        var au = getAu();
+        ArchitectureDataStructure architecture = getArchitecture();
+
+        var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
+        featureStory = featureStory.toBuilder().tddReferences(List.of(new Tdd.Id("Invalid TDD ID"))).build();
+
+        // WHEN
+        final JiraStory actual = new JiraStory(au, architecture, featureStory);
+
+        // THEN
+        // Raise Error
+    }
+
+
+    private ArchitectureDataStructure getArchitecture() throws Exception {
+        return new ArchitectureDataStructureReader(new FilesFacade())
+                .load(TestHelper.getPath(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile());
+    }
+
+    private ArchitectureUpdate getAu() {
+        return changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
+    }
+
     private ArchitectureUpdate getAuWithInvalidComponent() {
         return changeAllTddsToBeUnderComponent("Component-1231231323123", getAu());
     }
 
-    @Test
-    public void ShouldConstructJiraStory() throws Exception {
-        // GIVEN:
-        var au = getAu();
-        var architecture = getArchitecture();
-        var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
-
-        // WHEN:
-        final JiraStory actual = new JiraStory(au, architecture, featureStory);
-
-        // THEN:
-        final JiraStory expected = new JiraStory(
-                "[SAMPLE FEATURE STORY TITLE]",
-                List.of(new JiraStory.JiraTdd(new Tdd.Id("[SAMPLE-TDD-ID]"),
-                        new Tdd("[SAMPLE TDD TEXT]"),
-                        "c4://Internet Banking System/API Application/Reset Password Controller")),
-                List.of(new JiraStory.JiraFunctionalRequirement(
-                        new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
-                        new FunctionalRequirement("[SAMPLE REQUIREMENT TEXT]",
-                                "[SAMPLE REQUIREMENT SOURCE TEXT]",
-                                List.of(new Tdd.Id("[SAMPLE-TDD-ID]")))))
-        );
-
-        assertThat(actual, equalTo(expected));
+    private ArchitectureUpdate getAuWithInvalidRequirement() {
+        return getAu().toBuilder().functionalRequirements(
+                Map.of(new FunctionalRequirement.Id("different id than the reference in the story"),
+                        new FunctionalRequirement("any text", "any source", List.of())))
+                .build();
     }
 
     private ArchitectureUpdate changeAllTddsToBeUnderComponent(String newComponentId,

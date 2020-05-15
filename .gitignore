@@ -19,3 +19,8 @@ credentials.json
 
 .arch-as-code/
 demo-folder/*
+
+# Floobits stuff
+.floo
+
+.DS_Store

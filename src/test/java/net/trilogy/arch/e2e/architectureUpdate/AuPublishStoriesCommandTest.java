@@ -16,6 +16,7 @@ import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -24,14 +25,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -43,6 +49,7 @@ public class AuPublishStoriesCommandTest {
     private File rootDir;
     private JiraApi mockedJiraApi;
     private Application app;
+    private FilesFacade spiedFilesFacade;
 
     final PrintStream originalOut = System.out;
     final PrintStream originalErr = System.err;
@@ -64,7 +71,7 @@ public class AuPublishStoriesCommandTest {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
 
-        FilesFacade files = new FilesFacade();
+        spiedFilesFacade = spy(new FilesFacade());
 
         rootDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_PUBLISH).getPath());
 
@@ -72,11 +79,38 @@ public class AuPublishStoriesCommandTest {
 
         final JiraApiFactory mockedJiraApiFactory = mock(JiraApiFactory.class);
         mockedJiraApi = mock(JiraApi.class);
-        when(mockedJiraApiFactory.create(files, rootDir.toPath())).thenReturn(mockedJiraApi);
+        when(mockedJiraApiFactory.create(spiedFilesFacade, rootDir.toPath())).thenReturn(mockedJiraApi);
 
-        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, files);
+        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade);
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
+    }
+
+    @Test
+    public void shouldFailGracefullyIfFailToLoadAu() throws Exception {
+        Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
+        doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(auPath));
+
+        execute(app, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
+
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), equalTo("Unable to load architecture update.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: DETAILS\n"));
+    }
+
+    @Test
+    public void shouldFailGracefullyIfFailToLoadArchitecture() throws Exception {
+        doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("data-structure.yml")));
+
+        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), equalTo("Unable to load architecture.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: DETAILS\n"));
+    }
+
+    @Ignore("TODO")
+    @Test
+    public void shouldFailGracefullyIfUnableToCreateJiraStoryDTO() throws Exception {
+        fail("WIP");
     }
 
     @Test
@@ -249,7 +283,7 @@ public class AuPublishStoriesCommandTest {
                             new JiraStory.JiraTdd(
                                     new Tdd.Id("[SAMPLE-TDD-ID]"),
                                     new Tdd("[SAMPLE TDD TEXT]"),
-                                    new Tdd.ComponentReference("Component-[SAMPLE-COMPONENT-ID]")
+                                    "c4://Internet Banking System/API Application/Reset Password Controller"
                             )
                     ),
                     List.of(
@@ -269,7 +303,7 @@ public class AuPublishStoriesCommandTest {
                             new JiraStory.JiraTdd(
                                     new Tdd.Id("[SAMPLE-TDD-ID]"),
                                     new Tdd("[SAMPLE TDD TEXT]"),
-                                    new Tdd.ComponentReference("Component-[SAMPLE-COMPONENT-ID]")
+                                    "c4://Internet Banking System/API Application/Reset Password Controller"
                             )
                     ),
                     List.of(
@@ -286,3 +320,4 @@ public class AuPublishStoriesCommandTest {
         );
     }
 }
+

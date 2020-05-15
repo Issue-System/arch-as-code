@@ -11,15 +11,19 @@ import java.nio.file.Path;
 public abstract class TestHelper {
     public static Long TEST_WORKSPACE_ID = 49344L;
 
+    // TODO [TESTING]: Clean up folder locations
     public static final String MANIFEST_PATH_TO_TEST_GENERALLY = "/architecture/products/testspaces/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_DECISIONS = "/architecture/products/testspaces/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_MODEL_PEOPLE = "/architecture/products/testspaces/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS = "/architecture/products/testspaces/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS = "/architecture/products/testspaces/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS = "/architecture/products/testspaces/data-structure.yml";
+    public static final String MANIFEST_PATH_TO_TEST_METADATA = "/architecture/products/testspaces/data-structure.yml";
+    public static final String MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION = "/auAnnotate/data-structure.yml";
+
+    // TODO [TESTING] [IMPORTANT]: This version of the big bank yaml is an old import. Needs to be updated.
     public static final String MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES = "/view/bigBank/data-structure.yml";
     public static final String MANIFEST_PATH_TO_TEST_VIEWS = "/view/bigBank/data-structure.yml";
-    public static final String MANIFEST_PATH_TO_TEST_METADATA = "/architecture/products/testspaces/data-structure.yml";
 
     public static final String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/BigBank.json";
     public static final String JSON_STRUCTURIZR_THINK3_SOCOCO = "/structurizr/Think3-Sococo.c4model.json";
@@ -50,7 +54,7 @@ public abstract class TestHelper {
         return application.execute(command.split(" "));
     }
 
-    public static Path getPath(Class<?> getClassOfCallingClass, String file){
+    public static Path getPath(Class<?> getClassOfCallingClass, String file) {
         return new File(getClassOfCallingClass.getResource(file).getPath()).toPath();
     }
 
@@ -58,3 +62,4 @@ public abstract class TestHelper {
         return Files.readString(Path.of(getClassOfCallingClass.getResource(file).toURI()));
     }
 }
+

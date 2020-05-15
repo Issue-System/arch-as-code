@@ -3,6 +3,7 @@ package net.trilogy.arch.services.architectureUpdate;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraCreateStoryStatus;
 import net.trilogy.arch.adapter.Jira.JiraStory;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
@@ -25,6 +26,7 @@ public class StoryPublishingService {
 
     public ArchitectureUpdate createStories(
             final ArchitectureUpdate au,
+            final ArchitectureDataStructure architecture,
             String username,
             char[] password
     ) throws JiraApi.JiraApiException, NoStoriesToCreateException {
@@ -44,7 +46,7 @@ public class StoryPublishingService {
 
         var createStoriesResults = this.api.createStories(
                 stories.stream()
-                        .map(fs -> new JiraStory(au, fs))
+                        .map(fs -> new JiraStory(au, architecture, fs))
                         .collect(Collectors.toList()),
                 epicJiraTicket.getTicket(),
                 informationAboutTheEpic.getProjectId(),

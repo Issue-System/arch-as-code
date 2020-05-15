@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
@@ -21,9 +22,9 @@ public class JiraStory {
     private final List<JiraTdd> tdds;
     private final List<JiraFunctionalRequirement> functionalRequirements;
 
-    public JiraStory(ArchitectureUpdate au, FeatureStory featureStory) {
+    public JiraStory(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) {
         this.title = featureStory.getTitle();
-        this.tdds = getTdds(au, featureStory);
+        this.tdds = getTdds(au, architecture, featureStory);
         this.functionalRequirements = getFunctionalRequirements(au, featureStory);
     }
 
@@ -35,7 +36,7 @@ public class JiraStory {
                 .collect(Collectors.toList());
     }
 
-    private List<JiraTdd> getTdds(ArchitectureUpdate au, FeatureStory featureStory) {
+    private List<JiraTdd> getTdds(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) {
         return featureStory.getTddReferences().stream()
                 .map(tddId ->
                         au.getTDDs()
@@ -45,7 +46,7 @@ public class JiraStory {
                                 .map(componentEntry -> new JiraTdd(
                                         tddId,
                                         componentEntry.getValue().get(tddId),
-                                        componentEntry.getKey()
+                                        architecture.getModel().findEntityById(componentEntry.getKey().toString()).getPath().getPath()
                                 ))
                                 .findAny()
                                 .orElseThrow()
@@ -59,14 +60,14 @@ public class JiraStory {
     public static class JiraTdd {
         private final Tdd.Id id;
         private final Tdd tdd;
-        private final Tdd.ComponentReference component;
+        private final String component;
 
         public String getId() {
             return id.toString();
         }
 
         public String getComponent() {
-            return component.toString();
+            return component;
         }
 
         public String getText() {
@@ -94,3 +95,4 @@ public class JiraStory {
         }
     }
 }
+

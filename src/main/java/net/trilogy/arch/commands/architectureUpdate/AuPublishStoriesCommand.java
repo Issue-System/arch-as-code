@@ -4,7 +4,9 @@ import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
+import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.services.architectureUpdate.StoryPublishingService;
 import org.apache.commons.logging.Log;
@@ -52,9 +54,17 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         ArchitectureUpdate au;
         try {
-            au = architectureUpdateObjectMapper.readValue(Files.readString(auPath));
-        } catch (IOException | RuntimeException e) {
-            spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
+            au = architectureUpdateObjectMapper.readValue(filesFacade.readString(auPath));
+        } catch (Exception e) {
+            printError("Unable to load architecture update.", e);
+            return 1;
+        }
+
+        ArchitectureDataStructure architecture;
+        try {
+            architecture = new ArchitectureDataStructureReader(filesFacade).load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
+        } catch (Exception e) {
+            printError("Unable to load architecture.", e);
             return 1;
         }
 
@@ -65,7 +75,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         final ArchitectureUpdate updatedAu;
         try {
-            updatedAu = jiraService.createStories(au, username, password);
+            updatedAu = jiraService.createStories(au, architecture, username, password);
         } catch (JiraApi.JiraApiException e) {
             spec.commandLine().getErr().println("ERROR: " + e.getMessage() + "\n");
             if(e.getCause() != null) {
@@ -80,5 +90,9 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
+    }
+
+    private void printError(String errorMessage, Exception e) {
+        spec.commandLine().getErr().println(errorMessage + "\nError thrown: " + e + "\nCause: " + e.getCause());
     }
 }

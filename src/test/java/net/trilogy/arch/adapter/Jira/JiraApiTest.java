@@ -287,13 +287,13 @@ public class JiraApiTest {
         var jiraTdd1 = new JiraStory.JiraTdd(
                 new Tdd.Id("TDD ID 1"),
                 new Tdd("TDD TEXT 1"),
-                new Tdd.ComponentReference("COMPONENT ID 1")
+                "COMPONENT ID 1"
         );
 
         var jiraTdd2 = new JiraStory.JiraTdd(
                 new Tdd.Id("TDD ID 2"),
                 new Tdd("TDD TEXT 2"),
-                new Tdd.ComponentReference("COMPONENT ID 2")
+                "COMPONENT ID 2"
         );
 
         var jiraFunctionalRequirement1 = new JiraStory.JiraFunctionalRequirement(

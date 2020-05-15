@@ -1,16 +1,637 @@
-name: "Product 1"
-businessUnit: "DevFactory"
-description: "Architecture as code"
+name: "Big Bank plc"
+businessUnit: "Big Bank plc"
+description: "This is an example workspace to illustrate the key features of Structurizr, based around a fictional online banking system."
 decisions: []
 model:
-  people: []
-  systems: []
-  containers: []
+  people:
+  - id: "15"
+    path:
+      path: "@Back Office Staff"
+    name: "Back Office Staff"
+    description: "Administration and support staff within the bank."
+    tags:
+    - "Person"
+    - "Bank Staff"
+    - "Element"
+    relationships:
+    - id: "16"
+      action: "USES"
+      withId: "4"
+      description: "Uses"
+    location: "INTERNAL"
+  - id: "1"
+    path:
+      path: "@Personal Banking Customer"
+    name: "Personal Banking Customer"
+    description: "A customer of the bank, with personal bank accounts."
+    tags:
+    - "Person"
+    - "Element"
+    relationships:
+    - id: "22"
+      action: "USES"
+      withId: "19"
+      description: "Visits bigbank.com/ib using"
+      technology: "HTTPS"
+    - id: "23"
+      action: "USES"
+      withId: "17"
+      description: "Views account balances, and makes payments using"
+    - id: "14"
+      action: "INTERACTS_WITH"
+      withId: "12"
+      description: "Asks questions to"
+      technology: "Telephone"
+    - id: "24"
+      action: "USES"
+      withId: "18"
+      description: "Views account balances, and makes payments using"
+    - id: "11"
+      action: "USES"
+      withId: "9"
+      description: "Withdraws cash using"
+    - id: "3"
+      action: "USES"
+      withId: "2"
+      description: "Views account balances, and makes payments using"
+    location: "EXTERNAL"
+  - id: "12"
+    path:
+      path: "@Customer Service Staff"
+    name: "Customer Service Staff"
+    description: "Customer service staff within the bank."
+    tags:
+    - "Person"
+    - "Bank Staff"
+    - "Element"
+    relationships:
+    - id: "13"
+      action: "USES"
+      withId: "4"
+      description: "Uses"
+    location: "INTERNAL"
+  systems:
+  - id: "4"
+    path:
+      path: "c4://Mainframe Banking System"
+    name: "Mainframe Banking System"
+    description: "Stores all of the core banking information about customers, accounts, transactions, etc."
+    tags:
+    - "Existing System"
+    - "Element"
+    - "Software System"
+    relationships: []
+    location: "INTERNAL"
+  - id: "2"
+    path:
+      path: "c4://Internet Banking System"
+    name: "Internet Banking System"
+    description: "Allows customers to view information about their bank accounts, and make payments."
+    tags:
+    - "Element"
+    - "Software System"
+    relationships:
+    - id: "5"
+      action: "USES"
+      withId: "4"
+      description: "Gets account information from, and makes payments using"
+    - id: "7"
+      action: "USES"
+      withId: "6"
+      description: "Sends e-mail using"
+    location: "INTERNAL"
+  - id: "9"
+    path:
+      path: "c4://ATM"
+    name: "ATM"
+    description: "Allows customers to withdraw cash."
+    tags:
+    - "Existing System"
+    - "Element"
+    - "Software System"
+    relationships:
+    - id: "10"
+      action: "USES"
+      withId: "4"
+      description: "Uses"
+    location: "INTERNAL"
+  - id: "6"
+    path:
+      path: "c4://E-mail System"
+    name: "E-mail System"
+    description: "The internal Microsoft Exchange e-mail system."
+    tags:
+    - "Existing System"
+    - "Element"
+    - "Software System"
+    relationships:
+    - id: "8"
+      action: "DELIVERS"
+      withId: "1"
+      description: "Sends e-mails to"
+    location: "INTERNAL"
+  containers:
+  - id: "17"
+    path:
+      path: "c4://Internet Banking System/Single-Page Application"
+    name: "Single-Page Application"
+    description: "Provides all of the Internet banking functionality to customers via their web browser."
+    tags:
+    - "Web Browser"
+    - "Element"
+    - "Container"
+    relationships:
+    - id: "48"
+      action: "USES"
+      withId: "20"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "36"
+      action: "USES"
+      withId: "31"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "35"
+      action: "USES"
+      withId: "29"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "37"
+      action: "USES"
+      withId: "30"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    systemId: "2"
+    technology: "JavaScript and Angular"
+  - id: "20"
+    path:
+      path: "c4://Internet Banking System/API Application"
+    name: "API Application"
+    description: "Provides Internet banking functionality via a JSON/HTTPS API."
+    tags:
+    - "Element"
+    - "Container"
+    relationships:
+    - id: "28"
+      action: "USES"
+      withId: "6"
+      description: "Sends e-mail using"
+      technology: "SMTP"
+    - id: "26"
+      action: "USES"
+      withId: "21"
+      description: "Reads from and writes to"
+      technology: "JDBC"
+    - id: "27"
+      action: "USES"
+      withId: "4"
+      description: "Makes API calls to"
+      technology: "XML/HTTPS"
+    systemId: "2"
+    technology: "Java and Spring MVC"
+  - id: "21"
+    path:
+      path: "c4://Internet Banking System/Database"
+    name: "Database"
+    description: "Stores user registration information, hashed authentication credentials, access logs, etc."
+    tags:
+    - "Database"
+    - "Element"
+    - "Container"
+    relationships: []
+    systemId: "2"
+    technology: "Oracle Database Schema"
+  - id: "18"
+    path:
+      path: "c4://Internet Banking System/Mobile App"
+    name: "Mobile App"
+    description: "Provides a limited subset of the Internet banking functionality to customers via their mobile device."
+    tags:
+    - "Mobile App"
+    - "Element"
+    - "Container"
+    relationships:
+    - id: "38"
+      action: "USES"
+      withId: "29"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "39"
+      action: "USES"
+      withId: "31"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "40"
+      action: "USES"
+      withId: "30"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    - id: "49"
+      action: "USES"
+      withId: "20"
+      description: "Makes API calls to"
+      technology: "JSON/HTTPS"
+    systemId: "2"
+    technology: "Xamarin"
+  - id: "19"
+    path:
+      path: "c4://Internet Banking System/Web Application"
+    name: "Web Application"
+    description: "Delivers the static content and the Internet banking single page application."
+    tags:
+    - "Element"
+    - "Container"
+    relationships:
+    - id: "25"
+      action: "USES"
+      withId: "17"
+      description: "Delivers to the customer's web browser"
+    systemId: "2"
+    technology: "Java and Spring MVC"
   components:
-    - id: "[SAMPLE-COMPONENT-ID]"
-  deploymentNodes: []
+  - id: "[SAMPLE-COMPONENT-ID]"
+    path:
+      path: "c4://Internet Banking System/API Application/Reset Password Controller"
+    name: "Reset Password Controller"
+    description: "Allows users to reset their passwords with a single use URL."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "43"
+      action: "USES"
+      withId: "32"
+      description: "Uses"
+    - id: "44"
+      action: "USES"
+      withId: "34"
+      description: "Uses"
+    containerId: "20"
+    technology: "Spring MVC Rest Controller"
+  - id: "29"
+    path:
+      path: "c4://Internet Banking System/API Application/Sign In Controller"
+    name: "Sign In Controller"
+    description: "Allows users to sign in to the Internet Banking System."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "41"
+      action: "USES"
+      withId: "32"
+      description: "Uses"
+    containerId: "20"
+    technology: "Spring MVC Rest Controller"
+  - id: "34"
+    path:
+      path: "c4://Internet Banking System/API Application/E-mail Component"
+    name: "E-mail Component"
+    description: "Sends e-mails to users."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "47"
+      action: "USES"
+      withId: "6"
+      description: "Sends e-mail using"
+    containerId: "20"
+    technology: "Spring Bean"
+  - id: "30"
+    path:
+      path: "c4://Internet Banking System/API Application/Accounts Summary Controller"
+    name: "Accounts Summary Controller"
+    description: "Provides customers with a summary of their bank accounts."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "42"
+      action: "USES"
+      withId: "33"
+      description: "Uses"
+    containerId: "20"
+    technology: "Spring MVC Rest Controller"
+  - id: "32"
+    path:
+      path: "c4://Internet Banking System/API Application/Security Component"
+    name: "Security Component"
+    description: "Provides functionality related to signing in, changing passwords, etc."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "45"
+      action: "USES"
+      withId: "21"
+      description: "Reads from and writes to"
+      technology: "JDBC"
+    containerId: "20"
+    technology: "Spring Bean"
+  - id: "33"
+    path:
+      path: "c4://Internet Banking System/API Application/Mainframe Banking System Facade"
+    name: "Mainframe Banking System Facade"
+    description: "A facade onto the mainframe banking system."
+    tags:
+    - "Component"
+    - "Element"
+    relationships:
+    - id: "46"
+      action: "USES"
+      withId: "4"
+      description: "Uses"
+      technology: "XML/HTTPS"
+    containerId: "20"
+    technology: "Spring Bean"
+  deploymentNodes:
+  - id: "68"
+    name: "Big Bank plc"
+    tags: []
+    relationships: []
+    technology: "Big Bank plc data center"
+    environment: "Live"
+    instances: 1
+    children:
+    - id: "82"
+      name: "bigbank-db02"
+      description: "The secondary database server."
+      tags: []
+      relationships: []
+      technology: "Ubuntu 16.04 LTS"
+      environment: "Live"
+      instances: 1
+      children:
+      - id: "83"
+        name: "Oracle - Secondary"
+        description: "A secondary, standby database server, used for failover purposes only."
+        tags: []
+        relationships: []
+        technology: "Oracle 12c"
+        environment: "Live"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "84"
+          environment: "Live"
+          containerReference:
+            id: "21"
+          instanceId: 3
+      containerInstances: []
+    - id: "78"
+      name: "bigbank-db01"
+      description: "The primary database server."
+      tags: []
+      relationships: []
+      technology: "Ubuntu 16.04 LTS"
+      environment: "Live"
+      instances: 1
+      children:
+      - id: "79"
+        name: "Oracle - Primary"
+        description: "The primary, live database server."
+        tags: []
+        relationships: []
+        technology: "Oracle 12c"
+        environment: "Live"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "80"
+          environment: "Live"
+          containerReference:
+            id: "21"
+          instanceId: 2
+      containerInstances: []
+    - id: "69"
+      name: "bigbank-web***"
+      description: "A web server residing in the web server farm, accessed via F5 BIG-IP LTMs."
+      tags: []
+      relationships: []
+      technology: "Ubuntu 16.04 LTS"
+      environment: "Live"
+      instances: 4
+      children:
+      - id: "70"
+        name: "Apache Tomcat"
+        description: "An open source Java EE web server."
+        tags: []
+        relationships: []
+        technology: "Apache Tomcat 8.x"
+        environment: "Live"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "71"
+          environment: "Live"
+          containerReference:
+            id: "19"
+          instanceId: 2
+      containerInstances: []
+    - id: "73"
+      name: "bigbank-api***"
+      description: "A web server residing in the web server farm, accessed via F5 BIG-IP LTMs."
+      tags: []
+      relationships: []
+      technology: "Ubuntu 16.04 LTS"
+      environment: "Live"
+      instances: 8
+      children:
+      - id: "74"
+        name: "Apache Tomcat"
+        description: "An open source Java EE web server."
+        tags: []
+        relationships: []
+        technology: "Apache Tomcat 8.x"
+        environment: "Live"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "75"
+          environment: "Live"
+          containerReference:
+            id: "20"
+          instanceId: 2
+      containerInstances: []
+    containerInstances: []
+  - id: "65"
+    name: "Customer's computer"
+    tags: []
+    relationships: []
+    technology: "Microsoft Windows or Apple macOS"
+    environment: "Live"
+    instances: 1
+    children:
+    - id: "66"
+      name: "Web Browser"
+      tags: []
+      relationships: []
+      technology: "Chrome, Firefox, Safari, or Edge"
+      environment: "Live"
+      instances: 1
+      children: []
+      containerInstances:
+      - id: "67"
+        environment: "Live"
+        containerReference:
+          id: "17"
+        instanceId: 2
+    containerInstances: []
+  - id: "63"
+    name: "Customer's mobile device"
+    tags: []
+    relationships: []
+    technology: "Apple iOS or Android"
+    environment: "Live"
+    instances: 1
+    children: []
+    containerInstances:
+    - id: "64"
+      environment: "Live"
+      containerReference:
+        id: "18"
+      instanceId: 1
+  - id: "50"
+    name: "Developer Laptop"
+    description: "A developer laptop."
+    tags: []
+    relationships: []
+    technology: "Microsoft Windows 10 or Apple macOS"
+    environment: "Development"
+    instances: 1
+    children:
+    - id: "59"
+      name: "Web Browser"
+      tags: []
+      relationships: []
+      technology: "Chrome, Firefox, Safari, or Edge"
+      environment: "Development"
+      instances: 1
+      children: []
+      containerInstances:
+      - id: "60"
+        environment: "Development"
+        containerReference:
+          id: "17"
+        instanceId: 1
+    - id: "51"
+      name: "Docker Container - Web Server"
+      description: "A Docker container."
+      tags: []
+      relationships: []
+      technology: "Docker"
+      environment: "Development"
+      instances: 1
+      children:
+      - id: "52"
+        name: "Apache Tomcat"
+        description: "An open source Java EE web server."
+        tags: []
+        relationships: []
+        technology: "Apache Tomcat 8.x"
+        environment: "Development"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "53"
+          environment: "Development"
+          containerReference:
+            id: "19"
+          instanceId: 1
+        - id: "54"
+          environment: "Development"
+          containerReference:
+            id: "20"
+          instanceId: 1
+      containerInstances: []
+    - id: "55"
+      name: "Docker Container - Database Server"
+      description: "A Docker container."
+      tags: []
+      relationships: []
+      technology: "Docker"
+      environment: "Development"
+      instances: 1
+      children:
+      - id: "56"
+        name: "Database Server"
+        description: "A development database."
+        tags: []
+        relationships: []
+        technology: "Oracle 12c"
+        environment: "Development"
+        instances: 1
+        children: []
+        containerInstances:
+        - id: "57"
+          environment: "Development"
+          containerReference:
+            id: "21"
+          instanceId: 1
+      containerInstances: []
+    containerInstances: []
 views:
-  systemViews: []
-  containerViews: []
-  componentViews: []
-  deploymentViews: []
+  systemViews:
+  - key: "SystemContext"
+    name: "Internet Banking System - System Context"
+    description: "The system context diagram for the Internet Banking System."
+    tags: []
+    references:
+    - id: "4"
+    - id: "6"
+    - id: "2"
+    - id: "1"
+    systemId: "2"
+  containerViews:
+  - key: "Containers"
+    name: "Internet Banking System - Containers"
+    description: "The container diagram for the Internet Banking System."
+    tags: []
+    references:
+    - id: "4"
+    - id: "18"
+    - id: "6"
+    - id: "17"
+    - id: "21"
+    - id: "19"
+    - id: "1"
+    - id: "20"
+    systemId: "2"
+  componentViews:
+  - key: "Components"
+    name: "Internet Banking System - API Application - Components"
+    description: "The component diagram for the API Application."
+    tags: []
+    references:
+    - id: "4"
+    - id: "18"
+    - id: "29"
+    - id: "30"
+    - id: "33"
+    - id: "6"
+    - id: "17"
+    - id: "21"
+    - id: "32"
+    - id: "34"
+    - id: "31"
+    containerId: "20"
+  deploymentViews:
+  - key: "LiveDeployment"
+    name: "Internet Banking System - Deployment - Live"
+    description: "An example live deployment scenario for the Internet Banking System."
+    references:
+    - id: "63"
+    - id: "65"
+    - id: "68"
+    system:
+      id: "2"
+    environment: "Live"
+  - key: "DevelopmentDeployment"
+    name: "Internet Banking System - Deployment - Development"
+    description: "An example development deployment scenario for the Internet Banking System."
+    references:
+    - id: "50"
+    system:
+      id: "2"
+    environment: "Development"

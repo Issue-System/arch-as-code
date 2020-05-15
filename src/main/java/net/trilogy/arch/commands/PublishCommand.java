@@ -36,3 +36,4 @@ public class PublishCommand implements Callable<Integer> {
         return 1;
     }
 }
+

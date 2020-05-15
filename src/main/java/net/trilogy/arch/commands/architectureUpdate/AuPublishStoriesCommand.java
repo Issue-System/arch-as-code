@@ -35,10 +35,10 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
     private File productDocumentationRoot;
 
-    @CommandLine.Option(names = {"-u", "--username"}, description = "Username", required = true)
+    @CommandLine.Option(names = {"-u", "--username"}, description = "Jira username", required = true)
     private String username;
 
-    @CommandLine.Option(names = {"-p", "--password"}, arity = "0..1", interactive = true, required = true)
+    @CommandLine.Option(names = {"-p", "--password"}, description = "Jira password", arity = "0..1", interactive = true, required = true)
     private char[] password;
 
     @CommandLine.Spec
@@ -100,3 +100,4 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         spec.commandLine().getErr().println(errorMessage + "\nError thrown: " + e + "\nCause: " + e.getCause());
     }
 }
+

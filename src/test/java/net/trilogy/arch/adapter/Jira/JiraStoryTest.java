@@ -68,10 +68,23 @@ public class JiraStoryTest {
         // Raise Error
     }
 
-    @Ignore("TODO")
-    @Test
+    @Test(expected = InvalidStoryException.class)
     public void shouldThrowIfInvalidComponent() throws Exception {
-        fail("WIP");
+        // GIVEN
+        var au = getAuWithInvalidComponent();
+        ArchitectureDataStructure architecture = getArchitecture();
+
+        var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
+
+        // WHEN
+        final JiraStory actual = new JiraStory(au, architecture, featureStory);
+
+        // THEN
+        // Raise Error
+    }
+
+    private ArchitectureUpdate getAuWithInvalidComponent() {
+        return changeAllTddsToBeUnderComponent("Component-1231231323123", getAu());
     }
 
     @Test

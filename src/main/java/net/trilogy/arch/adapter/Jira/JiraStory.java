@@ -71,8 +71,16 @@ public class JiraStory {
         return tdds;
     }
 
-    private C4Path fetchPath(ArchitectureDataStructure architecture, Map.Entry<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> componentReferenceMapEntry) {
-        return architecture.getModel().findEntityById(componentReferenceMapEntry.getKey().toString()).getPath();
+    private C4Path fetchPath(ArchitectureDataStructure architecture,
+                             Map.Entry<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> componentReferenceMapEntry) {
+        C4Path path;
+        try {
+            path = architecture.getModel().findEntityById(componentReferenceMapEntry.getKey().toString()).getPath();
+        } catch ( Exception e) {
+            path = null;
+        }
+
+        return path;
     }
 
     @ToString

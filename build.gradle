@@ -12,15 +12,21 @@ buildscript {
 
 plugins {
     id 'info.solidsoft.pitest' version '1.5.1'
+    id 'com.palantir.graal' version '0.6.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
 //See https://www.baeldung.com/lombok-ide for how to configure intellij to work with lombok
-apply plugin: "io.freefair.lombok"
+apply plugin: 'io.freefair.lombok'
 apply plugin: 'jacoco'
 apply plugin: 'distribution'
-apply plugin: "com.palantir.git-version"
+apply plugin: 'com.palantir.git-version'
+apply plugin: 'com.palantir.graal'
+
+// Workaround of https://github.com/palantir/gradle-graal/issues/239
+apply from: "${rootDir}/graal.gradle.kts"
+
 
 mainClassName = 'net.trilogy.arch.Application'
 sourceCompatibility = JavaVersion.VERSION_11
@@ -113,6 +119,12 @@ pitest {
     timestampedReports = true
 }
 
+graal {
+    mainClass 'net.trilogy.arch.Application'
+    outputName 'arch-as-code'
+    graalVersion '20.0.0'
+}
+
 def generatedResources = "$buildDir/generated-resources/main"
 sourceSets {
     main {
@@ -165,3 +177,4 @@ project.test {
             }
     }
 }
+

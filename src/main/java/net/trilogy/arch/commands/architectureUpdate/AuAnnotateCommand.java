@@ -19,8 +19,8 @@ public class AuAnnotateCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "File name of architecture update to annotate")
     private File architectureUpdateFilePath;
 
-    @Parameters(index = "1", description = "Product documentation root directory")
-    private File productDocumentationRoot;
+    @Parameters(index = "1", description = "Product architecture root directory")
+    private File productArchitectureDirectory;
 
     @Spec
     private CommandSpec spec;
@@ -48,7 +48,7 @@ public class AuAnnotateCommand implements Callable<Integer> {
         final ArchitectureDataStructure architecture;
         try {
             architecture = new ArchitectureDataStructureReader(filesFacade).load(
-                    productDocumentationRoot.toPath().resolve("data-structure.yml").toFile()
+                    productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile()
             );
         } catch (Exception e) {
             printError(e, "Unable to load Architecture data-structure.yml.");

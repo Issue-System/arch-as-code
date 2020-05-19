@@ -26,14 +26,14 @@ public class InitializeCommand implements Callable<Integer> {
     private String apiSecret;
 
     @CommandLine.Parameters(index = "0", description = "Directory to initialize")
-    private File productDocumentationRoot;
+    private File productArchitectureDirectory;
 
     // for testing purposes
-    public InitializeCommand(String workspaceId, String apiKey, String apiSecret, File productDocumentationRoot) {
+    public InitializeCommand(String workspaceId, String apiKey, String apiSecret, File productArchitectureDirectory) {
         this.workspaceId = workspaceId;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
-        this.productDocumentationRoot = productDocumentationRoot;
+        this.productArchitectureDirectory = productArchitectureDirectory;
     }
 
     public InitializeCommand() {
@@ -42,10 +42,10 @@ public class InitializeCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        logger.info(String.format("Architecture as code initialized under - %s\n", productDocumentationRoot.getAbsolutePath()));
+        logger.info(String.format("Architecture as code initialized under - %s\n", productArchitectureDirectory.getAbsolutePath()));
 
         // TODO [TESTING]: Add sad path e2e testing
-        createCredentials(productDocumentationRoot, workspaceId, apiKey, apiSecret);
+        createCredentials(productArchitectureDirectory, workspaceId, apiKey, apiSecret);
         createManifest();
 
         logger.info("You're ready to go!!");
@@ -55,7 +55,7 @@ public class InitializeCommand implements Callable<Integer> {
 
     private void createManifest() throws IOException {
         ArchitectureDataStructure data = createSampleDataStructure();
-        String toFilePath = productDocumentationRoot.getAbsolutePath() + File.separator + "data-structure.yml";
+        String toFilePath = productArchitectureDirectory.getAbsolutePath() + File.separator + "data-structure.yml";
         write(data, toFilePath);
         logger.info(String.format("Manifest file written to - %s", toFilePath));
     }

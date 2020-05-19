@@ -30,7 +30,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     private String googleApiSecret;
 
     @Parameters(index = "0", description = "Product workspace directory, containng the product's architecture")
-    private File productDocumentationRoot;
+    private File productArchitectureDirectory;
 
     private final String INITIAL_GOOGLE_API_AUTH_URI = "https://accounts.google.com/o/oauth2/auth";
     private final String INITIAL_GOOGLE_API_TOKEN_URI = "https://oauth2.googleapis.com/token";
@@ -53,12 +53,12 @@ public class AuInitializeCommand implements Callable<Integer> {
         if (!makeGoogleApiCredentialsFolder()) return 1;
         if (!createGoogleApiClientCredentialsFile(googleApiClientId, googleApiProjectId, googleApiSecret)) return 1;
 
-        logger.info(String.format("Architecture updates initialized under - %s", productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
+        logger.info(String.format("Architecture updates initialized under - %s", productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
     private boolean makeJiraSettingsFile() {
-        File file = productDocumentationRoot.toPath().resolve(JIRA_API_SETTINGS_FILE_PATH).toFile();
+        File file = productArchitectureDirectory.toPath().resolve(JIRA_API_SETTINGS_FILE_PATH).toFile();
         if (!file.getParentFile().mkdirs()) return false;
         try {
             filesFacade.writeString(file.toPath(), buildJiraSettingsJsonString());
@@ -70,7 +70,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean createGoogleApiClientCredentialsFile(String clientId, String projectId, String secret) {
-        File file = productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME).toFile();
+        File file = productArchitectureDirectory.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).resolve(GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME).toFile();
         String credentialJsonString = buildCredentialJsonString(clientId, projectId, secret);
         try {
             filesFacade.writeString(file.toPath(), credentialJsonString);
@@ -109,7 +109,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean makeAuFolder() {
-        File auFolder = productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+        File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
             logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));
@@ -119,7 +119,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     }
 
     private boolean makeGoogleApiCredentialsFolder() {
-        File auCredentialFolder = productDocumentationRoot.toPath()
+        File auCredentialFolder = productArchitectureDirectory.toPath()
                 .resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toFile();
 
         boolean credSucceeded = auCredentialFolder.mkdirs();

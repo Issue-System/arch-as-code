@@ -32,8 +32,8 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFileName;
 
-    @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
-    private File productDocumentationRoot;
+    @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
+    private File productArchitectureDirectory;
 
     @CommandLine.Option(names = {"-u", "--username"}, description = "Jira username", required = true)
     private String username;
@@ -63,13 +63,13 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
 
         ArchitectureDataStructure architecture;
         try {
-            architecture = new ArchitectureDataStructureReader(filesFacade).load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
+            architecture = new ArchitectureDataStructureReader(filesFacade).load(productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile());
         } catch (Exception e) {
             printError("Unable to load architecture.", e);
             return 1;
         }
 
-        final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productDocumentationRoot.toPath());
+        final JiraApi jiraApi = jiraApiFactory.create(filesFacade, productArchitectureDirectory.toPath());
         var stdOut = spec.commandLine().getOut();
         var stdErr = spec.commandLine().getErr();
         final StoryPublishingService jiraService = new StoryPublishingService(stdOut, stdErr, jiraApi);

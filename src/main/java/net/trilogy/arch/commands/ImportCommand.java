@@ -19,8 +19,8 @@ public class ImportCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", paramLabel = "EXPORTED_WORKSPACE", description = "Exported structurizr workspace json file location.")
     private File exportedWorkspacePath;
 
-    @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
-    private File productDocumentationRoot;
+    @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
+    private File productArchitectureDirectory;
 
 
     @VisibleForTesting
@@ -35,7 +35,7 @@ public class ImportCommand implements Callable<Integer> {
     // TODO: [TESTING] Sad path
     public Integer call() throws Exception {
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
-        File writeFile = this.productDocumentationRoot.toPath().resolve("data-structure.yml").toFile();
+        File writeFile = this.productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile();
 
         File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
         logger.info(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));

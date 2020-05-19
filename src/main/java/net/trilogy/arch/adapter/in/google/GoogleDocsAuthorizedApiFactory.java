@@ -65,13 +65,13 @@ public class GoogleDocsAuthorizedApiFactory {
         this.docsFactory = docsFactory;
     }
 
-    public GoogleDocsApiInterface getAuthorizedDocsApi(File productDocumentationRoot) throws IOException {
-        Docs rawApi = docsFactory.make(httpTransport, jsonFactory, authorize(productDocumentationRoot));
+    public GoogleDocsApiInterface getAuthorizedDocsApi(File productArchitectureDirectory) throws IOException {
+        Docs rawApi = docsFactory.make(httpTransport, jsonFactory, authorize(productArchitectureDirectory));
         return new GoogleDocsApiInterface(rawApi);
     }
 
-    private Credential authorize(File productDocumentationRoot) throws IOException {
-        var credentialsDirectory = productDocumentationRoot.toPath().resolve(this.credentialsDirectory).toFile();
+    private Credential authorize(File productArchitectureDirectory) throws IOException {
+        var credentialsDirectory = productArchitectureDirectory.toPath().resolve(this.credentialsDirectory).toFile();
 
         GoogleClientSecrets clientCredentials = loadClientCredentials(credentialsDirectory);
         DataStore<StoredCredential> userCredentials = new FileDataStoreFactory(credentialsDirectory).getDataStore(GOOGLE_DOCS_API_USER_CREDENTIALS_FILE_NAME);

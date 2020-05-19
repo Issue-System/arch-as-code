@@ -31,8 +31,8 @@ public class AuValidateCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFilePath;
 
-    @Parameters(index = "1", description = "Product documentation root directory")
-    private File productDocumentationRoot;
+    @Parameters(index = "1", description = "Product architecture root directory")
+    private File productArchitectureDirectory;
 
     @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs only")
     boolean tddValidation;
@@ -48,7 +48,7 @@ public class AuValidateCommand implements Callable<Integer> {
         ValidationResult validationResults;
         // TODO [ENHANCEMENT]: Use JSON schema validation
         try {
-            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productDocumentationRoot.toPath().resolve("data-structure.yml").toFile());
+            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {

@@ -197,10 +197,10 @@ public class GoogleDocumentReaderTest {
         String url4 = "https://docs.google.com/document/d/1_beIF2LWC3XgjDaUSrbXTuQ-3XENnjmmB8Hz3kw7hOs/edit";
         String url5 = "https://docs.google.com/document/d/1tbahd26QIINkEyOx3vvvY-ReShMdsIE34PRTA5W9Dng/edit";
 
-        File productDocumentationRoot = new File(".");
+        File productArchitectureDirectory = new File(".");
 
         var apiFactory = new GoogleDocsAuthorizedApiFactory();
-        var api = apiFactory.getAuthorizedDocsApi(productDocumentationRoot);
+        var api = apiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
         var response1 = api.fetch(url1);
         var response2 = api.fetch(url2);
         var response3 = api.fetch(url3);
@@ -226,7 +226,7 @@ public class GoogleDocumentReaderTest {
                         "\nReading doc: " + url3 +
                         "\nReading doc: " + url4 +
                         "\nReading doc: " + url5 +
-                        "\n\nUsing credentials within " + productDocumentationRoot.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
+                        "\n\nUsing credentials within " + productArchitectureDirectory.toPath().resolve(GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH).toAbsolutePath() +
                         "\n\nWritten to file " + tempFile1.toAbsolutePath() +
                         "\nWritten to file " + tempFile2.toAbsolutePath() +
                         "\nWritten to file " + tempFile3.toAbsolutePath() +

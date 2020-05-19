@@ -13,17 +13,17 @@ import java.io.File;
 import java.io.IOException;
 
 public class ArchitectureDataStructurePublisher {
-    private final File productDocumentationRoot;
+    private final File productArchitectureDirectory;
     private final ArchitectureDataStructureReader dataStructureReader;
     private final ArchitectureDataStructureTransformer dataStructureTransformer;
     private final StructurizrAdapter structurizrAdapter;
     private final String manifestFileName;
 
-    ArchitectureDataStructurePublisher(File productDocumentationRoot,
+    ArchitectureDataStructurePublisher(File productArchitectureDirectory,
                                               ArchitectureDataStructureReader importer,
                                               ArchitectureDataStructureTransformer transformer,
                                               StructurizrAdapter structurizrAdapter) {
-        this.productDocumentationRoot = productDocumentationRoot;
+        this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
         this.structurizrAdapter = structurizrAdapter;
@@ -31,8 +31,8 @@ public class ArchitectureDataStructurePublisher {
 
     }
 
-    public ArchitectureDataStructurePublisher(File productDocumentationRoot, ArchitectureDataStructureReader importer, ArchitectureDataStructureTransformer transformer, StructurizrAdapter adapter, String manifestFileName) {
-        this.productDocumentationRoot = productDocumentationRoot;
+    public ArchitectureDataStructurePublisher(File productArchitectureDirectory, ArchitectureDataStructureReader importer, ArchitectureDataStructureTransformer transformer, StructurizrAdapter adapter, String manifestFileName) {
+        this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
         this.structurizrAdapter = adapter;
@@ -41,22 +41,22 @@ public class ArchitectureDataStructurePublisher {
 
     // TODO [TESTING] [OVERHAUL] [OPTIONAL]: Make testing not require real connection to Structurizr.
     public void publish() throws StructurizrClientException, IOException {
-        Workspace workspace = getWorkspace(productDocumentationRoot, manifestFileName);
+        Workspace workspace = getWorkspace(productArchitectureDirectory, manifestFileName);
         structurizrAdapter.publish(workspace);
     }
 
-    public Workspace getWorkspace(File productDocumentationRoot, String manifestFileName) throws IOException {
-        File manifestFile = new File(productDocumentationRoot + File.separator + manifestFileName);
+    public Workspace getWorkspace(File productArchitectureDirectory, String manifestFileName) throws IOException {
+        File manifestFile = new File(productArchitectureDirectory + File.separator + manifestFileName);
         ArchitectureDataStructure dataStructure = dataStructureReader.load(manifestFile);
 
         return dataStructureTransformer.toWorkSpace(dataStructure);
     }
 
-    public static ArchitectureDataStructurePublisher create(File productDocumentationRoot, String manifestFileName) {
+    public static ArchitectureDataStructurePublisher create(File productArchitectureDirectory, String manifestFileName) {
         ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader(new FilesFacade());
-        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productDocumentationRoot);
+        ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productArchitectureDirectory);
         StructurizrAdapter adapter = new StructurizrAdapter();
 
-        return new ArchitectureDataStructurePublisher(productDocumentationRoot, importer, transformer, adapter, manifestFileName);
+        return new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, transformer, adapter, manifestFileName);
     }
 }

@@ -16,13 +16,13 @@ import com.google.common.annotations.VisibleForTesting;
 public class ValidateCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ValidateCommand.class);
 
-    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_DOCUMENTATION_PATH", description = "Product documentation root where data-structure.yml is located.")
-    File productDocumentationRoot;
+    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_PATH", description = "Product architecture root where data-structure.yml is located.")
+    File productArchitectureDirectory;
     private final String manifestFileName;
 
     @VisibleForTesting
-    public ValidateCommand(File productDocumentationRoot, String manifestFileName) {
-        this.productDocumentationRoot = productDocumentationRoot;
+    public ValidateCommand(File productArchitectureDirectory, String manifestFileName) {
+        this.productArchitectureDirectory = productArchitectureDirectory;
         this.manifestFileName = manifestFileName;
     }
 
@@ -33,7 +33,7 @@ public class ValidateCommand implements Callable<Integer> {
     @Override
     // TODO [TESTING]: add sad path coverage e2e tests
     public Integer call() throws IOException {
-        List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productDocumentationRoot, this.manifestFileName);
+        List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productArchitectureDirectory, this.manifestFileName);
 
         if (messageSet.isEmpty()) {
             logger.info(manifestFileName + " is valid.");

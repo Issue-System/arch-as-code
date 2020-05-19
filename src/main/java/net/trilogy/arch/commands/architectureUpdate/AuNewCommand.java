@@ -24,8 +24,8 @@ public class AuNewCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", description = "Name for new architecture update")
     private String name;
 
-    @CommandLine.Parameters(index = "1", description = "Product documentation root directory")
-    private File productDocumentationRoot;
+    @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
+    private File productArchitectureDirectory;
 
     @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Google Document, used to import decisions and other data", required = false)
     private String p1GoogleDocUrl;
@@ -37,7 +37,7 @@ public class AuNewCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
-        File auFolder = productDocumentationRoot.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
+        File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {
             logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
@@ -54,7 +54,7 @@ public class AuNewCommand implements Callable<Integer> {
 
         ArchitectureUpdate au = ArchitectureUpdate.blank();
         if(p1GoogleDocUrl != null) {
-            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productDocumentationRoot);
+            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
             au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
         }
 

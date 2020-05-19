@@ -20,7 +20,7 @@ public class ArchitectureDataStructureSchemaValidator {
             JsonNode node = getYamlFromFile(manifestInputStream);
             errors = schema.validate(node);
         } catch (IOException e) {
-            throw new IllegalStateException("Product documentation data structure yaml file could not be found.", e);
+            throw new IllegalStateException("Product architecture data structure yaml file could not be found.", e);
         }
 
         return errors;

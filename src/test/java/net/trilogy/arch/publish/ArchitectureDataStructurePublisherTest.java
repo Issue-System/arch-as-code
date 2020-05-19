@@ -19,7 +19,7 @@ public class ArchitectureDataStructurePublisherTest {
 
     @Test
     public void given_file_that_exists_should_publish_workspace() throws Exception {
-        File productDocumentationRoot = mock(File.class);
+        File productArchitectureDirectory = mock(File.class);
         ArchitectureDataStructureReader importer = mock(ArchitectureDataStructureReader.class);
         ArchitectureDataStructureTransformer transformer = mock(ArchitectureDataStructureTransformer.class);
         StructurizrAdapter adapter = mock(StructurizrAdapter.class);
@@ -28,8 +28,8 @@ public class ArchitectureDataStructurePublisherTest {
         when(transformer.toWorkSpace(any())).thenReturn(new Workspace("any", "any"));
 
         //when
-        when(productDocumentationRoot.exists()).thenReturn(true);
-        new ArchitectureDataStructurePublisher(productDocumentationRoot, importer, transformer, adapter).publish();
+        when(productArchitectureDirectory.exists()).thenReturn(true);
+        new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, transformer, adapter).publish();
 
         //then
         verify(importer, times(1)).load(any(File.class));

@@ -52,7 +52,7 @@ public class AuNewCommand implements Callable<Integer> {
             return 1;
         }
 
-        ArchitectureUpdate au = ArchitectureUpdate.blank();
+        ArchitectureUpdate au = ArchitectureUpdate.builderPreFilledWithBlanks().name(name).build();
         if(p1GoogleDocUrl != null) {
             GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
             au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);

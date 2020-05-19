@@ -116,7 +116,11 @@ public class AuNewCommandTest {
         collector.checkThat(Files.exists(auFile), is(true));
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
-                equalTo(new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.blank()))
+                equalTo(
+                    new ArchitectureUpdateObjectMapper().writeValueAsString(
+                        ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
+                    )
+                )
         );
     }
 

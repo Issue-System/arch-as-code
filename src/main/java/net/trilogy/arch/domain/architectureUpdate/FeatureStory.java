@@ -36,7 +36,7 @@ public class FeatureStory {
     public static FeatureStory blank() {
         return new FeatureStory(
                 "[SAMPLE FEATURE STORY TITLE]",
-                Jira.blank(),
+                new Jira("", ""),
                 List.of(Tdd.Id.blank()),
                 List.of(FunctionalRequirement.Id.blank())
         );

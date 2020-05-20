@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 public class PublishCommand implements Callable<Integer> {
     private final String manifestFileName;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_DIRECTORY", description = "Product architecture root where data-structure.yml is located.")
+    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_DIRECTORY", description = "Product architecture root where product-architecture.yml is located.")
     private File productArchitectureDirectory;
 
     @VisibleForTesting
@@ -23,7 +23,7 @@ public class PublishCommand implements Callable<Integer> {
     }
 
     public PublishCommand() {
-        this.manifestFileName = "data-structure.yml";
+        this.manifestFileName = "product-architecture.yml";
     }
 
     @Override

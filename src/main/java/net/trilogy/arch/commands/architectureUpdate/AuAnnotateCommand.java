@@ -48,10 +48,10 @@ public class AuAnnotateCommand implements Callable<Integer> {
         final ArchitectureDataStructure architecture;
         try {
             architecture = new ArchitectureDataStructureReader(filesFacade).load(
-                    productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile()
+                    productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile()
             );
         } catch (Exception e) {
-            printError(e, "Unable to load Architecture data-structure.yml.");
+            printError(e, "Unable to load Architecture product-architecture.yml.");
             return 2;
         }
 

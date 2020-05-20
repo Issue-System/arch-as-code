@@ -35,7 +35,7 @@ public class ImportCommand implements Callable<Integer> {
     // TODO: [TESTING] Sad path
     public Integer call() throws Exception {
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
-        File writeFile = this.productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile();
+        File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
 
         File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
         logger.info(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));

@@ -28,7 +28,7 @@ public class ValidateCommandE2ETest {
     @Test
     public void validate() throws Exception {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
-        ValidateCommand validateCommand = new ValidateCommand(documentationRoot, "data-structure.yml");
+        ValidateCommand validateCommand = new ValidateCommand(documentationRoot, "product-architecture.yml");
 
         Integer statusCode = validateCommand.call();
 

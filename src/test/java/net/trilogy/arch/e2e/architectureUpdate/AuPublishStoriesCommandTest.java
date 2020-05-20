@@ -100,7 +100,7 @@ public class AuPublishStoriesCommandTest {
 
     @Test
     public void shouldFailGracefullyIfFailToLoadArchitecture() throws Exception {
-        doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("data-structure.yml")));
+        doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("product-architecture.yml")));
 
         int status = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 

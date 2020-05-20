@@ -56,7 +56,7 @@ public class InitializeCommand implements Callable<Integer> {
 
     private void createManifest() throws IOException {
         ArchitectureDataStructure data = createSampleDataStructure();
-        String toFilePath = productArchitectureDirectory.getAbsolutePath() + File.separator + "data-structure.yml";
+        String toFilePath = productArchitectureDirectory.getAbsolutePath() + File.separator + "product-architecture.yml";
         write(data, toFilePath);
         logger.info(String.format("Manifest file written to - %s", toFilePath));
     }

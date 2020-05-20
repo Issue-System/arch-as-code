@@ -175,7 +175,7 @@ public class AuAnnotateCommandTest {
     public void shouldNotifyUserWhenArchitectureDatastructureFailsToLoad() throws Exception {
         // GIVEN
         final FilesFacade spyedFilesFacade = spy(new FilesFacade());
-        final Path a = rootPath.resolve("data-structure.yml");
+        final Path a = rootPath.resolve("product-architecture.yml");
         doThrow(new IOException("error-message", new RuntimeException("Boom!"))).when(spyedFilesFacade).readString(eq(a));
 
         // WHEN
@@ -186,7 +186,7 @@ public class AuAnnotateCommandTest {
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(
                 err.toString(),
-                equalTo("Unable to load Architecture data-structure.yml.\nError: java.io.IOException: error-message\nCause: java.lang.RuntimeException: Boom!\n"));
+                equalTo("Unable to load Architecture product-architecture.yml.\nError: java.io.IOException: error-message\nCause: java.lang.RuntimeException: Boom!\n"));
         collector.checkThat(status, equalTo(2));
     }
 

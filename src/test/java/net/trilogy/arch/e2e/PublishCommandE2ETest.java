@@ -15,7 +15,7 @@ public class PublishCommandE2ETest {
     @Test
     public void publish() throws Exception {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
-        PublishCommand publishCommand = new PublishCommand(documentationRoot, "data-structure.yml");
+        PublishCommand publishCommand = new PublishCommand(documentationRoot, "product-architecture.yml");
 
         Integer statusCode = publishCommand.call();
 

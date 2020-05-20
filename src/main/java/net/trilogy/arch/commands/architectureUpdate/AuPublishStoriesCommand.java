@@ -64,7 +64,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         ArchitectureDataStructure architecture;
         try {
-            architecture = new ArchitectureDataStructureReader(filesFacade).load(productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile());
+            architecture = new ArchitectureDataStructureReader(filesFacade).load(productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile());
         } catch (Exception e) {
             printError( "Unable to load architecture.", e);
             return 1;

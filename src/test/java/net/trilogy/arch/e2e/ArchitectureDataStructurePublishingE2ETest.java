@@ -24,7 +24,7 @@ public class ArchitectureDataStructurePublishingE2ETest {
                 new File(getClass().getResource(ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
 
         //when
-        ArchitectureDataStructurePublisher.create(documentationRoot, "data-structure.yml").publish();
+        ArchitectureDataStructurePublisher.create(documentationRoot, "product-architecture.yml").publish();
 
         //then
         StructurizrAdapter adapter = new StructurizrAdapter();

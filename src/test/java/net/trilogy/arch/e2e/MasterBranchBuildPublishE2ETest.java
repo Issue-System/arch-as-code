@@ -13,7 +13,7 @@ public class MasterBranchBuildPublishE2ETest {
     @Test
     public void publish() throws Exception {
         File documentationRoot = new File("documentation/products/arch-as-code");
-        PublishCommand publishCommand = new PublishCommand(documentationRoot, "data-structure.yml");
+        PublishCommand publishCommand = new PublishCommand(documentationRoot, "product-architecture.yml");
 
         Integer statusCode = publishCommand.call();
 

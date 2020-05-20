@@ -46,7 +46,7 @@ public class InitializeCommandE2ETest {
         InitializeCommand command = new InitializeCommand("key", "secret", "1234", tempProductDirectory.toFile());
         assertThat(command.call(), equalTo(0));
 
-        File file = tempProductDirectory.resolve("data-structure.yml").toFile();
+        File file = tempProductDirectory.resolve("product-architecture.yml").toFile();
         assertTrue(file.exists());
         assertThat(Files.readAllLines(file.toPath()),
                 contains(

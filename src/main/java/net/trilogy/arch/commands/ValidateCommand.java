@@ -16,7 +16,7 @@ import com.google.common.annotations.VisibleForTesting;
 public class ValidateCommand implements Callable<Integer> {
     private static final Log logger = LogFactory.getLog(ValidateCommand.class);
 
-    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_PATH", description = "Product architecture root where data-structure.yml is located.")
+    @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_PATH", description = "Product architecture root where product-architecture.yml is located.")
     File productArchitectureDirectory;
     private final String manifestFileName;
 
@@ -27,7 +27,7 @@ public class ValidateCommand implements Callable<Integer> {
     }
 
     public ValidateCommand() {
-        this.manifestFileName = "data-structure.yml";
+        this.manifestFileName = "product-architecture.yml";
     }
 
     @Override

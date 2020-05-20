@@ -36,7 +36,7 @@ public class ImportCommandE2ETest {
         assertThat(TestHelper.execute("import", pathToSococo, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
 
         // Then
-        File file = tempProductDirectory.resolve("data-structure.yml").toFile();
+        File file = tempProductDirectory.resolve("product-architecture.yml").toFile();
         assertTrue(file.exists());
         assertTrue(Files.readString(file.toPath()).contains("Sococo Import"));
     }

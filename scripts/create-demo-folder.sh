@@ -32,12 +32,12 @@ else
 
     cd $dir/../demo-folder
 
-    mv data-structure.yml data-structure.yml.bak
+    mv product-architecture.yml product-architecture.yml.bak
 
     .install/bin/arch-as-code init -i i -k i -s s .
     .install/bin/arch-as-code au init -c c -p p -s s .
 
-    mv data-structure.yml.bak data-structure.yml
+    mv product-architecture.yml.bak product-architecture.yml
 
     # copy .arch-as-code from repo root
     rm -rf .arch-as-code

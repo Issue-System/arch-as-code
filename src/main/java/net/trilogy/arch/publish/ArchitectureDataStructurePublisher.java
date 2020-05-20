@@ -27,7 +27,7 @@ public class ArchitectureDataStructurePublisher {
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
         this.structurizrAdapter = structurizrAdapter;
-        this.manifestFileName = "data-structure.yml";
+        this.manifestFileName = "product-architecture.yml";
 
     }
 

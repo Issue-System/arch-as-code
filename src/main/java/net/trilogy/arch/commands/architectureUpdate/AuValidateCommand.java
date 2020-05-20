@@ -48,7 +48,7 @@ public class AuValidateCommand implements Callable<Integer> {
         ValidationResult validationResults;
         // TODO [ENHANCEMENT]: Use JSON schema validation
         try {
-            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile());
+            ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
         } catch (IOException | RuntimeException e) {

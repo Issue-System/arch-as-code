@@ -43,6 +43,7 @@ public class ArchitectureDataStructureObjectMapper {
     }
 
     public ArchitectureDataStructure readValue(String architectureAsString) throws IOException {
+        // TODO [ENHANCEMENT] [OPTIONAL]: Generate paths if they don't exist
         return this.mapper.readValue(architectureAsString, ArchitectureDataStructure.class);
     }
 

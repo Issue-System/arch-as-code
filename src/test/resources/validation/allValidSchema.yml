@@ -224,8 +224,6 @@ model:
     containerId: "12"
     technology: "Spring Bean"
   - id: "15"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Reset Password Controller"
     name: "DevSpaces/DevSpaces API/Reset Password Controller"
     description: "Allows users to reset their passwords"
     tags:

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,8 +53,20 @@ public class ListComponentsCommandE2ETest {
     }
 
     @Test
-    public void shouldOutputComponentsList() throws IOException {
+    public void shouldOutputComponentsList() throws Exception {
         initFileForTest("allValidSchema.yml");
+
+        int status = execute("list-components", rootDir.getAbsolutePath());
+
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(out.toString(), equalTo(
+            "ID, Name, Path\n" +
+            "13, DevSpaces/DevSpaces API/Sign In Controller, c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Sign In Controller\n" +
+            "14, DevSpaces/DevSpaces API/Security Component, c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Security Component\n" +
+            "15, DevSpaces/DevSpaces API/Reset Password Controller, \n" +
+            "16, DevSpaces/DevSpaces API/E-mail Component, c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-E-mail Component\n" 
+        ));
+        collector.checkThat(err.toString(), equalTo(""));
     }
 
     @Test

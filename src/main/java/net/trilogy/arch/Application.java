@@ -22,6 +22,7 @@ public class Application {
                 .addSubcommand(new ValidateCommand())
                 .addSubcommand(new PublishCommand())
                 .addSubcommand(new ImportCommand())
+                .addSubcommand(new ListComponentsCommand(filesFacade))
                 .addSubcommand(
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))

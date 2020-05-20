@@ -89,9 +89,4 @@ public class ListComponentsCommandE2ETest {
         collector.checkThat(err.toString(), containsString("Unable to load architecture\nError thrown: java.lang.IllegalArgumentException: Manifest file does not exist"));
     }
 
-    @Test
-    public void shouldFailIfArchitectureInvalid() throws IOException {
-        initFileForTest("missingModelProperties.yml");
-    }
-
 }

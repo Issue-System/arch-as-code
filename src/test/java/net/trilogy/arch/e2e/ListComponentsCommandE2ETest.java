@@ -81,7 +81,12 @@ public class ListComponentsCommandE2ETest {
     }
 
     @Test
-    public void shouldFailIfArchitectureNotFound() {
+    public void shouldFailIfArchitectureNotFound() throws Exception {
+        int status = execute("list-components", rootDir.getAbsolutePath());
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), containsString("Unable to load architecture\nError thrown: java.lang.IllegalArgumentException: Manifest file does not exist"));
     }
 
     @Test

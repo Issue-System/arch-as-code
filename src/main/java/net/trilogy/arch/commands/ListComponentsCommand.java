@@ -6,6 +6,8 @@ import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.validation.ArchitectureDataStructureValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import lombok.Getter;
 import picocli.CommandLine;
 import picocli.CommandLine.Spec;
 import picocli.CommandLine.Model.CommandSpec;
@@ -19,12 +21,15 @@ import java.util.stream.Collectors;
 import com.google.common.annotations.VisibleForTesting;
 
 @CommandLine.Command(name = "list-components", mixinStandardHelpOptions = true, description = "Outputs a CSV formatted list of components and their IDs, which are present in the architecture.")
-public class ListComponentsCommand implements Callable<Integer> {
+public class ListComponentsCommand implements Callable<Integer>, DisplaysErrorMixin {
 
+    @Getter
     @Spec
     private CommandSpec spec;
+
     @CommandLine.Parameters(index = "0", description = "Directory containing the product architecture")
     private File productArchitectureDirectory;
+
     private final ArchitectureDataStructureReader reader;
 
     public ListComponentsCommand( FilesFacade filesFacade ) {
@@ -32,8 +37,15 @@ public class ListComponentsCommand implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws IOException {
-        ArchitectureDataStructure arch = readArchitecture();
+    public Integer call() {
+
+        ArchitectureDataStructure arch = null;
+        try {
+            arch = readArchitecture();
+        } catch (Exception e) {
+            printError("Unable to load architecture", e);
+            return 1;
+        }
 
         outputComponents(arch);
 

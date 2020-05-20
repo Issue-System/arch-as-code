@@ -48,6 +48,7 @@ public class InitializeCommand implements Callable<Integer> {
         createCredentials(productArchitectureDirectory, workspaceId, apiKey, apiSecret);
         createManifest();
 
+        // TODO [LOGGING] [OUTPUT]: Across the application, use stdout/stderr for display, and use a file for logging
         logger.info("You're ready to go!!");
 
         return 0;

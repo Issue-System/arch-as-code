@@ -70,8 +70,14 @@ public class ListComponentsCommandE2ETest {
     }
 
     @Test
-    public void shouldHandleEmptyArchitecture() throws IOException {
+    public void shouldHandleEmptyArchitecture() throws Exception {
         initFileForTest("missingViewContexts.yml");
+
+        int status = execute("list-components", rootDir.getAbsolutePath());
+
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(out.toString(), equalTo("ID, Name, Path\n"));
+        collector.checkThat(err.toString(), equalTo(""));
     }
 
     @Test

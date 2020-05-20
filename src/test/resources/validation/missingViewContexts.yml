@@ -4,7 +4,7 @@ businessUnit: "DevFactory"
 model:
   people: []
   systems: []
-  container: []
+  containers: []
   components: []
 views:
   systemViews:

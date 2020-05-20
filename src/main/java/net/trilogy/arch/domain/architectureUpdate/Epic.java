@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class Epic {
-    public static final String BLANK_AU_EPIC_TITLE_VALUE = "Please fill in: Epic Title";
-    public static final String BLANK_AU_EPIC_JIRA_LINK_VALUE = "Please fill in: Epic Ticket Link";
-    public static final String BLANK_AU_EPIC_JIRA_TICKET_VALUE = "please-fill-in-epic-ticket";
+    public static final String BLANK_AU_EPIC_TITLE_VALUE = "Please enter epic title from Jira";
+    public static final String BLANK_AU_EPIC_JIRA_LINK_VALUE = "Please enter epic link from Jira";
+    public static final String BLANK_AU_EPIC_JIRA_TICKET_VALUE = "please-enter-epic-ticket-from-jira";
 
 
     @JsonProperty(value = "title") private final String title;

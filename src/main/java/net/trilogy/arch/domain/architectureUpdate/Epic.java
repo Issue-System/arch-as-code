@@ -9,6 +9,11 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class Epic {
+    public static final String BLANK_AU_EPIC_TITLE_VALUE = "Please fill in: Epic Title";
+    public static final String BLANK_AU_EPIC_JIRA_LINK_VALUE = "Please fill in: Epic Ticket Link";
+    public static final String BLANK_AU_EPIC_JIRA_TICKET_VALUE = "please-fill-in-epic-ticket";
+
+
     @JsonProperty(value = "title") private final String title;
     @JsonProperty(value = "jira") private final Jira jira;
 
@@ -23,6 +28,6 @@ public class Epic {
     }
 
     public static Epic blank() {
-        return new Epic("[SAMPLE EPIC TITLE]", Jira.blank());
+        return new Epic(BLANK_AU_EPIC_TITLE_VALUE, new Jira(BLANK_AU_EPIC_JIRA_TICKET_VALUE, BLANK_AU_EPIC_JIRA_LINK_VALUE));
     }
 }

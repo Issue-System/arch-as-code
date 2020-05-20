@@ -1,10 +1,12 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import lombok.Getter;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
+import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", mixinStandardHelpOptions = true, description = "Create a new architecture update.")
-public class AuNewCommand implements Callable<Integer> {
+public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     private static final Log logger = LogFactory.getLog(AuCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
@@ -30,18 +32,26 @@ public class AuNewCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-p", "--p1-url"}, description = "Url to P1 Google Document, used to import decisions and other data", required = false)
     private String p1GoogleDocUrl;
 
+    @Getter
+    @CommandLine.Spec
+    private CommandLine.Model.CommandSpec spec;
+
     public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade) {
         this.googleDocsApiFactory = googleDocsApiFactory;
         this.filesFacade = filesFacade;
     }
 
     @Override
-    public Integer call() throws IOException {
+    public Integer call() {
         File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {
-            logger.error(String.format("Root path - %s - seems incorrect. Run init first.", auFolder.getAbsolutePath()));
-            return 1;
+            try {
+                filesFacade.createDirectory(auFolder.toPath());
+            } catch (Exception e) {
+                printError( "Unable to create architecture-updates directory.", e);
+                return 1;
+            }
         }
 
         String auFileName = name + ".yml";
@@ -53,14 +63,26 @@ public class AuNewCommand implements Callable<Integer> {
         }
 
         ArchitectureUpdate au = ArchitectureUpdate.builderPreFilledWithBlanks().name(name).build();
-        if(p1GoogleDocUrl != null) {
-            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
-            au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
+
+        try {
+            if(p1GoogleDocUrl != null) {
+                GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
+                au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
+            }
+        } catch (Exception e) {
+            String configPath = productArchitectureDirectory.toPath().resolve(".arch-as-code").toAbsolutePath().toString();
+            printError( "ERROR: Unable to initialize Google Docs API. Does configuration " + configPath + " exist?", e);
+            return 1;
         }
 
-        filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
+        try {
+            filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
+        } catch (Exception e) {
+            printError("Unable to write AU file.", e);
+            return 1;
+        }
 
-        logger.info(String.format("AU created - %s", auFile.toPath()));
+        spec.commandLine().getOut().println(String.format("AU created - %s", auFile.toPath()));
         return 0;
     }
 }

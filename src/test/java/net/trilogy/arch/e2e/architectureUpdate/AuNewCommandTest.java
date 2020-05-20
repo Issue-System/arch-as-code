@@ -9,14 +9,19 @@ import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.mockito.ArgumentMatchers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,7 +31,11 @@ import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class AuNewCommandTest {
@@ -34,17 +43,34 @@ public class AuNewCommandTest {
     public final ErrorCollector collector = new ErrorCollector();
 
     private GoogleDocsApiInterface googleDocsApiMock;
+    private FilesFacade filesFacadeSpy;
     private Application app;
     private File rootDir;
 
+    final PrintStream originalOut = System.out;
+    final PrintStream originalErr = System.err;
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    final ByteArrayOutputStream err = new ByteArrayOutputStream();
+
     @Before
     public void setUp() throws Exception {
+        out.reset();
+        err.reset();
+        System.setOut(new PrintStream(out));
+        System.setErr(new PrintStream(err));
+
         rootDir = getTempDirectory().toFile();
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
-        var filesFacade = new FilesFacade();
-        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacade);
+        filesFacadeSpy = spy(new FilesFacade());
+        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy);
+    }
+
+    @After
+    public void tearDown() {
+        System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 
     @Test
@@ -86,16 +112,60 @@ public class AuNewCommandTest {
     }
 
     @Test
-    public void shouldFailIfNotInitialized() throws Exception {
+    public void shouldFailGracefullyIfGoogleApiUninitialized() throws Exception {
+        int status = execute("au", "new", "au-name", str(rootDir.toPath()), "-p", "p1GoogleDocUrl");
+
+        Path auFile = rootDir.toPath().resolve("architecture-updates/au-name.yml");
+        String configPath = rootDir.toPath().resolve(".arch-as-code").toAbsolutePath().toString();
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(Files.exists(auFile), is(false));
+        collector.checkThat(err.toString(), containsString("Unable to initialize Google Docs API. Does configuration " + configPath + " exist?\n"));
+    }
+
+    @Test
+    public void shouldFailGracefullyIfFailsToCreateDirectory() throws Exception {
+        Path auFolder = rootDir.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER);
+        collector.checkThat(
+                ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
+                Files.exists(auFolder),
+                is(false)
+        );
+
+        doThrow(new IOException("details", new RuntimeException("cause"))).when(filesFacadeSpy).createDirectory(eq(auFolder));
+
+        int status = execute(app, "au new au-name " + str(rootDir.toPath()));
+
+        Path auFile = rootDir.toPath().resolve("architecture-updates/au-name.yml");
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(Files.exists(auFile), is(false));
+        collector.checkThat(err.toString(), containsString("Unable to create architecture-updates directory."));
+        collector.checkThat(err.toString(), containsString("details"));
+        collector.checkThat(err.toString(), containsString("cause"));
+    }
+
+    @Test
+    public void shouldHandleCreatingFolderIfDoesNotExist() throws Exception {
         collector.checkThat(
                 ARCHITECTURE_UPDATES_ROOT_FOLDER + " folder does not exist. (Precondition check)",
                 Files.exists(rootDir.toPath().resolve(ARCHITECTURE_UPDATES_ROOT_FOLDER)),
                 is(false)
         );
 
+        int status = execute("au", "new", "au-name", str(rootDir.toPath()));
+
+        Path auFile = rootDir.toPath().resolve("architecture-updates/au-name.yml");
+
+        collector.checkThat(status, equalTo(0));
+        collector.checkThat(Files.exists(auFile), is(true));
         collector.checkThat(
-                execute("au", "new", "au-name", str(rootDir.toPath())),
-                not(equalTo(0))
+                Files.readString(auFile.toAbsolutePath()),
+                equalTo(
+                    new ArchitectureUpdateObjectMapper().writeValueAsString(
+                        ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
+                    )
+                )
         );
     }
 
@@ -193,6 +263,8 @@ public class AuNewCommandTest {
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));
+        collector.checkThat(err.toString(), containsString("Unable to write AU file."));
+        collector.checkThat(err.toString(), containsString("No disk space!"));
     }
 
     private void mockGoogleDocsApi() throws IOException {

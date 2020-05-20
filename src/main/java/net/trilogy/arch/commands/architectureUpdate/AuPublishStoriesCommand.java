@@ -1,12 +1,13 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import lombok.Getter;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
-import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
+import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.services.architectureUpdate.StoryPublishingService;
@@ -16,12 +17,11 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
-public class AuPublishStoriesCommand implements Callable<Integer> {
+public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin {
 
     private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
 
@@ -41,6 +41,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-p", "--password"}, description = "Jira password", arity = "0..1", interactive = true, required = true)
     private char[] password;
 
+    @Getter
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
@@ -65,7 +66,7 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         try {
             architecture = new ArchitectureDataStructureReader(filesFacade).load(productArchitectureDirectory.toPath().resolve("data-structure.yml").toFile());
         } catch (Exception e) {
-            printError("Unable to load architecture.", e);
+            printError( "Unable to load architecture.", e);
             return 1;
         }
 
@@ -94,10 +95,6 @@ public class AuPublishStoriesCommand implements Callable<Integer> {
         filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
-    }
-
-    private void printError(String errorMessage, Exception e) {
-        spec.commandLine().getErr().println(errorMessage + "\nError thrown: " + e + "\nCause: " + e.getCause());
     }
 }
 

@@ -161,6 +161,8 @@ public class WorkspaceReader {
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
 
+                                    // TODO [AAC-101] Read source code mappings from properties
+
                                     Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(model, co, co.getRelationships());
                                     return C4Component.builder()

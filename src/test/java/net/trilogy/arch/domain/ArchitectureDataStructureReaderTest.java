@@ -32,7 +32,6 @@ public class ArchitectureDataStructureReaderTest {
         var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
         assertThat(data.getName(), is(equalTo("TestSpaces")));
-        assertThat(data.getBusinessUnit(), is(equalTo("DevFactory")));
         assertThat(data.getDescription(), is(equalTo("TestSpaces is a tool!")));
     }
 
@@ -61,18 +60,20 @@ public class ArchitectureDataStructureReaderTest {
 
         var actualPerson = data.getModel().findPersonByName("PCA");
         var expectedPerson = C4Person.builder()
-                .alias("@PCA")
                 .description("Product Chief Architect")
+                .path(C4Path.path("@PCA"))
                 .id("3")
-                .location(null)
+                .location(C4Location.UNSPECIFIED)
                 .name("PCA")
                 .tags(Set.of(
-                        new C4Tag("Trilogy System View")
+                        new C4Tag("Person"),
+                        new C4Tag("Trilogy System View"),
+                        new C4Tag("Element")
                 ))
                 .relationships(List.of(
-                        new C4Relationship("26", null, C4Action.USES, "c4://GitHub", "8", "as a version control system", null),
-                        new C4Relationship("27", null, C4Action.USES, "c4://XO Chat", "5", "to communicate with team", null),
-                        new C4Relationship("28", null, C4Action.USES, "c4://Trilogy Google G Suite", "7", "inter-team collaboration", null)
+                        new C4Relationship("28", null, C4Action.USES, null, "7", "inter-team collaboration", null),
+                        new C4Relationship("27", null, C4Action.USES, null, "5", "to communicate with team", null),
+                        new C4Relationship("26", null, C4Action.USES, null, "8", "as a version control system", null)
                 ))
                 .build();
         assertThat(actualPerson, is(equalTo(expectedPerson)));
@@ -87,15 +88,18 @@ public class ArchitectureDataStructureReaderTest {
 
         var actual = (C4SoftwareSystem) data.getModel().findEntityById("6");
         var expected = C4SoftwareSystem.builder()
-                .alias("c4://SalesForce")
                 .id("6")
                 .name("SalesForce")
                 .description("Book keeping")
                 .location(C4Location.EXTERNAL)
                 .relationships(List.of(
-                        new C4Relationship("29", null, C4Action.USES, "c4://DevSpaces/DevSpaces Backend", "11", "queries usage details to estimate monthly costs", null)
+                        new C4Relationship("29", null, C4Action.USES, null, "11", "queries usage details to estimate monthly costs", null)
                 ))
-                .tags(Set.of())
+                .tags(Set.of(
+                        new C4Tag("Element"),
+                        new C4Tag("Software System")
+                ))
+                .path(C4Path.path("c4://SalesForce"))
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -110,17 +114,19 @@ public class ArchitectureDataStructureReaderTest {
 
         var actual = (C4Container) data.getModel().findEntityById("11");
         var expected = C4Container.builder()
-                .alias("c4://DevSpaces/DevSpaces Backend")
                 .name("DevSpaces/DevSpaces Backend")
                 .id("11")
-                .systemAlias("c4://DevSpaces")
+                .systemId("9")
                 .description("Restful API providing capabilities for interacting with a DevSpace")
                 .technology("Spring Boot")
+                .path(C4Path.path("c4://DevSpaces/DevSpaces-DevSpaces Backend"))
                 .tags(Set.of(
-                        new C4Tag("DevSpaces Container View")
+                        new C4Tag("DevSpaces Container View"),
+                        new C4Tag("Element"),
+                        new C4Tag("Container")
                 ))
                 .relationships(List.of(
-                        new C4Relationship("32", null, C4Action.USES, "c4://DevSpaces/DevSpaces API", "13", "to manipulate dev spaces", null)
+                        new C4Relationship("32", null, C4Action.USES, null, "13", "to manipulate dev spaces", null)
                 ))
                 .build();
 
@@ -136,18 +142,24 @@ public class ArchitectureDataStructureReaderTest {
 
         var actual = (C4Component) data.getModel().findEntityById("38");
         var expected = C4Component.builder()
-                .alias("c4://DevSpaces/DevSpaces API/Sign In Controller")
+                .path(C4Path.path("c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Sign In Controller"))
                 .id("38")
                 .name("DevSpaces/DevSpaces API/Sign In Controller")
-                .containerAlias("c4://DevSpaces/DevSpaces API")
+                .containerId("13")
                 .description("Allows users to sign in")
                 .technology("Spring MVC Rest Controller")
                 .url("https://devspaces.io/sign-in")
-                .tags(Set.of(new C4Tag("DevSpaces API Component View")))
+                .tags(Set.of(
+                        new C4Tag("DevSpaces API Component View"),
+                        new C4Tag("Component"),
+                        new C4Tag("Element")
+                ))
                 .relationships(List.of(
-                        new C4Relationship("34", null, C4Action.USES, "c4://DevSpaces/DevSpaces API/Security Component", "14", "Authorizes user", null)
+                        new C4Relationship("34", null, C4Action.USES, null, "14", "Authorizes user", null)
                 ))
                 .build();
+
+        // TODO [AAC-101] Should read source code mappings
 
         assertThat(actual, is(equalTo(expected)));
     }

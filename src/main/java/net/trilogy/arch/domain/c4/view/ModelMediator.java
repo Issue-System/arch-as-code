@@ -88,6 +88,9 @@ public class ModelMediator {
         Component result = container.addComponent(component.getName(), component.getDescription(), component.getTechnology());
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
+
+        // TODO [AAC-101] Send source code mappings as property
+        
         return result;
     }
 

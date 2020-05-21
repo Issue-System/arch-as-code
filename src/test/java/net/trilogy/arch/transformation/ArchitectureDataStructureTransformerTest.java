@@ -98,6 +98,9 @@ public class ArchitectureDataStructureTransformerTest {
         Component component = (Component) model.getElement("38"); // "c4://DevSpaces/DevSpaces API/Sign In Controller"
         assertThat(component, notNullValue());
         assertThat(component.getUrl(), equalTo("https://devspaces.io/sign-in"));
+        
+        // TODO [AAC-101] Send source code mappings as property
+        // assertThat(component.getProperties().get("Source Code Mappings"), equalTo("Hi"));
     }
 
     @Test

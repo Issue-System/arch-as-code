@@ -10,13 +10,19 @@ import lombok.ToString;
 
 import java.util.Map;
 
-@Getter
 @ToString
 @EqualsAndHashCode
 public class TddContainerByComponent {
-    @JsonProperty(value = "component-id") private final Tdd.ComponentReference componentId;
-    @JsonProperty(value = "deleted") private final Boolean deleted;
-    @JsonProperty(value = "tdds") private final Map<Tdd.Id, Tdd> tdds;
+    @Getter 
+    @JsonProperty(value = "component-id")
+    private final Tdd.ComponentReference componentId;
+
+    @Getter 
+    @JsonProperty(value = "tdds") 
+    private final Map<Tdd.Id, Tdd> tdds;
+
+    @JsonProperty(value = "deleted") 
+    private final Boolean deleted;
 
     @Builder(toBuilder = true)
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -28,6 +34,10 @@ public class TddContainerByComponent {
         this.componentId = componentId;
         this.deleted = deleted;
         this.tdds = tdds;
+    }
+
+    public boolean isDeleted() {
+        return deleted != null && deleted;
     }
 
     public static TddContainerByComponent blank() {

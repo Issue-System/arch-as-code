@@ -36,7 +36,6 @@ public class ArchitectureUpdateValidator {
         this.architecture = architecture;
 
         allComponentIdsInArchitecture = getAllComponentIdsInArchitecture();
-
         allTddIdsInStories = getAllTddIdsReferencedByStories();
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();
@@ -110,8 +109,10 @@ public class ArchitectureUpdateValidator {
     private Set<ValidationError> getErrors_TddsComponentsMustBeValidReferences() {
         return au.getTddContainersByComponent()
                 .stream()
+                .filter(container -> !container.isDeleted())
                 .map(TddContainerByComponent::getComponentId)
-                .filter(componentReference -> !allComponentIdsInArchitecture.contains(componentReference.toString()))
+                .filter(componentReference -> 
+                        !allComponentIdsInArchitecture.contains(componentReference.toString()))
                 .map(ValidationError::forTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
     }

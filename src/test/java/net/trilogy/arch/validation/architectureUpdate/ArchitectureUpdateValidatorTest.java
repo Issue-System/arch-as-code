@@ -60,11 +60,20 @@ public class ArchitectureUpdateValidatorTest {
                                 new FunctionalRequirement("Text", "Source", List.of()),
 
                                 new FunctionalRequirement.Id("Functional-Requirement-Without-Story"),
-                                new FunctionalRequirement("Text", "Source", List.of(new Tdd.Id("Valid-TDD-with-requirement-and-story")))
+                                new FunctionalRequirement("Text", "Source", List.of(
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story"),
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story-2"),
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story-3")
+                                ))
                         )
                 )
                 .tddContainersByComponent(
                         List.of(
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("Deleted-Component-Id"),
+                                        true,
+                                        Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-2"), new Tdd("text"))
+                                ),
                                 new TddContainerByComponent(
                                         new Tdd.ComponentReference("38"),
                                         false,
@@ -90,6 +99,11 @@ public class ArchitectureUpdateValidatorTest {
                                                 new Tdd.Id("Tdd-with-invalid-component"), new Tdd("text"),
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("INVALID BECAUSE DUPLICATED ID")
                                         )
+                                ),
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("Invalid-Component-Id-2"),
+                                        null,
+                                        Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-3"), new Tdd("text"))
                                 )
                         )
                 )
@@ -99,6 +113,8 @@ public class ArchitectureUpdateValidatorTest {
                                 List.of(
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story"),
+                                                new Tdd.Id("Valid-TDD-with-requirement-and-story-2"),
+                                                new Tdd.Id("Valid-TDD-with-requirement-and-story-3"),
                                                 new Tdd.Id("Invalid-TDD-ID"),
                                                 new Tdd.Id("Tdd-with-invalid-component")
                                         ), List.of(
@@ -155,6 +171,7 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forStoriesTddsMustBeValidReferences(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
 
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
+                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id-2")),
 
                 ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 
@@ -164,6 +181,8 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story"))
         );
+
+        // TODO: Validate that: If story is deleted, it must not be in the architecture.
 
         expectedErrors.forEach(e ->
                 collector.checkThat(actualErrors, hasItem(e)));

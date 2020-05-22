@@ -1,5 +1,8 @@
 package net.trilogy.arch.domain.c4.view;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.structurizr.model.*;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.generator.FunctionalIdGenerator;
@@ -88,14 +91,16 @@ public class ModelMediator {
         Component result = container.addComponent(component.getName(), component.getDescription(), component.getTechnology());
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
-
-        // TODO [AAC-101][2] Send source code mappings as property
-        
+        result.addProperty("Source Code Mappings", str(component.getSrcMappings()));
         return result;
     }
 
     public DeploymentNode addDeploymentNode(C4Model dataStructureModel, C4DeploymentNode c4DeploymentNode) {
         return DeploymentNodeTransformer.addDeploymentNodeFromC4ToModel(c4DeploymentNode, dataStructureModel, model, idGenerator);
+    }
+
+    private String str(List<String> lst) {
+        return "[" + lst.stream().map(i -> '"' + i + '"').collect(Collectors.joining(","))+ "]";
     }
 
     private String[] getTags(HasTag t) {

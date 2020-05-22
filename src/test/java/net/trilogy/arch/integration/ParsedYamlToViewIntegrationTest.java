@@ -3,6 +3,7 @@ package net.trilogy.arch.integration;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.structurizr.Workspace;
+import com.structurizr.model.Relationship;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ContainerView;
 import com.structurizr.view.DeploymentView;
@@ -31,23 +32,33 @@ public class ParsedYamlToViewIntegrationTest {
 
     @Test
     public void system_view_test() throws Exception {
-        Workspace workspace = getWorkspace();
+        Workspace workspace = when_getWorkspace();
+
         Collection<SystemContextView> systemContextViews = workspace.getViews().getSystemContextViews();
         SystemContextView view = systemContextViews.stream().findFirst().get();
         List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
 
-        assertThat(view.getRelationships().size(), equalTo(4));
+        List<String> relationships = extractRelationships(view);
+
         assertThat(elementNames,
-                containsInAnyOrder("Personal Banking Customer",
+                containsInAnyOrder(
+                        "Personal Banking Customer",
                         "E-mail System",
                         "Mainframe Banking System",
                         "Internet Banking System"
-                ));
+                )
+        );
+        System.out.println(relationships);
+        assertThat(relationships,
+                containsInAnyOrder(
+                        "1->7"
+                )
+        );
     }
 
     @Test
     public void container_view_test() throws Exception {
-        Workspace workspace = getWorkspace();
+        Workspace workspace = when_getWorkspace();
         Collection<ContainerView> containerViews = workspace.getViews().getContainerViews();
         ContainerView view = containerViews.stream().findFirst().get();
         List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
@@ -67,7 +78,7 @@ public class ParsedYamlToViewIntegrationTest {
 
     @Test
     public void component_view_test() throws Exception {
-        Workspace workspace = getWorkspace();
+        Workspace workspace = when_getWorkspace();
         Collection<ComponentView> componentViews = workspace.getViews().getComponentViews();
         ComponentView view = componentViews.stream().findFirst().get();
         List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
@@ -90,7 +101,7 @@ public class ParsedYamlToViewIntegrationTest {
 
     @Test
     public void deployment_view_test() throws Exception {
-        Workspace workspace = getWorkspace();
+        Workspace workspace = when_getWorkspace();
         Collection<DeploymentView> deploymentViews = workspace.getViews().getDeploymentViews();
         DeploymentView view = deploymentViews.stream().findFirst().get();
 
@@ -116,12 +127,18 @@ public class ParsedYamlToViewIntegrationTest {
                 ));
     }
 
-    private Workspace getWorkspace() throws IOException {
+    private Workspace when_getWorkspace() throws IOException {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VIEWS).getPath());
         File manifestFile = new File(documentationRoot + File.separator + "product-architecture.yml");
 
         ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(manifestFile);
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(documentationRoot);
         return transformer.toWorkSpace(dataStructure);
+    }
+
+    private List<String> extractRelationships(SystemContextView view) {
+        return view.getRelationships().stream().map(
+                r -> "" + r.getRelationship().getSourceId() + "->" + r.getRelationship().getDestinationId() + ""
+        ).collect(Collectors.toList());
     }
 }

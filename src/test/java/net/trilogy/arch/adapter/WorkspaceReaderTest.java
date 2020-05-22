@@ -13,6 +13,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -179,6 +180,43 @@ public class WorkspaceReaderTest {
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void shouldReadViewRelationshipsCorrectly() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+
+        final Set<C4Reference> actual = dataStructure.getViews().getComponentViews().get(0).getReferences();
+        Set<C4Reference> expected = new HashSet<>();
+        // elements
+        expected.add(new C4Reference("4", null));
+        expected.add(new C4Reference("6", null));
+        expected.add(new C4Reference("17", null));
+        expected.add(new C4Reference("18", null));
+        expected.add(new C4Reference("21", null));
+        expected.add(new C4Reference("29", null));
+        expected.add(new C4Reference("30", null));
+        expected.add(new C4Reference("31", null));
+        expected.add(new C4Reference("32", null));
+        expected.add(new C4Reference("33", null));
+        expected.add(new C4Reference("34", null));
+        // relationships
+        expected.add(new C4Reference("40", null));
+        expected.add(new C4Reference("41", null));
+        expected.add(new C4Reference("42", null));
+        expected.add(new C4Reference("43", null));
+        expected.add(new C4Reference("37", null));
+        expected.add(new C4Reference("36", null));
+        expected.add(new C4Reference("35", null));
+        expected.add(new C4Reference("44", null));
+        expected.add(new C4Reference("45", null));
+        expected.add(new C4Reference("46", null));
+        expected.add(new C4Reference("47", null));
+        expected.add(new C4Reference("38", null));
+        expected.add(new C4Reference("39", null));
+
+        assertThat(actual, is(expected));
     }
 
 }

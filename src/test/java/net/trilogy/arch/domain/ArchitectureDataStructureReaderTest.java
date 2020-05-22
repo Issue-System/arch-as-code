@@ -219,6 +219,9 @@ public class ArchitectureDataStructureReaderTest {
                 .description("Internet Banking System - System View")
                 .systemAlias("c4://Internet Banking System")
                 .tags(Set.of())
+                .relationships(Set.of(
+                        new C4Reference("20", null)
+                ))
                 .elements(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),
                         new C4Reference(null, "c4://Internet Banking System"),

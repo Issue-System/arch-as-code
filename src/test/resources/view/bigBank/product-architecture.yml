@@ -407,6 +407,8 @@ views:
         - alias: "c4://Internet Banking System"
         - alias: "c4://E-mail System"
         - alias: "c4://Mainframe Banking System"
+      relationships:
+        - id: "20"
 
   containerViews:
     - name: "Container diagram for Internet Banking System"

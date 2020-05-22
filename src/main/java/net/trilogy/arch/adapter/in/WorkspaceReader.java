@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.structurizr.documentation.DecisionStatus.Proposed;
 import static java.util.Optional.ofNullable;
@@ -138,10 +139,16 @@ public class WorkspaceReader {
         c4View.setName(view.getName());
         c4View.setDescription(view.getDescription());
         c4View.setKey(view.getKey());
+
         Set<C4Reference> elements = view.getElements().stream()
                 .map(e -> new C4Reference(e.getId(), null))
                 .collect(toSet());
 
+        final Set<C4Reference> relationships = view.getRelationships().stream()
+                .map(r -> new C4Reference(r.getId(), null))
+                .collect(toSet());
+
+        elements.addAll(relationships);
         c4View.setReferences(elements);
     }
 

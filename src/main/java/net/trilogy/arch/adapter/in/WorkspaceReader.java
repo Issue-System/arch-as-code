@@ -1,5 +1,7 @@
 package net.trilogy.arch.adapter.in;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.model.*;
@@ -13,6 +15,7 @@ import net.trilogy.arch.domain.c4.view.*;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -161,11 +164,11 @@ public class WorkspaceReader {
                                 .map(co -> {
                                     C4Path c4Path = buildPath(co);
 
-                                    // TODO [AAC-101][3] Read source code mappings from properties
-
                                     Set<C4Tag> tags = convertTags(co.getTags());
                                     List<C4Relationship> relationships = mapRelationships(model, co, co.getRelationships());
+
                                     return C4Component.builder()
+                                            .srcMappings(getSrcMappings(co))
                                             .id(co.getId())
                                             .containerId(cont.getId())
                                             .path(c4Path)
@@ -274,6 +277,16 @@ public class WorkspaceReader {
 
     private Set<C4Tag> convertTags(String tags) {
         return Arrays.stream(tags.split(",")).map(C4Tag::new).collect(toSet());
+    }
+
+    private List<String> getSrcMappings(Component co) {
+        try {
+            return List.of(new ObjectMapper().readValue( 
+                co.getProperties().get("Source Code Mappings"),
+                String[].class
+            ));
+        } catch (Exception ignored) {}
+        return List.of();
     }
 
     private List<C4Relationship> mapRelationships(Model model, Element fromElement, Set<Relationship> relationships) {

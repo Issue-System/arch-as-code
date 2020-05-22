@@ -1306,6 +1306,9 @@
                                 "tags": "Element,Component,External",
                                 "name": "Ionic",
                                 "description": "Ionic native part for Android",
+                                "properties": {
+                                    "Source Code Mappings": "[\"src/bin/bash\",\"src/bin/zsh\"]"
+                                },
                                 "relationships": [
                                     {
                                         "id": "239",

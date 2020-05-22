@@ -31,17 +31,26 @@ public class SystemContextViewEnhancer extends BaseViewEnhancer<SystemContextVie
     }
 
     public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
+        return getEntityConsumer(modelMediator, view, false);
+    }
+
+    public Consumer<Entity> addEntityWithRelationships(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
+        return getEntityConsumer(modelMediator, view, true);
+    }
+
+    private Consumer<Entity> getEntityConsumer(ModelMediator modelMediator, SystemContextView view, boolean shouldAddAllRelationships) {
         return entity -> {
             switch (entity.getType()) {
                 case person:
-                    view.add(modelMediator.person(entity.getId()));
+                    view.add(modelMediator.person(entity.getId()), shouldAddAllRelationships);
                     break;
                 case system:
-                    view.add(modelMediator.softwareSystem(entity.getId()));
+                    view.add(modelMediator.softwareSystem(entity.getId()), shouldAddAllRelationships);
                     break;
                 default:
                     throw new IllegalStateException("Unsupported type " + entity.getType());
             }
         };
     }
+
 }

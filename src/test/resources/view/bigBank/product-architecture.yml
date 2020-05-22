@@ -107,6 +107,7 @@ model:
         - "Internet Banking System SystemView"
       relationships:
         - id: "29"
+          alias: "29 : banking system USES email system"
           action: USES
           withAlias: "c4://E-mail System"
           description: "Sends e-mail using"
@@ -397,11 +398,18 @@ model:
 
 views:
   systemViews:
-    - name: "System Context diagram for Internet Banking System"
+    - name: "system view"
       systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - System View"
-      #        tags:
-      #          - "Internet Banking System SystemView"
+      elements:
+        - alias: "@Personal Banking Customer"
+        - alias: "c4://Internet Banking System"
+        - alias: "c4://E-mail System"
+        - alias: "c4://Mainframe Banking System"
+
+    - name: "system view with relationships"
+      systemAlias: "c4://Internet Banking System"
+      description: "Internet Banking System - System View"
       elements:
         - alias: "@Personal Banking Customer"
         - alias: "c4://Internet Banking System"
@@ -409,6 +417,7 @@ views:
         - alias: "c4://Mainframe Banking System"
       relationships:
         - id: "20"
+        - alias: "29 : banking system USES email system"
 
   containerViews:
     - name: "Container diagram for Internet Banking System"

@@ -211,16 +211,17 @@ public class ArchitectureDataStructureReaderTest {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_VIEWS).getPath());
         var data = new ArchitectureDataStructureReader(new FilesFacade()).load(file);
 
-        assertThat(data.getViews().getSystemViews().size(), is(equalTo(1)));
+        assertThat(data.getViews().getSystemViews().size(), is(equalTo(2)));
 
-        var actual = data.getViews().getSystemViews().get(0);
+        var actual = data.getViews().getSystemViews().get(1);
         var expected = C4SystemView.builder()
-                .name("System Context diagram for Internet Banking System")
+                .name("system view with relationships")
                 .description("Internet Banking System - System View")
                 .systemAlias("c4://Internet Banking System")
                 .tags(Set.of())
                 .relationships(Set.of(
-                        new C4Reference("20", null)
+                        new C4Reference("20", null),
+                        new C4Reference(null, "29 : banking system USES email system")
                 ))
                 .elements(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),

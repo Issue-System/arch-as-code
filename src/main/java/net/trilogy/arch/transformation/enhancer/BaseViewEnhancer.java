@@ -6,6 +6,7 @@ import lombok.NonNull;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Reference;
+import net.trilogy.arch.domain.c4.C4Relationship;
 import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4View;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
@@ -39,11 +40,26 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
 
     public abstract Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
 
+    public abstract Consumer<Entity> addEntityWithRelationships(ModelMediator modelMediator, C4Model dataStructureModel, T view);
+
     private void addEntities(ModelMediator modelMediator, C4Model dataStructureModel, T view, G c4View) {
-        c4View.getElements()
-                .stream()
-                .map(viewReference -> viewReferenceToEntity(dataStructureModel, viewReference))
-                .forEach(addEntity(modelMediator, dataStructureModel, view));
+        boolean shouldAddAllRelationships = view.getRelationships() == null;
+
+        c4View.getElements().forEach(reference -> {
+                Entity entity = viewReferenceToEntity(dataStructureModel, reference);
+                if(shouldAddAllRelationships) {
+                    addEntityWithRelationships(modelMediator, dataStructureModel, view).accept(entity);
+                } else {
+                    addEntity(modelMediator, dataStructureModel, view).accept(entity);
+                }
+        });
+
+        if(shouldAddAllRelationships) return;
+
+        c4View.getRelationships().forEach(reference -> {
+            Entity relationship = viewReferenceToEntity(dataStructureModel, reference);
+            addRelationship(modelMediator, dataStructureModel, view, relationship);
+        });
     }
 
     private Entity viewReferenceToEntity(C4Model dataStructureModel, C4Reference viewRef) {
@@ -60,6 +76,6 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
         c4View.getTags()
                 .forEach(tag -> dataStructure.getAllWithTag(tag)
                         .stream()
-                        .forEach(addEntity(modelMediator, dataStructure.getModel(), context)));
+                        .forEach(addEntityWithRelationships(modelMediator, dataStructure.getModel(), context)));
     }
 }

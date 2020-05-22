@@ -31,6 +31,10 @@ public class ContainerContextViewEnhancer extends BaseViewEnhancer<ContainerView
     }
 
     public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ContainerView view) {
+        return addEntityWithRelationships(modelMediator, dataStructureModel, view);
+    }
+
+    public Consumer<Entity> addEntityWithRelationships(ModelMediator modelMediator, C4Model dataStructureModel, ContainerView view) {
         return entity -> {
             switch (entity.getType()) {
                 case person:

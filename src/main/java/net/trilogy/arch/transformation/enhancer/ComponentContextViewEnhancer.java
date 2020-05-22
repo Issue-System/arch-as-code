@@ -31,6 +31,10 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
     }
 
     public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ComponentView view) {
+        return addEntityWithRelationships(modelMediator, dataStructureModel, view);
+    }
+
+    public Consumer<Entity> addEntityWithRelationships(ModelMediator modelMediator, C4Model dataStructureModel, ComponentView view) {
         return entity -> {
 
             switch (entity.getType()) {

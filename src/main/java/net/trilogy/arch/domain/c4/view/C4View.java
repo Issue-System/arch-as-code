@@ -23,7 +23,9 @@ public abstract class C4View {
     private String description;
     private Set<C4Tag> tags = emptySet();
     private Set<C4Reference> elements = emptySet();
-    @Nullable private Set<C4Reference> relationships = null;
+
+    @Nullable // null indicates "user doesn't care" as opposed to "user wants empty"
+    private Set<C4Reference> relationships = null; 
 
     // description is never null, write test
     public String getKey() {

@@ -35,7 +35,8 @@ public class ParsedYamlToViewIntegrationTest {
         Workspace workspace = when_getWorkspace();
 
         Collection<SystemContextView> systemContextViews = workspace.getViews().getSystemContextViews();
-        SystemContextView view = systemContextViews.stream().findFirst().get();
+
+        SystemContextView view = systemContextViews.stream().filter(it -> ! it.getKey().contains("with relationships")).findAny().get();
         List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
 
         List<String> relationships = extractRelationships(view);
@@ -51,7 +52,36 @@ public class ParsedYamlToViewIntegrationTest {
         System.out.println(relationships);
         assertThat(relationships,
                 containsInAnyOrder(
-                        "1->7"
+                        "1->7",
+                        "7->6",
+                        "6->1",
+                        "7->4"
+                )
+        );
+    }
+    @Test
+    public void system_view_test_with_relationships() throws Exception {
+        Workspace workspace = when_getWorkspace();
+
+        Collection<SystemContextView> systemContextViews = workspace.getViews().getSystemContextViews();
+        SystemContextView view = systemContextViews.stream().filter(it -> it.getKey().contains("with relationships")).findAny().get();
+        List<String> elementNames = view.getElements().stream().map(e -> e.getElement().getName()).collect(Collectors.toList());
+
+        List<String> relationships = extractRelationships(view);
+
+        assertThat(elementNames,
+                containsInAnyOrder(
+                        "Personal Banking Customer",
+                        "E-mail System",
+                        "Mainframe Banking System",
+                        "Internet Banking System"
+                )
+        );
+        System.out.println(relationships);
+        assertThat(relationships,
+                containsInAnyOrder(
+                        "1->7",
+                        "7->6"
                 )
         );
     }

@@ -258,7 +258,7 @@ views:
       description: "Internal Trilogy users view of DevSpaces system"
       tags:
         - "DevSpaces System View"
-      references:
+      elements:
         - alias: "@Developer"
         - alias: "@PCA"
         - alias: "c4://GitHub"

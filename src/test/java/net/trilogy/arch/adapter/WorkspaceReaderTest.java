@@ -135,7 +135,7 @@ public class WorkspaceReaderTest {
                 .system(new C4Reference("2", null))
                 .description("An example development deployment scenario for the Internet Banking System.")
                 .environment("Development")
-                .references(Set.of(new C4Reference("50", null)))
+                .elements(Set.of(new C4Reference("50", null)))
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -155,7 +155,7 @@ public class WorkspaceReaderTest {
                 .environment("Default")
                 .description("")
                 .name("Deployment - Default")
-                .references(Set.of(new C4Reference("1", null)))
+                .elements(Set.of(new C4Reference("1", null)))
                 .build();
 
         assertThat(actual, is(equalTo(expected)));
@@ -188,7 +188,7 @@ public class WorkspaceReaderTest {
         URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
 
-        final Set<C4Reference> actual = dataStructure.getViews().getComponentViews().get(0).getReferences();
+        final Set<C4Reference> actual = dataStructure.getViews().getComponentViews().get(0).getElements();
         Set<C4Reference> expected = new HashSet<>();
         // elements
         expected.add(new C4Reference("4", null));

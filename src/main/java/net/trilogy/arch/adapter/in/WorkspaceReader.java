@@ -1,6 +1,5 @@
 package net.trilogy.arch.adapter.in;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
@@ -15,12 +14,10 @@ import net.trilogy.arch.domain.c4.view.*;
 import net.trilogy.arch.transformation.DeploymentNodeTransformer;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.structurizr.documentation.DecisionStatus.Proposed;
 import static java.util.Optional.ofNullable;
@@ -107,7 +104,7 @@ public class WorkspaceReader {
                 .stream()
                 .map(deploymentView -> {
 
-                    Set<C4Reference> references = c4Model.getDeploymentNodes()
+                    Set<C4Reference> elements = c4Model.getDeploymentNodes()
                             .stream()
                             .filter(d -> deploymentView.getElements().stream()
                                     .map(e -> e.getId())
@@ -127,7 +124,7 @@ public class WorkspaceReader {
                             .description(deploymentView.getDescription())
                             .environment(deploymentView.getEnvironment())
                             .system(systemRef)
-                            .references(references)
+                            .elements(elements)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -149,7 +146,7 @@ public class WorkspaceReader {
                 .collect(toSet());
 
         elements.addAll(relationships);
-        c4View.setReferences(elements);
+        c4View.setElements(elements);
     }
 
     private List<C4DeploymentNode> deploymentNodes(Model model) {

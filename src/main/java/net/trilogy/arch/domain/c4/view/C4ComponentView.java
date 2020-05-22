@@ -14,8 +14,8 @@ public class C4ComponentView extends C4View implements HasContainerReference, Ha
     private String containerAlias;
 
     @Builder
-    public C4ComponentView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> references, String containerId, String containerAlias) {
-        super(key, name, description, tags, references);
+    public C4ComponentView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> elements, String containerId, String containerAlias) {
+        super(key, name, description, tags, elements);
         this.containerId = containerId;
         this.containerAlias = containerAlias;
     }

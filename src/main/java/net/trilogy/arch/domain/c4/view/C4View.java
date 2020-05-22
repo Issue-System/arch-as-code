@@ -20,7 +20,7 @@ public abstract class C4View {
     private String name;
     private String description;
     private Set<C4Tag> tags = emptySet();
-    private Set<C4Reference> references = emptySet();
+    private Set<C4Reference> elements = emptySet();
 
     // description is never null, write test
     public String getKey() {

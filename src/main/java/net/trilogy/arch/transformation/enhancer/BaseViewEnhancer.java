@@ -40,7 +40,7 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
     public abstract Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
 
     private void addEntities(ModelMediator modelMediator, C4Model dataStructureModel, T view, G c4View) {
-        c4View.getReferences()
+        c4View.getElements()
                 .stream()
                 .map(viewReference -> viewReferenceToEntity(dataStructureModel, viewReference))
                 .forEach(addEntity(modelMediator, dataStructureModel, view));

@@ -35,7 +35,7 @@ public class DeploymentViewEnhancer implements WorkspaceEnhancer {
     }
 
     private void addDeploymentNode(Model model, ArchitectureDataStructure dataStructure, DeploymentView view, C4DeploymentView c4DeploymentView) {
-        c4DeploymentView.getReferences().forEach(ref -> {
+        c4DeploymentView.getElements().forEach(ref -> {
             C4DeploymentNode c4DeploymentNode = (C4DeploymentNode) dataStructure.getModel().findEntityByReference(ref);
             DeploymentNode deploymentNode = (DeploymentNode) model.getElement(c4DeploymentNode.getId());
             view.add(deploymentNode);

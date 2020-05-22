@@ -326,7 +326,7 @@ views:
     name: "Trilogy Google G Suite - System Context"
     description: "Trilogy inter-team communication"
     tags: []
-    references:
+    elements:
     - id: "7"
     - id: "3"
     - id: "2"
@@ -337,7 +337,7 @@ views:
     name: "DevSpaces - System Context"
     description: "Internal Trilogy users view of DevSpaces system"
     tags: []
-    references:
+    elements:
     - id: "7"
     - id: "3"
     - id: "6"
@@ -351,7 +351,7 @@ views:
     name: "DevSpaces - Containers"
     description: "DevSpaces Container"
     tags: []
-    references:
+    elements:
     - id: "11"
     - id: "10"
     - id: "2"
@@ -365,7 +365,7 @@ views:
     name: "DevSpaces - DevSpaces/DevSpaces API - Components"
     description: "DevSpaces API Components"
     tags: []
-    references:
+    elements:
     - id: "15"
     - id: "14"
     - id: "38"

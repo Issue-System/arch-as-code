@@ -577,7 +577,7 @@ views:
     name: "Internet Banking System - System Context"
     description: "The system context diagram for the Internet Banking System."
     tags: []
-    references:
+    elements:
     - id: "4"
     - id: "6"
     - id: "2"
@@ -588,7 +588,7 @@ views:
     name: "Internet Banking System - Containers"
     description: "The container diagram for the Internet Banking System."
     tags: []
-    references:
+    elements:
     - id: "4"
     - id: "18"
     - id: "6"
@@ -603,7 +603,7 @@ views:
     name: "Internet Banking System - API Application - Components"
     description: "The component diagram for the API Application."
     tags: []
-    references:
+    elements:
     - id: "4"
     - id: "18"
     - id: "29"
@@ -620,7 +620,7 @@ views:
   - key: "LiveDeployment"
     name: "Internet Banking System - Deployment - Live"
     description: "An example live deployment scenario for the Internet Banking System."
-    references:
+    elements:
     - id: "63"
     - id: "65"
     - id: "68"
@@ -630,7 +630,7 @@ views:
   - key: "DevelopmentDeployment"
     name: "Internet Banking System - Deployment - Development"
     description: "An example development deployment scenario for the Internet Banking System."
-    references:
+    elements:
     - id: "50"
     system:
       id: "2"

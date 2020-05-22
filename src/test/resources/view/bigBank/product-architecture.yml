@@ -402,7 +402,7 @@ views:
       description: "Internet Banking System - System View"
       #        tags:
       #          - "Internet Banking System SystemView"
-      references:
+      elements:
         - alias: "@Personal Banking Customer"
         - alias: "c4://Internet Banking System"
         - alias: "c4://E-mail System"
@@ -412,7 +412,7 @@ views:
     - name: "Container diagram for Internet Banking System"
       systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - Container View"
-      references:
+      elements:
         - alias: "@Personal Banking Customer"
         - alias: "c4://Internet Banking System/Web Application"
         - alias: "c4://Internet Banking System/Single-Page Application"
@@ -426,7 +426,7 @@ views:
     - name: "Component diagram for Internet Banking System - API Application"
       containerAlias: "c4://Internet Banking System/API Application"
       description: "Internet Banking System : API Application - Component View"
-      references:
+      elements:
         - alias: "c4://Internet Banking System/API Application/Sign In Controller"
         - alias: "c4://Internet Banking System/API Application/Reset Password Controller"
         - alias: "c4://Internet Banking System/API Application/Accounts Summary Controller"
@@ -446,5 +446,5 @@ views:
         alias: "c4://Internet Banking System"
       description: "An example development deployment scenario for the Internet Banking System."
       environment: "Development"
-      references:
+      elements:
         - alias: "Developer Laptop"

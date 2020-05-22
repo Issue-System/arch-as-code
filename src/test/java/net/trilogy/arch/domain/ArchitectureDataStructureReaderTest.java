@@ -219,7 +219,7 @@ public class ArchitectureDataStructureReaderTest {
                 .description("Internet Banking System - System View")
                 .systemAlias("c4://Internet Banking System")
                 .tags(Set.of())
-                .references(Set.of(
+                .elements(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),
                         new C4Reference(null, "c4://Internet Banking System"),
                         new C4Reference(null, "c4://E-mail System"),
@@ -243,7 +243,7 @@ public class ArchitectureDataStructureReaderTest {
                 .systemAlias("c4://Internet Banking System")
                 .description("Internet Banking System - Container View")
                 .tags(Set.of())
-                .references(Set.of(
+                .elements(Set.of(
                         new C4Reference(null, "@Personal Banking Customer"),
                         new C4Reference(null, "c4://Internet Banking System/Web Application"),
                         new C4Reference(null, "c4://Internet Banking System/Single-Page Application"),
@@ -271,7 +271,7 @@ public class ArchitectureDataStructureReaderTest {
                 .containerAlias("c4://Internet Banking System/API Application")
                 .description("Internet Banking System : API Application - Component View")
                 .tags(Set.of())
-                .references(Set.of(
+                .elements(Set.of(
                         new C4Reference(null, "c4://Internet Banking System/API Application/Sign In Controller"),
                         new C4Reference(null, "c4://Internet Banking System/API Application/Reset Password Controller"),
                         new C4Reference(null, "c4://Internet Banking System/API Application/Accounts Summary Controller"),
@@ -303,7 +303,7 @@ public class ArchitectureDataStructureReaderTest {
                 .key("Laptop")
                 .name("Development Deployment")
                 .system(new C4Reference(null, "c4://Internet Banking System"))
-                .references(Set.of(new C4Reference(null, "Developer Laptop")))
+                .elements(Set.of(new C4Reference(null, "Developer Laptop")))
                 .tags(Set.of())
                 .build();
 

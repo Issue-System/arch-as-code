@@ -14,8 +14,8 @@ public class C4ContainerView extends C4View implements HasSystemReference, HasId
     private String systemAlias;
 
     @Builder
-    public C4ContainerView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> references, String systemId, String systemAlias) {
-        super(key, name, description, tags, references);
+    public C4ContainerView(String key, @NonNull String name, @NonNull String description, @Singular Set<C4Tag> tags, @Singular Set<C4Reference> elements, String systemId, String systemAlias) {
+        super(key, name, description, tags, elements);
         this.systemId = systemId;
         this.systemAlias = systemAlias;
     }

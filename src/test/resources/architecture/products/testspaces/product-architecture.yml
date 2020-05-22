@@ -284,6 +284,9 @@ model:
     containerId: "13"
     technology: "Spring MVC Rest Controller"
     url: "https://devspaces.io/sign-in"
+    src-mappings:
+    - "src/bin/bash"
+    - "src/bin/zsh"
   - id: "15"
     path:
       path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Reset Password Controller"

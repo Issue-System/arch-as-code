@@ -157,9 +157,11 @@ public class ArchitectureDataStructureReaderTest {
                 .relationships(List.of(
                         new C4Relationship("34", null, C4Action.USES, null, "14", "Authorizes user", null)
                 ))
+                .srcMappings(List.of(
+                        "src/bin/bash",
+                        "src/bin/zsh"
+                ))
                 .build();
-
-        // TODO [AAC-101] Should read source code mappings
 
         assertThat(actual, is(equalTo(expected)));
     }

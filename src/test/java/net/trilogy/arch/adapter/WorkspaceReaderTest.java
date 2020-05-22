@@ -59,7 +59,7 @@ public class WorkspaceReaderTest {
                 new C4Relationship("239", null, USES, null, "16", "Runs", "Chromium")
         ));
         assertThat(component.getTechnology(), is(equalTo("Android")));
-        // TODO [AAC-101] Read source code mappings from properties
+        // TODO [AAC-101][3] Read source code mappings from properties
     }
 
     @Test

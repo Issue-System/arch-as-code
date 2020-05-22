@@ -89,7 +89,7 @@ public class ModelMediator {
         result.addTags(getTags(component));
         result.setUrl(component.getUrl());
 
-        // TODO [AAC-101] Send source code mappings as property
+        // TODO [AAC-101][2] Send source code mappings as property
         
         return result;
     }

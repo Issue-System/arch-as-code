@@ -99,7 +99,7 @@ public class ArchitectureDataStructureTransformerTest {
         assertThat(component, notNullValue());
         assertThat(component.getUrl(), equalTo("https://devspaces.io/sign-in"));
         
-        // TODO [AAC-101] Send source code mappings as property
+        // TODO [AAC-101][2] Send source code mappings as property
         // assertThat(component.getProperties().get("Source Code Mappings"), equalTo("Hi"));
     }
 

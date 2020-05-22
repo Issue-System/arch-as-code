@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
@@ -43,21 +44,14 @@ public class Tdd {
         }
     }
 
+    @RequiredArgsConstructor
     @EqualsAndHashCode
     public static class ComponentReference implements EntityReference {
+        @JsonValue
         private final String id;
-
-        public ComponentReference(String id) {
-            this.id = id.replaceFirst("Component-", "");
-        }
 
         public static ComponentReference blank() {
             return new ComponentReference("[SAMPLE-COMPONENT-ID]");
-        }
-
-        @JsonValue
-        public String asJson() {
-            return "Component-" + id;
         }
 
         public String toString() {

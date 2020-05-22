@@ -2,17 +2,16 @@ package net.trilogy.arch.adapter.Jira;
 
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.Jira.JiraStory;
 import net.trilogy.arch.adapter.Jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import org.junit.Ignore;
+import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import org.junit.Test;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,11 +115,11 @@ public class JiraStoryTest {
     }
 
     private ArchitectureUpdate getAu() {
-        return changeAllTddsToBeUnderComponent("Component-31", ArchitectureUpdate.blank());
+        return changeAllTddsToBeUnderComponent("31", ArchitectureUpdate.blank());
     }
 
     private ArchitectureUpdate getAuWithInvalidComponent() {
-        return changeAllTddsToBeUnderComponent("Component-1231231323123", getAu());
+        return changeAllTddsToBeUnderComponent("1231231323123", getAu());
     }
 
     private ArchitectureUpdate getAuWithInvalidRequirement() {
@@ -130,13 +129,17 @@ public class JiraStoryTest {
                 .build();
     }
 
-    private ArchitectureUpdate changeAllTddsToBeUnderComponent(String newComponentId,
-                                                               ArchitectureUpdate au) {
-        final Map<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> newTdds = new LinkedHashMap<>();
-        for (var oldTdd : au.getTDDs().values()) {
-            newTdds.put(new Tdd.ComponentReference(newComponentId), oldTdd);
+    private ArchitectureUpdate changeAllTddsToBeUnderComponent(String newComponentId, ArchitectureUpdate au) {
+        var oldTdds = new HashMap<Tdd.Id, Tdd>();
+        for (var container : au.getTddContainersByComponent()) {
+            oldTdds.putAll(container.getTdds());
         }
-        return au.toBuilder().TDDs(newTdds).build();
+        final TddContainerByComponent newComponentWithTdds = new TddContainerByComponent(
+                new Tdd.ComponentReference(newComponentId),
+                false,
+                oldTdds
+        );
+        return au.toBuilder().tddContainersByComponent(List.of(newComponentWithTdds)).build();
     }
 }
 

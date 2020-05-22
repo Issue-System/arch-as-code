@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
         "useful-links",
         "milestone-dependencies",
         "decisions",
-        "TDDs",
+        "tdds-per-component",
         "functional-requirements",
         "capabilities"
 })
@@ -36,7 +36,7 @@ public class ArchitectureUpdate {
     @JsonProperty(value = "useful-links") private final List<Link> usefulLinks;
     @JsonProperty(value = "milestone-dependencies") private final List<MilestoneDependency> milestoneDependencies;
     @JsonProperty(value = "decisions") private final Map<Decision.Id, Decision> decisions;
-    @JsonProperty(value = "TDDs") private final Map<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> TDDs;
+    @JsonProperty(value = "tdds-per-component") private final List<TddContainerByComponent> tddContainersByComponent;
     @JsonProperty(value = "functional-requirements") private final Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements;
     @JsonProperty(value = "capabilities") private final CapabilitiesContainer capabilityContainer;
 
@@ -48,7 +48,7 @@ public class ArchitectureUpdate {
             @JsonProperty("authors") List<Person> authors,
             @JsonProperty("PCAs") List<Person> PCAs,
             @JsonProperty("decisions") Map<Decision.Id, Decision> decisions,
-            @JsonProperty("TDDs") Map<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> TDDs,
+            @JsonProperty("tdds-per-component") List<TddContainerByComponent> tddContainersByComponent,
             @JsonProperty("functional-requirements") Map<FunctionalRequirement.Id, FunctionalRequirement> functionalRequirements,
             @JsonProperty("capabilities") CapabilitiesContainer capabilityContainer,
             @JsonProperty("p2") P2 p2,
@@ -61,7 +61,7 @@ public class ArchitectureUpdate {
         this.authors = authors;
         this.PCAs = PCAs;
         this.decisions = decisions;
-        this.TDDs = TDDs;
+        this.tddContainersByComponent = tddContainersByComponent;
         this.functionalRequirements = functionalRequirements;
         this.capabilityContainer = capabilityContainer;
         this.p2 = p2;
@@ -77,7 +77,7 @@ public class ArchitectureUpdate {
                 .authors(List.of(Person.blank()))
                 .PCAs(List.of(Person.blank()))
                 .decisions(Map.of(Decision.Id.blank(), Decision.blank()))
-                .TDDs(Map.of(Tdd.ComponentReference.blank(), Map.of(Tdd.Id.blank(), Tdd.blank())))
+                .tddContainersByComponent(List.of(TddContainerByComponent.blank()))
                 .functionalRequirements(Map.of(FunctionalRequirement.Id.blank(), FunctionalRequirement.blank()))
                 .capabilityContainer(CapabilitiesContainer.blank())
                 .p2(P2.blank())

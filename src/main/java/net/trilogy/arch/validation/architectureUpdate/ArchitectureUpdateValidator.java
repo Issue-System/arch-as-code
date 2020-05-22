@@ -5,6 +5,7 @@ import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import net.trilogy.arch.domain.c4.BaseEntity;
 
 import java.util.Collection;
@@ -107,9 +108,9 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_TddsComponentsMustBeValidReferences() {
-        return au.getTDDs()
-                .keySet()
+        return au.getTddContainersByComponent()
                 .stream()
+                .map(TddContainerByComponent::getComponentId)
                 .filter(componentReference -> !allComponentIdsInArchitecture.contains(componentReference.toString()))
                 .map(ValidationError::forTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
@@ -197,10 +198,9 @@ public class ArchitectureUpdateValidator {
     }
 
     private List<Tdd.Id> getAllTddIds() {
-        return au.getTDDs()
-                .values()
+        return au.getTddContainersByComponent()
                 .stream()
-                .flatMap(map -> map.keySet().stream())
+                .flatMap(container -> container.getTdds().keySet().stream())
                 .collect(Collectors.toList());
     }
 

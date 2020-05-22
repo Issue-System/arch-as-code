@@ -13,7 +13,6 @@ import net.trilogy.arch.domain.c4.C4Path;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @ToString
@@ -47,31 +46,27 @@ public class JiraStory {
 
         List<JiraTdd> tdds = new ArrayList<>();
         for (var tddId : featureStory.getTddReferences()) {
-            var tdd = au.getTDDs()
-                    .entrySet()
+            var tdd = au.getTddContainersByComponent()
                     .stream()
-                    .filter(componentEntry -> componentEntry.getValue().containsKey(tddId))
-                    .filter(componentReferenceMapEntry -> fetchPath(architecture, componentReferenceMapEntry) != null)
-                    .map(componentEntry -> {
-                        return new JiraTdd(
-                                tddId,
-                                componentEntry.getValue().get(tddId),
-                                fetchPath(architecture, componentEntry).getPath()
-                        );
-                    })
+                    .filter(container -> container.getTdds().containsKey(tddId))
+                    .filter(container -> fetchPath(architecture, container.getComponentId()) != null)
+                    .map(container -> new JiraTdd(
+                            tddId,
+                            container.getTdds().get(tddId),
+                            fetchPath(architecture, container.getComponentId()).getPath()
+                    ))
                     .findAny()
-                    .orElseThrow(() -> new InvalidStoryException());
+                    .orElseThrow(InvalidStoryException::new);
             tdds.add(tdd);
         }
 
         return tdds;
     }
 
-    private C4Path fetchPath(ArchitectureDataStructure architecture,
-                             Map.Entry<Tdd.ComponentReference, Map<Tdd.Id, Tdd>> componentReferenceMapEntry) {
+    private C4Path fetchPath(ArchitectureDataStructure architecture, Tdd.ComponentReference componentReference) {
         C4Path path;
         try {
-            path = architecture.getModel().findEntityById(componentReferenceMapEntry.getKey().toString()).getPath();
+            path = architecture.getModel().findEntityById(componentReference.toString()).getPath();
         } catch ( Exception e) {
             path = null;
         }

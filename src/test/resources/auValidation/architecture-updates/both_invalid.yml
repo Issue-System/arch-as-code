@@ -29,10 +29,11 @@ decisions:
   '[SAMPLE-DECISION-ID]':
     text: "[SAMPLE DECISION TEXT]"
     tdd-references: []
-TDDs:
-  Component-[INVALID-COMPONENT-ID]:
-    '[SAMPLE-TDD-ID]':
-      text: "[SAMPLE TDD TEXT]"
+tdds-per-component:
+  - component-id: "[INVALID-COMPONENT-ID]"
+    tdds:
+      '[SAMPLE-TDD-ID]':
+        text: "[SAMPLE TDD TEXT]"
 functional-requirements:
   '[SAMPLE-REQUIREMENT-ID]':
     text: "[SAMPLE REQUIREMENT TEXT]"

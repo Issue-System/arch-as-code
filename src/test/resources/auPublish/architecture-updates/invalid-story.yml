@@ -35,8 +35,9 @@ decisions:
     text: "[SAMPLE DECISION TEXT]"
     tdd-references:
       - "[SAMPLE-TDD-ID]"
-TDDs:
-  Component-[SAMPLE-COMPONENT-ID]:
+tdds-per-component:
+- component-id: "[SAMPLE-COMPONENT-ID]"
+  tdds:
     '[SAMPLE-TDD-ID]':
       text: "[SAMPLE TDD TEXT]"
 functional-requirements:

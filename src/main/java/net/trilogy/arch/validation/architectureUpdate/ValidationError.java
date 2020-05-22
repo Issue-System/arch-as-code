@@ -66,7 +66,7 @@ public class ValidationError {
         return new ValidationError(
                 ValidationErrorType.INVALID_COMPONENT_REFERENCE,
                 componentReference,
-                String.format("Component id \"%s\" does not exist.", componentReference.toString())
+                String.format("Component id \"%s\" does not exist.", componentReference)
         );
     }
 

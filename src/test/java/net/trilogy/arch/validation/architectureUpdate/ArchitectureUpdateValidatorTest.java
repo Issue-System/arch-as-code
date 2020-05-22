@@ -11,6 +11,7 @@ import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,21 +63,33 @@ public class ArchitectureUpdateValidatorTest {
                                 new FunctionalRequirement("Text", "Source", List.of(new Tdd.Id("Valid-TDD-with-requirement-and-story")))
                         )
                 )
-                .TDDs(
-                        Map.of(
-                                new Tdd.ComponentReference("Component-38"), Map.of(
-                                        new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("text")
+                .tddContainersByComponent(
+                        List.of(
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("38"),
+                                        false,
+                                        Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("text"))
                                 ),
-                                new Tdd.ComponentReference("Component-14"), Map.of(
-                                        new Tdd.Id("TDD-unused-and-without-story"), new Tdd("text")
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("14"),
+                                        false,
+                                        Map.of(new Tdd.Id("TDD-unused-and-without-story"), new Tdd("text"))
                                 ),
-                                new Tdd.ComponentReference("Component-15"), Map.of(
-                                        new Tdd.Id("Valid-TDD-with-decision-and-story"), new Tdd("text"),
-                                        new Tdd.Id("TDD-unused-with-story"), new Tdd("text")
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("15"),
+                                        false,
+                                        Map.of(
+                                                new Tdd.Id("Valid-TDD-with-decision-and-story"), new Tdd("text"),
+                                                new Tdd.Id("TDD-unused-with-story"), new Tdd("text")
+                                        )
                                 ),
-                                new Tdd.ComponentReference("Component-Invalid-Component-Id"), Map.of(
-                                        new Tdd.Id("Tdd-with-invalid-component"), new Tdd("text"),
-                                        new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("INVALID BECAUSE DUPLICATED ID")
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("Invalid-Component-Id"),
+                                        false,
+                                        Map.of(
+                                                new Tdd.Id("Tdd-with-invalid-component"), new Tdd("text"),
+                                                new Tdd.Id("Valid-TDD-with-requirement-and-story"), new Tdd("INVALID BECAUSE DUPLICATED ID")
+                                        )
                                 )
                         )
                 )
@@ -141,7 +154,7 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forStoriesTddsMustBeValidReferences(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
 
-                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Component-Invalid-Component-Id")),
+                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
 
                 ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 
@@ -152,9 +165,9 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story"))
         );
 
-        collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));
-
         expectedErrors.forEach(e ->
                 collector.checkThat(actualErrors, hasItem(e)));
+
+        collector.checkThat(actualErrors.size(), equalTo(expectedErrors.size()));
     }
 }

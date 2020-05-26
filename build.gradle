@@ -25,7 +25,7 @@ apply plugin: 'com.palantir.git-version'
 mainClassName = 'net.trilogy.arch.Application'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
-version = '0.1.0'
+version = '0.1.1'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'

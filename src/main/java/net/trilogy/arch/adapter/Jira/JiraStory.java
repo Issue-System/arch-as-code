@@ -9,10 +9,12 @@ import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import net.trilogy.arch.domain.c4.C4Path;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @ToString
@@ -49,11 +51,11 @@ public class JiraStory {
             var tdd = au.getTddContainersByComponent()
                     .stream()
                     .filter(container -> container.getTdds().containsKey(tddId))
-                    .filter(container -> fetchPath(architecture, container.getComponentId()) != null)
+                    .filter(container -> getComponentHeader(architecture, container).isPresent())
                     .map(container -> new JiraTdd(
                             tddId,
                             container.getTdds().get(tddId),
-                            fetchPath(architecture, container.getComponentId()).getPath()
+                            getComponentHeader(architecture, container).orElseThrow()
                     ))
                     .findAny()
                     .orElseThrow(InvalidStoryException::new);
@@ -63,16 +65,20 @@ public class JiraStory {
         return tdds;
     }
 
-    private C4Path fetchPath(ArchitectureDataStructure architecture, Tdd.ComponentReference componentReference) {
-        // TODO [AAC-99]: Handle when component is deleted
-        C4Path path;
-        try {
-            path = architecture.getModel().findEntityById(componentReference.toString()).getPath();
-        } catch ( Exception e) {
-            path = null;
+    private Optional<String> getComponentHeader(ArchitectureDataStructure architecture, TddContainerByComponent tddContainerByComponent) {
+        if(tddContainerByComponent.isDeleted()){
+            return Optional.of("[DELETED COMPONENT]");
         }
-
-        return path;
+        try {
+            return Optional.of(
+                architecture.getModel()
+                    .findEntityById(tddContainerByComponent.getComponentId().toString())
+                    .getPath()
+                    .getPath()
+            );
+        } catch (Exception ignored) {
+            return Optional.empty();
+        }
     }
 
     @ToString

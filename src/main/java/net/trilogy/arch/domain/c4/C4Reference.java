@@ -1,12 +1,10 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode
 public class C4Reference {
     private String id;
     private String alias;

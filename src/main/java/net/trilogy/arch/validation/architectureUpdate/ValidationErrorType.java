@@ -12,7 +12,6 @@ public enum ValidationErrorType {
     TDD_WITHOUT_CAUSE("TDD without cause", ValidationStage.TDD),
     INVALID_TDD_REFERENCE_IN_STORY("Invalid TDD Reference in Story", ValidationStage.STORY),
     INVALID_COMPONENT_REFERENCE("Invalid Component Reference", ValidationStage.TDD),
-    INVALID_DELETED_COMPONENT_REFERENCE("Component Reference incorrectly marked deleted", ValidationStage.TDD),
     DUPLICATE_TDD_ID("Duplicate TDD ID", ValidationStage.TDD), 
     DUPLICATE_COMPONENT_ID("Duplicate Component ID", ValidationStage.TDD);
 

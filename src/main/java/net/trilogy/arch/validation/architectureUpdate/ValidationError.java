@@ -71,14 +71,6 @@ public class ValidationError {
         );
     }
 
-    public static ValidationError forTddsComponentsMustBeDeletedIfMarked(ComponentReference componentReference) {
-        return new ValidationError(
-                ValidationErrorType.INVALID_DELETED_COMPONENT_REFERENCE,
-                componentReference,
-                String.format("Component id \"%s\" is incorrectly marked as deleted.", componentReference.toString())
-        );
-    }
-
     public static ValidationError forFunctionalRequirementsMustBeValidReferences(String storyTitle, FunctionalRequirement.Id id) {
         return new ValidationError(
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,

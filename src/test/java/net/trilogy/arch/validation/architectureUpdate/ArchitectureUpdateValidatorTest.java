@@ -185,7 +185,8 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id-2")),
 
-                ValidationError.forTddsComponentsMustBeDeletedIfMarked(new Tdd.ComponentReference("16")),
+                // TODO: WIP
+                // ValidationError.forTddsComponentsMustBeDeletedIfMarked(new Tdd.ComponentReference("16")),
 
                 ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 

@@ -70,22 +70,14 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_TddsDeletedComponentsMustBeActuallyDeleted() {
-        return au.getTddContainersByComponent()
-            .stream()
-            .filter(container -> container.isDeleted())
-            .filter(container -> allComponentIdsInArchitecture.contains(
-                    container.getComponentId().toString()
-            ))
-            .map(container -> container.getComponentId())
-            .map(ValidationError::forTddsComponentsMustBeDeletedIfMarked)
-            .collect(Collectors.toSet());
+        return Set.of();
     }
 
     private Set<ValidationError> getErrors_ComponentsMustBeReferencedOnlyOnceForTdds() {
         var allComponentReferences = au.getTddContainersByComponent()
-            .stream()
-            .map(TddContainerByComponent::getComponentId)
-            .collect(Collectors.toList());
+                .stream()
+                .map(TddContainerByComponent::getComponentId)
+                .collect(Collectors.toList());
         return findDuplicates(allComponentReferences)
             .stream()
             .map(ValidationError::forDuplicatedComponent)

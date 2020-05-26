@@ -7,6 +7,7 @@ import net.trilogy.arch.domain.architectureUpdate.Decision;
 import net.trilogy.arch.domain.architectureUpdate.EntityReference;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.Tdd.ComponentReference;
 
 @ToString
 @Getter
@@ -70,11 +71,20 @@ public class ValidationError {
         );
     }
 
+    public static ValidationError forTddsComponentsMustBeDeletedIfMarked(ComponentReference componentReference) {
+        return new ValidationError(
+                ValidationErrorType.INVALID_DELETED_COMPONENT_REFERENCE,
+                componentReference,
+                String.format("Component id \"%s\" is incorrectly marked as deleted.", componentReference.toString())
+        );
+    }
+
     public static ValidationError forFunctionalRequirementsMustBeValidReferences(String storyTitle, FunctionalRequirement.Id id) {
         return new ValidationError(
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,
                 null,
-                String.format("Story \"%s\" contains functional requirement reference \"%s\" that does not exist.", storyTitle, id.toString())        );
+                String.format("Story \"%s\" contains functional requirement reference \"%s\" that does not exist.", storyTitle, id.toString())
+        );
     }
 
     public static ValidationError forStoriesMustHaveTdds(String storyTitle) {
@@ -95,9 +105,17 @@ public class ValidationError {
 
     public static ValidationError forDuplicatedTdd(Tdd.Id id) {
         return new ValidationError(
-                ValidationErrorType.DUPLICATE_ID,
+                ValidationErrorType.DUPLICATE_TDD_ID,
                 id,
                 String.format("TDD \"%s\" is duplicated.", id.toString())
+        );
+    }
+
+    public static ValidationError forDuplicatedComponent(ComponentReference componentReference) {
+        return new ValidationError(
+                ValidationErrorType.DUPLICATE_COMPONENT_ID,
+                componentReference,
+                String.format("Component id \"%s\" is duplicated.", componentReference.toString())
         );
     }
 
@@ -109,4 +127,5 @@ public class ValidationError {
         }
         return "Entity";
     }
+
 }

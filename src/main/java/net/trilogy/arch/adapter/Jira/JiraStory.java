@@ -64,6 +64,7 @@ public class JiraStory {
     }
 
     private C4Path fetchPath(ArchitectureDataStructure architecture, Tdd.ComponentReference componentReference) {
+        // TODO [AAC-99]: Handle when component is deleted
         C4Path path;
         try {
             path = architecture.getModel().findEntityById(componentReference.toString()).getPath();

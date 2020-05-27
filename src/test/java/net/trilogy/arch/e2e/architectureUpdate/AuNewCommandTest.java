@@ -332,11 +332,12 @@ public class AuNewCommandTest {
     }
 
     private Path getTempDirectory() throws Exception {
-        var rootDir = Files.createTempDirectory("arch-as-code_architecture-update_command_tests").toFile();
-        var git = Git.init().setDirectory(rootDir).call();
+        var repoDir = Files.createTempDirectory("aac");
+        var rootDir = Files.createDirectory(repoDir.resolve("root"));
+        var git = Git.init().setDirectory(repoDir.toFile()).call();
         git.add().addFilepattern(".").call();
         git.commit().setMessage("First!").call();
         git.checkout().setCreateBranch(true).setName("au-name").call();
-        return rootDir.toPath();
+        return rootDir;
     }
 }

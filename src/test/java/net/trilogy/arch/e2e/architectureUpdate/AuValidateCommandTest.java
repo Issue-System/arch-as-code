@@ -28,6 +28,7 @@ public class AuValidateCommandTest {
     public final ErrorCollector collector = new ErrorCollector();
 
     private File rootDir;
+    private Git git;
 
     final PrintStream originalOut = System.out;
     final PrintStream originalErr = System.err;
@@ -49,12 +50,12 @@ public class AuValidateCommandTest {
         rootDir = buildDir.toPath().resolve("git").toFile();
 
         FileUtils.copyDirectory(buildDir, rootDir);
-        Git git = Git.init().setDirectory(rootDir).call();
+        git = Git.init().setDirectory(rootDir).call();
 
-        setUpRealisticGitRepository(git);
+        setUpRealisticGitRepository();
     }
 
-    private void setUpRealisticGitRepository(Git git) throws IOException, NoFilepatternException, GitAPIException {
+    private void setUpRealisticGitRepository() throws IOException, NoFilepatternException, GitAPIException {
         Files.move(
             rootDir.toPath().resolve("master-branch-product-architecture.yml"),
             rootDir.toPath().resolve("product-architecture.yml")
@@ -62,14 +63,17 @@ public class AuValidateCommandTest {
         git.add().addFilepattern("product-architecture.yml").call();
         git.commit().setMessage("add architecture to master").call();
 
+        git.add().addFilepattern("architecture-updates").call();
+        git.commit().setMessage("add AU yamls").call();
+
         git.checkout().setCreateBranch(true).setName("au").call();
         Files.delete(rootDir.toPath().resolve("product-architecture.yml"));
         Files.move(
             rootDir.toPath().resolve("au-branch-product-architecture.yml"),
             rootDir.toPath().resolve("product-architecture.yml")
         );
-        git.add().addFilepattern(".").call();
-        git.commit().setMessage("change architecture in au and add AU yamls").call();
+        git.add().addFilepattern("product-architecture.yml").call();
+        git.commit().setMessage("change architecture in au").call();
     }
 
     @After
@@ -199,7 +203,19 @@ public class AuValidateCommandTest {
     @Test
     public void shouldFindErrorsAcrossGitBranches() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
-        Integer status = execute("architecture-update", "validate", "-t", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("architecture-update", "validate", auPath, rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(err.toString(), containsString("WIP"));
+    }
+
+    @Test
+    public void shouldHandleIfRunFromWrongBranch() throws Exception {
+        git.checkout().setName("master").call();
+        
+        var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
+
+        Integer status = execute("architecture-update", "validate", auPath, rootDir.getAbsolutePath());
+        
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("WIP"));
     }

@@ -22,9 +22,36 @@ import static net.trilogy.arch.TestHelper.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 
 public class ArchitectureDataStructureReaderTest {
+
+    @Test
+    public void shouldLoadMasterBranchArchitecture() {
+        fail("WIP");
+    }
+
+    @Test
+    public void shouldNotChangeDirectoryState() {
+        fail("WIP");
+        // check if same branch
+        // check file contents
+        // check stash contents
+    }
+
+    @Test
+    public void shouldNotChangeDirectoryStateIfExceptionThrown() {
+        fail("WIP");
+        // check if same branch
+        // check file contents
+        // check stash contents
+    }
+
+    @Test
+    public void shouldHandleIfBranchInvalid() {
+        fail("WIP");
+    }
 
     @Test
     public void shouldReadMetaData() throws Exception {

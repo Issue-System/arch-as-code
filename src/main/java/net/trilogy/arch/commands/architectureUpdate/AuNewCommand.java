@@ -48,8 +48,14 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     }
 
     @Override
-    public Integer call() throws NoWorkTreeException, GitAPIException, IOException {
-        String branchName = gitFacade.open(productArchitectureDirectory).getRepository().getBranch();
+    public Integer call() {
+        String branchName;
+        try {
+            branchName = gitFacade.open(productArchitectureDirectory).getRepository().getBranch();
+        } catch (Exception e) {
+            printError("ERROR: Unable to check git branch", e);
+            return 1;
+        }
         if(!name.equals(branchName)){
             printError(
                 "ERROR: AU must be created in git branch of same name."+

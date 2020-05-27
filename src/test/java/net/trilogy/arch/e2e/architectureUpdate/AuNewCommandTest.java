@@ -42,6 +42,7 @@ import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTUR
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -54,6 +55,7 @@ public class AuNewCommandTest {
 
     private GoogleDocsApiInterface googleDocsApiMock;
     private FilesFacade filesFacadeSpy;
+    private GitFacade gitFacadeSpy;
     private Application app;
     private File rootDir;
 
@@ -74,8 +76,9 @@ public class AuNewCommandTest {
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
         filesFacadeSpy = spy(new FilesFacade());
+        gitFacadeSpy = spy(new GitFacade());
 
-        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, new GitFacade());
+        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, gitFacadeSpy);
     }
 
     @After
@@ -83,6 +86,21 @@ public class AuNewCommandTest {
         FileUtils.forceDelete(rootDir);
         System.setOut(originalOut);
         System.setErr(originalErr);
+    }
+
+    @Test
+    public void shouldFailGracefullyIfGitApiFails() throws Exception {
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
+
+        doThrow(new RuntimeException("Boo!")).when(gitFacadeSpy).open(any());
+        
+        int status = execute(app, "au new not-au-name " + str(rootDir.toPath()));
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), containsString(
+            "ERROR: Unable to check git branch\nError thrown:" 
+        ));
     }
 
     @Test

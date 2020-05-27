@@ -7,8 +7,14 @@ import static org.hamcrest.Matchers.not;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,16 +35,50 @@ public class AuValidateCommandTest {
     final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
     @Before
-    public void setUp() {
+    public void setUpOut() {
         out.reset();
         err.reset();
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
-        rootDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION).getPath());
+    }
+
+    @Before
+    public void setUp() throws IllegalStateException, GitAPIException, IOException {
+        var buildDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION).getPath());
+
+        rootDir = buildDir.toPath().resolve("git").toFile();
+        FileUtils.copyDirectory(buildDir, rootDir);
+
+        Git git = Git.init().setDirectory(rootDir).call();
+
+        setUpRealisticGitRepository(git);
+    }
+
+    private void setUpRealisticGitRepository(Git git) throws IOException, NoFilepatternException, GitAPIException {
+        Files.move(
+            rootDir.toPath().resolve("master-branch-product-architecture.yml"),
+            rootDir.toPath().resolve("product-architecture.yml")
+        );
+        git.add().addFilepattern("product-architecture.yml").call();
+        git.commit().setMessage("add architecture to master").call();
+
+        git.checkout().setCreateBranch(true).setName("au").call();
+        Files.delete(rootDir.toPath().resolve("product-architecture.yml"));
+        Files.move(
+            rootDir.toPath().resolve("au-branch-product-architecture.yml"),
+            rootDir.toPath().resolve("product-architecture.yml")
+        );
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("change architecture in au and add AU yamls").call();
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
+        FileUtils.deleteDirectory(rootDir);
+    }
+
+    @After
+    public void tearDownOut() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }

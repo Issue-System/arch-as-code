@@ -48,6 +48,9 @@ dependencies {
     implementation 'com.structurizr:structurizr-client:1.3.3'
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.7.0.202003110725-r'
+
     //Command line arguments
     implementation 'info.picocli:picocli:4.2.0'
     annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
@@ -70,6 +73,7 @@ dependencies {
     //Makesure hamcrest is above junit see - https://stackoverflow.com/questions/7869711/getting-nosuchmethoderror-org-hamcrest-matcher-describemismatch-when-running
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'junit:junit:4.13'
+    testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile "org.mockito:mockito-core:2.+"
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
 }

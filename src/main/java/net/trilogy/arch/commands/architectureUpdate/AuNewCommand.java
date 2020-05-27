@@ -18,6 +18,7 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", mixinStandardHelpOptions = true, description = "Create a new architecture update.")
@@ -49,22 +50,50 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
 
     @Override
     public Integer call() {
-        String branchName;
-        try {
-            branchName = gitFacade.open(productArchitectureDirectory).getRepository().getBranch();
-        } catch (Exception e) {
-            printError("ERROR: Unable to check git branch", e);
-            return 1;
-        }
-        if(!name.equals(branchName)){
-            printError(
-                "ERROR: AU must be created in git branch of same name."+
-                "\nCurrent git branch: '" + branchName + "'" +
-                "\nAu name: '" + name + "'"
-            );
-            return 1;
-        }
+        if(!checkBranchNameEquals(name)) return 1;
 
+        var auFile = getNewAuFilePath();
+        if(auFile.isEmpty()) return 1;
+
+        var au = loadAu();
+        if(au.isEmpty()) return 1;
+
+        if(!writeAu(auFile.get(), au.get())) return 1;
+
+        spec.commandLine().getOut().println(String.format("AU created - %s", auFile.get().toPath()));
+        return 0;
+    }
+
+    private Optional<ArchitectureUpdate> loadAu() {
+        if(p1GoogleDocUrl != null) {
+            return loadFromP1();
+        }else{
+            return Optional.of(ArchitectureUpdate.builderPreFilledWithBlanks().name(name).build());
+        }
+    }
+
+    private boolean writeAu(File auFile, ArchitectureUpdate au){
+        try {
+            filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
+            return true;
+        } catch (Exception e) {
+            printError("Unable to write AU file.", e);
+            return false;
+        }
+    }
+
+    private Optional<ArchitectureUpdate> loadFromP1(){
+        try {
+            GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
+            return Optional.of(new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl));
+        } catch (Exception e) {
+            String configPath = productArchitectureDirectory.toPath().resolve(".arch-as-code").toAbsolutePath().toString();
+            printError( "ERROR: Unable to initialize Google Docs API. Does configuration " + configPath + " exist?", e);
+            return Optional.empty();
+        }
+    }
+
+    private Optional<File> getNewAuFilePath() {
         File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {
@@ -72,39 +101,36 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
                 filesFacade.createDirectory(auFolder.toPath());
             } catch (Exception e) {
                 printError( "Unable to create architecture-updates directory.", e);
-                return 1;
+                return Optional.empty();
             }
         }
 
         String auFileName = name + ".yml";
-
         File auFile = auFolder.toPath().resolve(auFileName).toFile();
         if (auFile.isFile()) {
             logger.error(String.format("AU %s already exists. Try a different name.", auFileName));
-            return 1;
+            return Optional.empty();
         }
 
-        ArchitectureUpdate au = ArchitectureUpdate.builderPreFilledWithBlanks().name(name).build();
-
-        try {
-            if(p1GoogleDocUrl != null) {
-                GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
-                au = new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl);
-            }
-        } catch (Exception e) {
-            String configPath = productArchitectureDirectory.toPath().resolve(".arch-as-code").toAbsolutePath().toString();
-            printError( "ERROR: Unable to initialize Google Docs API. Does configuration " + configPath + " exist?", e);
-            return 1;
-        }
-
-        try {
-            filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
-        } catch (Exception e) {
-            printError("Unable to write AU file.", e);
-            return 1;
-        }
-
-        spec.commandLine().getOut().println(String.format("AU created - %s", auFile.toPath()));
-        return 0;
+        return Optional.of(auFile);
     }
+
+    private boolean checkBranchNameEquals(String str) {
+        try {
+            String branch = gitFacade.open(productArchitectureDirectory)
+                .getRepository()
+                .getBranch();
+            if(branch.equals(str)) return true; 
+            printError(
+                "ERROR: AU must be created in git branch of same name."+
+                "\nCurrent git branch: '" + branch + "'" +
+                "\nAu name: '" + str + "'"
+            );
+            return false;
+        } catch (Exception e) {
+            printError("ERROR: Unable to check git branch", e);
+            return false;
+        }
+    }
+
 }

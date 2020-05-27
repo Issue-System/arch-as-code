@@ -34,8 +34,7 @@ public class AuValidateCommandTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
-    @Before
-    public void setUpOut() {
+    private void setUpOut() {
         out.reset();
         err.reset();
         System.setOut(new PrintStream(out));
@@ -44,11 +43,12 @@ public class AuValidateCommandTest {
 
     @Before
     public void setUp() throws IllegalStateException, GitAPIException, IOException {
+        setUpOut();
         var buildDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION).getPath());
 
         rootDir = buildDir.toPath().resolve("git").toFile();
-        FileUtils.copyDirectory(buildDir, rootDir);
 
+        FileUtils.copyDirectory(buildDir, rootDir);
         Git git = Git.init().setDirectory(rootDir).call();
 
         setUpRealisticGitRepository(git);
@@ -75,10 +75,10 @@ public class AuValidateCommandTest {
     @After
     public void tearDown() throws IOException {
         FileUtils.deleteDirectory(rootDir);
+        tearDownOut();
     }
 
-    @After
-    public void tearDownOut() {
+    private void tearDownOut() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
@@ -194,6 +194,14 @@ public class AuValidateCommandTest {
                 err.toString(),
                 containsString("TDD \"[SAMPLE-TDD-ID]\" needs to be referenced in a story.")
         );
+    }
+
+    @Test
+    public void shouldFindErrorsAcrossGitBranches() throws Exception {
+        var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
+        Integer status = execute("architecture-update", "validate", "-t", auPath, rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(err.toString(), containsString("WIP"));
     }
 
     @Test

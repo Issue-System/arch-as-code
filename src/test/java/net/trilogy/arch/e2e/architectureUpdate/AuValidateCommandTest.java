@@ -225,7 +225,7 @@ public class AuValidateCommandTest {
         Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath() + "invalid");
         
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("WIP"));
+        collector.checkThat(err.toString(), containsString("Manifest file does not exist"));
     }
 
     @Test

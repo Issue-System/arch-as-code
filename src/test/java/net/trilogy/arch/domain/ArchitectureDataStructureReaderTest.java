@@ -8,6 +8,8 @@ import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.C4ContainerView;
 import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import net.trilogy.arch.domain.c4.view.C4SystemView;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,11 +29,13 @@ import static org.junit.Assert.fail;
 
 public class ArchitectureDataStructureReaderTest {
 
+    @Ignore("TODO")
     @Test
     public void shouldLoadMasterBranchArchitecture() {
         fail("WIP");
     }
 
+    @Ignore("TODO")
     @Test
     public void shouldNotChangeDirectoryState() {
         fail("WIP");
@@ -40,6 +44,7 @@ public class ArchitectureDataStructureReaderTest {
         // check stash contents
     }
 
+    @Ignore("TODO")
     @Test
     public void shouldNotChangeDirectoryStateIfExceptionThrown() {
         fail("WIP");
@@ -48,6 +53,7 @@ public class ArchitectureDataStructureReaderTest {
         // check stash contents
     }
 
+    @Ignore("TODO")
     @Test
     public void shouldHandleIfBranchInvalid() {
         fail("WIP");

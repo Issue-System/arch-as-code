@@ -17,6 +17,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -200,6 +201,7 @@ public class AuValidateCommandTest {
         );
     }
 
+    @Ignore("TODO")
     @Test
     public void shouldFindErrorsAcrossGitBranches() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
@@ -208,6 +210,7 @@ public class AuValidateCommandTest {
         collector.checkThat(err.toString(), containsString("WIP"));
     }
 
+    @Ignore("TODO")
     @Test
     public void shouldHandleIfWrongBaseBranchProvided() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();

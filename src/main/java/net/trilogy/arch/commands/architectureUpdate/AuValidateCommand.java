@@ -34,6 +34,9 @@ public class AuValidateCommand implements Callable<Integer> {
     @Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'.", required = true)
+    String baseBranch;
+
     @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs only")
     boolean tddValidation;
 

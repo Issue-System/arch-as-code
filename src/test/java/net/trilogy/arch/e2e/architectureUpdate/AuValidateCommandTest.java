@@ -90,7 +90,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeFullyValid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/blank.yml";
-        Integer status = execute("au", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, equalTo(0));
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
         collector.checkThat(err.toString(), equalTo(""));
@@ -99,7 +99,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeTDDValid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/invalid_capabilities.yml";
-        Integer status = execute("architecture-update", "validate", "-t", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("architecture-update", "validate", "-b", "master", "-t", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, equalTo(0));
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
         collector.checkThat(err.toString(), equalTo(""));
@@ -108,7 +108,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeStoryValid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/invalid_tdds.yml";
-        Integer status = execute("architecture-update", "validate", "-s", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("architecture-update", "validate", "-b", "master", "-s", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, equalTo(0));
         collector.checkThat(out.toString(), containsString("Success, no errors found."));
         collector.checkThat(err.toString(), equalTo(""));
@@ -117,7 +117,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldPresentErrorsNicely() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/both_invalid.yml";
-        Integer status = execute("au", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
 
@@ -140,7 +140,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeFullyInvalid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/both_invalid.yml";
-        Integer status = execute("au", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
 
@@ -161,7 +161,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeTddInvalid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/both_invalid.yml";
-        Integer status = execute("au", "validate", "--TDDs", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", "--TDDs", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
 
@@ -182,7 +182,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldBeStoryInvalid() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/both_invalid.yml";
-        Integer status = execute("au", "validate", "--stories", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", "--stories", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
 
@@ -203,18 +203,26 @@ public class AuValidateCommandTest {
     @Test
     public void shouldFindErrorsAcrossGitBranches() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
-        Integer status = execute("architecture-update", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("WIP"));
     }
 
     @Test
-    public void shouldHandleIfRunFromWrongBranch() throws Exception {
-        git.checkout().setName("master").call();
-        
+    public void shouldHandleIfWrongBaseBranchProvided() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
 
-        Integer status = execute("architecture-update", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("architecture-update", "validate", "-b", "invalid", auPath, rootDir.getAbsolutePath());
+        
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(err.toString(), containsString("WIP"));
+    }
+
+    @Test
+    public void shouldHandleIfUnableToLoadArchitecture() throws Exception {
+        var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
+
+        Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath() + "invalid");
         
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("WIP"));
@@ -223,7 +231,7 @@ public class AuValidateCommandTest {
     @Test
     public void shouldFindAUStructureErrors() throws Exception {
         var auPath = rootDir.getAbsolutePath() + "/architecture-updates/invalid_structure.yml";
-        Integer status = execute("au", "validate", auPath, rootDir.getAbsolutePath());
+        Integer status = execute("au", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
 

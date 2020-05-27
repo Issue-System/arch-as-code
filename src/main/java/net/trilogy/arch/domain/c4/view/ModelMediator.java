@@ -69,6 +69,7 @@ public class ModelMediator {
     }
 
     public Person addPerson(C4Person person) {
+        // TODO [ENHANCEMENT]: Add aliases as property here (and also read them on import)
         Location location = LocationTransformer.c4LocationToLocation(person.getLocation());
         idGenerator.setNext(person.getId());
         Person result = model.addPerson(location, person.getName(), person.getDescription());

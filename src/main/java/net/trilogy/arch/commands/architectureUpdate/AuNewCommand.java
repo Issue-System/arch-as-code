@@ -3,6 +3,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 import lombok.Getter;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.GitFacade;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
@@ -10,6 +11,9 @@ import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.NoWorkTreeException;
+
 import picocli.CommandLine;
 
 import java.io.File;
@@ -22,6 +26,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
     private final FilesFacade filesFacade;
+    private final GitFacade gitFacade;
 
     @CommandLine.Parameters(index = "0", description = "Name for new architecture update")
     private String name;
@@ -36,13 +41,24 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
-    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade) {
+    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade, GitFacade gitFacade) {
         this.googleDocsApiFactory = googleDocsApiFactory;
         this.filesFacade = filesFacade;
+        this.gitFacade = gitFacade;
     }
 
     @Override
-    public Integer call() {
+    public Integer call() throws NoWorkTreeException, GitAPIException, IOException {
+        String branchName = gitFacade.open(productArchitectureDirectory).getRepository().getBranch();
+        if(!name.equals(branchName)){
+            printError(
+                "ERROR: AU must be created in git branch of same name."+
+                "\nCurrent git branch: '" + branchName + "'" +
+                "\nAu name: '" + name + "'"
+            );
+            return 1;
+        }
+
         File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
 
         if (!auFolder.isDirectory()) {

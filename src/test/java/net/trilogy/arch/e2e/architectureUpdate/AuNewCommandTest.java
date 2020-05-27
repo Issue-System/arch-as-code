@@ -5,11 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.GitFacade;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.AbortedByHookException;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.NoMessageException;
+import org.eclipse.jgit.api.errors.UnmergedPathsException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -64,13 +74,30 @@ public class AuNewCommandTest {
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
         filesFacadeSpy = spy(new FilesFacade());
-        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy);
+
+        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, new GitFacade());
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
+        FileUtils.forceDelete(rootDir);
         System.setOut(originalOut);
         System.setErr(originalErr);
+    }
+
+    @Test
+    public void shouldFailIfBranchNameDoesNotMatch() throws Exception {
+        execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
+        
+        int status = execute("au", "new", "not-au-name", str(rootDir.toPath()));
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), equalTo(
+            "ERROR: AU must be created in git branch of same name.\n" + 
+            "Current git branch: 'au-name'\n" + 
+            "Au name: 'not-au-name'\n"
+        ));
     }
 
     @Test
@@ -259,7 +286,7 @@ public class AuNewCommandTest {
         when(mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new IOException("No disk space!"));
 
-        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade);
+        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitFacade());
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));
@@ -286,7 +313,12 @@ public class AuNewCommandTest {
         return tempDirPath.toAbsolutePath().toString();
     }
 
-    private Path getTempDirectory() throws IOException {
-        return Files.createTempDirectory("arch-as-code_architecture-update_command_tests");
+    private Path getTempDirectory() throws Exception {
+        var rootDir = Files.createTempDirectory("arch-as-code_architecture-update_command_tests").toFile();
+        var git = Git.init().setDirectory(rootDir).call();
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("First!").call();
+        git.checkout().setCreateBranch(true).setName("au-name").call();
+        return rootDir.toPath();
     }
 }

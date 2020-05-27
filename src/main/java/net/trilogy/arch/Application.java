@@ -1,6 +1,7 @@
 package net.trilogy.arch;
 
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.GitFacade;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.commands.*;
@@ -16,7 +17,8 @@ public class Application {
 
     public Application(GoogleDocsAuthorizedApiFactory googleDocsApiFactory,
                        JiraApiFactory jiraApiFactory,
-                       FilesFacade filesFacade) {
+                       FilesFacade filesFacade, 
+                       GitFacade gitFacade) {
         cli = new CommandLine(new ParentCommand())
                 .addSubcommand(new InitializeCommand())
                 .addSubcommand(new ValidateCommand())
@@ -26,7 +28,7 @@ public class Application {
                 .addSubcommand(
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
-                                .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade))
+                                .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade, gitFacade))
                                 .addSubcommand(new AuValidateCommand())
                                 .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade))
                                 .addSubcommand(new AuAnnotateCommand(filesFacade))
@@ -35,10 +37,11 @@ public class Application {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         var filesFacade = new FilesFacade();
+        var gitFacade = new GitFacade();
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
         var jiraApiFactory = new JiraApiFactory();
 
-        var app = new Application(googleDocsApiFactory, jiraApiFactory, filesFacade);
+        var app = new Application(googleDocsApiFactory, jiraApiFactory, filesFacade, gitFacade);
 
         int exitCode = app.execute(args);
         System.exit(exitCode);

@@ -1,6 +1,7 @@
 package net.trilogy.arch;
 
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.GitFacade;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
 
@@ -47,7 +48,8 @@ public abstract class TestHelper {
         var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
         var filesFacade = new FilesFacade();
         var jiraApiFactory = new JiraApiFactory();
-        return new Application(googleDocsApiFactory, jiraApiFactory, filesFacade).execute(args);
+        var gitFacade = new GitFacade();
+        return new Application(googleDocsApiFactory, jiraApiFactory, filesFacade, gitFacade).execute(args);
     }
 
     public static Integer execute(Application application, String command) {

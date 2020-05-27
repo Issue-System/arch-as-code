@@ -4,6 +4,7 @@ import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.FilesFacade;
+import net.trilogy.arch.adapter.GitFacade;
 import net.trilogy.arch.adapter.Jira.JiraApi;
 import net.trilogy.arch.adapter.Jira.JiraApiFactory;
 import net.trilogy.arch.adapter.Jira.JiraCreateStoryStatus;
@@ -80,7 +81,7 @@ public class AuPublishStoriesCommandTest {
         mockedJiraApi = mock(JiraApi.class);
         when(mockedJiraApiFactory.create(spiedFilesFacade, rootDir.toPath())).thenReturn(mockedJiraApi);
 
-        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade);
+        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, new GitFacade());
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }

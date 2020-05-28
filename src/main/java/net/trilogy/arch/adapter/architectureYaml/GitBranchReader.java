@@ -24,10 +24,20 @@ public class GitBranchReader {
         this.gitFacade = gitFacade;
     }
 
-    public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
+    public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath)
+            throws IOException, RefAlreadyExistsException, RefNotFoundException,
+            InvalidRefNameException, CheckoutConflictException, GitAPIException {
+
         var repo = gitFacade.openParentRepo(architectureYamlFilePath.toFile());
+        var originalBranch = repo.getRepository().getBranch();
+
         repo.checkout().setName(branchName).call();
-        return new ArchitectureDataStructureObjectMapper()
-            .readValue(filesFacade.readString(architectureYamlFilePath));
+
+        var arch = new ArchitectureDataStructureObjectMapper()
+                            .readValue(filesFacade.readString(architectureYamlFilePath));
+
+        repo.checkout().setName(originalBranch).call();
+
+        return arch;
     }
 }

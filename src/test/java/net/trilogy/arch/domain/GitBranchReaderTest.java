@@ -12,7 +12,11 @@ import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -80,27 +84,34 @@ public class GitBranchReaderTest {
         collector.checkThat(actual, equalTo(expected));
     }
 
-    @Ignore("TODO")
     @Test
-    public void shouldNotChangeDirectoryState() {
-        fail("WIP");
-        // check if same branch
-        // check file contents
-        // check stash contents
+    public void shouldNotChangeBranch()
+            throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
+            CheckoutConflictException, IOException, GitAPIException {
+        new GitBranchReader(new FilesFacade(), new GitFacade()).load("master", archPath);
+        
+        collector.checkThat(isBranch("not-master"), is(true));
     }
 
-    @Ignore("TODO")
-    @Test
-    public void shouldNotChangeDirectoryStateIfExceptionThrown() {
-        fail("WIP");
-        // check if same branch
-        // check file contents
-        // check stash contents
-    }
-
+    // check file contents
+    // check stash contents
+    
+    // check branch if exception thrown
+    // check file contents if exception thrown
+    // check stash contents if exception thrown
+    
     @Ignore("TODO")
     @Test
     public void shouldHandleIfBranchInvalid() {
         fail("WIP");
     }
+
+    private boolean isBranch(String wantedBranch) throws IOException {
+        return new GitFacade()
+                .openParentRepo(archPath.toFile().getParentFile())
+                .getRepository()
+                .getBranch()
+                .equals(wantedBranch);
+    }
+
 }

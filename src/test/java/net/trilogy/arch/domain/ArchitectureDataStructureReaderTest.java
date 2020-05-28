@@ -25,39 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
-
 public class ArchitectureDataStructureReaderTest {
-
-    @Ignore("TODO")
-    @Test
-    public void shouldLoadMasterBranchArchitecture() {
-        fail("WIP");
-    }
-
-    @Ignore("TODO")
-    @Test
-    public void shouldNotChangeDirectoryState() {
-        fail("WIP");
-        // check if same branch
-        // check file contents
-        // check stash contents
-    }
-
-    @Ignore("TODO")
-    @Test
-    public void shouldNotChangeDirectoryStateIfExceptionThrown() {
-        fail("WIP");
-        // check if same branch
-        // check file contents
-        // check stash contents
-    }
-
-    @Ignore("TODO")
-    @Test
-    public void shouldHandleIfBranchInvalid() {
-        fail("WIP");
-    }
-
     @Test
     public void shouldReadMetaData() throws Exception {
         var file = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_METADATA).getPath());

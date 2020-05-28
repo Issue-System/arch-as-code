@@ -14,9 +14,6 @@ public class ArchitectureDataStructureReader {
     final private FilesFacade filesFacade;
 
     public ArchitectureDataStructure load(File manifest) throws IOException {
-        checkNotNull(manifest, "Manifest must not be null.");
-        checkArgument(manifest.exists(), String.format("Manifest file does not exist - %s.", manifest.getAbsolutePath()));
-
         final String archAsString = filesFacade.readString(manifest.toPath());
         return new ArchitectureDataStructureObjectMapper().readValue(archAsString);
     }

@@ -228,7 +228,7 @@ public class AuValidateCommandTest {
         Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath() + "invalid");
         
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("Manifest file does not exist"));
+        collector.checkThat(err.toString(), containsString("Error thrown: java.nio.file.NoSuchFileException"));
     }
 
     @Test
@@ -240,7 +240,7 @@ public class AuValidateCommandTest {
 
         collector.checkThat(
                 err.toString(),
-                containsString("Invalid structure")
+                containsString("Unable to load file\nError thrown: com.fasterxml")
         );
     }
 }

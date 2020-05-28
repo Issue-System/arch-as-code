@@ -3,6 +3,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
@@ -20,12 +21,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
-public class AuValidateCommand implements Callable<Integer> {
+public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin {
 
     @Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFilePath;
@@ -42,6 +45,7 @@ public class AuValidateCommand implements Callable<Integer> {
     @CommandLine.Option(names = {"-s", "--stories"}, description = "Run validation for feature stories only")
     boolean capabilityValidation;
 
+    @Getter
     @Spec
     private CommandSpec spec;
 
@@ -53,8 +57,8 @@ public class AuValidateCommand implements Callable<Integer> {
             ArchitectureDataStructure architecture = new ArchitectureDataStructureReader(new FilesFacade()).load(productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile());
             ArchitectureUpdate au = new ArchitectureUpdateObjectMapper().readValue(Files.readString(architectureUpdateFilePath.toPath()));
             validationResults = ArchitectureUpdateValidator.validate(au, architecture);
-        } catch (IOException | RuntimeException e) {
-            spec.commandLine().getErr().println("Invalid structure. Error thrown: \n" + e.getMessage() + "\nCause: " + e.getCause());
+        } catch (Exception e) {
+            printError("Unable to load file", e);
             return 1;
         }
 

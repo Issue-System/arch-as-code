@@ -14,6 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -116,8 +118,9 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     }
 
     private boolean checkBranchNameEquals(String str) {
+
         try {
-            String branch = gitFacade.open(productArchitectureDirectory)
+            String branch = gitFacade.wrap(getRepository(productArchitectureDirectory))
                 .getRepository()
                 .getBranch();
             if(branch.equals(str)) return true; 
@@ -133,4 +136,11 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
         }
     }
 
+    public static Repository getRepository(File rootDir) throws IOException {
+        FileRepositoryBuilder builder = new FileRepositoryBuilder();
+        return builder
+                .readEnvironment()
+                .findGitDir(rootDir)
+                .build();
+    }
 }

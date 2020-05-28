@@ -3,7 +3,9 @@ package net.trilogy.arch.domain;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -78,27 +81,83 @@ public class GitBranchReaderTest {
 
     @Test
     public void shouldLoadMasterBranchArchitecture() throws Exception {
-        var actual = new GitBranchReader(new FilesFacade(), new GitFacade()).load("master", archPath);
+        var actual = new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
+            .load("master", archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
         collector.checkThat(actual, equalTo(expected));
     }
 
     @Test
-    public void shouldNotChangeBranch()
-            throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
-            CheckoutConflictException, IOException, GitAPIException {
-        new GitBranchReader(new FilesFacade(), new GitFacade()).load("master", archPath);
+    public void shouldNotChangeBranch() throws Exception {
+        new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
+            .load("master", archPath);
         
         collector.checkThat(isBranch("not-master"), is(true));
     }
 
-    // check file contents
-    // check stash contents
-    
-    // check branch if exception thrown
-    // check file contents if exception thrown
-    // check stash contents if exception thrown
+    @Test
+    public void shouldPreserveWorkingDirFiles() throws Exception {
+        var otherFile = archPath.getParent().resolve("other-file.txt");
+        Files.writeString(archPath, "MODIFIED FILE");
+        Files.writeString(otherFile, "NEW FILE");
+        var beforeFiles = FileUtils.listFilesAndDirs(
+                repoDir, 
+                FileFilterUtils.trueFileFilter(), 
+                FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
+
+        new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper()).load("master", archPath);
+
+        var afterFiles = FileUtils.listFilesAndDirs(
+                repoDir, 
+                FileFilterUtils.trueFileFilter(), 
+                FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
+
+        collector.checkThat(beforeFiles, equalTo(afterFiles));
+        collector.checkThat(Files.readString(archPath), equalTo("MODIFIED FILE"));
+        collector.checkThat(Files.readString(otherFile), equalTo("NEW FILE"));
+    }
+
+    @Test
+    public void shouldNotChangeBranchIfException() throws Exception {
+        var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
+        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
+
+        try{
+            new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
+            fail("Exception not thrown.");
+        } catch(RuntimeException ignored) {
+            collector.checkThat(isBranch("not-master"), is(true));
+        }
+    }
+
+    @Test
+    public void shouldPreserveWorkingDirFilesIfException() throws Exception {
+        var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
+        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
+
+        var otherFile = archPath.getParent().resolve("other-file.txt");
+        Files.writeString(archPath, "MODIFIED FILE");
+        Files.writeString(otherFile, "NEW FILE");
+        var beforeFiles = FileUtils.listFilesAndDirs(
+                repoDir, 
+                FileFilterUtils.trueFileFilter(), 
+                FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
+
+        try {
+            new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
+            fail("Exception not thrown.");
+        } catch(RuntimeException ignored) {
+            var afterFiles = FileUtils.listFilesAndDirs(
+                    repoDir, 
+                    FileFilterUtils.trueFileFilter(), 
+                    FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
+
+            collector.checkThat(beforeFiles, equalTo(afterFiles));
+            collector.checkThat(Files.readString(archPath), equalTo("MODIFIED FILE"));
+            collector.checkThat(Files.readString(otherFile), equalTo("NEW FILE"));
+        }
+    }
     
     @Ignore("TODO")
     @Test

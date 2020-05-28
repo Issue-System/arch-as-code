@@ -18,10 +18,12 @@ import net.trilogy.arch.facade.GitFacade;
 public class GitBranchReader {
     private final FilesFacade filesFacade;
     private final GitFacade gitFacade;
+    private final ArchitectureDataStructureObjectMapper objMapper;
 
-    public GitBranchReader(FilesFacade filesFacade, GitFacade gitFacade) {
+    public GitBranchReader(FilesFacade filesFacade, GitFacade gitFacade, ArchitectureDataStructureObjectMapper objMapper) {
         this.filesFacade = filesFacade;
         this.gitFacade = gitFacade;
+        this.objMapper = objMapper;
     }
 
     public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath)
@@ -31,12 +33,16 @@ public class GitBranchReader {
         var repo = gitFacade.openParentRepo(architectureYamlFilePath.toFile());
         var originalBranch = repo.getRepository().getBranch();
 
+        filesFacade.writeString(architectureYamlFilePath.getParent().resolve("empty.txt"), "");
+        repo.stashCreate().setIncludeUntracked(true).call();
+
         repo.checkout().setName(branchName).call();
 
-        var arch = new ArchitectureDataStructureObjectMapper()
-                            .readValue(filesFacade.readString(architectureYamlFilePath));
+        var arch = objMapper.readValue(filesFacade.readString(architectureYamlFilePath));
 
         repo.checkout().setName(originalBranch).call();
+
+        repo.stashApply().call();
 
         return arch;
     }

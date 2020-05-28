@@ -92,7 +92,7 @@ public class AuNewCommandTest {
     public void shouldFailGracefullyIfGitApiFails() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
 
-        doThrow(new RuntimeException("Boo!")).when(gitFacadeSpy).wrap(any());
+        doThrow(new RuntimeException("Boo!")).when(gitFacadeSpy).openParentRepo(any());
         
         int status = execute(app, "au new not-au-name " + str(rootDir.toPath()));
 

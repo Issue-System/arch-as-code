@@ -118,9 +118,8 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     }
 
     private boolean checkBranchNameEquals(String str) {
-
         try {
-            String branch = gitFacade.wrap(getRepository(productArchitectureDirectory))
+            String branch = gitFacade.openParentRepo(productArchitectureDirectory)
                 .getRepository()
                 .getBranch();
             if(branch.equals(str)) return true; 
@@ -134,13 +133,5 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
             printError("ERROR: Unable to check git branch", e);
             return false;
         }
-    }
-
-    public static Repository getRepository(File rootDir) throws IOException {
-        FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        return builder
-                .readEnvironment()
-                .findGitDir(rootDir)
-                .build();
     }
 }

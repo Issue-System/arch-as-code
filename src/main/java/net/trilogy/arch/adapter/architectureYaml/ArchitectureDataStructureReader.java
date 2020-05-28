@@ -9,6 +9,11 @@ import java.io.IOException;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * This class is being strangle-patterned away.
+ * Use {@link net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper }
+ */
+@Deprecated
 public class ArchitectureDataStructureReader {
 
     final private FilesFacade filesFacade;

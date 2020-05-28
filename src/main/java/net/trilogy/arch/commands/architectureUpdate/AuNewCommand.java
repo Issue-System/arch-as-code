@@ -1,25 +1,20 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
-import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.GitFacade;
-import net.trilogy.arch.adapter.in.google.GoogleDocsApiInterface;
-import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
-import net.trilogy.arch.adapter.in.google.GoogleDocumentReader;
+import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
+import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
+import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.google.GoogleDocumentReader;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.NoWorkTreeException;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 

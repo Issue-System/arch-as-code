@@ -1,7 +1,7 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;

@@ -2,8 +2,8 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.GitFacade;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
 
 import org.junit.After;
 import org.junit.Before;

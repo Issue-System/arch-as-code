@@ -1,12 +1,12 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
-import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.Jira.JiraApi;
-import net.trilogy.arch.adapter.Jira.JiraApiFactory;
-import net.trilogy.arch.adapter.Jira.JiraStory.InvalidStoryException;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.adapter.jira.JiraApi;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;

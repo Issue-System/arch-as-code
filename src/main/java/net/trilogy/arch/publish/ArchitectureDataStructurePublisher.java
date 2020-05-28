@@ -2,9 +2,9 @@ package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.StructurizrAdapter;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
 import net.trilogy.arch.transformation.TransformerFactory;

@@ -1,13 +1,11 @@
 package net.trilogy.arch.e2e;
 
 import com.structurizr.Workspace;
-import com.structurizr.api.StructurizrClientException;
-import net.trilogy.arch.adapter.StructurizrAdapter;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.publish.ArchitectureDataStructurePublisher;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static net.trilogy.arch.TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION;
 import static net.trilogy.arch.TestHelper.TEST_WORKSPACE_ID;

@@ -1,8 +1,8 @@
 package net.trilogy.arch.domain;
 
 
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.C4ContainerView;
@@ -13,7 +13,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;

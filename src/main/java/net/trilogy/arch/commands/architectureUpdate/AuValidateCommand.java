@@ -1,8 +1,8 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
-import net.trilogy.arch.adapter.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
@@ -16,7 +16,6 @@ import picocli.CommandLine.Model.CommandSpec;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;

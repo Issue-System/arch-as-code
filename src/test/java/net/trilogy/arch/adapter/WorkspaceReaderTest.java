@@ -1,7 +1,7 @@
 package net.trilogy.arch.adapter;
 
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.in.WorkspaceReader;
+import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.*;

@@ -1,14 +1,12 @@
 package net.trilogy.arch;
 
-import net.trilogy.arch.adapter.Credentials;
-import net.trilogy.arch.adapter.WorkspaceConfig;
+import net.trilogy.arch.adapter.structurizr.Credentials;
+import net.trilogy.arch.adapter.structurizr.WorkspaceConfig;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.security.GeneralSecurityException;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;

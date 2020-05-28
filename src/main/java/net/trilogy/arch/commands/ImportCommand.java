@@ -1,7 +1,7 @@
 package net.trilogy.arch.commands;
 
-import net.trilogy.arch.adapter.in.WorkspaceReader;
-import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
+import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

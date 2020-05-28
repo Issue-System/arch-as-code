@@ -1,7 +1,7 @@
 package net.trilogy.arch.transformation;
 
 import com.structurizr.Workspace;
-import net.trilogy.arch.adapter.Credentials;
+import net.trilogy.arch.adapter.structurizr.Credentials;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.enhancer.WorkspaceEnhancer;
 

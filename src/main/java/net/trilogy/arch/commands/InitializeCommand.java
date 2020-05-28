@@ -1,6 +1,6 @@
 package net.trilogy.arch.commands;
 
-import net.trilogy.arch.adapter.out.ArchitectureDataStructureWriter;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import static net.trilogy.arch.adapter.Credentials.createCredentials;
+import static net.trilogy.arch.adapter.structurizr.Credentials.createCredentials;
 
 @CommandLine.Command(name = "init", description = "Initializes a new workspace directory to contain a single project architecture, AUs, documentation, and credentials for Structurizr imports and exports. This is generally the first command to be run.", mixinStandardHelpOptions = true)
 public class InitializeCommand implements Callable<Integer> {

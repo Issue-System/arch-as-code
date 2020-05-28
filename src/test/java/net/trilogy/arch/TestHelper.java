@@ -1,9 +1,9 @@
 package net.trilogy.arch;
 
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.GitFacade;
-import net.trilogy.arch.adapter.Jira.JiraApiFactory;
-import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 
 import java.io.File;
 import java.nio.file.Files;

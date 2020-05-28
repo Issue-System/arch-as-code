@@ -1,10 +1,10 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
-import net.trilogy.arch.adapter.FilesFacade;
-import net.trilogy.arch.adapter.GitFacade;
-import net.trilogy.arch.adapter.Jira.JiraApiFactory;
-import net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -15,9 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static net.trilogy.arch.adapter.Jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
-import static net.trilogy.arch.adapter.in.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
+import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
+import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
+import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;

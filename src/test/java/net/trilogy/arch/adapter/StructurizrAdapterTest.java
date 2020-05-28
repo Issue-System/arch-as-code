@@ -2,7 +2,7 @@ package net.trilogy.arch.adapter;
 
 
 import com.structurizr.Workspace;
-import com.structurizr.api.StructurizrClientException;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import org.junit.Test;
 
 import static net.trilogy.arch.TestHelper.TEST_WORKSPACE_ID;

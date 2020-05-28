@@ -1,16 +1,13 @@
 package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
-import com.structurizr.api.StructurizrClientException;
-import net.trilogy.arch.adapter.StructurizrAdapter;
-import net.trilogy.arch.adapter.in.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
 import org.junit.Test;
-import org.mockito.MockSettings;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;

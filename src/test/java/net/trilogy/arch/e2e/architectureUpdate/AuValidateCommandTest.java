@@ -46,7 +46,7 @@ public class AuValidateCommandTest {
     @Before
     public void setUp() throws IllegalStateException, GitAPIException, IOException {
         setUpOut();
-        var buildDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION).getPath());
+        var buildDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION_E2E).getPath());
 
         rootDir = buildDir.toPath().resolve("git").toFile();
 
@@ -201,13 +201,12 @@ public class AuValidateCommandTest {
         );
     }
 
-    @Ignore("TODO")
     @Test
     public void shouldFindErrorsAcrossGitBranches() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
         Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("WIP"));
+        collector.checkThat(err.toString(), containsString("Deleted component id \"deleted-component-invalid\" is invalid."));
     }
 
     @Test

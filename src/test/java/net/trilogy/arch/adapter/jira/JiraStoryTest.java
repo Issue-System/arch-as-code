@@ -194,4 +194,3 @@ public class JiraStoryTest {
         return au.toBuilder().tddContainersByComponent(List.of(newComponentWithTdds)).build();
     }
 }
-

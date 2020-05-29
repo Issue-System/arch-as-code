@@ -22,6 +22,9 @@ public abstract class TestHelper {
     public static final String MANIFEST_PATH_TO_TEST_METADATA = "/architecture/products/testspaces/product-architecture.yml";
     public static final String MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION = "/auAnnotate/product-architecture.yml";
 
+    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE = "/auValidation/unit/archBeforeAu.yml";
+    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE = "/auValidation/unit/archAfterAu.yml";
+
     // TODO [TESTING] [IMPORTANT]: This version of the big bank yaml is an old import. Needs to be updated.
     public static final String MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES = "/view/bigBank/product-architecture.yml";
     public static final String MANIFEST_PATH_TO_TEST_VIEWS = "/view/bigBank/product-architecture.yml";
@@ -39,7 +42,7 @@ public abstract class TestHelper {
 
     public static final String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static final String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
-    public static final String ROOT_PATH_TO_TEST_AU_VALIDATION = "/auValidation/";
+    public static final String ROOT_PATH_TO_TEST_AU_VALIDATION_E2E = "/auValidation/e2e/";
     public static final String ROOT_PATH_TO_TEST_AU_PUBLISH = "/auPublish/";
     public static final String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
     public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";

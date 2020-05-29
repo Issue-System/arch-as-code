@@ -71,6 +71,14 @@ public class ValidationError {
         );
     }
 
+    public static ValidationError forDeletedTddsComponentsMustBeValidReferences(ComponentReference componentReference) {
+        return new ValidationError(
+                ValidationErrorType.INVALID_DELETED_COMPONENT_ID,
+                componentReference,
+                String.format("Deleted component id \"%s\" is invalid.", componentReference.toString())
+        );
+    }
+
     public static ValidationError forFunctionalRequirementsMustBeValidReferences(String storyTitle, FunctionalRequirement.Id id) {
         return new ValidationError(
                 ValidationErrorType.INVALID_FUNCTIONAL_REQUIREMENT_REFERENCE_IN_STORY,

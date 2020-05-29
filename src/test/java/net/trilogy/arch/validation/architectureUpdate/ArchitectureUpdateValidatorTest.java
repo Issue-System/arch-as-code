@@ -1,17 +1,9 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
-import net.trilogy.arch.domain.architectureUpdate.Decision;
-import net.trilogy.arch.domain.architectureUpdate.Epic;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
-import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
+import net.trilogy.arch.domain.architectureUpdate.*;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,10 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE;
+import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE;
+import static org.hamcrest.Matchers.*;
 
 public class ArchitectureUpdateValidatorTest {
     @Rule
@@ -33,13 +24,20 @@ public class ArchitectureUpdateValidatorTest {
 
     private ArchitectureUpdate invalidAu;
     private ArchitectureDataStructure validDataStructure;
+    private ArchitectureDataStructure hasMissingComponentDataStructure;
 
     @Before
     public void setUp() throws IOException {
-        validDataStructure = new ArchitectureDataStructureReader(new FilesFacade())
-                .load(new File(
-                        getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS).getPath()
-                ));
+        final String ValidArchAsString = new FilesFacade().readString(new File(
+                getClass().getResource(MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE).getPath()
+        ).toPath());
+        validDataStructure = new ArchitectureDataStructureObjectMapper().readValue(ValidArchAsString);
+
+        final String missingComponentArchAsString = new FilesFacade().readString(new File(
+                getClass().getResource(MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE).getPath()
+        ).toPath());
+        hasMissingComponentDataStructure = new ArchitectureDataStructureObjectMapper().readValue(missingComponentArchAsString);
+
 
         invalidAu = ArchitectureUpdate.builderPreFilledWithBlanks()
                 .decisions(Map.of(
@@ -71,7 +69,7 @@ public class ArchitectureUpdateValidatorTest {
                 .tddContainersByComponent(
                         List.of(
                                 new TddContainerByComponent(
-                                        new Tdd.ComponentReference("Deleted-Component-Id"),
+                                        new Tdd.ComponentReference("Valid-Deleted-Component-Id"),
                                         true,
                                         Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-2"), new Tdd("text"))
                                 ),
@@ -107,8 +105,8 @@ public class ArchitectureUpdateValidatorTest {
                                         Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-3"), new Tdd("text"))
                                 ),
                                 new TddContainerByComponent(
-                                        new Tdd.ComponentReference("16"), 
-                                        true, // ERR: not actually deleted
+                                        new Tdd.ComponentReference("Invalid-Deleted-Component-Id"),
+                                        true,  // ERR: Because this component never existed
                                         Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-4"), new Tdd("text"))
                                 ),
                                 new TddContainerByComponent(
@@ -156,7 +154,7 @@ public class ArchitectureUpdateValidatorTest {
 
     @Test
     public void blankAuShouldBeValid() {
-        var result = ArchitectureUpdateValidator.validate(ArchitectureUpdate.blank(), validDataStructure, null);
+        var result = ArchitectureUpdateValidator.validate(ArchitectureUpdate.blank(), validDataStructure, validDataStructure);
 
         collector.checkThat(result.isValid(), is(true));
         collector.checkThat(result.isValid(ValidationStage.STORY), is(true));
@@ -165,7 +163,7 @@ public class ArchitectureUpdateValidatorTest {
 
     @Test
     public void shouldFindAllErrors() {
-        var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure, null).getErrors();
+        var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure, hasMissingComponentDataStructure).getErrors();
 
         var expectedErrors = List.of(
                 ValidationError.forTddsMustBeValidReferences(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
@@ -184,6 +182,7 @@ public class ArchitectureUpdateValidatorTest {
 
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
                 ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id-2")),
+                ValidationError.forDeletedTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Deleted-Component-Id")),
 
                 ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 
@@ -194,6 +193,7 @@ public class ArchitectureUpdateValidatorTest {
                 ValidationError.forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story")),
 
                 ValidationError.forDuplicatedComponent(new Tdd.ComponentReference("38"))
+
         );
 
         expectedErrors.forEach(e ->

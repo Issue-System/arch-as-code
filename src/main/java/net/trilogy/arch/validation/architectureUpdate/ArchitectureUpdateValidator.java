@@ -20,7 +20,8 @@ public class ArchitectureUpdateValidator {
     private final ArchitectureDataStructure architectureAfterUpdate;
     private final ArchitectureDataStructure architectureBeforeUpdate;
 
-    private final Set<String> allComponentIdsInArchitecture;
+    private final Set<String> allComponentIdsInBeforeArchitecture;
+    private final Set<String> allComponentIdsInAfterArchitecture;
 
     private final Set<Tdd.Id> allTddIdsInStories;
     private final List<Tdd.Id> allTddIds;
@@ -29,12 +30,12 @@ public class ArchitectureUpdateValidator {
     private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
 
     public static ValidationResult validate(
-            ArchitectureUpdate architectureUpdateToValidate, 
+            ArchitectureUpdate architectureUpdateToValidate,
             ArchitectureDataStructure architectureAfterUpdate,
             ArchitectureDataStructure architectureBeforeUpdate) {
 
         return new ArchitectureUpdateValidator(
-                architectureUpdateToValidate, 
+                architectureUpdateToValidate,
                 architectureAfterUpdate,
                 architectureBeforeUpdate
         ).run();
@@ -48,7 +49,8 @@ public class ArchitectureUpdateValidator {
         this.architectureAfterUpdate = architectureAfterUpdate;
         this.architectureBeforeUpdate = architectureBeforeUpdate;
 
-        allComponentIdsInArchitecture = getAllComponentIdsInArchitecture();
+        allComponentIdsInBeforeArchitecture = getAllComponentIdsIn(this.architectureBeforeUpdate);
+        allComponentIdsInAfterArchitecture = getAllComponentIdsIn(this.architectureAfterUpdate);
         allTddIdsInStories = getAllTddIdsReferencedByStories();
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();
@@ -66,6 +68,7 @@ public class ArchitectureUpdateValidator {
                 getErrors_ComponentsMustBeReferencedOnlyOnceForTdds(),
 
                 getErrors_TddsComponentsMustBeValidReferences(),
+                getErrors_TddsDeletedComponentsMustBeValidReferences(),
 
                 getErrors_TddsMustHaveDecisionsOrRequirements(),
 
@@ -77,19 +80,18 @@ public class ArchitectureUpdateValidator {
 
                 getErrors_TddsMustHaveStories(),
                 getErrors_FunctionalRequirementsMustHaveStories()
-
         ).collect(Collectors.toList()));
     }
 
     private Set<ValidationError> getErrors_ComponentsMustBeReferencedOnlyOnceForTdds() {
         var allComponentReferences = architectureUpdate.getTddContainersByComponent()
-            .stream()
-            .map(TddContainerByComponent::getComponentId)
-            .collect(Collectors.toList());
+                .stream()
+                .map(TddContainerByComponent::getComponentId)
+                .collect(Collectors.toList());
         return findDuplicates(allComponentReferences)
-            .stream()
-            .map(ValidationError::forDuplicatedComponent)
-            .collect(Collectors.toSet());
+                .stream()
+                .map(ValidationError::forDuplicatedComponent)
+                .collect(Collectors.toSet());
     }
 
     private Set<ValidationError> getErrors_TddsMustHaveUniqueIds() {
@@ -120,16 +122,24 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_TddsComponentsMustBeValidReferences() {
-        
-        // TODO [Enhancement]: Also check deleted components
-        
         return architectureUpdate.getTddContainersByComponent()
                 .stream()
                 .filter(container -> !container.isDeleted())
                 .map(TddContainerByComponent::getComponentId)
-                .filter(componentReference -> 
-                        !allComponentIdsInArchitecture.contains(componentReference.toString()))
+                .filter(componentReference ->
+                        !allComponentIdsInAfterArchitecture.contains(componentReference.toString()))
                 .map(ValidationError::forTddsComponentsMustBeValidReferences)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<ValidationError> getErrors_TddsDeletedComponentsMustBeValidReferences() {
+        return architectureUpdate.getTddContainersByComponent()
+                .stream()
+                .filter(TddContainerByComponent::isDeleted)
+                .map(TddContainerByComponent::getComponentId)
+                .filter(componentReference ->
+                        !allComponentIdsInBeforeArchitecture.contains(componentReference.toString()))
+                .map(ValidationError::forDeletedTddsComponentsMustBeValidReferences)
                 .collect(Collectors.toSet());
     }
 
@@ -258,8 +268,8 @@ public class ArchitectureUpdateValidator {
                 .collect(Collectors.toSet());
     }
 
-    private Set<String> getAllComponentIdsInArchitecture() {
-        return this.architectureAfterUpdate.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
+    private Set<String> getAllComponentIdsIn(ArchitectureDataStructure architecture) {
+        return architecture.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
     }
 
     private <T> Set<T> findDuplicates(Collection<T> collection) {

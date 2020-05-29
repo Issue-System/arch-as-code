@@ -14,9 +14,9 @@ else
     cd "$dir"
     cd ..
 
-    rm -rf $dir/../demo-folder/.arch-as-code
-    rm -rf $dir/../demo-folder/.install
-    mkdir -p $dir/../demo-folder/.install
+    rm -rf /tmp/aac/demo-folder/.arch-as-code
+    rm -rf /tmp/aac/demo-folder/.install
+    mkdir -p /tmp/aac/demo-folder/.install
 
     # remove existing
     ./gradlew clean
@@ -28,9 +28,11 @@ else
     unzip *.zip
     rm *.zip
     cd *
-    mv ./* $dir/../demo-folder/.install/
+    mv ./* /tmp/aac/demo-folder/.install/
 
-    cd $dir/../demo-folder
+    cd /tmp/aac/demo-folder
+
+    git init
 
     mv product-architecture.yml product-architecture.yml.bak
 

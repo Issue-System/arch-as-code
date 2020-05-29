@@ -18,6 +18,5 @@ bin/
 credentials.json
 
 .arch-as-code/
-demo-folder/*
 
 .DS_Store

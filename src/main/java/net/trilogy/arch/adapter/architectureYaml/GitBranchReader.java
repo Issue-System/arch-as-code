@@ -1,19 +1,19 @@
 package net.trilogy.arch.adapter.architectureYaml;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.stream.Collectors;
-
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.facade.GitFacade;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.*;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.treewalk.TreeWalk;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 public class GitBranchReader {
     private final FilesFacade filesFacade;
@@ -30,20 +30,31 @@ public class GitBranchReader {
             throws IOException, RefAlreadyExistsException, RefNotFoundException,
             InvalidRefNameException, CheckoutConflictException, GitAPIException {
 
-        var repo = gitFacade.openParentRepo(architectureYamlFilePath.toFile());
-        var originalBranch = repo.getRepository().getBranch();
+        var git = gitFacade.openParentRepo(architectureYamlFilePath.toFile());
+        final RevCommit lastCommit = git.log().add(git.getRepository().resolve(branchName)).call().iterator().next();
+        final String relativePath = getRelativePath(architectureYamlFilePath, git);
 
-        filesFacade.writeString(architectureYamlFilePath.getParent().resolve("empty.txt"), "");
-        repo.stashCreate().setIncludeUntracked(true).call();
-
-        repo.checkout().setName(branchName).call();
-
-        var arch = objMapper.readValue(filesFacade.readString(architectureYamlFilePath));
-
-        repo.checkout().setName(originalBranch).call();
-
-        repo.stashApply().call();
+        final String archAsString = getContent(git, lastCommit, relativePath);
+        var arch = objMapper.readValue(archAsString);
 
         return arch;
+    }
+
+    private String getRelativePath(Path architectureYamlFilePath, Git git) {
+        return architectureYamlFilePath
+                .toAbsolutePath()
+                .toString()
+                .replaceAll(git.getRepository().getDirectory().getParentFile().getAbsolutePath() + "/", "");
+    }
+
+    private String getContent(Git git, RevCommit commit, String path) throws IOException {
+        try (TreeWalk treeWalk = TreeWalk.forPath(git.getRepository(), path, commit.getTree())) {
+            ObjectId blobId = treeWalk.getObjectId(0);
+            try (ObjectReader objectReader = git.getRepository().newObjectReader()) {
+                ObjectLoader objectLoader = objectReader.open(blobId);
+                byte[] bytes = objectLoader.getBytes();
+                return new String(bytes, StandardCharsets.UTF_8);
+            }
+        }
     }
 }

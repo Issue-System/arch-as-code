@@ -1,38 +1,28 @@
 package net.trilogy.arch.domain;
 
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.architectureYaml.GitBranchReader;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.eclipse.jgit.api.Git;
+import org.junit.*;
+import org.junit.rules.ErrorCollector;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
-import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.adapter.architectureYaml.GitBranchReader;
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GitBranchReaderTest {
     @Rule
@@ -57,14 +47,21 @@ public class GitBranchReaderTest {
         archPath = rootDir.toPath().resolve("product-architecture.yml");
 
         architectureAsString = TestHelper.loadResource(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY);
+        // First commit
+        Files.writeString(archPath, "initial commit");
+        git.add().addFilepattern("root/product-architecture.yml").call();
+        git.commit().setMessage("initial commit").call();
+
+        // Second commit
         Files.writeString(archPath, architectureAsString);
         git.add().addFilepattern("root/product-architecture.yml").call();
         git.commit().setMessage("commit architecture to master").call();
 
+
         collector.checkThat(
-            "PRECONDITION CHECK: Architecture must exist in master branch.",
-            Files.exists(archPath),
-            is(true)
+                "PRECONDITION CHECK: Architecture must exist in master branch.",
+                Files.exists(archPath),
+                is(true)
         );
 
         git.checkout().setCreateBranch(true).setName("not-master").call();
@@ -73,16 +70,22 @@ public class GitBranchReaderTest {
         git.commit().setMessage("commit deleting architecture in other branch").call();
 
         collector.checkThat(
-            "PRECONDITION CHECK: Architecture must not exist in current branch.",
-            Files.exists(archPath),
-            is(false)
+                "PRECONDITION CHECK: Architecture must not exist in current branch.",
+                Files.exists(archPath),
+                is(false)
         );
+    }
+
+    @Test
+    @Ignore("TODO")
+    public void shouldNotFailWhenNoCommits() {
+        fail("todo");
     }
 
     @Test
     public void shouldLoadMasterBranchArchitecture() throws Exception {
         var actual = new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
-            .load("master", archPath);
+                .load("master", archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
         collector.checkThat(actual, equalTo(expected));
@@ -91,8 +94,8 @@ public class GitBranchReaderTest {
     @Test
     public void shouldNotChangeBranch() throws Exception {
         new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
-            .load("master", archPath);
-        
+                .load("master", archPath);
+
         collector.checkThat(isBranch("not-master"), is(true));
     }
 
@@ -102,15 +105,15 @@ public class GitBranchReaderTest {
         Files.writeString(archPath, "MODIFIED FILE");
         Files.writeString(otherFile, "NEW FILE");
         var beforeFiles = FileUtils.listFilesAndDirs(
-                repoDir, 
-                FileFilterUtils.trueFileFilter(), 
+                repoDir,
+                FileFilterUtils.trueFileFilter(),
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
         new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper()).load("master", archPath);
 
         var afterFiles = FileUtils.listFilesAndDirs(
-                repoDir, 
-                FileFilterUtils.trueFileFilter(), 
+                repoDir,
+                FileFilterUtils.trueFileFilter(),
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
         collector.checkThat(beforeFiles, equalTo(afterFiles));
@@ -122,11 +125,10 @@ public class GitBranchReaderTest {
     public void shouldNotChangeBranchIfException() throws Exception {
         var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
         when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
-
-        try{
+        try {
             new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
             fail("Exception not thrown.");
-        } catch(RuntimeException ignored) {
+        } catch (RuntimeException ignored) {
             collector.checkThat(isBranch("not-master"), is(true));
         }
     }
@@ -140,17 +142,17 @@ public class GitBranchReaderTest {
         Files.writeString(archPath, "MODIFIED FILE");
         Files.writeString(otherFile, "NEW FILE");
         var beforeFiles = FileUtils.listFilesAndDirs(
-                repoDir, 
-                FileFilterUtils.trueFileFilter(), 
+                repoDir,
+                FileFilterUtils.trueFileFilter(),
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
         try {
             new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
             fail("Exception not thrown.");
-        } catch(RuntimeException ignored) {
+        } catch (RuntimeException ignored) {
             var afterFiles = FileUtils.listFilesAndDirs(
-                    repoDir, 
-                    FileFilterUtils.trueFileFilter(), 
+                    repoDir,
+                    FileFilterUtils.trueFileFilter(),
                     FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
             collector.checkThat(beforeFiles, equalTo(afterFiles));
@@ -158,7 +160,7 @@ public class GitBranchReaderTest {
             collector.checkThat(Files.readString(otherFile), equalTo("NEW FILE"));
         }
     }
-    
+
     @Ignore("TODO")
     @Test
     public void shouldHandleIfBranchInvalid() {

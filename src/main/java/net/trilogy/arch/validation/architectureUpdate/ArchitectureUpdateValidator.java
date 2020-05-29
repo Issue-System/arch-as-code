@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 
 public class ArchitectureUpdateValidator {
 
-    private final ArchitectureUpdate au;
-    private final ArchitectureDataStructure architecture;
+    private final ArchitectureUpdate architectureUpdate;
+    private final ArchitectureDataStructure architectureAfterUpdate;
+    private final ArchitectureDataStructure architectureBeforeUpdate;
 
     private final Set<String> allComponentIdsInArchitecture;
 
@@ -27,13 +28,25 @@ public class ArchitectureUpdateValidator {
     private final Set<Tdd.Id> allTddIdsInDecisions;
     private final Set<Tdd.Id> allTddIdsInFunctionalRequirements;
 
-    public static ValidationResult validate(ArchitectureUpdate au, ArchitectureDataStructure architecture) {
-        return new ArchitectureUpdateValidator(au, architecture).run();
+    public static ValidationResult validate(
+            ArchitectureUpdate architectureUpdateToValidate, 
+            ArchitectureDataStructure architectureAfterUpdate,
+            ArchitectureDataStructure architectureBeforeUpdate) {
+
+        return new ArchitectureUpdateValidator(
+                architectureUpdateToValidate, 
+                architectureAfterUpdate,
+                architectureBeforeUpdate
+        ).run();
     }
 
-    private ArchitectureUpdateValidator(ArchitectureUpdate au, ArchitectureDataStructure architecture) {
-        this.au = au;
-        this.architecture = architecture;
+    private ArchitectureUpdateValidator(
+            ArchitectureUpdate architectureUpdate,
+            ArchitectureDataStructure architectureAfterUpdate,
+            ArchitectureDataStructure architectureBeforeUpdate) {
+        this.architectureUpdate = architectureUpdate;
+        this.architectureAfterUpdate = architectureAfterUpdate;
+        this.architectureBeforeUpdate = architectureBeforeUpdate;
 
         allComponentIdsInArchitecture = getAllComponentIdsInArchitecture();
         allTddIdsInStories = getAllTddIdsReferencedByStories();
@@ -69,7 +82,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_ComponentsMustBeReferencedOnlyOnceForTdds() {
-        var allComponentReferences = au.getTddContainersByComponent()
+        var allComponentReferences = architectureUpdate.getTddContainersByComponent()
             .stream()
             .map(TddContainerByComponent::getComponentId)
             .collect(Collectors.toList());
@@ -86,7 +99,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_StoriesFunctionalRequirementsMustBeValidReferences() {
-        return au.getCapabilityContainer().getFeatureStories()
+        return architectureUpdate.getCapabilityContainer().getFeatureStories()
                 .stream()
                 .filter(story -> story.getRequirementReferences() != null)
                 .flatMap(story ->
@@ -100,7 +113,7 @@ public class ArchitectureUpdateValidator {
 
     private Set<ValidationError> getErrors_FunctionalRequirementsMustHaveStories() {
         var storyReferencedFunctionalRequirements = getAllFunctionalRequirementsReferencedByStories();
-        return au.getFunctionalRequirements().entrySet().stream()
+        return architectureUpdate.getFunctionalRequirements().entrySet().stream()
                 .filter(funcReqEntry -> !storyReferencedFunctionalRequirements.contains(funcReqEntry.getKey()))
                 .map(funcReqEntry -> ValidationError.forMustHaveStories(funcReqEntry.getKey()))
                 .collect(Collectors.toSet());
@@ -110,7 +123,7 @@ public class ArchitectureUpdateValidator {
         
         // TODO [Enhancement]: Also check deleted components
         
-        return au.getTddContainersByComponent()
+        return architectureUpdate.getTddContainersByComponent()
                 .stream()
                 .filter(container -> !container.isDeleted())
                 .map(TddContainerByComponent::getComponentId)
@@ -136,7 +149,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_DecisionsMustHaveTdds() {
-        return au.getDecisions()
+        return architectureUpdate.getDecisions()
                 .entrySet()
                 .stream()
                 .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() == null || decisionEntry.getValue().getTddReferences().isEmpty())
@@ -145,7 +158,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_StoriesMustHaveTdds() {
-        return au.getCapabilityContainer().getFeatureStories()
+        return architectureUpdate.getCapabilityContainer().getFeatureStories()
                 .stream()
                 .filter(story -> story.getTddReferences() == null || story.getTddReferences().isEmpty())
                 .map(story -> ValidationError.forStoriesMustHaveTdds(story.getTitle()))
@@ -153,7 +166,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_StoriesMustHaveFunctionalRequirements() {
-        return au.getCapabilityContainer().getFeatureStories()
+        return architectureUpdate.getCapabilityContainer().getFeatureStories()
                 .stream()
                 .filter(story -> story.getRequirementReferences() == null || story.getRequirementReferences().isEmpty())
                 .map(story -> ValidationError.forStoriesMustHaveFunctionalRequirements(story.getTitle()))
@@ -161,7 +174,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_DecisionsTddsMustBeValidReferences() {
-        return au.getDecisions()
+        return architectureUpdate.getDecisions()
                 .entrySet()
                 .stream()
                 .filter(decisionEntry -> decisionEntry.getValue().getTddReferences() != null)
@@ -175,7 +188,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_StoriesTddsMustBeValidReferences() {
-        return au.getCapabilityContainer()
+        return architectureUpdate.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
                 .filter(story -> story.getTddReferences() != null)
@@ -189,7 +202,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<ValidationError> getErrors_FunctionalRequirementsTddsMustBeValidReferences() {
-        return au.getFunctionalRequirements()
+        return architectureUpdate.getFunctionalRequirements()
                 .entrySet()
                 .stream()
                 .filter(functionalEntry -> functionalEntry.getValue().getTddReferences() != null)
@@ -202,18 +215,18 @@ public class ArchitectureUpdateValidator {
     }
 
     private List<Tdd.Id> getAllTddIds() {
-        return au.getTddContainersByComponent()
+        return architectureUpdate.getTddContainersByComponent()
                 .stream()
                 .flatMap(container -> container.getTdds().keySet().stream())
                 .collect(Collectors.toList());
     }
 
     private Set<FunctionalRequirement.Id> getAllFunctionalRequirementIds() {
-        return au.getFunctionalRequirements().keySet();
+        return architectureUpdate.getFunctionalRequirements().keySet();
     }
 
     private Set<Tdd.Id> getAllTddIdsReferencedByStories() {
-        return au.getCapabilityContainer()
+        return architectureUpdate.getCapabilityContainer()
                 .getFeatureStories()
                 .stream()
                 .flatMap(story -> story.getTddReferences().stream())
@@ -221,7 +234,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<Tdd.Id> getAllTddIdsReferencedByFunctionalRequirements() {
-        return au.getFunctionalRequirements()
+        return architectureUpdate.getFunctionalRequirements()
                 .values()
                 .stream()
                 .filter(requirement -> requirement.getTddReferences() != null)
@@ -230,14 +243,14 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<FunctionalRequirement.Id> getAllFunctionalRequirementsReferencedByStories() {
-        return au.getCapabilityContainer()
+        return architectureUpdate.getCapabilityContainer()
                 .getFeatureStories().stream()
                 .flatMap(story -> story.getRequirementReferences().stream())
                 .collect(Collectors.toSet());
     }
 
     private Set<Tdd.Id> getAllTddIdsReferencedByDecisions() {
-        return au.getDecisions()
+        return architectureUpdate.getDecisions()
                 .values()
                 .stream()
                 .filter(decision -> decision.getTddReferences() != null)
@@ -246,7 +259,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<String> getAllComponentIdsInArchitecture() {
-        return this.architecture.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
+        return this.architectureAfterUpdate.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
     }
 
     private <T> Set<T> findDuplicates(Collection<T> collection) {

@@ -210,15 +210,14 @@ public class AuValidateCommandTest {
         collector.checkThat(err.toString(), containsString("WIP"));
     }
 
-    @Ignore("TODO")
     @Test
-    public void shouldHandleIfWrongBaseBranchProvided() throws Exception {
+    public void shouldHandleIfGitReaderFails() throws Exception {
         var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
 
         Integer status = execute("architecture-update", "validate", "-b", "invalid", auPath, rootDir.getAbsolutePath());
         
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("WIP"));
+        collector.checkThat(err.toString(), containsString("Unable to load 'invalid' branch architecture\nError thrown: net.trilogy.arch.adapter.architectureYaml.GitBranchReader$BranchNotFoundException"));
     }
 
     @Test
@@ -240,7 +239,7 @@ public class AuValidateCommandTest {
 
         collector.checkThat(
                 err.toString(),
-                containsString("Unable to load file\nError thrown: com.fasterxml")
+                containsString("Unable to load architecture update file\nError thrown: com.fasterxml")
         );
     }
 }

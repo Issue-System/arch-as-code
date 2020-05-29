@@ -156,7 +156,7 @@ public class ArchitectureUpdateValidatorTest {
 
     @Test
     public void blankAuShouldBeValid() {
-        var result = ArchitectureUpdateValidator.validate(ArchitectureUpdate.blank(), validDataStructure);
+        var result = ArchitectureUpdateValidator.validate(ArchitectureUpdate.blank(), validDataStructure, null);
 
         collector.checkThat(result.isValid(), is(true));
         collector.checkThat(result.isValid(ValidationStage.STORY), is(true));
@@ -165,7 +165,7 @@ public class ArchitectureUpdateValidatorTest {
 
     @Test
     public void shouldFindAllErrors() {
-        var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure).getErrors();
+        var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure, null).getErrors();
 
         var expectedErrors = List.of(
                 ValidationError.forTddsMustBeValidReferences(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),

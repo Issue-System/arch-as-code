@@ -26,6 +26,16 @@ public class ArchitectureUpdateValidatorTest {
     private ArchitectureDataStructure validDataStructure;
     private ArchitectureDataStructure hasMissingComponentDataStructure;
 
+    /*
+     * [TODO] [TESTING]: Refactor required.
+     *
+     * This testing strategy got out of hand. The strategy is:
+     *   create an AU with all possible validation errors, and see if the validator
+     *   catches them all
+     * The recommended strategy is:
+     *   make production `getError_` method accessible from test (package private, or extract to its 
+     *   own class), and test it individually + have a single test that ensures all errors are aggregated
+    */
     @Before
     public void setUp() throws IOException {
         final String ValidArchAsString = new FilesFacade().readString(new File(
@@ -37,7 +47,6 @@ public class ArchitectureUpdateValidatorTest {
                 getClass().getResource(MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE).getPath()
         ).toPath());
         hasMissingComponentDataStructure = new ArchitectureDataStructureObjectMapper().readValue(missingComponentArchAsString);
-
 
         invalidAu = ArchitectureUpdate.builderPreFilledWithBlanks()
                 .decisions(Map.of(
@@ -62,7 +71,8 @@ public class ArchitectureUpdateValidatorTest {
                                         new Tdd.Id("Valid-TDD-with-requirement-and-story"),
                                         new Tdd.Id("Valid-TDD-with-requirement-and-story-2"),
                                         new Tdd.Id("Valid-TDD-with-requirement-and-story-3"),
-                                        new Tdd.Id("Valid-TDD-with-requirement-and-story-4")
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story-4"),
+                                        new Tdd.Id("Valid-TDD-with-requirement-and-story-5")
                                 ))
                         )
                 )
@@ -82,6 +92,11 @@ public class ArchitectureUpdateValidatorTest {
                                         new Tdd.ComponentReference("14"),
                                         false,
                                         Map.of(new Tdd.Id("TDD-unused-and-without-story"), new Tdd("text"))
+                                ),
+                                new TddContainerByComponent(
+                                        new Tdd.ComponentReference("14"),
+                                        true, // same id as a non-deleted one-- they should not clash
+                                        Map.of(new Tdd.Id("Valid-TDD-with-requirement-and-story-5"), new Tdd("text"))
                                 ),
                                 new TddContainerByComponent(
                                         new Tdd.ComponentReference("15"),
@@ -125,6 +140,7 @@ public class ArchitectureUpdateValidatorTest {
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story-2"),
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story-3"),
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story-4"),
+                                                new Tdd.Id("Valid-TDD-with-requirement-and-story-5"),
                                                 new Tdd.Id("Invalid-TDD-ID"),
                                                 new Tdd.Id("Tdd-with-invalid-component")
                                         ), List.of(

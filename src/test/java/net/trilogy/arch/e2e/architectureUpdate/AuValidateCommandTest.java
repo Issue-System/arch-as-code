@@ -206,7 +206,7 @@ public class AuValidateCommandTest {
         var auPath = rootDir.toPath().resolve("architecture-updates/invalid_deleted_component.yml").toAbsolutePath().toString();
         Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("Deleted component id \"deleted-component-invalid\" is invalid."));
+        collector.checkThat(err.toString(), containsString("Deleted component id \"deleted-component-invalid\" is invalid. (Checked architecture in \"master\" branch.)"));
     }
 
     @Test

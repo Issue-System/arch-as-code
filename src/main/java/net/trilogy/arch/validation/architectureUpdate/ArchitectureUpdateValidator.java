@@ -1,6 +1,9 @@
 package net.trilogy.arch.validation.architectureUpdate;
 
 import io.vavr.collection.Stream;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
@@ -86,11 +89,11 @@ public class ArchitectureUpdateValidator {
     private Set<ValidationError> getErrors_ComponentsMustBeReferencedOnlyOnceForTdds() {
         var allComponentReferences = architectureUpdate.getTddContainersByComponent()
                 .stream()
-                .map(TddContainerByComponent::getComponentId)
+                .map(it -> new ComponentReferenceAndIsDeleted(it.getComponentId(), it.isDeleted()))
                 .collect(Collectors.toList());
         return findDuplicates(allComponentReferences)
                 .stream()
-                .map(ValidationError::forDuplicatedComponent)
+                .map(it -> ValidationError.forDuplicatedComponent(it.getComponentReference()))
                 .collect(Collectors.toSet());
     }
 
@@ -278,5 +281,13 @@ public class ArchitectureUpdateValidator {
                 .stream()
                 .filter(t -> !uniques.add(t))
                 .collect(Collectors.toSet());
+    }
+    
+    @EqualsAndHashCode
+    @Getter
+    @RequiredArgsConstructor
+    private static class ComponentReferenceAndIsDeleted {
+        private final Tdd.ComponentReference componentReference;
+        private final boolean isDeleted;
     }
 }

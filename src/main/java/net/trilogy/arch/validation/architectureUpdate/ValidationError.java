@@ -73,7 +73,7 @@ public class ValidationError {
 
     public static ValidationError forDeletedTddsComponentsMustBeValidReferences(ComponentReference componentReference) {
         return new ValidationError(
-                ValidationErrorType.INVALID_DELETED_COMPONENT_ID,
+                ValidationErrorType.INVALID_DELETED_COMPONENT_REFERENCE,
                 componentReference,
                 String.format("Deleted component id \"%s\" is invalid.", componentReference.toString())
         );

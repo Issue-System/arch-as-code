@@ -89,7 +89,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
 
         if (!areAllStagesValid) {
             final List<ValidationError> errors = getErrorsOfStages(stages, validationResults);
-            final String resultToDisplay = getPrettyStringOfErrors(errors);
+            final String resultToDisplay = getPrettyStringOfErrors(errors, baseBranch);
             spec.commandLine().getErr().println(resultToDisplay);
             return 1;
         }
@@ -144,10 +144,10 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
         }
     }
 
-    private String getPrettyStringOfErrors(final List<ValidationError> errors) {
+    private String getPrettyStringOfErrors(final List<ValidationError> errors, final String baseBranchName) {
         return getTypes(errors).stream()
                 .map(type -> getErrorsOfType(type, errors))
-                .map(this::getPrettyStringOfErrorsInSingleType)
+                .map(it -> getPrettyStringOfErrorsInSingleType(it, baseBranchName))
                 .collect(Collectors.joining())
                 .trim();
     }
@@ -172,11 +172,19 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
                 .collect(Collectors.toList());
     }
 
-    private String getPrettyStringOfErrorsInSingleType(final List<ValidationError> errors) {
-        return errors.get(0).getValidationErrorType() +
-                ":" +
-                errors.stream().map(error -> "\n    " + error.getDescription()).collect(Collectors.joining()) +
+    private String getPrettyStringOfErrorsInSingleType(final List<ValidationError> errors, final String baseBranchName) {
+        return errors.get(0).getValidationErrorType() + ":" +
+                errors.stream()
+                    .map(error -> toString(error, baseBranchName))
+                    .collect(Collectors.joining()) +
                 "\n";
+    }
+
+    private String toString(ValidationError error, String baseBranchName) {
+        var result = "\n    " + error.getDescription();
+        if (error.getValidationErrorType() == ValidationErrorType.INVALID_DELETED_COMPONENT_REFERENCE)
+            result += " (Checked architecture in \"" + baseBranchName + "\" branch.)";
+        return result;
     }
 
     private List<ValidationStage> determineValidationStages(final boolean tddValidation, final boolean capabilityValidation) {

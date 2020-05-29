@@ -1,10 +1,9 @@
 package net.trilogy.arch.adapter.architectureYaml;
 
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.facade.GitFacade;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.*;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -16,28 +15,29 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 public class GitBranchReader {
-    private final FilesFacade filesFacade;
     private final GitFacade gitFacade;
     private final ArchitectureDataStructureObjectMapper objMapper;
 
-    public GitBranchReader(FilesFacade filesFacade, GitFacade gitFacade, ArchitectureDataStructureObjectMapper objMapper) {
-        this.filesFacade = filesFacade;
+    public GitBranchReader(GitFacade gitFacade, ArchitectureDataStructureObjectMapper objMapper) {
         this.gitFacade = gitFacade;
         this.objMapper = objMapper;
     }
 
     public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath)
-            throws IOException, RefAlreadyExistsException, RefNotFoundException,
-            InvalidRefNameException, CheckoutConflictException, GitAPIException {
+            throws IOException, GitAPIException, BranchNotFoundException {
 
         var git = gitFacade.openParentRepo(architectureYamlFilePath.toFile());
-        final RevCommit lastCommit = git.log().add(git.getRepository().resolve(branchName)).call().iterator().next();
+        final ObjectId resolvedBranch = git.getRepository().resolve(branchName);
+
+        if (resolvedBranch == null) {
+            throw new BranchNotFoundException();
+        }
+
+        final RevCommit lastCommit = git.log().add(resolvedBranch).call().iterator().next();
         final String relativePath = getRelativePath(architectureYamlFilePath, git);
-
         final String archAsString = getContent(git, lastCommit, relativePath);
-        var arch = objMapper.readValue(archAsString);
 
-        return arch;
+        return objMapper.readValue(archAsString);
     }
 
     private String getRelativePath(Path architectureYamlFilePath, Git git) {
@@ -56,5 +56,8 @@ public class GitBranchReader {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
         }
+    }
+
+    public class BranchNotFoundException extends Exception {
     }
 }

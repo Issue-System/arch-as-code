@@ -4,12 +4,14 @@ package net.trilogy.arch.domain;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.GitBranchReader;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.facade.GitFacade;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.jgit.api.Git;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.io.File;
@@ -77,14 +79,8 @@ public class GitBranchReaderTest {
     }
 
     @Test
-    @Ignore("TODO")
-    public void shouldNotFailWhenNoCommits() {
-        fail("todo");
-    }
-
-    @Test
     public void shouldLoadMasterBranchArchitecture() throws Exception {
-        var actual = new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
+        var actual = new GitBranchReader(new GitFacade(), new ArchitectureDataStructureObjectMapper())
                 .load("master", archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
@@ -93,7 +89,7 @@ public class GitBranchReaderTest {
 
     @Test
     public void shouldNotChangeBranch() throws Exception {
-        new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper())
+        new GitBranchReader(new GitFacade(), new ArchitectureDataStructureObjectMapper())
                 .load("master", archPath);
 
         collector.checkThat(isBranch("not-master"), is(true));
@@ -109,7 +105,7 @@ public class GitBranchReaderTest {
                 FileFilterUtils.trueFileFilter(),
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
-        new GitBranchReader(new FilesFacade(), new GitFacade(), new ArchitectureDataStructureObjectMapper()).load("master", archPath);
+        new GitBranchReader(new GitFacade(), new ArchitectureDataStructureObjectMapper()).load("master", archPath);
 
         var afterFiles = FileUtils.listFilesAndDirs(
                 repoDir,
@@ -126,7 +122,7 @@ public class GitBranchReaderTest {
         var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
         when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
         try {
-            new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
+            new GitBranchReader(new GitFacade(), badMapper).load("master", archPath);
             fail("Exception not thrown.");
         } catch (RuntimeException ignored) {
             collector.checkThat(isBranch("not-master"), is(true));
@@ -147,7 +143,7 @@ public class GitBranchReaderTest {
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
         try {
-            new GitBranchReader(new FilesFacade(), new GitFacade(), badMapper).load("master", archPath);
+            new GitBranchReader(new GitFacade(), badMapper).load("master", archPath);
             fail("Exception not thrown.");
         } catch (RuntimeException ignored) {
             var afterFiles = FileUtils.listFilesAndDirs(
@@ -161,10 +157,10 @@ public class GitBranchReaderTest {
         }
     }
 
-    @Ignore("TODO")
-    @Test
-    public void shouldHandleIfBranchInvalid() {
-        fail("WIP");
+    @Test(expected = GitBranchReader.BranchNotFoundException.class)
+    public void shouldHandleIfBranchInvalid() throws Exception {
+        new GitBranchReader(new GitFacade(), new ArchitectureDataStructureObjectMapper())
+                .load("non-existent-branch", archPath);
     }
 
     private boolean isBranch(String wantedBranch) throws IOException {

@@ -92,9 +92,9 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
             final String resultToDisplay = getPrettyStringOfErrors(errors);
             spec.commandLine().getErr().println(resultToDisplay);
             return 1;
-        } else {
-            spec.commandLine().getOut().println("Success, no errors found.");
         }
+
+        spec.commandLine().getOut().println("Success, no errors found.");
         return 0;
     }
 

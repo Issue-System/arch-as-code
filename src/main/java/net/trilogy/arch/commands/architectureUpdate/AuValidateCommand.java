@@ -45,11 +45,13 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
     private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
     private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
     private final FilesFacade filesFacade;
+    private final GitInterface gitInterface;
 
-    public AuValidateCommand() {
+    public AuValidateCommand(FilesFacade filesFacade, GitInterface gitInterface) {
         this.architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
         this.architectureUpdateObjectMapper = new ArchitectureUpdateObjectMapper();
-        this.filesFacade = new FilesFacade();
+        this.filesFacade = filesFacade;
+        this.gitInterface = gitInterface;
     }
 
     @Override
@@ -118,8 +120,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
                 .resolve("product-architecture.yml");
         try {
             return Optional.of(
-                    new GitInterface()
-                            .load(branch, productArchitecturePath)
+                    gitInterface.load(branch, productArchitecturePath)
             );
         } catch (final Exception e) {
             printError("Unable to load '" + branch + "' branch architecture", e);

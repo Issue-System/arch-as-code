@@ -33,7 +33,7 @@ public class Application {
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade, gitInterface))
-                                .addSubcommand(new AuValidateCommand())
+                                .addSubcommand(new AuValidateCommand(filesFacade, gitInterface))
                                 .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade))
                                 .addSubcommand(new AuAnnotateCommand(filesFacade))
                 );

@@ -1,28 +1,21 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
-import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Files;
-
+import net.trilogy.arch.TestHelper;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-import net.trilogy.arch.TestHelper;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.nio.file.Files;
+
+import static net.trilogy.arch.TestHelper.execute;
+import static org.hamcrest.Matchers.*;
 
 public class AuValidateCommandTest {
     @Rule
@@ -36,16 +29,12 @@ public class AuValidateCommandTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     final ByteArrayOutputStream err = new ByteArrayOutputStream();
 
-    private void setUpOut() {
+    @Before
+    public void setUp() throws Exception {
         out.reset();
         err.reset();
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
-    }
-
-    @Before
-    public void setUp() throws IllegalStateException, GitAPIException, IOException {
-        setUpOut();
         var buildDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_AU_VALIDATION_E2E).getPath());
 
         rootDir = buildDir.toPath().resolve("git").toFile();
@@ -56,10 +45,10 @@ public class AuValidateCommandTest {
         setUpRealisticGitRepository();
     }
 
-    private void setUpRealisticGitRepository() throws IOException, NoFilepatternException, GitAPIException {
+    private void setUpRealisticGitRepository() throws Exception {
         Files.move(
-            rootDir.toPath().resolve("master-branch-product-architecture.yml"),
-            rootDir.toPath().resolve("product-architecture.yml")
+                rootDir.toPath().resolve("master-branch-product-architecture.yml"),
+                rootDir.toPath().resolve("product-architecture.yml")
         );
         git.add().addFilepattern("product-architecture.yml").call();
         git.commit().setMessage("add architecture to master").call();
@@ -70,20 +59,16 @@ public class AuValidateCommandTest {
         git.checkout().setCreateBranch(true).setName("au").call();
         Files.delete(rootDir.toPath().resolve("product-architecture.yml"));
         Files.move(
-            rootDir.toPath().resolve("au-branch-product-architecture.yml"),
-            rootDir.toPath().resolve("product-architecture.yml")
+                rootDir.toPath().resolve("au-branch-product-architecture.yml"),
+                rootDir.toPath().resolve("product-architecture.yml")
         );
         git.add().addFilepattern("product-architecture.yml").call();
         git.commit().setMessage("change architecture in au").call();
     }
 
     @After
-    public void tearDown() throws IOException {
+    public void tearDown() throws Exception {
         FileUtils.deleteDirectory(rootDir);
-        tearDownOut();
-    }
-
-    private void tearDownOut() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
@@ -214,7 +199,7 @@ public class AuValidateCommandTest {
         var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
 
         Integer status = execute("architecture-update", "validate", "-b", "invalid", auPath, rootDir.getAbsolutePath());
-        
+
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("Unable to load 'invalid' branch architecture\nError thrown: net.trilogy.arch.adapter.git.GitInterface$BranchNotFoundException"));
     }
@@ -224,7 +209,7 @@ public class AuValidateCommandTest {
         var auPath = rootDir.toPath().resolve("architecture-updates/blank.yml").toAbsolutePath().toString();
 
         Integer status = execute("architecture-update", "validate", "-b", "master", auPath, rootDir.getAbsolutePath() + "invalid");
-        
+
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("Error thrown: java.nio.file.NoSuchFileException"));
     }

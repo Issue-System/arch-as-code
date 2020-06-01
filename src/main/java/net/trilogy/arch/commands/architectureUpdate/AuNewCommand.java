@@ -3,15 +3,12 @@ package net.trilogy.arch.commands.architectureUpdate;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.google.GoogleDocumentReader;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -20,7 +17,6 @@ import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", mixinStandardHelpOptions = true, description = "Create a new architecture update.")
 public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
-    private static final Log logger = LogFactory.getLog(AuCommand.class);
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
     private final FilesFacade filesFacade;
@@ -47,29 +43,29 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
 
     @Override
     public Integer call() {
-        if(!checkBranchNameEquals(name)) return 1;
+        if (!checkBranchNameEquals(name)) return 1;
 
         var auFile = getNewAuFilePath();
-        if(auFile.isEmpty()) return 1;
+        if (auFile.isEmpty()) return 1;
 
         var au = loadAu();
-        if(au.isEmpty()) return 1;
+        if (au.isEmpty()) return 1;
 
-        if(!writeAu(auFile.get(), au.get())) return 1;
+        if (!writeAu(auFile.get(), au.get())) return 1;
 
         spec.commandLine().getOut().println(String.format("AU created - %s", auFile.get().toPath()));
         return 0;
     }
 
     private Optional<ArchitectureUpdate> loadAu() {
-        if(p1GoogleDocUrl != null) {
+        if (p1GoogleDocUrl != null) {
             return loadFromP1();
-        }else{
+        } else {
             return Optional.of(ArchitectureUpdate.builderPreFilledWithBlanks().name(name).build());
         }
     }
 
-    private boolean writeAu(File auFile, ArchitectureUpdate au){
+    private boolean writeAu(File auFile, ArchitectureUpdate au) {
         try {
             filesFacade.writeString(auFile.toPath(), objectMapper.writeValueAsString(au));
             return true;
@@ -79,13 +75,13 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
         }
     }
 
-    private Optional<ArchitectureUpdate> loadFromP1(){
+    private Optional<ArchitectureUpdate> loadFromP1() {
         try {
             GoogleDocsApiInterface authorizedDocsApi = googleDocsApiFactory.getAuthorizedDocsApi(productArchitectureDirectory);
             return Optional.of(new GoogleDocumentReader(authorizedDocsApi).load(p1GoogleDocUrl));
         } catch (Exception e) {
             String configPath = productArchitectureDirectory.toPath().resolve(".arch-as-code").toAbsolutePath().toString();
-            printError( "ERROR: Unable to initialize Google Docs API. Does configuration " + configPath + " exist?", e);
+            printError("ERROR: Unable to initialize Google Docs API. Does configuration " + configPath + " exist?", e);
             return Optional.empty();
         }
     }
@@ -97,7 +93,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
             try {
                 filesFacade.createDirectory(auFolder.toPath());
             } catch (Exception e) {
-                printError( "Unable to create architecture-updates directory.", e);
+                printError("Unable to create architecture-updates directory.", e);
                 return Optional.empty();
             }
         }
@@ -105,7 +101,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
         String auFileName = name + ".yml";
         File auFile = auFolder.toPath().resolve(auFileName).toFile();
         if (auFile.isFile()) {
-            logger.error(String.format("AU %s already exists. Try a different name.", auFileName));
+            printError(String.format("AU %s already exists. Try a different name.", auFileName));
             return Optional.empty();
         }
 
@@ -115,11 +111,11 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     private boolean checkBranchNameEquals(String str) {
         try {
             String branch = gitInterface.getBranch(productArchitectureDirectory);
-            if(branch.equals(str)) return true; 
+            if (branch.equals(str)) return true;
             printError(
-                "ERROR: AU must be created in git branch of same name."+
-                "\nCurrent git branch: '" + branch + "'" +
-                "\nAu name: '" + str + "'"
+                    "ERROR: AU must be created in git branch of same name." +
+                            "\nCurrent git branch: '" + branch + "'" +
+                            "\nAu name: '" + str + "'"
             );
             return false;
         } catch (Exception e) {

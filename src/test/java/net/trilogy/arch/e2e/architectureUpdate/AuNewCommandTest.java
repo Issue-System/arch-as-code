@@ -58,7 +58,7 @@ public class AuNewCommandTest {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
 
-        rootDir = getTempDirectory().toFile();
+        rootDir = getTempRepositoryDirectory().toFile();
         googleDocsApiMock = mock(GoogleDocsApiInterface.class);
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
@@ -69,7 +69,7 @@ public class AuNewCommandTest {
     }
 
     @After
-    public void tearDown() throws IOException {
+    public void tearDown() throws Exception {
         FileUtils.forceDelete(rootDir);
         System.setOut(originalOut);
         System.setErr(originalErr);
@@ -98,7 +98,7 @@ public class AuNewCommandTest {
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
-        collector.checkThat(err.toString(), equalTo(
+        collector.checkThat(err.toString(), containsString(
                 "ERROR: AU must be created in git branch of same name.\n" +
                         "Current git branch: 'au-name'\n" +
                         "Au name: 'not-au-name'\n"
@@ -253,7 +253,7 @@ public class AuNewCommandTest {
 
     @Test
     public void shouldNotCreateFileIfAlreadyExists() throws Exception {
-        Path rootDir = getTempDirectory();
+        Path rootDir = getTempRepositoryDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
 
         String auName = "au-name";
@@ -281,7 +281,7 @@ public class AuNewCommandTest {
 
     @Test
     public void shouldFailIfCannotWriteFile() throws Exception {
-        Path rootDir = getTempDirectory();
+        Path rootDir = getTempRepositoryDirectory();
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir));
 
         String auName = "au-name";
@@ -318,7 +318,7 @@ public class AuNewCommandTest {
         return tempDirPath.toAbsolutePath().toString();
     }
 
-    private Path getTempDirectory() throws Exception {
+    private Path getTempRepositoryDirectory() throws Exception {
         var repoDir = Files.createTempDirectory("aac");
         var rootDir = Files.createDirectory(repoDir.resolve("root"));
         var git = Git.init().setDirectory(repoDir.toFile()).call();

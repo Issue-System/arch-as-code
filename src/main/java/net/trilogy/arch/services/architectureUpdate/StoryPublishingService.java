@@ -27,7 +27,8 @@ public class StoryPublishingService {
 
     public ArchitectureUpdate createStories(
             final ArchitectureUpdate au,
-            final ArchitectureDataStructure architecture,
+            final ArchitectureDataStructure beforeAuArchitecture,
+            final ArchitectureDataStructure afterAuArchitecture,
             String username,
             char[] password
     ) throws JiraApi.JiraApiException, NoStoriesToCreateException, JiraStory.InvalidStoryException {
@@ -47,7 +48,7 @@ public class StoryPublishingService {
 
         List<JiraStory> jiraStories = new ArrayList<>();
         for(var story : stories) {
-            jiraStories.add(new JiraStory(au, architecture, story));
+            jiraStories.add(new JiraStory(au, beforeAuArchitecture, afterAuArchitecture, story));
         }
 
         var createStoriesResults = this.api.createStories(

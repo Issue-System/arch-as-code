@@ -1,9 +1,9 @@
 package net.trilogy.arch.adapter.jira;
 
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
@@ -29,11 +29,12 @@ public class JiraStoryTest {
     public void ShouldConstructJiraStory() throws Exception {
         // GIVEN:
         var au = getAu();
-        var architecture = getArchitecture();
+        var afterAuArchitecture = getArchitectureAfterAu();
+        var beforeAuArchitecture = getArchitectureBeforeAu();
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN:
-        final JiraStory actual = new JiraStory(au, architecture, featureStory);
+        final JiraStory actual = new JiraStory(au, beforeAuArchitecture, afterAuArchitecture, featureStory);
 
         // THEN:
         final JiraStory expected = new JiraStory(
@@ -47,7 +48,7 @@ public class JiraStoryTest {
                     new JiraStory.JiraTdd(
                         new Tdd.Id("TDD 3"),
                         new Tdd("TDD 3 text"),
-                        "[DELETED COMPONENT]"
+                        "c4://Internet Banking System/API Application/Sign In Controller" // deleted component id: 29
                     )
                 ),
                 List.of(
@@ -69,11 +70,10 @@ public class JiraStoryTest {
     public void shouldThrowIfInvalidRequirement() throws Exception {
         // GIVEN
         var au = getAuWithInvalidRequirement();
-        var architecture = getArchitecture();
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN:
-        new JiraStory(au, architecture, featureStory);
+        new JiraStory(au, getArchitectureBeforeAu(), getArchitectureAfterAu(), featureStory);
 
         // THEN raise exception.
     }
@@ -82,14 +82,14 @@ public class JiraStoryTest {
     public void shouldThrowIfComponentHasNoPath() throws Exception {
         // GIVEN
         var au = getAu();
-        ArchitectureDataStructure architecture = getArchitecture();
+        ArchitectureDataStructure architectureAfterAu = getArchitectureAfterAu();
 
-        architecture.getModel().getComponents().forEach(c -> c.setPath(null));
+        architectureAfterAu.getModel().getComponents().forEach(c -> c.setPath(null));
 
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN
-        new JiraStory(au, architecture, featureStory);
+        new JiraStory(au, getArchitectureBeforeAu(), architectureAfterAu, featureStory);
 
         // THEN
         // Raise Error
@@ -99,12 +99,11 @@ public class JiraStoryTest {
     public void shouldThrowIfInvalidComponent() throws Exception {
         // GIVEN
         var au = getAuWithInvalidComponent();
-        ArchitectureDataStructure architecture = getArchitecture();
 
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 
         // WHEN
-        new JiraStory(au, architecture, featureStory);
+        new JiraStory(au, getArchitectureBeforeAu(), getArchitectureAfterAu(), featureStory);
 
         // THEN
         // Raise Error
@@ -114,25 +113,30 @@ public class JiraStoryTest {
     public void shouldThrowIfInvalidTdd() throws Exception {
         // GIVEN
         var au = getAu();
-        ArchitectureDataStructure architecture = getArchitecture();
 
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
         featureStory = featureStory.toBuilder().tddReferences(List.of(new Tdd.Id("Invalid TDD ID"))).build();
 
         // WHEN
-        new JiraStory(au, architecture, featureStory);
+        new JiraStory(au, getArchitectureBeforeAu(), getArchitectureAfterAu(), featureStory);
 
         // THEN
         // Raise Error
     }
 
 
-    private ArchitectureDataStructure getArchitecture() throws Exception {
-        return new ArchitectureDataStructureReader(new FilesFacade()).load(
-            TestHelper.getPath(
-                getClass(), 
-                TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile()
-            );
+    private ArchitectureDataStructure getArchitectureBeforeAu() throws Exception {
+        final String archAsString = new FilesFacade().readString(TestHelper.getPath(
+                getClass(),
+                TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile().toPath());
+        return new ArchitectureDataStructureObjectMapper().readValue(archAsString.replaceAll("29", "404"));
+    }
+
+    private ArchitectureDataStructure getArchitectureAfterAu() throws Exception {
+        final String archAsString = new FilesFacade().readString(TestHelper.getPath(
+                getClass(),
+                TestHelper.MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION).toFile().toPath());
+        return new ArchitectureDataStructureObjectMapper().readValue(archAsString);
     }
 
     private ArchitectureUpdate getAu() {

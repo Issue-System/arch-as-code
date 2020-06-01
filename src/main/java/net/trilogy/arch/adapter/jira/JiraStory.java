@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
-import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
+import net.trilogy.arch.domain.architectureUpdate.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +20,12 @@ public class JiraStory {
     private final List<JiraTdd> tdds;
     private final List<JiraFunctionalRequirement> functionalRequirements;
 
-    public JiraStory(ArchitectureUpdate au, ArchitectureDataStructure architecture, FeatureStory featureStory) throws InvalidStoryException {
+    public JiraStory(ArchitectureUpdate au,
+                     ArchitectureDataStructure beforeAuArchitecture,
+                     ArchitectureDataStructure afterAuArchitecture,
+                     FeatureStory featureStory) throws InvalidStoryException {
         this.title = featureStory.getTitle();
-        this.tdds = getTdds(au, architecture, featureStory);
+        this.tdds = getTdds(au, beforeAuArchitecture, afterAuArchitecture, featureStory);
         this.functionalRequirements = getFunctionalRequirements(au, featureStory);
     }
 
@@ -41,7 +40,7 @@ public class JiraStory {
 
     private List<JiraTdd> getTdds(
             ArchitectureUpdate au,
-            ArchitectureDataStructure architecture,
+            ArchitectureDataStructure beforeAuArchitecture, ArchitectureDataStructure afterAuArchitecture,
             FeatureStory featureStory
     ) throws InvalidStoryException {
 
@@ -50,11 +49,11 @@ public class JiraStory {
             var tdd = au.getTddContainersByComponent()
                     .stream()
                     .filter(container -> container.getTdds().containsKey(tddId))
-                    .filter(container -> getComponentHeader(architecture, container).isPresent())
+                    .filter(container -> getComponentHeader(beforeAuArchitecture, afterAuArchitecture, container).isPresent())
                     .map(container -> new JiraTdd(
                             tddId,
                             container.getTdds().get(tddId),
-                            getComponentHeader(architecture, container).orElseThrow()
+                            getComponentHeader(beforeAuArchitecture, afterAuArchitecture, container).orElseThrow()
                     ))
                     .findAny()
                     .orElseThrow(InvalidStoryException::new);
@@ -64,16 +63,17 @@ public class JiraStory {
         return tdds;
     }
 
-    private Optional<String> getComponentHeader(ArchitectureDataStructure architecture, TddContainerByComponent tddContainerByComponent) {
-        if(tddContainerByComponent.isDeleted()){
-            return Optional.of("[DELETED COMPONENT]");
-        }
+    private Optional<String> getComponentHeader(ArchitectureDataStructure beforeAuArchitecture, ArchitectureDataStructure afterAuArchitecture, TddContainerByComponent tddContainerByComponent) {
         try {
+            final ArchitectureDataStructure architecture;
+            if (tddContainerByComponent.isDeleted()) architecture = beforeAuArchitecture;
+            else architecture = afterAuArchitecture;
+
             return Optional.of(
-                architecture.getModel()
-                    .findEntityById(tddContainerByComponent.getComponentId().toString())
-                    .getPath()
-                    .getPath()
+                    architecture.getModel()
+                            .findEntityById(tddContainerByComponent.getComponentId().toString())
+                            .getPath()
+                            .getPath()
             );
         } catch (Exception ignored) {
             return Optional.empty();

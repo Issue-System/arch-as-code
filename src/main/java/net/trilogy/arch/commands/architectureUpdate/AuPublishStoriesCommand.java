@@ -84,7 +84,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         final ArchitectureUpdate updatedAu;
         try {
-            updatedAu = jiraService.createStories(au, architecture, username, password);
+            updatedAu = jiraService.createStories(au,null,  architecture, username, password);
         } catch (JiraApi.JiraApiException e) {
             spec.commandLine().getErr().println("ERROR: " + e.getMessage() + "\n");
             if (e.getCause() != null) {

@@ -159,7 +159,19 @@ public class GitInterfaceTest {
         new GitInterface().load("non-existent-branch", archPath);
     }
 
-    private boolean isBranch(String wantedBranch) throws IOException {
+    @Test
+    public void shouldReturnCorrectBranch() throws Exception {
+        collector.checkThat(new GitInterface().getBranch(rootDir), equalTo("not-master"));
+    }
+
+    @Test(expected = GitInterface.BranchNotFoundException.class)
+    public void shouldThrowWhenNotGitRepo() throws Exception {
+        File noGitDir = Files.createTempDirectory("aac").toFile();
+
+        new GitInterface().getBranch(noGitDir);
+    }
+
+    private boolean isBranch(String wantedBranch) throws Exception {
         return new GitInterface()
                 .getBranch(archPath.toFile().getParentFile())
                 .equals(wantedBranch);

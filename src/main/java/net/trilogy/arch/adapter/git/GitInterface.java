@@ -44,10 +44,14 @@ public class GitInterface {
         return objMapper.readValue(archAsString);
     }
 
-    public String getBranch(File dir) throws IOException {
-        return openParentRepo(dir)
-                .getRepository()
-                .getBranch();
+    public String getBranch(File dir) throws BranchNotFoundException {
+        try {
+            return openParentRepo(dir)
+                    .getRepository()
+                    .getBranch();
+        } catch (Exception e) {
+            throw new BranchNotFoundException();
+        }
     }
 
     private String getRelativePath(Path architectureYamlFilePath, Git git) {

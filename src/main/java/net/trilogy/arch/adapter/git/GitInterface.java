@@ -20,7 +20,11 @@ public class GitInterface {
     private final ArchitectureDataStructureObjectMapper objMapper;
 
     public GitInterface() {
-        this.objMapper = new ArchitectureDataStructureObjectMapper();
+        this(new ArchitectureDataStructureObjectMapper());
+    }
+
+    GitInterface(ArchitectureDataStructureObjectMapper objMapper) {
+        this.objMapper = objMapper;
     }
 
     public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath)

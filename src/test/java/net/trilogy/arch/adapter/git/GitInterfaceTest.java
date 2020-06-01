@@ -1,13 +1,15 @@
-package net.trilogy.arch.domain;
+package net.trilogy.arch.adapter.git;
 
 
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.adapter.git.GitInterface;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.jgit.api.Git;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.io.File;
@@ -111,28 +113,23 @@ public class GitInterfaceTest {
         collector.checkThat(Files.readString(otherFile), equalTo("NEW FILE"));
     }
 
-    @Ignore("test me")
     @Test
     public void shouldNotChangeBranchIfException() throws Exception {
-        // FIXME: Should be tested in GitInterface Unit tests
-        // Unit test Gitinterface.load()?
         var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
-        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
+        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boom!"));
+
         try {
-            new GitInterface().load("master", archPath);
+            new GitInterface(badMapper).load("master", archPath);
             fail("Exception not thrown.");
         } catch (RuntimeException ignored) {
             collector.checkThat(isBranch("not-master"), is(true));
         }
     }
 
-    @Ignore("test me")
     @Test
     public void shouldPreserveWorkingDirFilesIfException() throws Exception {
-        // FIXME: Should be tested in GitInterface Unit tests
-        // Unit test Gitinterface.load()?
         var badMapper = mock(ArchitectureDataStructureObjectMapper.class);
-        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boo!"));
+        when(badMapper.readValue(any())).thenThrow(new RuntimeException("Boom!"));
 
         var otherFile = archPath.getParent().resolve("other-file.txt");
         Files.writeString(archPath, "MODIFIED FILE");
@@ -143,7 +140,7 @@ public class GitInterfaceTest {
                 FileFilterUtils.notFileFilter(FileFilterUtils.nameFileFilter(".git")));
 
         try {
-            new GitInterface().load("master", archPath);
+            new GitInterface(badMapper).load("master", archPath);
             fail("Exception not thrown.");
         } catch (RuntimeException ignored) {
             var afterFiles = FileUtils.listFilesAndDirs(

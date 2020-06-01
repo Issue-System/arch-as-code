@@ -2,8 +2,8 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
 import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.google.GoogleDocumentReader;
@@ -24,7 +24,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
     private final FilesFacade filesFacade;
-    private final GitFacade gitFacade;
+    private final GitInterface gitInterface;
 
     @CommandLine.Parameters(index = "0", description = "Name for new architecture update")
     private String name;
@@ -39,10 +39,10 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
-    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade, GitFacade gitFacade) {
+    public AuNewCommand(GoogleDocsAuthorizedApiFactory googleDocsApiFactory, FilesFacade filesFacade, GitInterface gitInterface) {
         this.googleDocsApiFactory = googleDocsApiFactory;
         this.filesFacade = filesFacade;
-        this.gitFacade = gitFacade;
+        this.gitInterface = gitInterface;
     }
 
     @Override
@@ -114,9 +114,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
 
     private boolean checkBranchNameEquals(String str) {
         try {
-            String branch = gitFacade.openParentRepo(productArchitectureDirectory)
-                .getRepository()
-                .getBranch();
+            String branch = gitInterface.getBranch(productArchitectureDirectory);
             if(branch.equals(str)) return true; 
             printError(
                 "ERROR: AU must be created in git branch of same name."+

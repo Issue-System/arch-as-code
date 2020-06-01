@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-
+import net.trilogy.arch.facade.FilesFacade;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.junit.After;
@@ -33,13 +32,9 @@ import static net.trilogy.arch.TestHelper.execute;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AuNewCommandTest {
     @Rule
@@ -47,7 +42,7 @@ public class AuNewCommandTest {
 
     private GoogleDocsApiInterface googleDocsApiMock;
     private FilesFacade filesFacadeSpy;
-    private GitFacade gitFacadeSpy;
+    private GitInterface gitInterfaceSpy;
     private Application app;
     private File rootDir;
 
@@ -68,9 +63,9 @@ public class AuNewCommandTest {
         final var googleDocsApiFactoryMock = mock(GoogleDocsAuthorizedApiFactory.class);
         when(googleDocsApiFactoryMock.getAuthorizedDocsApi(rootDir)).thenReturn(googleDocsApiMock);
         filesFacadeSpy = spy(new FilesFacade());
-        gitFacadeSpy = spy(new GitFacade());
+        gitInterfaceSpy = spy(new GitInterface());
 
-        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, gitFacadeSpy);
+        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, gitInterfaceSpy);
     }
 
     @After
@@ -84,29 +79,29 @@ public class AuNewCommandTest {
     public void shouldFailGracefullyIfGitApiFails() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
 
-        doThrow(new RuntimeException("Boo!")).when(gitFacadeSpy).openParentRepo(any());
-        
+        doThrow(new RuntimeException("Boom!")).when(gitInterfaceSpy).getBranch(any());
+
         int status = execute(app, "au new not-au-name " + str(rootDir.toPath()));
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), containsString(
-            "ERROR: Unable to check git branch\nError thrown:" 
+                "ERROR: Unable to check git branch\nError thrown:"
         ));
     }
 
     @Test
     public void shouldFailIfBranchNameDoesNotMatch() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
-        
+
         int status = execute("au", "new", "not-au-name", str(rootDir.toPath()));
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), equalTo(
-            "ERROR: AU must be created in git branch of same name.\n" + 
-            "Current git branch: 'au-name'\n" + 
-            "Au name: 'not-au-name'\n"
+                "ERROR: AU must be created in git branch of same name.\n" +
+                        "Current git branch: 'au-name'\n" +
+                        "Au name: 'not-au-name'\n"
         ));
     }
 
@@ -199,9 +194,9 @@ public class AuNewCommandTest {
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
                 equalTo(
-                    new ArchitectureUpdateObjectMapper().writeValueAsString(
-                        ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
-                    )
+                        new ArchitectureUpdateObjectMapper().writeValueAsString(
+                                ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
+                        )
                 )
         );
     }
@@ -224,9 +219,9 @@ public class AuNewCommandTest {
         collector.checkThat(
                 Files.readString(auFile.toAbsolutePath()),
                 equalTo(
-                    new ArchitectureUpdateObjectMapper().writeValueAsString(
-                        ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
-                    )
+                        new ArchitectureUpdateObjectMapper().writeValueAsString(
+                                ArchitectureUpdate.builderPreFilledWithBlanks().name("au-name").build()
+                        )
                 )
         );
     }
@@ -296,7 +291,7 @@ public class AuNewCommandTest {
         when(mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new IOException("No disk space!"));
 
-        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitFacade());
+        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));

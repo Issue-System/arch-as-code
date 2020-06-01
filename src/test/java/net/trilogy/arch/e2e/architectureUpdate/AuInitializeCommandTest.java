@@ -1,10 +1,10 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -15,9 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
+import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static net.trilogy.arch.commands.architectureUpdate.AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
@@ -171,7 +171,7 @@ public class AuInitializeCommandTest {
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
 
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitFacade());
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
 
         // WHEN:
         int status = execute(app, "au init -c c -p p -s s " + str(rootDir));
@@ -195,7 +195,7 @@ public class AuInitializeCommandTest {
         ).thenThrow(
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitFacade());
+        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
 
         // when
         Integer status = execute(app, "au init -c c -p p -s s " + str(tempDirPath));

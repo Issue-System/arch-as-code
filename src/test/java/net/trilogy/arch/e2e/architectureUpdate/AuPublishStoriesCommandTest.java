@@ -3,18 +3,14 @@ package net.trilogy.arch.e2e.architectureUpdate;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-import net.trilogy.arch.adapter.jira.JiraApi;
-import net.trilogy.arch.adapter.jira.JiraApiFactory;
-import net.trilogy.arch.adapter.jira.JiraCreateStoryStatus;
-import net.trilogy.arch.adapter.jira.JiraQueryResult;
-import net.trilogy.arch.adapter.jira.JiraStory;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.jira.*;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,12 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AuPublishStoriesCommandTest {
     @Rule
@@ -79,7 +70,7 @@ public class AuPublishStoriesCommandTest {
         mockedJiraApi = mock(JiraApi.class);
         when(mockedJiraApiFactory.create(spiedFilesFacade, rootDir.toPath())).thenReturn(mockedJiraApi);
 
-        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, new GitFacade());
+        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, new GitInterface());
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }
@@ -88,7 +79,7 @@ public class AuPublishStoriesCommandTest {
     public void shouldFailGracefullyIfFailToLoadConfig() throws Exception {
         Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
 
-        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitFacade());
+        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitInterface());
 
         int status = execute(newApp, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
 
@@ -133,7 +124,7 @@ public class AuPublishStoriesCommandTest {
                 out.toString(),
                 equalTo(
                         "Not re-creating stories:\n  - story that should not be created\n\n" +
-                                "Checking epic...\n\n" + 
+                                "Checking epic...\n\n" +
                                 "Attempting to create stories...\n\n"
                 )
         );
@@ -185,7 +176,7 @@ public class AuPublishStoriesCommandTest {
                 out.toString(),
                 equalTo(
                         "Not re-creating stories:\n  - story that should not be created\n\n" +
-                                "Checking epic...\n\n" + 
+                                "Checking epic...\n\n" +
                                 "Attempting to create stories...\n\n" +
                                 "Successfully created:\n  - story that should be created\n  - story that failed to be created\n"
                 )
@@ -217,8 +208,8 @@ public class AuPublishStoriesCommandTest {
         ArchitectureUpdate expectedAu = originalAu.addJiraToFeatureStory(
                 originalAu.getCapabilityContainer().getFeatureStories().get(0), new Jira("ABC-123", "link-to-ABC-123")
         );
-            
-        collector.checkThat( actualAu, equalTo(expectedAu));
+
+        collector.checkThat(actualAu, equalTo(expectedAu));
     }
 
     @Test
@@ -248,8 +239,8 @@ public class AuPublishStoriesCommandTest {
                 out.toString(),
                 equalTo(
                         "Not re-creating stories:\n  - story that should not be created\n\n" +
-                        "Checking epic...\n\n" + 
-                        "Attempting to create stories...\n\nSuccessfully created:\n  - story that should be created\n"
+                                "Checking epic...\n\n" +
+                                "Attempting to create stories...\n\nSuccessfully created:\n  - story that should be created\n"
                 )
         );
         assertThat(statusCode, equalTo(0));
@@ -267,8 +258,8 @@ public class AuPublishStoriesCommandTest {
                 out.toString(),
                 equalTo(
                         "Not re-creating stories:\n  - story that should not be created\n\n" +
-                        "Checking epic...\n\n" + 
-                        "Attempting to create stories...\n\n"
+                                "Checking epic...\n\n" +
+                                "Attempting to create stories...\n\n"
                 )
         );
         assertThat(statusCode, not(equalTo(0)));
@@ -305,44 +296,44 @@ public class AuPublishStoriesCommandTest {
     private List<JiraStory> getExpectedJiraStoriesToCreate() {
         return List.of(
                 new JiraStory(
-                    "story that should be created",
-                    List.of(
-                            new JiraStory.JiraTdd(
-                                    new Tdd.Id("[SAMPLE-TDD-ID]"),
-                                    new Tdd("[SAMPLE TDD TEXT]"),
-                                    "c4://Internet Banking System/API Application/Reset Password Controller"
-                            )
-                    ),
-                    List.of(
-                            new JiraStory.JiraFunctionalRequirement(
-                                    new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
-                                    new FunctionalRequirement(
-                                            "[SAMPLE REQUIREMENT TEXT]",
-                                            "[SAMPLE REQUIREMENT SOURCE TEXT]",
-                                            List.of(new Tdd.Id("[SAMPLE-TDD-ID]"))
-                                    )
-                            )
-                    )
+                        "story that should be created",
+                        List.of(
+                                new JiraStory.JiraTdd(
+                                        new Tdd.Id("[SAMPLE-TDD-ID]"),
+                                        new Tdd("[SAMPLE TDD TEXT]"),
+                                        "c4://Internet Banking System/API Application/Reset Password Controller"
+                                )
+                        ),
+                        List.of(
+                                new JiraStory.JiraFunctionalRequirement(
+                                        new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
+                                        new FunctionalRequirement(
+                                                "[SAMPLE REQUIREMENT TEXT]",
+                                                "[SAMPLE REQUIREMENT SOURCE TEXT]",
+                                                List.of(new Tdd.Id("[SAMPLE-TDD-ID]"))
+                                        )
+                                )
+                        )
                 ),
                 new JiraStory(
-                    "story that failed to be created",
-                    List.of(
-                            new JiraStory.JiraTdd(
-                                    new Tdd.Id("[SAMPLE-TDD-ID]"),
-                                    new Tdd("[SAMPLE TDD TEXT]"),
-                                    "c4://Internet Banking System/API Application/Reset Password Controller"
-                            )
-                    ),
-                    List.of(
-                            new JiraStory.JiraFunctionalRequirement(
-                                    new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
-                                    new FunctionalRequirement(
-                                            "[SAMPLE REQUIREMENT TEXT]",
-                                            "[SAMPLE REQUIREMENT SOURCE TEXT]",
-                                            List.of(new Tdd.Id("[SAMPLE-TDD-ID]"))
-                                    )
-                            )
-                    )
+                        "story that failed to be created",
+                        List.of(
+                                new JiraStory.JiraTdd(
+                                        new Tdd.Id("[SAMPLE-TDD-ID]"),
+                                        new Tdd("[SAMPLE TDD TEXT]"),
+                                        "c4://Internet Banking System/API Application/Reset Password Controller"
+                                )
+                        ),
+                        List.of(
+                                new JiraStory.JiraFunctionalRequirement(
+                                        new FunctionalRequirement.Id("[SAMPLE-REQUIREMENT-ID]"),
+                                        new FunctionalRequirement(
+                                                "[SAMPLE REQUIREMENT TEXT]",
+                                                "[SAMPLE REQUIREMENT SOURCE TEXT]",
+                                                List.of(new Tdd.Id("[SAMPLE-TDD-ID]"))
+                                        )
+                                )
+                        )
                 )
         );
     }

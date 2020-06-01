@@ -2,9 +2,8 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -69,7 +68,7 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldAnnotate() throws Exception {
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
@@ -91,13 +90,13 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldRefreshAnnotations() throws Exception {
         // GIVEN
-        TestHelper.execute(new Application(null, null, new FilesFacade(), new GitFacade()),
+        TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-29"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
@@ -118,7 +117,7 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldHandleNoComponents() throws Exception {
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
                 "au annotate " + str(changedAuWithoutComponentsPath) + " " + str(rootPath));
 
         var actual = Files.readString(changedAuWithoutComponentsPath);
@@ -137,7 +136,7 @@ public class AuAnnotateCommandTest {
         Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-404"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
@@ -162,7 +161,7 @@ public class AuAnnotateCommandTest {
         when(mockedFilesFacade.readString(changedAuWithComponentsPath)).thenThrow(new IOException("error-message", new RuntimeException("Boom!")));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN
@@ -181,7 +180,7 @@ public class AuAnnotateCommandTest {
         doThrow(new IOException("error-message", new RuntimeException("Boom!"))).when(spyedFilesFacade).readString(eq(a));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, spyedFilesFacade, new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, spyedFilesFacade, new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN
@@ -200,7 +199,7 @@ public class AuAnnotateCommandTest {
         when(mockedFilesFacade.writeString(any(), any())).thenThrow(new IOException("Ran out of bytes!"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitFacade()),
+        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitInterface()),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN

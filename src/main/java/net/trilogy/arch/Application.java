@@ -1,11 +1,11 @@
 package net.trilogy.arch;
 
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.*;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -16,13 +16,13 @@ public class Application {
     private final CommandLine cli;
 
     public Application() throws GeneralSecurityException, IOException {
-        this(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitFacade());
+        this(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitInterface());
     }
 
     public Application(GoogleDocsAuthorizedApiFactory googleDocsApiFactory,
                        JiraApiFactory jiraApiFactory,
                        FilesFacade filesFacade,
-                       GitFacade gitFacade) {
+                       GitInterface gitInterface) {
         cli = new CommandLine(new ParentCommand())
                 .addSubcommand(new InitializeCommand())
                 .addSubcommand(new ValidateCommand())
@@ -32,7 +32,7 @@ public class Application {
                 .addSubcommand(
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
-                                .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade, gitFacade))
+                                .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade, gitInterface))
                                 .addSubcommand(new AuValidateCommand())
                                 .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade))
                                 .addSubcommand(new AuAnnotateCommand(filesFacade))

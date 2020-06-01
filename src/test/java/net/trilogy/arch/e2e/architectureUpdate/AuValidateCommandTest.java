@@ -216,7 +216,7 @@ public class AuValidateCommandTest {
         Integer status = execute("architecture-update", "validate", "-b", "invalid", auPath, rootDir.getAbsolutePath());
         
         collector.checkThat(status, not(equalTo(0)));
-        collector.checkThat(err.toString(), containsString("Unable to load 'invalid' branch architecture\nError thrown: net.trilogy.arch.adapter.architectureYaml.GitBranchReader$BranchNotFoundException"));
+        collector.checkThat(err.toString(), containsString("Unable to load 'invalid' branch architecture\nError thrown: net.trilogy.arch.adapter.git.GitInterface$BranchNotFoundException"));
     }
 
     @Test

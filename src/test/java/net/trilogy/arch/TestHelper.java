@@ -48,11 +48,7 @@ public abstract class TestHelper {
     public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";
 
     public static Integer execute(String... args) throws Exception {
-        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
-        var filesFacade = new FilesFacade();
-        var jiraApiFactory = new JiraApiFactory();
-        var gitFacade = new GitFacade();
-        return new Application(googleDocsApiFactory, jiraApiFactory, filesFacade, gitFacade).execute(args);
+        return new Application().execute(args);
     }
 
     public static Integer execute(Application application, String command) {

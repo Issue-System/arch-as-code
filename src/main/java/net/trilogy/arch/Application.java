@@ -1,11 +1,11 @@
 package net.trilogy.arch;
 
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.facade.GitFacade;
-import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.*;
+import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.facade.GitFacade;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -15,9 +15,13 @@ public class Application {
 
     private final CommandLine cli;
 
+    public Application() throws GeneralSecurityException, IOException {
+        this(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitFacade());
+    }
+
     public Application(GoogleDocsAuthorizedApiFactory googleDocsApiFactory,
                        JiraApiFactory jiraApiFactory,
-                       FilesFacade filesFacade, 
+                       FilesFacade filesFacade,
                        GitFacade gitFacade) {
         cli = new CommandLine(new ParentCommand())
                 .addSubcommand(new InitializeCommand())
@@ -36,14 +40,10 @@ public class Application {
     }
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-        var filesFacade = new FilesFacade();
-        var gitFacade = new GitFacade();
-        var googleDocsApiFactory = new GoogleDocsAuthorizedApiFactory();
-        var jiraApiFactory = new JiraApiFactory();
-
-        var app = new Application(googleDocsApiFactory, jiraApiFactory, filesFacade, gitFacade);
+        var app = new Application();
 
         int exitCode = app.execute(args);
+
         System.exit(exitCode);
     }
 

@@ -30,8 +30,7 @@ import java.util.List;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
@@ -83,6 +82,19 @@ public class AuPublishStoriesCommandTest {
         app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, new GitFacade());
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
+    }
+
+    @Test
+    public void shouldFailGracefullyIfFailToLoadConfig() throws Exception {
+        Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
+
+        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitFacade());
+
+        int status = execute(newApp, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
+
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), containsString("Unable to load configuration.\nError thrown: java.nio.file.NoSuchFileException"));
     }
 
     @Test

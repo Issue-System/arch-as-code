@@ -317,6 +317,34 @@ public class AuPublishStoriesCommandTest {
         collector.checkThat(status, not(equalTo(0)));
     }
 
+    @Test
+    public void shouldGracefullyHandleAuUpdateWriteFailure() throws Exception {
+        // GIVEN:
+        Jira epic = Jira.blank();
+        final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
+        when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+        when(
+                mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())
+        ).thenReturn(List.of(
+                JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
+                JiraCreateStoryStatus.succeeded("ABC-223", "link-to-ABC-223")
+        ));
+        mockGitInterface();
+        doThrow(new RuntimeException("ERROR", new RuntimeException("Boom!"))).when(spiedFilesFacade).writeString(any(), any());
+
+
+        // WHEN:
+        final String command = "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath();
+        final Integer status = execute(app, command);
+
+        // THEN:
+        collector.checkThat(
+                err.toString(),
+                equalTo("Unable to write update to AU.\nError thrown: java.lang.RuntimeException: ERROR\nCause: java.lang.RuntimeException: Boom!\n")
+        );
+        collector.checkThat(status, not(equalTo(0)));
+    }
+
     private List<JiraStory> getExpectedJiraStoriesToCreate() {
         return List.of(
                 new JiraStory(

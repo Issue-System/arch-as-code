@@ -14,11 +14,9 @@ import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.architectureUpdate.StoryPublishingService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -59,57 +57,71 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
         this.gitInterface = gitInterface;
     }
 
-    public Integer call() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
-        Path auPath = architectureUpdateFileName.toPath();
+    public Integer call() {
+        final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
+        final Path auPath = architectureUpdateFileName.toPath();
 
         var au = loadAu(auPath);
-        if (au.isEmpty()) {
-            return 1;
-        }
+        if (au.isEmpty()) return 1;
 
-        final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
-        ArchitectureDataStructure afterAuArchitecture;
         var beforeAuArchitecture = getBeforeAuArchitecture(productArchPath);
         if (beforeAuArchitecture.isEmpty()) return 1;
 
-        try {
-            final String archAsString = filesFacade.readString(productArchPath);
-            afterAuArchitecture = new ArchitectureDataStructureObjectMapper().readValue(archAsString);
-        } catch (Exception e) {
-            printError("Unable to load architecture.", e);
-            return 1;
-        }
+        var afterAuArchitecture = getAfterAuArchitecture(productArchPath);
+        if (afterAuArchitecture.isEmpty()) return 1;
 
-        JiraApi jiraApi;
-        try {
-            jiraApi = jiraApiFactory.create(filesFacade, productArchitectureDirectory.toPath());
-        } catch (Exception e) {
-            printError("Unable to load configuration.", e);
-            return 1;
-        }
+        var jiraApi = getJiraApi();
+        if (jiraApi.isEmpty()) return 1;
 
         final StoryPublishingService jiraService = new StoryPublishingService(
                 spec.commandLine().getOut(),
                 spec.commandLine().getErr(),
-                jiraApi);
+                jiraApi.get());
 
-        final ArchitectureUpdate updatedAu;
+        var updatedAu = createStories(au, beforeAuArchitecture, afterAuArchitecture, jiraService);
+        if (updatedAu.isEmpty()) return 1;
+
         try {
-            updatedAu = jiraService.createStories(au.get(), beforeAuArchitecture.get(), afterAuArchitecture, username, password);
-        } catch (JiraApi.JiraApiException e) {
-            printError("Jira API failed", e);
-            return 1;
-        } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
-            printError("ERROR: No stories to create.");
-            return 1;
-        } catch (InvalidStoryException e) {
-            printError("ERROR: Some stories are invalid. Please run 'au validate' command.");
+            filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu.get()));
+        } catch (Exception e) {
+            printError("Unable to write update to AU.", e);
             return 1;
         }
 
-        filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
-
         return 0;
+    }
+
+    private Optional<ArchitectureUpdate> createStories(Optional<ArchitectureUpdate> au, Optional<ArchitectureDataStructure> beforeAuArchitecture, Optional<ArchitectureDataStructure> afterAuArchitecture, StoryPublishingService jiraService) {
+        try {
+            return Optional.of(jiraService.createStories(au.get(), beforeAuArchitecture.get(), afterAuArchitecture.get(), username, password));
+        } catch (JiraApi.JiraApiException e) {
+            printError("Jira API failed", e);
+        } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
+            printError("ERROR: No stories to create.");
+        } catch (InvalidStoryException e) {
+            printError("ERROR: Some stories are invalid. Please run 'au validate' command.");
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<JiraApi> getJiraApi() {
+        try {
+            return Optional.of(jiraApiFactory.create(filesFacade, productArchitectureDirectory.toPath()));
+        } catch (Exception e) {
+            printError("Unable to load configuration.", e);
+            return Optional.empty();
+        }
+    }
+
+    private Optional<ArchitectureDataStructure> getAfterAuArchitecture(Path productArchPath) {
+        try {
+            final String archAsString = filesFacade.readString(productArchPath);
+            return Optional.of(new ArchitectureDataStructureObjectMapper().readValue(archAsString));
+        } catch (Exception e) {
+            printError("Unable to load architecture.", e);
+            return Optional.empty();
+        }
     }
 
     private Optional<ArchitectureDataStructure> getBeforeAuArchitecture(Path productArchPath) {

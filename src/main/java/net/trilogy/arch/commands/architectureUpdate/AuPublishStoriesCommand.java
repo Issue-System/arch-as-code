@@ -71,7 +71,14 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
         ArchitectureDataStructure afterAuArchitecture;
-        ArchitectureDataStructure beforeAuArchitecture = gitInterface.load(baseBranch, productArchPath);
+        ArchitectureDataStructure beforeAuArchitecture;
+        try {
+            beforeAuArchitecture = gitInterface.load(baseBranch, productArchPath);
+        } catch (Exception e) {
+            printError("Unable to load product architecture in branch: " + baseBranch, e);
+            return 1;
+        }
+
         try {
             final String archAsString = filesFacade.readString(productArchPath);
             afterAuArchitecture = new ArchitectureDataStructureObjectMapper().readValue(archAsString);

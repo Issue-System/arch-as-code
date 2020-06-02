@@ -163,18 +163,6 @@ public class AuPublishStoriesCommandTest {
         verify(mockedJiraApi).createStories(expected, epic.getTicket(), epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
     }
 
-    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
-        when(mockedGitInterface.load("master", rootDir.toPath().resolve("product-architecture.yml")))
-                .thenReturn(
-                        new ArchitectureDataStructureObjectMapper()
-                                .readValue(
-                                        Files.readString(
-                                                rootDir.toPath().resolve("product-architecture.yml"))
-                                                .replaceAll("34", "DELETED-COMPONENT-ID")
-                                )
-                );
-    }
-
     @Test
     public void shouldOutputResult() throws Exception {
         // GIVEN:
@@ -317,6 +305,17 @@ public class AuPublishStoriesCommandTest {
         assertThat(statusCode, not(equalTo(0)));
     }
 
+    @Test
+    public void shouldGracefullyHandleErrorsInGitInterface() throws Exception {
+        when(mockedGitInterface.load(any(), any())).thenThrow(new RuntimeException("Boom!"));
+
+        final Integer status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), equalTo("Unable to load product architecture in branch: master\nError thrown: java.lang.RuntimeException: Boom!\nCause: null\n"));
+        collector.checkThat(status, not(equalTo(0)));
+    }
+
     private List<JiraStory> getExpectedJiraStoriesToCreate() {
         return List.of(
                 new JiraStory(
@@ -365,6 +364,18 @@ public class AuPublishStoriesCommandTest {
                         )
                 )
         );
+    }
+
+    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
+        when(mockedGitInterface.load("master", rootDir.toPath().resolve("product-architecture.yml")))
+                .thenReturn(
+                        new ArchitectureDataStructureObjectMapper()
+                                .readValue(
+                                        Files.readString(
+                                                rootDir.toPath().resolve("product-architecture.yml"))
+                                                .replaceAll("34", "DELETED-COMPONENT-ID")
+                                )
+                );
     }
 }
 

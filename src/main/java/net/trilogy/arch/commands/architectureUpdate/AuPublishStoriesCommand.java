@@ -20,6 +20,7 @@ import picocli.CommandLine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
@@ -61,11 +62,8 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
     public Integer call() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
         Path auPath = architectureUpdateFileName.toPath();
 
-        ArchitectureUpdate au;
-        try {
-            au = architectureUpdateObjectMapper.readValue(filesFacade.readString(auPath));
-        } catch (Exception e) {
-            printError("Unable to load architecture update.", e);
+        var au = loadAu(auPath);
+        if (au.isEmpty()) {
             return 1;
         }
 
@@ -95,30 +93,37 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
             return 1;
         }
 
-        var stdOut = spec.commandLine().getOut();
-        var stdErr = spec.commandLine().getErr();
-        final StoryPublishingService jiraService = new StoryPublishingService(stdOut, stdErr, jiraApi);
+        final StoryPublishingService jiraService = new StoryPublishingService(
+                spec.commandLine().getOut(),
+                spec.commandLine().getErr(),
+                jiraApi);
 
         final ArchitectureUpdate updatedAu;
         try {
-            updatedAu = jiraService.createStories(au, beforeAuArchitecture, afterAuArchitecture, username, password);
+            updatedAu = jiraService.createStories(au.get(), beforeAuArchitecture, afterAuArchitecture, username, password);
         } catch (JiraApi.JiraApiException e) {
-            spec.commandLine().getErr().println("ERROR: " + e.getMessage() + "\n");
-            if (e.getCause() != null) {
-                spec.commandLine().getErr().println(e.getCause().getMessage() + "\n");
-            }
+            printError("Jira API failed", e);
             return 1;
         } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
-            spec.commandLine().getErr().println("ERROR: No stories to create.");
+            printError("ERROR: No stories to create.");
             return 1;
         } catch (InvalidStoryException e) {
-            spec.commandLine().getErr().println("ERROR: Some stories are invalid. Please run 'au validate' command.");
+            printError("ERROR: Some stories are invalid. Please run 'au validate' command.");
             return 1;
         }
 
         filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
+    }
+
+    private Optional<ArchitectureUpdate> loadAu(Path auPath) {
+        try {
+            return Optional.of(architectureUpdateObjectMapper.readValue(filesFacade.readString(auPath)));
+        } catch (Exception e) {
+            printError("Unable to load architecture update.", e);
+            return Optional.empty();
+        }
     }
 }
 

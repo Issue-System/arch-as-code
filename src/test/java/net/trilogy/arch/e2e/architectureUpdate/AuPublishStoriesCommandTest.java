@@ -265,7 +265,7 @@ public class AuPublishStoriesCommandTest {
 
         Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
-        assertThat(err.toString(), equalTo("ERROR: OOPS!\n\nDetails\n\n"));
+        assertThat(err.toString(), equalTo("Jira API failed\nError thrown: net.trilogy.arch.adapter.jira.JiraApi$JiraApiException: OOPS!\nCause: java.lang.RuntimeException: Details\n"));
         assertThat(
                 out.toString(),
                 equalTo(
@@ -300,7 +300,7 @@ public class AuPublishStoriesCommandTest {
 
         Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
-        assertThat(err.toString(), equalTo("ERROR: OOPS!\n\n"));
+        assertThat(err.toString(), equalTo("Jira API failed\nError thrown: net.trilogy.arch.adapter.jira.JiraApi$JiraApiException: OOPS!\nCause: null\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nChecking epic...\n\n"));
         assertThat(statusCode, not(equalTo(0)));
     }

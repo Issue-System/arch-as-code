@@ -3,6 +3,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.jira.*;
@@ -11,6 +12,7 @@ import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import net.trilogy.arch.facade.FilesFacade;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,6 +21,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,6 +42,7 @@ public class AuPublishStoriesCommandTest {
     private JiraApi mockedJiraApi;
     private Application app;
     private FilesFacade spiedFilesFacade;
+    private GitInterface mockedGitInterface;
 
     final PrintStream originalOut = System.out;
     final PrintStream originalErr = System.err;
@@ -70,7 +74,9 @@ public class AuPublishStoriesCommandTest {
         mockedJiraApi = mock(JiraApi.class);
         when(mockedJiraApiFactory.create(spiedFilesFacade, rootDir.toPath())).thenReturn(mockedJiraApi);
 
-        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, new GitInterface());
+        mockedGitInterface = mock(GitInterface.class);
+
+        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, mockedGitInterface);
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }
@@ -78,10 +84,11 @@ public class AuPublishStoriesCommandTest {
     @Test
     public void shouldFailGracefullyIfFailToLoadConfig() throws Exception {
         Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
+        mockGitInterface();
 
-        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), new GitInterface());
+        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), mockedGitInterface);
 
-        int status = execute(newApp, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
+        int status = execute(newApp, "au publish -b master -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
@@ -93,7 +100,7 @@ public class AuPublishStoriesCommandTest {
         Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
         doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(auPath));
 
-        int status = execute(app, "au publish -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
+        int status = execute(app, "au publish -b master -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
@@ -104,7 +111,7 @@ public class AuPublishStoriesCommandTest {
     public void shouldFailGracefullyIfFailToLoadArchitecture() throws Exception {
         doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("product-architecture.yml")));
 
-        int status = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        int status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(out.toString(), equalTo(""));
@@ -117,7 +124,7 @@ public class AuPublishStoriesCommandTest {
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
 
-        int status = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/invalid-story.yml " + rootDir.getAbsolutePath());
+        int status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/invalid-story.yml " + rootDir.getAbsolutePath());
 
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(
@@ -135,7 +142,7 @@ public class AuPublishStoriesCommandTest {
     public void shouldQueryJiraForEpic() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
 
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         verify(mockedJiraApi).getStory(epic, "user", "password".toCharArray());
     }
@@ -146,13 +153,26 @@ public class AuPublishStoriesCommandTest {
         Jira epic = Jira.blank();
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+        mockGitInterface();
 
         // WHEN:
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
         List<JiraStory> expected = getExpectedJiraStoriesToCreate();
         verify(mockedJiraApi).createStories(expected, epic.getTicket(), epicInformation.getProjectId(), epicInformation.getProjectKey(), "user", "password".toCharArray());
+    }
+
+    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
+        when(mockedGitInterface.load("master", rootDir.toPath().resolve("product-architecture.yml")))
+                .thenReturn(
+                        new ArchitectureDataStructureObjectMapper()
+                                .readValue(
+                                        Files.readString(
+                                                rootDir.toPath().resolve("product-architecture.yml"))
+                                                .replaceAll("34", "DELETED-COMPONENT-ID")
+                                )
+                );
     }
 
     @Test
@@ -167,9 +187,10 @@ public class AuPublishStoriesCommandTest {
                 JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
                 JiraCreateStoryStatus.succeeded("ABC-223", "link-to-ABC-223")
         ));
+        mockGitInterface();
 
         // WHEN:
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
         collector.checkThat(
@@ -196,9 +217,10 @@ public class AuPublishStoriesCommandTest {
                 JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
                 JiraCreateStoryStatus.failed("error-message")
         ));
+        mockGitInterface();
 
         // WHEN:
-        execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
         String actualAuAsstring = Files.readString(rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
         ArchitectureUpdate actualAu = new ArchitectureUpdateObjectMapper().readValue(actualAuAsstring);
 
@@ -224,9 +246,10 @@ public class AuPublishStoriesCommandTest {
                 JiraCreateStoryStatus.succeeded("ABC-123", "link-to-ABC-123"),
                 JiraCreateStoryStatus.failed("error-message")
         ));
+        mockGitInterface();
 
         // WHEN:
-        int statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        int statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         // THEN:
         assertThat(
@@ -247,11 +270,12 @@ public class AuPublishStoriesCommandTest {
     }
 
     @Test
-    public void shouldDisplayNiceErrorIfCreatingStoriesCrashes() throws JiraApi.JiraApiException {
+    public void shouldDisplayNiceErrorIfCreatingStoriesCrashes() throws Exception {
         when(mockedJiraApi.getStory(any(), any(), any())).thenReturn(new JiraQueryResult("ABC", "DEF"));
         when(mockedJiraApi.createStories(any(), any(), any(), any(), any(), any())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").cause(new RuntimeException("Details")).build());
+        mockGitInterface();
 
-        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n\nDetails\n\n"));
         assertThat(
@@ -267,7 +291,7 @@ public class AuPublishStoriesCommandTest {
 
     @Test
     public void shouldHandleNoStoriesToCreate() {
-        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/no-stories-to-create.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/no-stories-to-create.yml " + rootDir.getAbsolutePath());
 
         verifyNoMoreInteractions(mockedJiraApi);
         collector.checkThat(err.toString(), equalTo("ERROR: No stories to create.\n"));
@@ -281,12 +305,12 @@ public class AuPublishStoriesCommandTest {
     }
 
     @Test
-    public void shouldDisplayGetStoryErrorsFromJira() throws JiraApi.JiraApiException {
+    public void shouldDisplayGetStoryErrorsFromJira() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
 
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
 
-        Integer statusCode = execute(app, "au publish -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
+        Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         assertThat(err.toString(), equalTo("ERROR: OOPS!\n\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nChecking epic...\n\n"));
@@ -302,6 +326,11 @@ public class AuPublishStoriesCommandTest {
                                         new Tdd.Id("[SAMPLE-TDD-ID]"),
                                         new Tdd("[SAMPLE TDD TEXT]"),
                                         "c4://Internet Banking System/API Application/Reset Password Controller"
+                                ),
+                                new JiraStory.JiraTdd(
+                                        new Tdd.Id("[SAMPLE-TDD-ID-2]"),
+                                        new Tdd("[SAMPLE TDD TEXT]"),
+                                        "c4://Internet Banking System/API Application/E-mail Component"
                                 )
                         ),
                         List.of(

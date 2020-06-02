@@ -40,6 +40,11 @@ tdds-per-component:
     tdds:
       '[SAMPLE-TDD-ID]':
         text: "[SAMPLE TDD TEXT]"
+  - component-id: "DELETED-COMPONENT-ID"
+    deleted: true
+    tdds:
+      '[SAMPLE-TDD-ID-2]':
+        text: "[SAMPLE TDD TEXT]"
 functional-requirements:
   '[SAMPLE-REQUIREMENT-ID]':
     text: "[SAMPLE REQUIREMENT TEXT]"
@@ -61,6 +66,7 @@ capabilities:
         link: ""
       tdd-references:
         - "[SAMPLE-TDD-ID]"
+        - "[SAMPLE-TDD-ID-2]"
       functional-requirement-references:
         - "[SAMPLE-REQUIREMENT-ID]"
 

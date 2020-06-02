@@ -34,7 +34,7 @@ public class Application {
                                 .addSubcommand(new AuInitializeCommand(filesFacade))
                                 .addSubcommand(new AuNewCommand(googleDocsApiFactory, filesFacade, gitInterface))
                                 .addSubcommand(new AuValidateCommand(filesFacade, gitInterface))
-                                .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade))
+                                .addSubcommand(new AuPublishStoriesCommand(jiraApiFactory, filesFacade, gitInterface))
                                 .addSubcommand(new AuAnnotateCommand(filesFacade))
                 );
     }

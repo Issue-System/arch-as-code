@@ -2,7 +2,8 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.jira.JiraApi;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
@@ -13,6 +14,7 @@ import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.architectureUpdate.StoryPublishingService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -26,14 +28,18 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
     private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
 
     private final JiraApiFactory jiraApiFactory;
-    private final FilesFacade filesFacade;
     private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
+    private final FilesFacade filesFacade;
+    private final GitInterface gitInterface;
 
     @CommandLine.Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFileName;
 
     @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
+
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to get names of components. Usually 'master'.", required = true)
+    String baseBranch;
 
     @CommandLine.Option(names = {"-u", "--username"}, description = "Jira username", required = true)
     private String username;
@@ -45,13 +51,14 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
-    public AuPublishStoriesCommand(JiraApiFactory jiraApiFactory, FilesFacade filesFacade) {
+    public AuPublishStoriesCommand(JiraApiFactory jiraApiFactory, FilesFacade filesFacade, GitInterface gitInterface) {
         this.jiraApiFactory = jiraApiFactory;
-        this.filesFacade = filesFacade;
         this.architectureUpdateObjectMapper = new ArchitectureUpdateObjectMapper();
+        this.filesFacade = filesFacade;
+        this.gitInterface = gitInterface;
     }
 
-    public Integer call() throws IOException {
+    public Integer call() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
         Path auPath = architectureUpdateFileName.toPath();
 
         ArchitectureUpdate au;
@@ -62,9 +69,12 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
             return 1;
         }
 
-        ArchitectureDataStructure architecture;
+        final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
+        ArchitectureDataStructure afterAuArchitecture;
+        ArchitectureDataStructure beforeAuArchitecture = gitInterface.load(baseBranch, productArchPath);
         try {
-            architecture = new ArchitectureDataStructureReader(filesFacade).load(productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile());
+            final String archAsString = filesFacade.readString(productArchPath);
+            afterAuArchitecture = new ArchitectureDataStructureObjectMapper().readValue(archAsString);
         } catch (Exception e) {
             printError("Unable to load architecture.", e);
             return 1;
@@ -84,7 +94,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         final ArchitectureUpdate updatedAu;
         try {
-            updatedAu = jiraService.createStories(au,null,  architecture, username, password);
+            updatedAu = jiraService.createStories(au, beforeAuArchitecture, afterAuArchitecture, username, password);
         } catch (JiraApi.JiraApiException e) {
             spec.commandLine().getErr().println("ERROR: " + e.getMessage() + "\n");
             if (e.getCause() != null) {

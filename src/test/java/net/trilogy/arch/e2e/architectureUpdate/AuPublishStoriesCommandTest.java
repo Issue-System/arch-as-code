@@ -109,6 +109,7 @@ public class AuPublishStoriesCommandTest {
 
     @Test
     public void shouldFailGracefullyIfFailToLoadArchitecture() throws Exception {
+        mockGitInterface();
         doThrow(new RuntimeException("ERROR", new RuntimeException("DETAILS"))).when(spiedFilesFacade).readString(eq(rootDir.toPath().resolve("product-architecture.yml")));
 
         int status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
@@ -123,6 +124,7 @@ public class AuPublishStoriesCommandTest {
         Jira epic = Jira.blank();
         final JiraQueryResult epicInformation = new JiraQueryResult("PROJ_ID", "PROJ_KEY");
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenReturn(epicInformation);
+        mockGitInterface();
 
         int status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/invalid-story.yml " + rootDir.getAbsolutePath());
 
@@ -141,6 +143,7 @@ public class AuPublishStoriesCommandTest {
     @Test
     public void shouldQueryJiraForEpic() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
+        mockGitInterface();
 
         execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
@@ -278,17 +281,14 @@ public class AuPublishStoriesCommandTest {
     }
 
     @Test
-    public void shouldHandleNoStoriesToCreate() {
-        Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/no-stories-to-create.yml " + rootDir.getAbsolutePath());
+    public void shouldHandleNoStoriesToCreate() throws Exception {
+        mockGitInterface();
 
+        Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/no-stories-to-create.yml " + rootDir.getAbsolutePath());
         verifyNoMoreInteractions(mockedJiraApi);
+
         collector.checkThat(err.toString(), equalTo("ERROR: No stories to create.\n"));
-        collector.checkThat(
-                out.toString(),
-                equalTo(
-                        "Not re-creating stories:\n  - story that should not be created\n\n"
-                )
-        );
+        collector.checkThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\n"));
         collector.checkThat(statusCode, not(equalTo(0)));
     }
 
@@ -296,6 +296,7 @@ public class AuPublishStoriesCommandTest {
     public void shouldDisplayGetStoryErrorsFromJira() throws Exception {
         Jira epic = new Jira("[SAMPLE JIRA TICKET]", "[SAMPLE JIRA TICKET LINK]");
 
+        mockGitInterface();
         when(mockedJiraApi.getStory(epic, "user", "password".toCharArray())).thenThrow(JiraApi.JiraApiException.builder().message("OOPS!").build());
 
         Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());

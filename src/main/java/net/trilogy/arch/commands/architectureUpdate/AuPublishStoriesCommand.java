@@ -69,13 +69,8 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
         ArchitectureDataStructure afterAuArchitecture;
-        ArchitectureDataStructure beforeAuArchitecture;
-        try {
-            beforeAuArchitecture = gitInterface.load(baseBranch, productArchPath);
-        } catch (Exception e) {
-            printError("Unable to load product architecture in branch: " + baseBranch, e);
-            return 1;
-        }
+        var beforeAuArchitecture = getBeforeAuArchitecture(productArchPath);
+        if (beforeAuArchitecture.isEmpty()) return 1;
 
         try {
             final String archAsString = filesFacade.readString(productArchPath);
@@ -100,7 +95,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
 
         final ArchitectureUpdate updatedAu;
         try {
-            updatedAu = jiraService.createStories(au.get(), beforeAuArchitecture, afterAuArchitecture, username, password);
+            updatedAu = jiraService.createStories(au.get(), beforeAuArchitecture.get(), afterAuArchitecture, username, password);
         } catch (JiraApi.JiraApiException e) {
             printError("Jira API failed", e);
             return 1;
@@ -115,6 +110,15 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
         filesFacade.writeString(auPath, architectureUpdateObjectMapper.writeValueAsString(updatedAu));
 
         return 0;
+    }
+
+    private Optional<ArchitectureDataStructure> getBeforeAuArchitecture(Path productArchPath) {
+        try {
+            return Optional.of(gitInterface.load(baseBranch, productArchPath));
+        } catch (Exception e) {
+            printError("Unable to load product architecture in branch: " + baseBranch, e);
+            return Optional.empty();
+        }
     }
 
     private Optional<ArchitectureUpdate> loadAu(Path auPath) {

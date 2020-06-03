@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$1" == "-h" || "$1" == "--help" ]] 
+if [[ "$1" == "-h" || "$1" == "--help" ]]
 then
     echo "This script will:"
     echo " - run ./gradlew clean"
@@ -21,6 +21,8 @@ else
     # remove existing
     ./gradlew clean
     rm -rf build
+
+    cp ./scripts/demo-git-ignore /tmp/aac/demo-folder/.gitignore
 
     # build
     ./gradlew distZip

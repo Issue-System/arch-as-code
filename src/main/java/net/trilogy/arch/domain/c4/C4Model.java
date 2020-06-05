@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -97,11 +98,13 @@ public class C4Model {
         }
     }
 
+    // [TODO] [TESTING] Testing gap
     public Set<Entity> allEntities() {
         return Stream.of(getSystems(), getPeople(), getComponents(), getContainers(), getDeploymentNodesRecursively())
                 .flatMap(Collection::stream).collect(toSet());
     }
 
+    // [TODO] [TESTING] Testing gap
     public Set<Tuple2<Entity, C4Relationship>> allRelationships() {
         return allEntities().stream()
                 .flatMap(entity -> {
@@ -130,7 +133,8 @@ public class C4Model {
 
     public Entity findEntityByReference(C4Reference reference) {
         if (reference.getId() != null) {
-            return findEntityById(reference.getId());
+            String id = reference.getId();
+            return findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
         } else if (reference.getAlias() != null) {
             return findEntityByAlias(reference.getAlias());
         } else {
@@ -138,13 +142,12 @@ public class C4Model {
         }
     }
 
-    public Entity findEntityById(String id) {
+    public Optional<Entity> findEntityById(String id) {
         checkNotNull(id);
         return allEntities()
                 .stream()
                 .filter(e -> e.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
+                .findFirst();
     }
 
     public Entity findEntityByAlias(String alias) {
@@ -167,7 +170,8 @@ public class C4Model {
 
         Entity result;
         if (relationship.getWithId() != null) {
-            result = findEntityById(relationship.getWithId());
+            String id = relationship.getWithId();
+            result = findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
         } else if (relationship.getWithAlias() != null) {
             result = findEntityByAlias(relationship.getWithAlias());
         } else {
@@ -177,15 +181,13 @@ public class C4Model {
         return result;
     }
 
-    public C4Relationship findRelationshipById(String id) {
+    public Optional<C4Relationship> findRelationshipById(String id) {
         checkNotNull(id);
-        Tuple2<Entity, C4Relationship> foundTuple = allRelationships()
+        return allRelationships()
                 .stream()
                 .filter(t -> t._2().getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
-
-        return foundTuple._2();
+                .map(t -> t._2);
     }
 
     public C4Relationship findRelationshipByAlias(String alias) {

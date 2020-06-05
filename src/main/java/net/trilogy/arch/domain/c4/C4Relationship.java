@@ -1,14 +1,13 @@
 package net.trilogy.arch.domain.c4;
 
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
+import net.trilogy.arch.domain.Diffable;
 
 @Data
 @NoArgsConstructor
-public class C4Relationship {
+@EqualsAndHashCode
+public class C4Relationship implements Diffable {
     private String id;
     private String alias;
     @NonNull

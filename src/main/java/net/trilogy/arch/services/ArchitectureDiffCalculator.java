@@ -43,8 +43,18 @@ public class ArchitectureDiffCalculator {
 
     private static Set<Diffable> getAllThings(ArchitectureDataStructure arch) {
         return Sets.union(
-                arch.getModel().allEntities(),
-                arch.getModel().allRelationships().stream().map(it -> it._2).collect(Collectors.toSet())
+                arch.getModel()
+                    .allEntities()
+                    .stream()
+                    .map(it -> it.shallowCopy())
+                    .collect(Collectors.toSet()),
+
+                arch.getModel()
+                    .allRelationships()
+                    .stream()
+                    .map(it -> it._2())
+                    .map(it -> it.shallowCopy())
+                    .collect(Collectors.toSet())
         );
     }
 }

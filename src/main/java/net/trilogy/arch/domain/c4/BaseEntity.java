@@ -3,7 +3,6 @@ package net.trilogy.arch.domain.c4;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Set;

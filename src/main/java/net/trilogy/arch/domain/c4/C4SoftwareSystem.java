@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
+import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +15,10 @@ import static net.trilogy.arch.domain.c4.C4Location.UNSPECIFIED;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation {
+public class C4SoftwareSystem extends BaseEntity implements HasLocation {
     private C4Location location;
 
-    @Builder
+    @Builder(toBuilder=true)
     C4SoftwareSystem(String id, String alias, String name, C4Path path, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, C4Location location) {
         super(id, alias, path, name, description, tags, relationships);
         this.location = Optional.ofNullable(location).orElse(UNSPECIFIED);
@@ -29,9 +30,15 @@ public class C4SoftwareSystem extends BaseEntity implements Entity, HasLocation 
 
     public static class C4SoftwareSystemBuilder {
         public C4SoftwareSystemBuilder path(C4Path path) {
+            if(path == null) return this;
             checkArgument(C4Type.system.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));
             this.path = path;
             return this;
         }
+    }
+
+    @Override
+    public Diffable shallowCopy() {
+        return this.toBuilder().build();
     }
 }

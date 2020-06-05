@@ -18,7 +18,7 @@ public class C4Relationship implements Diffable {
     private String description;
     private String technology;
 
-    @Builder
+    @Builder(toBuilder = true)
     public C4Relationship(String id, String alias, @NonNull C4Action action, String withAlias, String withId, @NonNull String description, String technology) {
         this.id = id;
         this.alias = alias;
@@ -27,5 +27,9 @@ public class C4Relationship implements Diffable {
         this.withId = withId;
         this.description = description;
         this.technology = technology;
+    }
+
+    public Diffable shallowCopy() {
+        return this.toBuilder().build();
     }
 }

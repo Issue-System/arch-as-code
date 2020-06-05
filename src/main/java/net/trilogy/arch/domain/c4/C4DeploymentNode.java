@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
+import net.trilogy.arch.domain.Diffable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +11,14 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4DeploymentNode extends BaseEntity implements Entity {
+public class C4DeploymentNode extends BaseEntity {
     private String technology;
     private String environment;
     private Integer instances;
     private List<C4DeploymentNode> children = new ArrayList<>();
     private List<C4ContainerInstance> containerInstances = new ArrayList<>();
 
-    @Builder
+    @Builder(toBuilder=true)
     C4DeploymentNode(String id,
                      String alias,
                      String name,
@@ -48,5 +49,10 @@ public class C4DeploymentNode extends BaseEntity implements Entity {
 
     public C4Type getType() {
         return C4Type.deploymentNode;
+    }
+
+    @Override
+    public Diffable shallowCopy() {
+        return this.toBuilder().build();
     }
 }

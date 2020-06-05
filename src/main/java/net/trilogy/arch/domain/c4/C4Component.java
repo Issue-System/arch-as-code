@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
+import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Set;
@@ -11,13 +12,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Optional.ofNullable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class C4Component extends BaseEntity implements Entity, HasTechnology, HasUrl {
+public class C4Component extends BaseEntity implements HasTechnology, HasUrl {
     protected String containerId;
     protected String containerAlias;
     @NonNull
@@ -51,5 +50,9 @@ public class C4Component extends BaseEntity implements Entity, HasTechnology, Ha
             this.path = path;
             return this;
         }
+    }
+
+    public Diffable shallowCopy() {
+        return this.toBuilder().build();
     }
 }

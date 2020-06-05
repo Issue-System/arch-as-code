@@ -1,6 +1,7 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
+import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ import static java.util.Optional.ofNullable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4Container extends BaseEntity implements Entity, HasTechnology, HasUrl {
+public class C4Container extends BaseEntity implements HasTechnology, HasUrl {
     private String systemId;
     private String systemAlias;
     private String technology;
@@ -45,5 +46,10 @@ public class C4Container extends BaseEntity implements Entity, HasTechnology, Ha
             this.path = path;
             return this;
         }
+    }
+
+    @Override
+    public Diffable shallowCopy() {
+        return this.toBuilder().build();
     }
 }

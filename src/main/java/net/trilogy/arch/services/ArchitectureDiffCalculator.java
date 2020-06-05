@@ -14,7 +14,6 @@ public class ArchitectureDiffCalculator {
     public static Set<Diff> diff(ArchitectureDataStructure firstArch, ArchitectureDataStructure secondArch) {
         final Set<Diff> firstDiffs = getAllThings(firstArch).stream()
                 .map(p1 -> new Diff(
-                        p1.getId(),
                         p1,
                         findById(secondArch, p1.getId()).orElse(null)
                     )
@@ -23,7 +22,6 @@ public class ArchitectureDiffCalculator {
 
         final Set<Diff> secondDiffs = getAllThings(secondArch).stream()
                 .map(p2 -> new Diff(
-                        p2.getId(),
                         findById(firstArch, p2.getId()).orElse(null),
                         p2
                     )

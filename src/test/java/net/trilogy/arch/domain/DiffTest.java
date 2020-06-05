@@ -13,40 +13,40 @@ public class DiffTest {
 
     @Test
     public void shouldCalculateCreatedStatus() {
-        final Diff diff = new Diff(null, null, new Thing("toBeCreated"));
+        final Diff diff = new Diff(null, new Thing("toBeCreated"));
         assertThat(diff.getStatus(), equalTo(Diff.Status.CREATED));
     }
 
     @Test
     public void shouldCalculateDeletedStatus() {
-        final Diff diff = new Diff(null, new Thing("toBeDeleted"), null);
+        final Diff diff = new Diff(new Thing("toBeDeleted"), null);
         assertThat(diff.getStatus(), equalTo(Diff.Status.DELETED));
     }
 
     @Test
     public void shouldCalculateUpdatedStatus() {
-        final Diff diff = new Diff(null, new Thing("toBeUpdated"), new Thing("updated"));
+        final Diff diff = new Diff(new Thing("toBeUpdated"), new Thing("updated"));
         assertThat(diff.getStatus(), equalTo(Diff.Status.UPDATED));
     }
 
     @Test
     public void shouldCalculateNoUpdateStatus() {
-        final Diff diff = new Diff(null, new Thing("noChange"), new Thing("noChange"));
+        final Diff diff = new Diff(new Thing("noChange"), new Thing("noChange"));
         assertThat(diff.getStatus(), equalTo(Diff.Status.NO_UPDATE));
     }
 
     @Test
     public void shouldCalculatedChildrenUpdated() {
-        final Diff diff = new Diff(null, new Thing("noUpdate"), new Thing("noUpdate"));
+        final Diff diff = new Diff(new Thing("noUpdate"), new Thing("noUpdate"));
         diff.markChildrenUpdated();
         assertThat(diff.getStatus(), equalTo(Diff.Status.NO_UPDATE_BUT_CHILDREN_UPDATED));
     }
 
     @Test
     public void shouldNotCalculateChildrenIfChangedStatus() {
-        final Diff created = new Diff(null, null, new Thing("toBeCreated"));
-        final Diff deleted = new Diff(null, new Thing("toBeDeleted"), null);
-        final Diff updated = new Diff(null, new Thing("toBeUpdated"), new Thing("updated"));
+        final Diff created = new Diff(null, new Thing("toBeCreated"));
+        final Diff deleted = new Diff(new Thing("toBeDeleted"), null);
+        final Diff updated = new Diff(new Thing("toBeUpdated"), new Thing("updated"));
         created.markChildrenUpdated();
         deleted.markChildrenUpdated();
         updated.markChildrenUpdated();

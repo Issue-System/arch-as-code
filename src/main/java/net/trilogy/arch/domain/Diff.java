@@ -8,13 +8,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Diff{
-    final private String id;
     final private Diffable before;
     final private Diffable after;
     private Status status;
 
-    public Diff(String id, Diffable before, Diffable after) {
-        this.id = id;
+    public Diff(Diffable before, Diffable after) {
         this.before = before;
         this.after = after;
         this.status = calculateStatus();

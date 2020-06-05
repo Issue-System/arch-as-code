@@ -50,10 +50,10 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArchWithPeople(arch, Set.of(personInFirst, commonPersonNameToBeChanged, commonPersonNoChange));
         var second = getArchWithPeople(arch, Set.of(personInSecond, commonPersonNameChanged, commonPersonNoChange));
         Set<Diff> expected = Set.of(
-                new Diff(personInFirst.getId(), personInFirst, null),
-                new Diff(personInSecond.getId(), null, personInSecond),
-                new Diff(commonPersonNoChange.getId(), commonPersonNoChange, commonPersonNoChange),
-                new Diff(commonPersonNameToBeChanged.getId(), commonPersonNameToBeChanged, commonPersonNameChanged)
+                new Diff(personInFirst, null),
+                new Diff(null, personInSecond),
+                new Diff(commonPersonNoChange, commonPersonNoChange),
+                new Diff(commonPersonNameToBeChanged, commonPersonNameChanged)
         );
 
         var actual = ArchitectureDiffCalculator.diff(first, second);
@@ -76,7 +76,7 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArch(arch, Set.of(personWithRelationshipsToSys2), Set.of(system2, system3), Set.of(), Set.of(), Set.of());
         var second = getArch(arch, Set.of(personWithRelationshipsToSys3), Set.of(system2, system3), Set.of(), Set.of(), Set.of());
 
-        Diff expected = new Diff("10", relationToSys2, relationToSys3);
+        Diff expected = new Diff(relationToSys2, relationToSys3);
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(actual, hasItem(expected));

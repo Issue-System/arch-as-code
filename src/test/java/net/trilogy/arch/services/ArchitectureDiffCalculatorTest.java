@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPersonWithRelationshipsTo;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createSystem;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.emptyArch;
@@ -60,6 +61,34 @@ public class ArchitectureDiffCalculatorTest {
 
         expected.forEach(e -> collector.checkThat(actual, hasItem(e)));
         collector.checkThat(actual.size(), equalTo(expected.size()));
+    }
+
+    @Test
+    public void shouldDisregardEntityRelationships() {
+        var arch = emptyArch();
+
+        final C4Person personBefore = createPersonWithRelationshipsTo(
+                "1", 
+                Set.of(createRelationship("1", "2"), createRelationship("5", "7"))
+        );
+        final C4Person personAfter = createPersonWithRelationshipsTo(
+                "1", 
+                Set.of(createRelationship("2", "1"))
+        );
+
+        var first = getArchWithPeople(arch, Set.of(personBefore));
+        var second = getArchWithPeople(arch, Set.of(personAfter));
+
+        var actual = ArchitectureDiffCalculator.diff(first, second);
+
+        collector.checkThat(
+                actual.stream()
+                    .filter(it -> it.getAfter().getId() == "1")
+                    .findAny()
+                    .orElseThrow()
+                    .getStatus(), 
+                equalTo(Diff.Status.NO_UPDATE)
+        );
     }
 
     @Test

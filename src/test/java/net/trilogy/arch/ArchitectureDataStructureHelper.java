@@ -46,6 +46,17 @@ public class ArchitectureDataStructureHelper {
                 .build();
     }
 
+    public static C4Relationship createRelationship(String id, String withId) {
+        return C4Relationship.builder()
+            .id(id)
+            .alias("a" + id)
+            .withId(withId)
+            .action(C4Action.INTERACTS_WITH)
+            .technology("t" + id)
+            .description("d" + id)
+            .build();
+    }
+
     public static C4Person createPersonWithRelationshipsTo(String id, Set<C4Relationship> relationships) {
         return C4Person.builder()
                 .id(id)

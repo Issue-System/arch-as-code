@@ -41,6 +41,7 @@ public class C4Container extends Entity implements HasTechnology, HasUrl {
 
     public static class C4ContainerBuilder {
         public C4ContainerBuilder path(C4Path path) {
+            if(path == null) return this;
             checkArgument(C4Type.container.equals(path.type()), format("Path %s is not valid for Container.", path));
             this.path = path;
             return this;

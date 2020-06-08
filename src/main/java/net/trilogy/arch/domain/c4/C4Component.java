@@ -45,6 +45,7 @@ public class C4Component extends Entity implements HasTechnology, HasUrl {
 
     public static class C4ComponentBuilder {
         public C4ComponentBuilder path(C4Path path) {
+            if(path == null) return this;
             checkArgument(C4Type.component.equals(path.type()), format("Path %s is not valid for Component.", path));
             this.path = path;
             return this;

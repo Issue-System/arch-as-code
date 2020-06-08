@@ -72,6 +72,21 @@ public class ArchitectureDataStructureHelper {
                 .build();
     }
 
+    public static C4Container createContainer(String id, String systemId) {
+        return C4Container.builder()
+            .id(id)
+            .name("container-" + id)
+            .systemId(systemId)
+            .build();
+    }
+
+    public static C4Component createComponent(String id, String containerId) {
+        return C4Component.builder()
+            .id(id)
+            .name("component-"+id)
+            .containerId(containerId)
+            .build();
+    }
 
     public static C4SoftwareSystem createSystemWithRelationshipsTo(String id, Set<Entity> entities) {
         final String systemId = id;

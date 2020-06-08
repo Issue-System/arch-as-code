@@ -16,22 +16,33 @@ import java.util.stream.Stream;
 public class ArchitectureDiffCalculator {
     public static Set<Diff> diff(ArchitectureDataStructure firstArch, ArchitectureDataStructure secondArch) {
         final Set<Diff> firstDiffs = getAllThings(firstArch).stream()
-                .map(p1 -> new Diff(
-                        p1,
-                        findById(secondArch, p1.getId()).orElse(null)
-                    )
+                .map(thing1 -> {
+                        var thing2 = findById(secondArch, thing1.getId()).orElse(null);
+                        return new Diff(
+                            thing1, getDescendants(thing1, firstArch),
+                            thing2, getDescendants(thing2, secondArch)
+                        );
+                    }
                 )
                 .collect(Collectors.toSet());
 
         final Set<Diff> secondDiffs = getAllThings(secondArch).stream()
-                .map(p2 -> new Diff(
-                        findById(firstArch, p2.getId()).orElse(null),
-                        p2
-                    )
+                .map(thing2 -> {
+                        var thing1 = findById(firstArch, thing2.getId()).orElse(null);
+                        return new Diff(
+                            thing1, getDescendants(thing1, firstArch),
+                            thing2, getDescendants(thing2, secondArch)
+                        );
+                    }
                 )
                 .collect(Collectors.toSet());
 
         return Sets.union(firstDiffs, secondDiffs);
+    }
+
+    private static Set<? extends Diffable<?>> getDescendants(Diffable<?> thing,
+            ArchitectureDataStructure arch) {
+        return Set.of();
     }
 
     private static Optional<? extends Diffable<?>> findById(ArchitectureDataStructure arch, String id) {

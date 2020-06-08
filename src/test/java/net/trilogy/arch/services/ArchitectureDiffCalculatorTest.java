@@ -2,6 +2,8 @@ package net.trilogy.arch.services;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createContainer;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createComponent;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPersonWithRelationshipsTo;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createSystem;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.emptyArch;
@@ -17,6 +19,7 @@ import org.junit.rules.ErrorCollector;
 
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.Diff;
+import net.trilogy.arch.domain.Diff.Status;
 import net.trilogy.arch.domain.c4.C4Action;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
@@ -110,6 +113,29 @@ public class ArchitectureDiffCalculatorTest {
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(actual, hasItem(expected));
+    }
+
+    @Test
+    public void shouldDiffWithCorrectDescendants() {
+        var arch = emptyArch();
+        
+        var system1 = createSystem("1");
+        var container1 = createContainer("2", "1");
+        var component1 = createComponent("3", "2");
+
+        var system2 = createSystem("1");
+        var container2 = createContainer("2", "1");
+        var component2 = createComponent("4", "2");
+        
+        var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
+        var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
+
+        var diff = ArchitectureDiffCalculator.diff(first, second);
+
+        collector.checkThat(
+                diff.stream().filter(it -> it.getAfter() != null && it.getAfter().getId() == "1").findAny().get().getStatus(),
+                equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
+        );
     }
 
     private ArchitectureDataStructure getArchWithPeople(ArchitectureDataStructure.ArchitectureDataStructureBuilder arch, Set<C4Person> people) {

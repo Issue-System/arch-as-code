@@ -16,7 +16,6 @@ public class Diff{
     final private Set<? extends Diffable<?>> descendantsAfter;
     private Status status;
 
-    @Deprecated
     public Diff(Diffable<?> before, Diffable<?> after) {
         this.before = before;
         this.after = after;

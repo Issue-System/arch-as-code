@@ -1,10 +1,14 @@
 package net.trilogy.arch.services;
 
 import com.google.common.collect.Sets;
+import io.vavr.Tuple2;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.Diff;
 import net.trilogy.arch.domain.Diffable;
+import net.trilogy.arch.domain.c4.BaseEntity;
+import net.trilogy.arch.domain.c4.C4Relationship;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,30 +35,37 @@ public class ArchitectureDiffCalculator {
         return Sets.union(firstDiffs, secondDiffs);
     }
 
-    private static Optional<? extends Diffable> findById(ArchitectureDataStructure arch, String id) {
+    private static Optional<? extends Diffable<?>> findById(ArchitectureDataStructure arch, String id) {
         return Stream.of(
                 arch.getModel().findRelationshipById(id),
-                arch.getModel().findEntityById(id)
+                arch.getModel()
+                        .findEntityById(id)
+                        .map(ArchitectureDiffCalculator::clearRelationships)
             )
-            .filter(it -> it.isPresent())
-            .findAny()
-            .orElseGet(() -> Optional.empty());
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findAny();
     }
 
-    private static Set<Diffable> getAllThings(ArchitectureDataStructure arch) {
+    private static Set<Diffable<?>> getAllThings(ArchitectureDataStructure arch) {
         return Sets.union(
                 arch.getModel()
                     .allEntities()
                     .stream()
-                    .map(it -> it.shallowCopy())
+                    .map(ArchitectureDiffCalculator::clearRelationships)
                     .collect(Collectors.toSet()),
 
                 arch.getModel()
                     .allRelationships()
                     .stream()
-                    .map(it -> it._2())
-                    .map(it -> it.shallowCopy())
+                    .map(Tuple2::_2)
                     .collect(Collectors.toSet())
         );
+    }
+
+    private static BaseEntity clearRelationships(BaseEntity entity) {
+        var copy = entity.shallowCopy();
+        copy.setRelationships(List.of());
+        return copy;
     }
 }

@@ -49,7 +49,7 @@ public class C4Container extends BaseEntity implements HasTechnology, HasUrl {
     }
 
     @Override
-    public Diffable shallowCopy() {
+    public C4Container shallowCopy() {
         return this.toBuilder().build();
     }
 }

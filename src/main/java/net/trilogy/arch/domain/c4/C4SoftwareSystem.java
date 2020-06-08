@@ -38,7 +38,7 @@ public class C4SoftwareSystem extends BaseEntity implements HasLocation {
     }
 
     @Override
-    public Diffable shallowCopy() {
+    public C4SoftwareSystem shallowCopy() {
         return this.toBuilder().build();
     }
 }

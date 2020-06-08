@@ -99,13 +99,13 @@ public class C4Model {
     }
 
     // [TODO] [TESTING] Testing gap
-    public Set<Entity> allEntities() {
+    public Set<BaseEntity> allEntities() {
         return Stream.of(getSystems(), getPeople(), getComponents(), getContainers(), getDeploymentNodesRecursively())
                 .flatMap(Collection::stream).collect(toSet());
     }
 
     // [TODO] [TESTING] Testing gap
-    public Set<Tuple2<Entity, C4Relationship>> allRelationships() {
+    public Set<Tuple2<BaseEntity, C4Relationship>> allRelationships() {
         return allEntities().stream()
                 .flatMap(entity -> {
                     return entity.getRelationships().stream()
@@ -142,7 +142,7 @@ public class C4Model {
         }
     }
 
-    public Optional<Entity> findEntityById(String id) {
+    public Optional<BaseEntity> findEntityById(String id) {
         checkNotNull(id);
         return allEntities()
                 .stream()
@@ -192,7 +192,7 @@ public class C4Model {
 
     public C4Relationship findRelationshipByAlias(String alias) {
         checkNotNull(alias);
-        Tuple2<Entity, C4Relationship> foundTuple = allRelationships()
+        Tuple2<BaseEntity, C4Relationship> foundTuple = allRelationships()
                 .stream()
                 .filter(t -> t._2().getAlias().equals(alias))
                 .findFirst()

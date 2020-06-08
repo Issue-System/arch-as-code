@@ -52,7 +52,8 @@ public class C4Component extends BaseEntity implements HasTechnology, HasUrl {
         }
     }
 
-    public Diffable shallowCopy() {
+    @Override
+    public C4Component shallowCopy() {
         return this.toBuilder().build();
     }
 }

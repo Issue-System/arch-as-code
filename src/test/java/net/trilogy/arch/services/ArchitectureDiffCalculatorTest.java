@@ -69,7 +69,7 @@ public class ArchitectureDiffCalculatorTest {
 
         final C4Person personBefore = createPersonWithRelationshipsTo(
                 "1", 
-                Set.of(createRelationship("1", "2"), createRelationship("5", "7"))
+                Set.of(createRelationship("3", "2"), createRelationship("4", "7"))
         );
         final C4Person personAfter = createPersonWithRelationshipsTo(
                 "1", 
@@ -83,6 +83,7 @@ public class ArchitectureDiffCalculatorTest {
 
         collector.checkThat(
                 actual.stream()
+                    .filter(it -> it.getAfter() != null)
                     .filter(it -> it.getAfter().getId() == "1")
                     .findAny()
                     .orElseThrow()

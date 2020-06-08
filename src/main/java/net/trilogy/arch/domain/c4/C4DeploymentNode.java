@@ -52,7 +52,7 @@ public class C4DeploymentNode extends BaseEntity {
     }
 
     @Override
-    public Diffable shallowCopy() {
+    public C4DeploymentNode shallowCopy() {
         return this.toBuilder().build();
     }
 }

@@ -34,7 +34,8 @@ public class C4Person extends BaseEntity implements HasLocation {
         }
     }
 
-    public Diffable shallowCopy() {
+    @Override
+    public C4Person shallowCopy() {
         return this.toBuilder().build();
     }
 }

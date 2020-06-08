@@ -79,7 +79,7 @@ public class DiffTest {
 
     @EqualsAndHashCode
     @Getter
-    private static class Thing implements Diffable<Thing> {
+    private static class Thing implements Diffable {
         private final String id;
         public Thing(String id) { this.id = id; }
         public Thing shallowCopy() { return this; }

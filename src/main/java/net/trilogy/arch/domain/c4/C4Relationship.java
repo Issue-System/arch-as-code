@@ -7,7 +7,7 @@ import net.trilogy.arch.domain.Diffable;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class C4Relationship implements Diffable<C4Relationship> {
+public class C4Relationship implements Diffable {
     private String id;
     private String alias;
     @NonNull
@@ -27,10 +27,5 @@ public class C4Relationship implements Diffable<C4Relationship> {
         this.withId = withId;
         this.description = description;
         this.technology = technology;
-    }
-
-    @Override
-    public C4Relationship shallowCopy() {
-        return this.toBuilder().build();
     }
 }

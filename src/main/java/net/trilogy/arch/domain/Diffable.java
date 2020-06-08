@@ -1,7 +1,6 @@
 package net.trilogy.arch.domain;
 
-public interface Diffable<T> {
-    public T shallowCopy();
+public interface Diffable {
     public String getId();
     public boolean equals(Object o);
 }

@@ -10,13 +10,13 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Diff{
-    final private Diffable<?> before;
-    final private Diffable<?> after;
-    final private Set<? extends Diffable<?>> descendantsBefore;
-    final private Set<? extends Diffable<?>> descendantsAfter;
+    final private Diffable before;
+    final private Diffable after;
+    final private Set<? extends Diffable> descendantsBefore;
+    final private Set<? extends Diffable> descendantsAfter;
     private Status status;
 
-    public Diff(Diffable<?> before, Diffable<?> after) {
+    public Diff(Diffable before, Diffable after) {
         this.before = before;
         this.after = after;
         this.descendantsAfter = Set.of();
@@ -24,7 +24,7 @@ public class Diff{
         this.status = calculateStatus();
     }
 
-    public Diff(Diffable<?> before, Set<? extends Diffable<?>> descendantsBefore, Diffable<?> after, Set<? extends Diffable<?>> descendantsAfter) {
+    public Diff(Diffable before, Set<? extends Diffable> descendantsBefore, Diffable after, Set<? extends Diffable> descendantsAfter) {
         this.before = before;
         this.after = after;
         this.descendantsAfter = descendantsBefore;

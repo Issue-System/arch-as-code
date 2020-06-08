@@ -5,10 +5,10 @@ import com.structurizr.model.Container;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.c4.BaseEntity;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4Model;
-import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
@@ -30,7 +30,7 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
         return viewSet.createComponentView(container, componentView.getKey(), componentView.getDescription());
     }
 
-    public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ComponentView view) {
+    public Consumer<BaseEntity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ComponentView view) {
         return entity -> {
 
             switch (entity.getType()) {

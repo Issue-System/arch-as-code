@@ -122,7 +122,7 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Unable to find person with name: " + name));
     }
 
-    public Entity findByPath(C4Path path) {
+    public BaseEntity findByPath(C4Path path) {
         checkNotNull(path);
         return allEntities()
                 .stream()
@@ -131,7 +131,7 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
     }
 
-    public Entity findEntityByReference(C4Reference reference) {
+    public BaseEntity findEntityByReference(C4Reference reference) {
         if (reference.getId() != null) {
             String id = reference.getId();
             return findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -150,7 +150,7 @@ public class C4Model {
                 .findFirst();
     }
 
-    public Entity findEntityByAlias(String alias) {
+    public BaseEntity findEntityByAlias(String alias) {
         checkNotNull(alias);
         return allEntities()
                 .stream()
@@ -165,10 +165,10 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with alias: " + alias));
     }
 
-    public Entity findEntityByRelationshipWith(C4Relationship relationship) {
+    public BaseEntity findEntityByRelationshipWith(C4Relationship relationship) {
         checkNotNull(relationship);
 
-        Entity result;
+        BaseEntity result;
         if (relationship.getWithId() != null) {
             String id = relationship.getWithId();
             result = findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -201,7 +201,7 @@ public class C4Model {
         return foundTuple._2();
     }
 
-    public Set<Entity> findWithTag(C4Tag tag) {
+    public Set<BaseEntity> findWithTag(C4Tag tag) {
         checkNotNull(tag);
         return allEntities()
                 .stream()
@@ -209,7 +209,7 @@ public class C4Model {
                 .collect(toSet());
     }
 
-    private <T extends Entity> boolean entityWithIdExists(T entity, Set<T> set) {
+    private <T extends HasRelation & HasTag & HasIdentity> boolean entityWithIdExists(T entity, Set<T> set) {
         return set.stream().anyMatch(e -> e.getId().equals(entity.getId()));
     }
 

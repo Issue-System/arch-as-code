@@ -5,9 +5,9 @@ import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.ContainerView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.c4.BaseEntity;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
-import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ContainerView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
@@ -30,7 +30,7 @@ public class ContainerContextViewEnhancer extends BaseViewEnhancer<ContainerView
         return viewSet.createContainerView(softwareSystem, containerView.getKey(), containerView.getDescription());
     }
 
-    public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ContainerView view) {
+    public Consumer<BaseEntity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, ContainerView view) {
         return entity -> {
             switch (entity.getType()) {
                 case person:

@@ -4,9 +4,9 @@ import com.structurizr.Workspace;
 import com.structurizr.view.View;
 import lombok.NonNull;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.c4.BaseEntity;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Reference;
-import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4View;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
@@ -37,7 +37,7 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
 
     public abstract T createView(Workspace workspace, C4Model dataStructureModel, G c4View);
 
-    public abstract Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
+    public abstract Consumer<BaseEntity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, T view);
 
     private void addEntities(ModelMediator modelMediator, C4Model dataStructureModel, T view, G c4View) {
         c4View.getElements()
@@ -46,7 +46,7 @@ public abstract class BaseViewEnhancer<T extends View, G extends C4View> impleme
                 .forEach(addEntity(modelMediator, dataStructureModel, view));
     }
 
-    private Entity viewReferenceToEntity(C4Model dataStructureModel, C4Reference viewRef) {
+    private BaseEntity viewReferenceToEntity(C4Model dataStructureModel, C4Reference viewRef) {
         if (viewRef.getId() != null) {
             String id = viewRef.getId();
             return dataStructureModel.findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));

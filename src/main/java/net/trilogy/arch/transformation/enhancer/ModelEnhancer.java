@@ -106,7 +106,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addUsesRelationship(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
         if (r.getAction() == C4Action.USES) {
-            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
             C4Type type = destination.getType();
             idGenerator.setNext(r.getId());
 
@@ -134,7 +134,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addDelivers(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
         if (r.getAction().equals(DELIVERS)) {
-            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
@@ -150,7 +150,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addInteractsWith(ModelMediator modelMediator, C4Model dataStructureModel, Person person, C4Relationship r) {
         if (r.getAction().equals(INTERACTS_WITH)) {
-            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
@@ -165,7 +165,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private C4Container getContainer(C4Model dataStructureModel, C4Component comp) {
-        Entity result;
+        BaseEntity result;
         if (comp.getContainerId() != null) {
             String id = comp.getContainerId();
             result = dataStructureModel.findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -183,7 +183,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private C4SoftwareSystem getSoftwareSystem(C4Model dataStructureModel, C4Container cont) {
-        Entity result;
+        BaseEntity result;
         if (cont.getSystemId() != null) {
             String id = cont.getSystemId();
             result = dataStructureModel.findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));

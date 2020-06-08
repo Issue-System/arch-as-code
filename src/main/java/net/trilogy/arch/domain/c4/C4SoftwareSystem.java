@@ -1,7 +1,6 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
-import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,7 @@ import static net.trilogy.arch.domain.c4.C4Location.UNSPECIFIED;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4SoftwareSystem extends BaseEntity implements HasLocation {
+public class C4SoftwareSystem extends Entity implements HasLocation {
     private C4Location location;
 
     @Builder(toBuilder=true)

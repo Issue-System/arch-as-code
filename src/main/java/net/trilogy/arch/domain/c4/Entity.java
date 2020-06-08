@@ -14,7 +14,7 @@ import static java.util.Optional.ofNullable;
 
 @Data
 @NoArgsConstructor
-public abstract class BaseEntity implements Diffable<BaseEntity>, HasRelation, HasTag, HasIdentity {
+public abstract class Entity implements Diffable<Entity>, HasRelation, HasTag, HasIdentity {
     @NonNull
     protected String id;
     protected String alias;
@@ -27,7 +27,7 @@ public abstract class BaseEntity implements Diffable<BaseEntity>, HasRelation, H
 
     abstract public C4Type getType();
 
-    public BaseEntity(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, Set<C4Tag> tags, List<C4Relationship> relationships) {
+    public Entity(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, Set<C4Tag> tags, List<C4Relationship> relationships) {
         this.id = id;
         this.alias = alias;
         this.path = path;

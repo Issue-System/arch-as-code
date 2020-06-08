@@ -1,7 +1,6 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
-import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Set;
@@ -16,7 +15,7 @@ import static java.util.Collections.emptyList;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class C4Component extends BaseEntity implements HasTechnology, HasUrl {
+public class C4Component extends Entity implements HasTechnology, HasUrl {
     protected String containerId;
     protected String containerAlias;
     @NonNull

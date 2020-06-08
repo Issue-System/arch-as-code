@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static net.trilogy.arch.domain.c4.C4Path.path;
 
-public class BaseEntityTest {
+public class EntityTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void fails_to_assign_invalid_path_for_person_type() {

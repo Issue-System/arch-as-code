@@ -1,7 +1,7 @@
 package net.trilogy.arch.validation;
 
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.c4.BaseEntity;
+import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.C4Model;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class ModelReferenceValidator implements DataStructureValidator {
     public List<String> validate(ArchitectureDataStructure dataStructure) {
         C4Model model = dataStructure.getModel();
 
-        List<String> allEntities = model.allEntities().stream().map(BaseEntity::getId).collect(toList());
+        List<String> allEntities = model.allEntities().stream().map(Entity::getId).collect(toList());
 
         return model.allEntities()
                 .stream()

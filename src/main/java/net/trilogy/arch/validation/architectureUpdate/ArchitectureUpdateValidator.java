@@ -9,7 +9,7 @@ import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
 import net.trilogy.arch.domain.architectureUpdate.Tdd;
 import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
-import net.trilogy.arch.domain.c4.BaseEntity;
+import net.trilogy.arch.domain.c4.Entity;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -272,7 +272,7 @@ public class ArchitectureUpdateValidator {
     }
 
     private Set<String> getAllComponentIdsIn(ArchitectureDataStructure architecture) {
-        return architecture.getModel().getComponents().stream().map(BaseEntity::getId).collect(Collectors.toSet());
+        return architecture.getModel().getComponents().stream().map(Entity::getId).collect(Collectors.toSet());
     }
 
     private <T> Set<T> findDuplicates(Collection<T> collection) {

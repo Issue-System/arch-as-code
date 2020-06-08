@@ -99,13 +99,13 @@ public class C4Model {
     }
 
     // [TODO] [TESTING] Testing gap
-    public Set<BaseEntity> allEntities() {
+    public Set<Entity> allEntities() {
         return Stream.of(getSystems(), getPeople(), getComponents(), getContainers(), getDeploymentNodesRecursively())
                 .flatMap(Collection::stream).collect(toSet());
     }
 
     // [TODO] [TESTING] Testing gap
-    public Set<Tuple2<BaseEntity, C4Relationship>> allRelationships() {
+    public Set<Tuple2<Entity, C4Relationship>> allRelationships() {
         return allEntities().stream()
                 .flatMap(entity -> {
                     return entity.getRelationships().stream()
@@ -122,7 +122,7 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Unable to find person with name: " + name));
     }
 
-    public BaseEntity findByPath(C4Path path) {
+    public Entity findByPath(C4Path path) {
         checkNotNull(path);
         return allEntities()
                 .stream()
@@ -131,7 +131,7 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with path " + path));
     }
 
-    public BaseEntity findEntityByReference(C4Reference reference) {
+    public Entity findEntityByReference(C4Reference reference) {
         if (reference.getId() != null) {
             String id = reference.getId();
             return findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -142,7 +142,7 @@ public class C4Model {
         }
     }
 
-    public Optional<BaseEntity> findEntityById(String id) {
+    public Optional<Entity> findEntityById(String id) {
         checkNotNull(id);
         return allEntities()
                 .stream()
@@ -150,7 +150,7 @@ public class C4Model {
                 .findFirst();
     }
 
-    public BaseEntity findEntityByAlias(String alias) {
+    public Entity findEntityByAlias(String alias) {
         checkNotNull(alias);
         return allEntities()
                 .stream()
@@ -165,10 +165,10 @@ public class C4Model {
                 .orElseThrow(() -> new IllegalStateException("Could not find entity with alias: " + alias));
     }
 
-    public BaseEntity findEntityByRelationshipWith(C4Relationship relationship) {
+    public Entity findEntityByRelationshipWith(C4Relationship relationship) {
         checkNotNull(relationship);
 
-        BaseEntity result;
+        Entity result;
         if (relationship.getWithId() != null) {
             String id = relationship.getWithId();
             result = findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -192,7 +192,7 @@ public class C4Model {
 
     public C4Relationship findRelationshipByAlias(String alias) {
         checkNotNull(alias);
-        Tuple2<BaseEntity, C4Relationship> foundTuple = allRelationships()
+        Tuple2<Entity, C4Relationship> foundTuple = allRelationships()
                 .stream()
                 .filter(t -> t._2().getAlias().equals(alias))
                 .findFirst()
@@ -201,7 +201,7 @@ public class C4Model {
         return foundTuple._2();
     }
 
-    public Set<BaseEntity> findWithTag(C4Tag tag) {
+    public Set<Entity> findWithTag(C4Tag tag) {
         checkNotNull(tag);
         return allEntities()
                 .stream()
@@ -214,11 +214,11 @@ public class C4Model {
     }
 
     private boolean systemPathExists(C4Path path) {
-        return getSystems().stream().map(BaseEntity::getPath).anyMatch(p -> p.equals(path.systemPath()));
+        return getSystems().stream().map(Entity::getPath).anyMatch(p -> p.equals(path.systemPath()));
     }
 
     private boolean containerPathExists(C4Path path) {
-        return getContainers().stream().map(BaseEntity::getPath).anyMatch(p -> p.equals(path.containerPath()));
+        return getContainers().stream().map(Entity::getPath).anyMatch(p -> p.equals(path.containerPath()));
     }
 
     private boolean personWithNameExists(C4Person person) {

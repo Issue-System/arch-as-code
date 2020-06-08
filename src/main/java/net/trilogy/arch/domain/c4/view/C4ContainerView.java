@@ -9,7 +9,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4ContainerView extends C4View implements HasSystemReference, HasIdentity<C4SoftwareSystem> {
+public class C4ContainerView extends C4View implements HasSystemReference, HasIdentity {
     private String systemId;
     private String systemAlias;
 
@@ -31,7 +31,7 @@ public class C4ContainerView extends C4View implements HasSystemReference, HasId
     }
 
     public C4SoftwareSystem getReferenced(C4Model dataStructureModel) {
-        BaseEntity result;
+        Entity result;
         if (systemId != null) {
             result = dataStructureModel.findEntityById(systemId).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + systemId));
         } else if (systemAlias != null) {

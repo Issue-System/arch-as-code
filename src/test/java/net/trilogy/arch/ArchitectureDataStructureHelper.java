@@ -73,7 +73,7 @@ public class ArchitectureDataStructureHelper {
     }
 
 
-    public static C4SoftwareSystem createSystemWithRelationshipsTo(String id, Set<BaseEntity> entities) {
+    public static C4SoftwareSystem createSystemWithRelationshipsTo(String id, Set<Entity> entities) {
         final String systemId = id;
         final Set<C4Relationship> relationships = entities
                 .stream()

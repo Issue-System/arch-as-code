@@ -1,7 +1,6 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
-import net.trilogy.arch.domain.Diffable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class C4DeploymentNode extends BaseEntity {
+public class C4DeploymentNode extends Entity {
     private String technology;
     private String environment;
     private Integer instances;

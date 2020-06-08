@@ -1,7 +1,6 @@
 package net.trilogy.arch.domain.c4;
 
 import lombok.*;
-import net.trilogy.arch.domain.Diffable;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +11,7 @@ import static java.lang.String.format;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class C4Person extends BaseEntity implements HasLocation {
+public class C4Person extends Entity implements HasLocation {
     private C4Location location;
 
     public C4Type getType() {

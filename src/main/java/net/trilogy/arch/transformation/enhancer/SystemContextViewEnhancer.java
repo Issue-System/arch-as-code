@@ -5,7 +5,7 @@ import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.SystemContextView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.c4.BaseEntity;
+import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
 import net.trilogy.arch.domain.c4.view.C4SystemView;
@@ -30,7 +30,7 @@ public class SystemContextViewEnhancer extends BaseViewEnhancer<SystemContextVie
         return viewSet.createSystemContextView(softwareSystem, systemView.getKey(), systemView.getDescription());
     }
 
-    public Consumer<BaseEntity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
+    public Consumer<Entity> addEntity(ModelMediator modelMediator, C4Model dataStructureModel, SystemContextView view) {
         return entity -> {
             switch (entity.getType()) {
                 case person:

@@ -78,7 +78,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
         addNonPersonRelationships(modelMediator, dataStructureModel, dataStructureModel.getComponents(), comp -> new Tuple2<>(comp, modelMediator.component(comp.getId())));
     }
 
-    private void addPeopleRelationships(ModelMediator modelMediator, C4Model dataStructureModel, Set<? extends BaseEntity> entities, Function<BaseEntity, ? extends Tuple2<? extends BaseEntity, StaticStructureElement>> tuple2Function) {
+    private void addPeopleRelationships(ModelMediator modelMediator, C4Model dataStructureModel, Set<? extends Entity> entities, Function<Entity, ? extends Tuple2<? extends Entity, StaticStructureElement>> tuple2Function) {
         entities.stream().map(tuple2Function)
                 .forEach(tuple2 ->
                         tuple2._1()
@@ -90,7 +90,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
                 );
     }
 
-    private void addNonPersonRelationships(ModelMediator modelMediator, C4Model dataStructureModel, Set<? extends BaseEntity> entities, Function<BaseEntity, ? extends Tuple2<? extends BaseEntity, StaticStructureElement>> tuple2Function) {
+    private void addNonPersonRelationships(ModelMediator modelMediator, C4Model dataStructureModel, Set<? extends Entity> entities, Function<Entity, ? extends Tuple2<? extends Entity, StaticStructureElement>> tuple2Function) {
         entities.stream()
                 .map(tuple2Function)
                 .forEach(tuple2 -> addUsesAndDeliversRelations(modelMediator, dataStructureModel, tuple2._1(), tuple2._2()));
@@ -106,7 +106,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addUsesRelationship(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
         if (r.getAction() == C4Action.USES) {
-            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
             C4Type type = destination.getType();
             idGenerator.setNext(r.getId());
 
@@ -134,7 +134,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addDelivers(ModelMediator modelMediator, C4Model dataStructureModel, StaticStructureElement element, C4Relationship r) {
         if (r.getAction().equals(DELIVERS)) {
-            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
@@ -150,7 +150,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
 
     private void addInteractsWith(ModelMediator modelMediator, C4Model dataStructureModel, Person person, C4Relationship r) {
         if (r.getAction().equals(INTERACTS_WITH)) {
-            BaseEntity destination = dataStructureModel.findEntityByRelationshipWith(r);
+            Entity destination = dataStructureModel.findEntityByRelationshipWith(r);
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
@@ -165,7 +165,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private C4Container getContainer(C4Model dataStructureModel, C4Component comp) {
-        BaseEntity result;
+        Entity result;
         if (comp.getContainerId() != null) {
             String id = comp.getContainerId();
             result = dataStructureModel.findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));
@@ -183,7 +183,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
     }
 
     private C4SoftwareSystem getSoftwareSystem(C4Model dataStructureModel, C4Container cont) {
-        BaseEntity result;
+        Entity result;
         if (cont.getSystemId() != null) {
             String id = cont.getSystemId();
             result = dataStructureModel.findEntityById(id).orElseThrow(() -> new IllegalStateException("Could not find entity with id: " + id));

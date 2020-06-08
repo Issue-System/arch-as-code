@@ -5,8 +5,7 @@ import io.vavr.Tuple2;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.Diff;
 import net.trilogy.arch.domain.Diffable;
-import net.trilogy.arch.domain.c4.BaseEntity;
-import net.trilogy.arch.domain.c4.C4Relationship;
+import net.trilogy.arch.domain.c4.Entity;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +62,7 @@ public class ArchitectureDiffCalculator {
         );
     }
 
-    private static BaseEntity clearRelationships(BaseEntity entity) {
+    private static Entity clearRelationships(Entity entity) {
         var copy = entity.shallowCopy();
         copy.setRelationships(List.of());
         return copy;

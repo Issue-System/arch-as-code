@@ -1,20 +1,18 @@
 package net.trilogy.arch.domain;
 
-import java.util.Set;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
+
+import java.util.Set;
 
 @Getter
-@ToString
 @EqualsAndHashCode
-public class Diff{
+public class Diff {
     final private Diffable before;
     final private Diffable after;
     final private Set<? extends Diffable> descendantsBefore;
     final private Set<? extends Diffable> descendantsAfter;
-    private Status status;
+    final private Status status;
 
     public Diff(Diffable before, Diffable after) {
         this.before = before;
@@ -22,6 +20,25 @@ public class Diff{
         this.descendantsAfter = Set.of();
         this.descendantsBefore = Set.of();
         this.status = calculateStatus();
+    }
+
+    public String toString() {
+        // TODO: Temporary solution until we play diagramming card
+        String marker;
+        if (status.equals(Status.UPDATED)) marker = "*";
+        else if (status.equals(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)) marker = "~";
+        else if (status.equals(Status.CREATED)) marker = "+";
+        else if (status.equals(Status.DELETED)) marker = "-";
+        else marker = "=";
+
+        String id;
+        if (before == null) {
+            id = after.getId();
+        } else {
+            id = before.getId();
+        }
+
+        return marker + id;
     }
 
     public Diff(Diffable before, Set<? extends Diffable> descendantsBefore, Diffable after, Set<? extends Diffable> descendantsAfter) {

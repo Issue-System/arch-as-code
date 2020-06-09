@@ -1,33 +1,19 @@
 package net.trilogy.arch.services;
 
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createContainer;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createComponent;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createPersonWithRelationshipsTo;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createSystem;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.emptyArch;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-
-import java.util.Set;
-
+import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.Diff;
+import net.trilogy.arch.domain.Diff.Status;
+import net.trilogy.arch.domain.c4.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.Diff;
-import net.trilogy.arch.domain.Diff.Status;
-import net.trilogy.arch.domain.c4.C4Action;
-import net.trilogy.arch.domain.c4.C4Component;
-import net.trilogy.arch.domain.c4.C4Container;
-import net.trilogy.arch.domain.c4.C4DeploymentNode;
-import net.trilogy.arch.domain.c4.C4Model;
-import net.trilogy.arch.domain.c4.C4Person;
-import net.trilogy.arch.domain.c4.C4Relationship;
-import net.trilogy.arch.domain.c4.C4SoftwareSystem;
+import java.util.Set;
+
+import static net.trilogy.arch.ArchitectureDataStructureHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 
 public class ArchitectureDiffCalculatorTest {
     @Rule
@@ -130,10 +116,10 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
         var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
 
-        var diff = ArchitectureDiffCalculator.diff(first, second);
+        var diffs = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(
-                diff.stream().filter(it -> it.getAfter() != null && it.getAfter().getId() == "1").findAny().get().getStatus(),
+                diffs.stream().filter(it -> it.getAfter() != null && it.getAfter().getId() == "1").findAny().get().getStatus(),
                 equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
         );
     }

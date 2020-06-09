@@ -10,34 +10,24 @@ import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
 import net.trilogy.arch.domain.c4.Entity;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ArchitectureDiffCalculator {
     public static Set<Diff> diff(ArchitectureDataStructure firstArch, ArchitectureDataStructure secondArch) {
-        final Set<Diff> firstDiffs = getAllThings(firstArch).stream()
-                .map(thing1 -> {
-                        var thing2 = findById(secondArch, thing1.getId()).orElse(null);
-                        return new Diff(
-                            thing1, getDescendants(thing1, firstArch),
-                            thing2, getDescendants(thing2, secondArch)
-                        );
+        final Set<Diff> firstDiffs = getAllDiffables(firstArch).stream()
+                .map(diffableInFirst -> {
+                        var diffableInSecond = findById(secondArch, diffableInFirst.getId()).orElse(null);
+                        return makeDiff(firstArch, secondArch, diffableInFirst, diffableInSecond);
                     }
                 )
                 .collect(Collectors.toSet());
 
-        final Set<Diff> secondDiffs = getAllThings(secondArch).stream()
+        final Set<Diff> secondDiffs = getAllDiffables(secondArch).stream()
                 .map(thing2 -> {
                         var thing1 = findById(firstArch, thing2.getId()).orElse(null);
-                        return new Diff(
-                            thing1, getDescendants(thing1, firstArch),
-                            thing2, getDescendants(thing2, secondArch)
-                        );
+                        return makeDiff(firstArch, secondArch, thing1, thing2);
                     }
                 )
                 .collect(Collectors.toSet());
@@ -45,18 +35,28 @@ public class ArchitectureDiffCalculator {
         return Sets.union(firstDiffs, secondDiffs);
     }
 
-    private static Set<Diffable> getDescendants(Diffable thing, ArchitectureDataStructure arch) {
-        if(thing instanceof C4SoftwareSystem) {
+    private static Diff makeDiff(ArchitectureDataStructure firstArch,
+                                 ArchitectureDataStructure secondArch,
+                                 Diffable diffableInFirst,
+                                 Diffable diffableInSecond) {
+        return new Diff(
+                diffableInFirst, getDescendants(diffableInFirst, firstArch),
+                diffableInSecond, getDescendants(diffableInSecond, secondArch)
+        );
+    }
+
+    private static Set<Diffable> getDescendants(Diffable diffable, ArchitectureDataStructure arch) {
+        if(diffable instanceof C4SoftwareSystem) {
             Set<Diffable> results = new HashSet<>();
-            Set<C4Container> containers = getContainers((C4SoftwareSystem) thing, arch);
+            Set<C4Container> containers = getContainers((C4SoftwareSystem) diffable, arch);
             for (Diffable container : containers) {
                 results.add(container);
                 results.addAll(getComponents((C4Container) container, arch));
             }
             return results;
         }
-        if(thing instanceof C4Container) {
-            return new HashSet<>(getComponents((C4Container) thing, arch));
+        if(diffable instanceof C4Container) {
+            return new HashSet<>(getComponents((C4Container) diffable, arch));
         }
         return Set.of();
     }
@@ -81,7 +81,7 @@ public class ArchitectureDiffCalculator {
             .findAny();
     }
 
-    private static Set<Diffable> getAllThings(ArchitectureDataStructure arch) {
+    private static Set<Diffable> getAllDiffables(ArchitectureDataStructure arch) {
         return Sets.union(
                 arch.getModel()
                     .allEntities()

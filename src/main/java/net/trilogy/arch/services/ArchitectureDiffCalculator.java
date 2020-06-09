@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ArchitectureDiffCalculator {
-    public static Set<Diff> diff(ArchitectureDataStructure firstArch, ArchitectureDataStructure secondArch) {
-        final Set<Diff> firstDiffs = getAllDiffables(firstArch).stream()
+    public static Set<Diff> diff(ArchitectureDataStructure beforeArch, ArchitectureDataStructure afterArch) {
+        final Set<Diff> firstDiffs = getAllDiffables(beforeArch).stream()
                 .map(diffableInFirst -> {
-                        var diffableInSecond = findById(secondArch, diffableInFirst.getId()).orElse(null);
-                        return makeDiff(firstArch, secondArch, diffableInFirst, diffableInSecond);
+                        var diffableInSecond = findById(afterArch, diffableInFirst.getId()).orElse(null);
+                        return makeDiff(beforeArch, afterArch, diffableInFirst, diffableInSecond);
                     }
                 )
                 .collect(Collectors.toSet());
 
-        final Set<Diff> secondDiffs = getAllDiffables(secondArch).stream()
+        final Set<Diff> secondDiffs = getAllDiffables(afterArch).stream()
                 .map(thing2 -> {
-                        var thing1 = findById(firstArch, thing2.getId()).orElse(null);
-                        return makeDiff(firstArch, secondArch, thing1, thing2);
+                        var thing1 = findById(beforeArch, thing2.getId()).orElse(null);
+                        return makeDiff(beforeArch, afterArch, thing1, thing2);
                     }
                 )
                 .collect(Collectors.toSet());

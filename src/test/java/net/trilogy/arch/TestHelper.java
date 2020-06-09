@@ -36,6 +36,7 @@ public abstract class TestHelper {
     public static final String JSON_JIRA_CREATE_STORIES_RESPONSE_EXPECTED_BODY = "/jira/create-stories-response-expected-body.json";
 
     public static final String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
+    public static final String ROOT_PATH_TO_TEST_DIFF_COMMAND = "/architecture/products/testspaces/";
     public static final String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
     public static final String ROOT_PATH_TO_TEST_AU_VALIDATION_E2E = "/auValidation/e2e/";
     public static final String ROOT_PATH_TO_TEST_AU_PUBLISH = "/auPublish/";

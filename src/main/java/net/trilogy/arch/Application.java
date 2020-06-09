@@ -29,6 +29,7 @@ public class Application {
                 .addSubcommand(new PublishCommand())
                 .addSubcommand(new ImportCommand())
                 .addSubcommand(new ListComponentsCommand(filesFacade))
+                .addSubcommand(new DiffArchitectureCommand(filesFacade, gitInterface))
                 .addSubcommand(
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))

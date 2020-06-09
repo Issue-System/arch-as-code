@@ -1,6 +1,10 @@
 package net.trilogy.arch.commands;
 
 import lombok.Getter;
+import net.sourceforge.plantuml.FileFormat;
+import net.sourceforge.plantuml.FileFormatOption;
+import net.sourceforge.plantuml.SourceStringReader;
+import net.sourceforge.plantuml.core.DiagramDescription;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.domain.Diff;
@@ -8,7 +12,11 @@ import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import picocli.CommandLine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -36,16 +44,32 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     }
 
     @Override
-    public Integer call() {
-        final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
-        if (currentArch.isEmpty()) return 1;
+    public Integer call() throws IOException {
 
-        final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
-        if (beforeArch.isEmpty()) return 1;
+        String source = "@startuml\ntestdot\n@enduml";
 
-        final Set<Diff> diff = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        spec.commandLine().getOut().println(diff);
+        SourceStringReader reader = new SourceStringReader(source);
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // Write the first image to "os"
+        DiagramDescription desc = reader.outputImage(os, new FileFormatOption(FileFormat.SVG));
+        os.close();
+
+        // The XML is stored into svg
+        final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
+
+        getFilesFacade().writeString(Path.of("/tmp/aac/test.svg"), svg);
 
         return 0;
+
+        // final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
+        // if (currentArch.isEmpty()) return 1;
+
+        // final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
+        // if (beforeArch.isEmpty()) return 1;
+
+        // final Set<Diff> diff = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
+        // spec.commandLine().getOut().println(diff);
+
+        // return 0;
     }
 }

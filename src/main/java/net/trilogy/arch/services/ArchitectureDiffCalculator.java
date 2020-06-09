@@ -48,7 +48,7 @@ public class ArchitectureDiffCalculator {
     private static Set<Diffable> getDescendants(Diffable thing, ArchitectureDataStructure arch) {
         if(thing instanceof C4SoftwareSystem) {
             Set<Diffable> results = new HashSet<>();
-            Set<Diffable> containers = getContainers((C4SoftwareSystem) thing, arch);
+            Set<C4Container> containers = getContainers((C4SoftwareSystem) thing, arch);
             for (Diffable container : containers) {
                 results.add(container);
                 results.addAll(getComponents((C4Container) container, arch));
@@ -56,16 +56,16 @@ public class ArchitectureDiffCalculator {
             return results;
         }
         if(thing instanceof C4Container) {
-            return getComponents((C4Container) thing, arch);
+            return new HashSet<>(getComponents((C4Container) thing, arch));
         }
         return Set.of();
     }
 
-    private static Set<Diffable> getContainers(C4SoftwareSystem system, ArchitectureDataStructure arch) {
+    private static Set<C4Container> getContainers(C4SoftwareSystem system, ArchitectureDataStructure arch) {
         return arch.getModel().getContainers().stream().filter(it -> Objects.equals(it.getSystemId(), system.getId())).collect(Collectors.toSet());
     }
 
-    private static Set<Diffable> getComponents(C4Container container, ArchitectureDataStructure arch) {
+    private static Set<C4Component> getComponents(C4Container container, ArchitectureDataStructure arch) {
         return arch.getModel().getComponents().stream().filter(it -> Objects.equals(it.getContainerId(), container.getId())).collect(Collectors.toSet());
     }
 

@@ -9,8 +9,13 @@ import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.parse.Parser;
 
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
 public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
@@ -36,15 +41,22 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     }
 
     @Override
-    public Integer call() {
+    public Integer call() throws IOException {
         final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (currentArch.isEmpty()) return 1;
 
         final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (beforeArch.isEmpty()) return 1;
 
-        final Set<Diff> diff = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        spec.commandLine().getOut().println(diff);
+        final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
+        spec.commandLine().getOut().println(diffs);
+
+        StringBuilder dot = new StringBuilder().append("digraph {\n"); 
+        diffs.stream().map(it -> it.toDot(diffs)).forEach(it -> dot.append(it + "\n"));
+        dot.append("}");
+
+        final var g = new Parser().read(dot.toString());
+        Graphviz.fromGraph(g).render(Format.SVG).toFile(new File("/tmp/aac/test.svg"));
 
         return 0;
     }

@@ -2,8 +2,13 @@ package net.trilogy.arch.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.trilogy.arch.domain.c4.C4Relationship;
+import net.trilogy.arch.domain.c4.Entity;
 
 import java.util.Set;
+import java.util.stream.Stream;
+
+import com.google.common.collect.Sets;
 
 @Getter
 @EqualsAndHashCode
@@ -64,5 +69,53 @@ public class Diff {
         DELETED,
         NO_UPDATE_BUT_CHILDREN_UPDATED,
         NO_UPDATE
+    }
+
+    public String toDot(Set<Diff> diffs) {
+        if(this.after != null) { 
+            return toDot(this.after, diffs);
+        }
+        if(this.before != null) { 
+            return toDot(this.before, diffs);
+        }
+        return "";
+    }
+
+    private String toDot(Diffable thing, Set<Diff> diffs) {
+        if(thing instanceof Entity) {
+            return ((Entity) thing).getName();
+        }
+        if(thing instanceof C4Relationship) {
+            final var rel = (C4Relationship) thing;
+
+            final var to = diffs.stream()
+                .flatMap(it -> Stream.of(it.getBefore(), it.getAfter()))
+                .filter(it -> it != null)
+                .filter(it -> it.getId().equals(rel.getWithId()))
+                .findAny()
+                .map(it -> ((Entity) it).getName())
+                .orElse("UNKNOWN");
+
+            String from = "UNKNOWN";
+            for(var diff : diffs) {
+                if(
+                    diff.getDescendantsAfter().stream().filter(it -> it.getId().equals(thing.getId())).count()
+                    > 0
+                ) {
+                    from = ((Entity) diff.getAfter()).getName();
+                    break;
+                }
+                if(
+                    diff.getDescendantsBefore().stream().filter(it -> it.getId().equals(thing.getId())).count()
+                    > 0
+                ) {
+                    from = ((Entity) diff.getBefore()).getName();
+                    break;
+                }
+            }
+
+            return from + " -> " + to;
+        }
+        return "";
     }
 }

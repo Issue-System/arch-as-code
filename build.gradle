@@ -55,6 +55,8 @@ dependencies {
     implementation 'info.picocli:picocli:4.2.0'
     annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
 
+    compile group: 'guru.nidi', name: 'graphviz-java-all-j2v8', version: '0.16.2'
+
     //vavr
     implementation 'io.vavr:vavr:0.10.2'
 

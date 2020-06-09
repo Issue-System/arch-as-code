@@ -1,7 +1,7 @@
 package net.trilogy.arch.commands;
 
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import lombok.Getter;
@@ -10,38 +10,37 @@ import picocli.CommandLine.Spec;
 import picocli.CommandLine.Model.CommandSpec;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "list-components", mixinStandardHelpOptions = true, description = "Outputs a CSV formatted list of components and their IDs, which are present in the architecture.")
-public class ListComponentsCommand implements Callable<Integer>, DisplaysErrorMixin {
+public class ListComponentsCommand implements Callable<Integer>, LoadArchitectureMixin {
 
     @Getter
     @Spec
     private CommandSpec spec;
 
+    @Getter
     @CommandLine.Parameters(index = "0", description = "Directory containing the product architecture")
     private File productArchitectureDirectory;
 
-    private final ArchitectureDataStructureReader reader;
+    @Getter
+    private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
+
+    @Getter
+    private final FilesFacade filesFacade;
 
     public ListComponentsCommand( FilesFacade filesFacade ) {
-        this.reader = new ArchitectureDataStructureReader(filesFacade);
+        this.filesFacade = filesFacade;
+        this.architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
     }
 
     @Override
     public Integer call() {
+        final var arch = loadArchitectureOrPrintError("Unable to load architecture");
+        if(arch.isEmpty()) return 1;
 
-        ArchitectureDataStructure arch = null;
-        try {
-            arch = readArchitecture();
-        } catch (Exception e) {
-            printError("Unable to load architecture", e);
-            return 1;
-        }
-
-        outputComponents(arch);
+        outputComponents(arch.get());
 
         return 0;
     }
@@ -60,13 +59,5 @@ public class ListComponentsCommand implements Callable<Integer>, DisplaysErrorMi
                             .collect(Collectors.joining());
 
         spec.commandLine().getOut().println("ID, Name, Path" + toOutput);
-    }
-
-    private ArchitectureDataStructure readArchitecture() throws IOException {
-        return reader.load(
-                productArchitectureDirectory.toPath()
-                    .resolve("product-architecture.yml")
-                    .toFile()
-        );
     }
 }

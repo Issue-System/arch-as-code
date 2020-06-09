@@ -8,6 +8,8 @@ import net.trilogy.arch.adapter.jira.JiraApi;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
+import net.trilogy.arch.commands.LoadArchitectureFromGitBranchMixin;
+import net.trilogy.arch.commands.LoadArchitectureMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
@@ -22,18 +24,23 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
-public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin {
+public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
 
     private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
 
     private final JiraApiFactory jiraApiFactory;
     private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
+    @Getter
+    private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
+    @Getter
     private final FilesFacade filesFacade;
+    @Getter
     private final GitInterface gitInterface;
 
     @CommandLine.Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFileName;
 
+    @Getter
     @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
@@ -55,19 +62,19 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
         this.architectureUpdateObjectMapper = new ArchitectureUpdateObjectMapper();
         this.filesFacade = filesFacade;
         this.gitInterface = gitInterface;
+        architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
     }
 
     public Integer call() {
-        final Path productArchPath = productArchitectureDirectory.toPath().resolve("product-architecture.yml");
         final Path auPath = architectureUpdateFileName.toPath();
 
         var au = loadAu(auPath);
         if (au.isEmpty()) return 1;
 
-        var beforeAuArchitecture = getBeforeAuArchitecture(productArchPath);
+        final var beforeAuArchitecture = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load product architecture in branch: " + baseBranch);
         if (beforeAuArchitecture.isEmpty()) return 1;
 
-        var afterAuArchitecture = getAfterAuArchitecture(productArchPath);
+        final var afterAuArchitecture = loadArchitectureOrPrintError("Unable to load architecture.");
         if (afterAuArchitecture.isEmpty()) return 1;
 
         var jiraApi = getJiraApi();
@@ -78,7 +85,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
                 spec.commandLine().getErr(),
                 jiraApi.get());
 
-        var updatedAu = createStories(au, beforeAuArchitecture, afterAuArchitecture, jiraService);
+        var updatedAu = createStories(au.get(), beforeAuArchitecture.get(), afterAuArchitecture.get(), jiraService);
         if (updatedAu.isEmpty()) return 1;
 
         try {
@@ -91,9 +98,9 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
         return 0;
     }
 
-    private Optional<ArchitectureUpdate> createStories(Optional<ArchitectureUpdate> au, Optional<ArchitectureDataStructure> beforeAuArchitecture, Optional<ArchitectureDataStructure> afterAuArchitecture, StoryPublishingService jiraService) {
+    private Optional<ArchitectureUpdate> createStories(ArchitectureUpdate au, ArchitectureDataStructure beforeAuArchitecture, ArchitectureDataStructure afterAuArchitecture, StoryPublishingService jiraService) {
         try {
-            return Optional.of(jiraService.createStories(au.get(), beforeAuArchitecture.get(), afterAuArchitecture.get(), username, password));
+            return Optional.of(jiraService.createStories(au, beforeAuArchitecture, afterAuArchitecture, username, password));
         } catch (JiraApi.JiraApiException e) {
             printError("Jira API failed", e);
         } catch (StoryPublishingService.NoStoriesToCreateException ignored) {
@@ -110,25 +117,6 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
             return Optional.of(jiraApiFactory.create(filesFacade, productArchitectureDirectory.toPath()));
         } catch (Exception e) {
             printError("Unable to load configuration.", e);
-            return Optional.empty();
-        }
-    }
-
-    private Optional<ArchitectureDataStructure> getAfterAuArchitecture(Path productArchPath) {
-        try {
-            final String archAsString = filesFacade.readString(productArchPath);
-            return Optional.of(new ArchitectureDataStructureObjectMapper().readValue(archAsString));
-        } catch (Exception e) {
-            printError("Unable to load architecture.", e);
-            return Optional.empty();
-        }
-    }
-
-    private Optional<ArchitectureDataStructure> getBeforeAuArchitecture(Path productArchPath) {
-        try {
-            return Optional.of(gitInterface.load(baseBranch, productArchPath));
-        } catch (Exception e) {
-            printError("Unable to load product architecture in branch: " + baseBranch, e);
             return Optional.empty();
         }
     }

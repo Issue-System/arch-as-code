@@ -187,7 +187,7 @@ public class AuAnnotateCommandTest {
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(
                 err.toString(),
-                equalTo("Unable to load Architecture product-architecture.yml.\nError: java.io.IOException: error-message\nCause: java.lang.RuntimeException: Boom!\n"));
+                equalTo("Unable to load Architecture product-architecture.yml.\nError thrown: java.io.IOException: error-message\nCause: java.lang.RuntimeException: Boom!\n"));
         collector.checkThat(status, equalTo(2));
     }
 

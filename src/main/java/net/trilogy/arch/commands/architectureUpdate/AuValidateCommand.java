@@ -5,10 +5,15 @@ import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectM
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
-import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.commands.LoadArchitectureFromGitBranchMixin;
+import net.trilogy.arch.commands.LoadArchitectureMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.validation.architectureUpdate.*;
+import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
+import net.trilogy.arch.validation.architectureUpdate.ValidationError;
+import net.trilogy.arch.validation.architectureUpdate.ValidationErrorType;
+import net.trilogy.arch.validation.architectureUpdate.ValidationResult;
+import net.trilogy.arch.validation.architectureUpdate.ValidationStage;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
@@ -18,16 +23,27 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static picocli.CommandLine.*;
+import static picocli.CommandLine.Command;
+import static picocli.CommandLine.Parameters;
+import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
-public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin {
+public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureFromGitBranchMixin, LoadArchitectureMixin {
+
+    @Getter
+    @Spec
+    private CommandSpec spec;
 
     @Parameters(index = "0", description = "File name of architecture update to validate")
     private File architectureUpdateFilePath;
 
+    @Getter
     @Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
+
+    @Getter private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
+    @Getter private final FilesFacade filesFacade;
+    @Getter private final GitInterface gitInterface;
 
     @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'.", required = true)
     String baseBranch;
@@ -38,14 +54,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
     @CommandLine.Option(names = {"-s", "--stories"}, description = "Run validation for feature stories only")
     boolean capabilityValidation;
 
-    @Getter
-    @Spec
-    private CommandSpec spec;
-
-    private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
     private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
-    private final FilesFacade filesFacade;
-    private final GitInterface gitInterface;
 
     public AuValidateCommand(FilesFacade filesFacade, GitInterface gitInterface) {
         this.architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
@@ -56,10 +65,10 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
 
     @Override
     public Integer call() {
-        final var auBranchArch = loadArchitectureOfCurrentBranch();
+        final var auBranchArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (auBranchArch.isEmpty()) return 1;
 
-        final var baseBranchArch = loadArchitectureOfBranch(baseBranch);
+        final var baseBranchArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (baseBranchArch.isEmpty()) return 1;
 
         final var au = loadAu();
@@ -83,23 +92,6 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
         return 0;
     }
 
-    private Optional<ArchitectureDataStructure> loadArchitectureOfCurrentBranch() {
-        final var productArchitecturePath = productArchitectureDirectory
-                .toPath()
-                .resolve("product-architecture.yml");
-
-        try {
-            return Optional.of(
-                    architectureDataStructureObjectMapper.readValue(
-                            filesFacade.readString(productArchitecturePath)
-                    )
-            );
-        } catch (final Exception e) {
-            printError("Unable to load architecture file", e);
-            return Optional.empty();
-        }
-    }
-
     private Optional<ArchitectureUpdate> loadAu() {
         // TODO [ENHANCEMENT]: Use JSON schema validation
         try {
@@ -110,20 +102,6 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin 
             );
         } catch (final Exception e) {
             printError("Unable to load architecture update file", e);
-            return Optional.empty();
-        }
-    }
-
-    private Optional<ArchitectureDataStructure> loadArchitectureOfBranch(String branch) {
-        final var productArchitecturePath = productArchitectureDirectory
-                .toPath()
-                .resolve("product-architecture.yml");
-        try {
-            return Optional.of(
-                    gitInterface.load(branch, productArchitecturePath)
-            );
-        } catch (final Exception e) {
-            printError("Unable to load '" + branch + "' branch architecture", e);
             return Optional.empty();
         }
     }

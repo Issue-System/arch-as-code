@@ -1,6 +1,9 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import lombok.Getter;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.commands.LoadArchitectureMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine.Command;
@@ -14,21 +17,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Command(name = "annotate", description = "Annotates the architecture update with comments detailing the full paths of all components referenced by ID. Makes the AU easier to read.", mixinStandardHelpOptions = true)
-public class AuAnnotateCommand implements Callable<Integer> {
+public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMixin {
 
     @Parameters(index = "0", description = "File name of architecture update to annotate")
     private File architectureUpdateFilePath;
 
+    @Getter
     @Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
+    @Getter
     @Spec
     private CommandSpec spec;
 
+    @Getter
     private final FilesFacade filesFacade;
+
+    @Getter
+    private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
 
     public AuAnnotateCommand(FilesFacade filesFacade) {
         this.filesFacade = filesFacade;
+        architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
     }
 
     @Override
@@ -45,22 +55,15 @@ public class AuAnnotateCommand implements Callable<Integer> {
 
         final Matcher matcher = regexToGetComponentReferences.matcher(au);
 
-        final ArchitectureDataStructure architecture;
-        try {
-            architecture = new ArchitectureDataStructureReader(filesFacade).load(
-                    productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile()
-            );
-        } catch (Exception e) {
-            printError(e, "Unable to load Architecture product-architecture.yml.");
-            return 2;
-        }
+        final var architecture = loadArchitectureOrPrintError("Unable to load Architecture product-architecture.yml.");
+        if(architecture.isEmpty()) return 2;
 
         while (matcher.find()) {
             au = matcher.replaceAll((res) -> 
                     res.group(1) + 
                     res.group(2) + 
                     res.group(3) + 
-                    getComponentPathComment(res.group(2), architecture) + 
+                    getComponentPathComment(res.group(2), architecture.get()) +
                     res.group(4)
             );
         }

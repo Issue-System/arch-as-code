@@ -51,7 +51,7 @@ public class ArchitectureDiffCalculator {
             Set<C4Container> containers = getContainers((C4SoftwareSystem) diffable, arch);
             for (Diffable container : containers) {
                 results.add(container);
-                results.addAll(getComponents((C4Container) container, arch));
+                results.addAll(getDescendants(container, arch));
             }
             return results;
         }

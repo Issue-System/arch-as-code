@@ -8,24 +8,32 @@ import net.trilogy.arch.domain.c4.Entity;
 public class DiffToDotCalculator {
 
     public static String toDot(String title, Set<Diff> diffs) {
-        final var dot = new StringBuilder();
-        appendln(dot, "digraph " + title + " {");
-        appendln(dot, "    node [shape=Mrecord];");
-        appendln(dot, "");
+        final var dot = new Dot();
+        dot.add(0, "digraph " + title + " {");
+        dot.add(1, "node [shape=Mrecord];");
+        dot.add(0, "");
         for(var diff : diffs){
             if(diff.getElement() instanceof Entity){
-                append(dot, (Entity) diff.getElement());
+                dot.add(1, (Entity) diff.getElement());
             }
         }
-        appendln(dot, "}");
+        dot.add(0, "}");
         return dot.toString();
     }
 
-    private static void append(StringBuilder dot, Entity element) {
-        appendln(dot, "    " + element.getId() + " [label=\"" + element.getName() + "\"];");
-    }
+    private static class Dot{
+        private final StringBuilder builder = new StringBuilder();
 
-    private static void appendln(StringBuilder dot, String line){
-        dot.append(line).append("\n");
+        public String toString() {
+            return builder.toString();
+        }
+
+        private void add(int indentationLevel, Entity element) {
+            add(indentationLevel, element.getId() + " [label=\"" + element.getName() + "\"];");
+        }
+
+        public void add(int indentationLevel, String line) {
+            builder.append("    ".repeat(indentationLevel)).append(line).append("\n");
+        }
     }
 }

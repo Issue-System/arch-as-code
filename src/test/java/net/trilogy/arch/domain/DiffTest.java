@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 import java.util.Set;
 
@@ -75,6 +76,36 @@ public class DiffTest {
         assertThat(created.getStatus(), equalTo(Diff.Status.CREATED));
         assertThat(deleted.getStatus(), equalTo(Diff.Status.DELETED));
         assertThat(updated.getStatus(), equalTo(Diff.Status.UPDATED));
+    }
+
+    @Test
+    public void shouldGetLatestElement() {
+        final var thing = new Thing("A");
+        final var children = Set.of(new Thing("B"));
+        final var diff = new Diff(new Thing("C"), Set.of(new Thing("D")), thing, children);
+
+        assertThat(diff.getElement(), is(thing));
+        assertThat(diff.getDescendants(), is(children));
+    }
+
+    @Test
+    public void shouldGetAfterIfBeforeIsNull() {
+        final var thing = new Thing("A");
+        final var children = Set.of(new Thing("B"));
+        final var diff = new Diff(null, null, thing, children);
+
+        assertThat(diff.getElement(), is(thing));
+        assertThat(diff.getDescendants(), is(children));
+    }
+
+    @Test
+    public void shouldGetBeforeIfAfterIsNull() {
+        final var thing = new Thing("A");
+        final var children = Set.of(new Thing("B"));
+        final var diff = new Diff(thing, children, null, null);
+
+        assertThat(diff.getElement(), is(thing));
+        assertThat(diff.getDescendants(), is(children));
     }
 
     @EqualsAndHashCode

@@ -74,8 +74,7 @@ public class ArchitectureDiffCalculatorTest {
 
         collector.checkThat(
                 actual.stream()
-                        .filter(it -> it.getAfter() != null)
-                        .filter(it -> it.getAfter().getId() == "rel1")
+                        .filter(it -> it.getElement().getId() == "rel1")
                         .findAny()
                         .orElseThrow()
                         .getStatus(),
@@ -103,8 +102,7 @@ public class ArchitectureDiffCalculatorTest {
 
         collector.checkThat(
                 actual.stream()
-                        .filter(it -> it.getAfter() != null)
-                        .filter(it -> it.getAfter().getId() == "1")
+                        .filter(it -> it.getElement().getId() == "1")
                         .findAny()
                         .orElseThrow()
                         .getStatus(),
@@ -153,7 +151,7 @@ public class ArchitectureDiffCalculatorTest {
         var diffs = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(
-                diffs.stream().filter(it -> it.getAfter() != null && it.getAfter().getId() == "1").findAny().get().getStatus(),
+                diffs.stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
                 equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
         );
     }

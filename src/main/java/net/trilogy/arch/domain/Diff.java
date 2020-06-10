@@ -5,14 +5,13 @@ import lombok.Getter;
 
 import java.util.Set;
 
-@Getter
 @EqualsAndHashCode
 public class Diff {
     final private Diffable before;
     final private Diffable after;
     final private Set<? extends Diffable> descendantsBefore;
     final private Set<? extends Diffable> descendantsAfter;
-    final private Status status;
+    @Getter final private Status status;
 
     public Diff(Diffable before, Diffable after) {
         this.before = before;
@@ -44,8 +43,8 @@ public class Diff {
     public Diff(Diffable before, Set<? extends Diffable> descendantsBefore, Diffable after, Set<? extends Diffable> descendantsAfter) {
         this.before = before;
         this.after = after;
-        this.descendantsAfter = descendantsBefore;
-        this.descendantsBefore = descendantsAfter;
+        this.descendantsBefore = descendantsBefore;
+        this.descendantsAfter = descendantsAfter;
         this.status = calculateStatus();
     }
 
@@ -64,5 +63,13 @@ public class Diff {
         DELETED,
         NO_UPDATE_BUT_CHILDREN_UPDATED,
         NO_UPDATE
+    }
+
+    public Diffable getElement() {
+        return after != null ? after : before;
+    }
+
+    public Set<? extends Diffable> getDescendants() {
+        return after != null ? descendantsAfter : descendantsBefore;
     }
 }

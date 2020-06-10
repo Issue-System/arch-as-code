@@ -1,10 +1,10 @@
 package net.trilogy.arch.services;
 
 import com.google.common.collect.Sets;
-import io.vavr.Tuple2;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.Diff;
 import net.trilogy.arch.domain.Diffable;
+import net.trilogy.arch.domain.DiffableRelationship;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
@@ -71,7 +71,7 @@ public class ArchitectureDiffCalculator {
 
     private static Optional<? extends Diffable> findById(ArchitectureDataStructure arch, String id) {
         return Stream.of(
-                arch.getModel().findRelationshipById(id),
+                arch.getModel().findRelationshipById(id).map(it -> new DiffableRelationship(arch, it)),
                 arch.getModel()
                         .findEntityById(id)
                         .map(ArchitectureDiffCalculator::clearRelationships)
@@ -92,7 +92,7 @@ public class ArchitectureDiffCalculator {
                 arch.getModel()
                     .allRelationships()
                     .stream()
-                    .map(Tuple2::_2)
+                    .map(entityRelationshipPair -> new DiffableRelationship(entityRelationshipPair._1, entityRelationshipPair._2))
                     .collect(Collectors.toSet())
         );
     }

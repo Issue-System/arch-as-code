@@ -3,6 +3,7 @@ package net.trilogy.arch.services;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.Diff;
 import net.trilogy.arch.domain.Diff.Status;
+import net.trilogy.arch.domain.DiffableRelationship;
 import net.trilogy.arch.domain.c4.*;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,15 +54,45 @@ public class ArchitectureDiffCalculatorTest {
     }
 
     @Test
+    public void shouldFindDifferenceIfRelationshipHasDifferentSource() {
+        var arch = emptyArch();
+
+        final C4Person personBefore = createPersonWithRelationshipsTo(
+                "person1",
+                Set.of(createRelationship("rel1", "anything"))
+        );
+
+        final C4Person personAfter = createPersonWithRelationshipsTo(
+                "person2",
+                Set.of(createRelationship("rel1", "anything"))
+        );
+
+        var first = getArchWithPeople(arch, Set.of(personBefore));
+        var second = getArchWithPeople(arch, Set.of(personAfter));
+
+        var actual = ArchitectureDiffCalculator.diff(first, second);
+
+        collector.checkThat(
+                actual.stream()
+                        .filter(it -> it.getAfter() != null)
+                        .filter(it -> it.getAfter().getId() == "rel1")
+                        .findAny()
+                        .orElseThrow()
+                        .getStatus(),
+                equalTo(Diff.Status.UPDATED)
+        );
+    }
+
+    @Test
     public void shouldDisregardEntityRelationships() {
         var arch = emptyArch();
 
         final C4Person personBefore = createPersonWithRelationshipsTo(
-                "1", 
+                "1",
                 Set.of(createRelationship("3", "2"), createRelationship("4", "7"))
         );
         final C4Person personAfter = createPersonWithRelationshipsTo(
-                "1", 
+                "1",
                 Set.of(createRelationship("2", "1"))
         );
 
@@ -72,11 +103,11 @@ public class ArchitectureDiffCalculatorTest {
 
         collector.checkThat(
                 actual.stream()
-                    .filter(it -> it.getAfter() != null)
-                    .filter(it -> it.getAfter().getId() == "1")
-                    .findAny()
-                    .orElseThrow()
-                    .getStatus(), 
+                        .filter(it -> it.getAfter() != null)
+                        .filter(it -> it.getAfter().getId() == "1")
+                        .findAny()
+                        .orElseThrow()
+                        .getStatus(),
                 equalTo(Diff.Status.NO_UPDATE)
         );
     }
@@ -95,7 +126,10 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArch(arch, Set.of(personWithRelationshipsToSys2), Set.of(system2, system3), Set.of(), Set.of(), Set.of());
         var second = getArch(arch, Set.of(personWithRelationshipsToSys3), Set.of(system2, system3), Set.of(), Set.of(), Set.of());
 
-        Diff expected = new Diff(relationToSys2, relationToSys3);
+        Diff expected = new Diff(
+                new DiffableRelationship("1", relationToSys2),
+                new DiffableRelationship("1", relationToSys3)
+        );
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(actual, hasItem(expected));
@@ -104,7 +138,7 @@ public class ArchitectureDiffCalculatorTest {
     @Test
     public void shouldDiffWithCorrectDescendants() {
         var arch = emptyArch();
-        
+
         var system1 = createSystem("1");
         var container1 = createContainer("2", "1");
         var component1 = createComponent("3", "2");
@@ -112,7 +146,7 @@ public class ArchitectureDiffCalculatorTest {
         var system2 = createSystem("1");
         var container2 = createContainer("2", "1");
         var component2 = createComponent("4", "2");
-        
+
         var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
         var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
 

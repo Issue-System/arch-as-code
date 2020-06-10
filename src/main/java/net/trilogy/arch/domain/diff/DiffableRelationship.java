@@ -1,7 +1,8 @@
-package net.trilogy.arch.domain;
+package net.trilogy.arch.domain.diff;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.C4Relationship;
 import net.trilogy.arch.domain.c4.Entity;
 
@@ -34,5 +35,10 @@ public class DiffableRelationship implements Diffable {
     @Override
     public String getId() {
         return this.relationship.getId();
+    }
+
+    @Override
+    public String getName() {
+        return this.relationship.getDescription();
     }
 }

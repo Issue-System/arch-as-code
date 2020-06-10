@@ -1,9 +1,10 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.Diff;
-import net.trilogy.arch.domain.Diff.Status;
-import net.trilogy.arch.domain.DiffableRelationship;
+import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.Diff.Status;
+import net.trilogy.arch.domain.diff.DiffableEntity;
+import net.trilogy.arch.domain.diff.DiffableRelationship;
 import net.trilogy.arch.domain.c4.*;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,10 +42,10 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArchWithPeople(arch, Set.of(personInFirst, commonPersonNameToBeChanged, commonPersonNoChange));
         var second = getArchWithPeople(arch, Set.of(personInSecond, commonPersonNameChanged, commonPersonNoChange));
         Set<Diff> expected = Set.of(
-                new Diff(personInFirst, null),
-                new Diff(null, personInSecond),
-                new Diff(commonPersonNoChange, commonPersonNoChange),
-                new Diff(commonPersonNameToBeChanged, commonPersonNameChanged)
+                new Diff(new DiffableEntity(personInFirst), null),
+                new Diff(null, new DiffableEntity(personInSecond)),
+                new Diff(new DiffableEntity(commonPersonNoChange), new DiffableEntity(commonPersonNoChange)),
+                new Diff(new DiffableEntity(commonPersonNameToBeChanged), new DiffableEntity(commonPersonNameChanged))
         );
 
         var actual = ArchitectureDiffCalculator.diff(first, second);

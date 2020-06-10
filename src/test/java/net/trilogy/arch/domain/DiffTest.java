@@ -1,5 +1,7 @@
 package net.trilogy.arch.domain;
 
+import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.Diffable;
 import org.junit.Test;
 
 import lombok.EqualsAndHashCode;
@@ -109,10 +111,12 @@ public class DiffTest {
     }
 
     @EqualsAndHashCode
-    @Getter
     private static class Thing implements Diffable {
-        private final String id;
-        public Thing(String id) { this.id = id; }
-        public Thing shallowCopy() { return this; }
+        @Getter private final String id;
+        @Getter private final String name;
+        public Thing(String id) {
+            this.id = id;
+            this.name = id;
+        }
     }
 }

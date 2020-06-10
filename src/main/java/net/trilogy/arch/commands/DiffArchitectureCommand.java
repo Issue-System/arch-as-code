@@ -3,7 +3,7 @@ package net.trilogy.arch.commands;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
-import net.trilogy.arch.domain.Diff;
+import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import picocli.CommandLine;

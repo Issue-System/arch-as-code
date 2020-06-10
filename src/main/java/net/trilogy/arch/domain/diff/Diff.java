@@ -1,4 +1,4 @@
-package net.trilogy.arch.domain;
+package net.trilogy.arch.domain.diff;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

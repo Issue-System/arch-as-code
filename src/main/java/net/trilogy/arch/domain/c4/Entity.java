@@ -3,7 +3,7 @@ package net.trilogy.arch.domain.c4;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import net.trilogy.arch.domain.Diffable;
+import net.trilogy.arch.domain.diff.Diffable;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +14,7 @@ import static java.util.Optional.ofNullable;
 
 @Data
 @NoArgsConstructor
-public abstract class Entity implements Diffable, HasRelation, HasTag, HasIdentity {
+public abstract class Entity implements HasRelation, HasTag, HasIdentity {
     @NonNull
     protected String id;
     protected String alias;

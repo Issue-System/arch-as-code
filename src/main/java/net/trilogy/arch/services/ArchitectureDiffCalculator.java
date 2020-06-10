@@ -2,9 +2,10 @@ package net.trilogy.arch.services;
 
 import com.google.common.collect.Sets;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.Diff;
-import net.trilogy.arch.domain.Diffable;
-import net.trilogy.arch.domain.DiffableRelationship;
+import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.Diffable;
+import net.trilogy.arch.domain.diff.DiffableEntity;
+import net.trilogy.arch.domain.diff.DiffableRelationship;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
@@ -45,18 +46,20 @@ public class ArchitectureDiffCalculator {
         );
     }
 
-    private static Set<Diffable> getDescendants(Diffable diffable, ArchitectureDataStructure arch) {
-        if(diffable instanceof C4SoftwareSystem) {
-            Set<Diffable> results = new HashSet<>();
-            Set<C4Container> containers = getContainers((C4SoftwareSystem) diffable, arch);
-            for (Diffable container : containers) {
-                results.add(container);
-                results.addAll(getDescendants(container, arch));
+    private static Set<DiffableEntity> getDescendants(Diffable diffable, ArchitectureDataStructure arch) {
+        if(!(diffable instanceof DiffableEntity)) return Set.of();
+        final var entity = ((DiffableEntity) diffable).getEntity();
+        if(entity instanceof C4SoftwareSystem) {
+            Set<DiffableEntity> results = new HashSet<>();
+            Set<C4Container> containers = getContainers((C4SoftwareSystem) entity, arch);
+            for (C4Container container : containers) {
+                results.add(new DiffableEntity(container));
+                results.addAll(getDescendants(new DiffableEntity(container), arch));
             }
             return results;
         }
-        if(diffable instanceof C4Container) {
-            return new HashSet<>(getComponents((C4Container) diffable, arch));
+        if(entity instanceof C4Container) {
+            return getComponents((C4Container) entity, arch).stream().map(DiffableEntity::new).collect(Collectors.toSet());
         }
         return Set.of();
     }
@@ -74,7 +77,7 @@ public class ArchitectureDiffCalculator {
                 arch.getModel().findRelationshipById(id).map(it -> new DiffableRelationship(arch, it)),
                 arch.getModel()
                         .findEntityById(id)
-                        .map(ArchitectureDiffCalculator::clearRelationships)
+                        .map(DiffableEntity::new)
             )
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -86,7 +89,7 @@ public class ArchitectureDiffCalculator {
                 arch.getModel()
                     .allEntities()
                     .stream()
-                    .map(ArchitectureDiffCalculator::clearRelationships)
+                    .map(DiffableEntity::new)
                     .collect(Collectors.toSet()),
 
                 arch.getModel()
@@ -95,11 +98,5 @@ public class ArchitectureDiffCalculator {
                     .map(entityRelationshipPair -> new DiffableRelationship(entityRelationshipPair._1, entityRelationshipPair._2))
                     .collect(Collectors.toSet())
         );
-    }
-
-    private static Entity clearRelationships(Entity entity) {
-        var copy = entity.shallowCopy();
-        copy.setRelationships(List.of());
-        return copy;
     }
 }

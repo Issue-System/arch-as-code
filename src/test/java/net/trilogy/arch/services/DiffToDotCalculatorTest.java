@@ -2,14 +2,15 @@ package net.trilogy.arch.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.fail;
 
 import java.util.Set;
 
+import net.trilogy.arch.domain.diff.DiffableEntity;
 import org.junit.Test;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
-import net.trilogy.arch.domain.Diff;
-import net.trilogy.arch.domain.c4.C4Person;
+import net.trilogy.arch.domain.diff.Diff;
 
 public class DiffToDotCalculatorTest {
 
@@ -29,7 +30,10 @@ public class DiffToDotCalculatorTest {
     @Test
     public void shouldHandleEntityWithNoChange() {
         var actual = DiffToDotCalculator.toDot("title", Set.of(
-            new Diff(createPerson("4"), createPerson("4"))
+            new Diff(
+                    new DiffableEntity(createPerson("4")),
+                    new DiffableEntity(createPerson("4"))
+            )
         ));
 
         var expected = new StringBuilder();

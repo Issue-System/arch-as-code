@@ -6,6 +6,7 @@ import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
+import net.trilogy.arch.services.DiffToDotCalculator;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -43,8 +44,9 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (beforeArch.isEmpty()) return 1;
 
-        final Set<Diff> diff = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        spec.commandLine().getOut().println(diff);
+        final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
+        spec.commandLine().getOut().println(dotGraph);
 
         return 0;
     }

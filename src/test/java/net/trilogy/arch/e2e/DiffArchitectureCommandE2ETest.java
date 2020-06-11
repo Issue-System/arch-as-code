@@ -70,11 +70,19 @@ public class DiffArchitectureCommandE2ETest {
         // THEN
         collector.checkThat(
                 out.toString(),
-                containsString("+16")
+                containsString("digraph diff {\n")
         );
         collector.checkThat(
                 out.toString(),
-                containsString("-116")
+                containsString("16")
+        );
+        collector.checkThat(
+                out.toString(),
+                containsString("116")
+        );
+        collector.checkThat(
+                out.toString(),
+                containsString("\n}")
         );
         collector.checkThat(
                 err.toString(),

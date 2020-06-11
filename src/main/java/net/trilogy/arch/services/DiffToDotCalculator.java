@@ -4,13 +4,16 @@ import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class DiffToDotCalculator {
 
-    public static String toDot(String title, Set<Diff> diffs) {
+    public static String toDot(String title, Collection<Diff> diffs) {
         final var dot = new Dot();
         dot.add(0, "digraph " + title + " {");
+        diffs.stream()
+                .map(d -> toDot(d))
+                .forEach(line -> dot.add(1, line));
         dot.add(0, "}");
         return dot.toString();
     }

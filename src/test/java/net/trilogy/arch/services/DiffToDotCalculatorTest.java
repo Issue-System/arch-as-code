@@ -5,6 +5,7 @@ import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
@@ -23,6 +24,30 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
+    }
+
+
+    @Test
+    public void shouldGenerateEntireGraph() {
+        var actual = DiffToDotCalculator.toDot("title", List.of(
+                new Diff(
+                        new DiffableEntity(createPerson("1")),
+                        new DiffableEntity(createPerson("1"))
+                ),
+                new Diff(
+                        new DiffableRelationship("1", createRelationship("10", "3")),
+                        new DiffableRelationship("1", createRelationship("10", "4"))
+                )
+        ));
+
+        var expected = new StringBuilder();
+        appendln(expected, "digraph title {");
+        appendln(expected, "    1 [label=\"person-1\", color=black, fontcolor=black, shape=Mrecord];");
+        appendln(expected, "    1 -> 4 [label=\"d10\", color=blue, fontcolor=blue];");
+        appendln(expected, "}");
+
+        assertThat(actual, equalTo(expected.toString()));
+
     }
 
     @Test

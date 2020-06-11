@@ -1,19 +1,16 @@
 package net.trilogy.arch.services;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.fail;
+import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffableEntity;
+import net.trilogy.arch.domain.diff.DiffableRelationship;
+import org.junit.Test;
 
 import java.util.Set;
 
-import net.trilogy.arch.domain.diff.DiffableEntity;
-import net.trilogy.arch.domain.diff.DiffableRelationship;
-
-import org.junit.Test;
-
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
-import net.trilogy.arch.domain.diff.Diff;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class DiffToDotCalculatorTest {
 
@@ -40,12 +37,40 @@ public class DiffToDotCalculatorTest {
     }
 
     @Test
+    public void shouldCalculateNoUpdateColor() {
+        var actual = DiffToDotCalculator.getDotColor(
+                new Diff(
+                        new DiffableEntity(createPerson("4")),
+                        new DiffableEntity(createPerson("4"))
+                )
+        );
+
+        var expected = "black";
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldCalculateCreatedColor() {
+        var actual = DiffToDotCalculator.getDotColor(
+                new Diff(
+                        null,
+                        new DiffableEntity(createPerson("4"))
+                )
+        );
+
+        var expected = "darkgreen";
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    @Test
     public void shouldCalculateUpdatedColor() {
         var actual = DiffToDotCalculator.getDotColor(
-            new Diff(
-                    new DiffableEntity(createPerson("4")),
-                    new DiffableEntity(createPerson("4"))
-            )
+                new Diff(
+                        new DiffableEntity(createPerson("4")),
+                        new DiffableEntity(createPerson("5"))
+                )
         );
 
         var expected = "blue";
@@ -54,15 +79,43 @@ public class DiffToDotCalculatorTest {
     }
 
     @Test
-    public void shouldGenerateRelationshipDotEntry() {
-        var actual = DiffToDotCalculator.toDot(
-            new Diff(
-                    new DiffableRelationship(createPerson("4"), createRelationship("1", "5")),
-                    new DiffableRelationship(createPerson("4"), createRelationship("1", "5"))
-            )
+    public void shouldCalculateNoUpdateChilderUpdatedColor() {
+        var actual = DiffToDotCalculator.getDotColor(
+                new Diff(
+                        new DiffableEntity(createPerson("4")), Set.of(),
+                        new DiffableEntity(createPerson("4")), Set.of(new DiffableEntity(createPerson("impossible-child")))
+                )
         );
 
-        var expected = "4 -> 5 [label=\"d1\", color=blue, fontcolor=blue];";
+        var expected = "blueviolet";
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldCalculateDeletedColor() {
+        var actual = DiffToDotCalculator.getDotColor(
+                new Diff(
+                        new DiffableEntity(createPerson("4")),
+                        null
+                )
+        );
+
+        var expected = "red";
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldGenerateRelationshipDotEntry() {
+        var actual = DiffToDotCalculator.toDot(
+                new Diff(
+                        new DiffableRelationship(createPerson("4"), createRelationship("1", "5")),
+                        new DiffableRelationship(createPerson("4"), createRelationship("1", "5"))
+                )
+        );
+
+        var expected = "4 -> 5 [label=\"d1\", color=black, fontcolor=black];";
 
         assertThat(actual, equalTo(expected));
     }
@@ -70,18 +123,18 @@ public class DiffToDotCalculatorTest {
     @Test
     public void shouldGenerateEntityDotEntry() {
         var actual = DiffToDotCalculator.toDot(
-            new Diff(
-                    new DiffableEntity(createPerson("4")),
-                    new DiffableEntity(createPerson("4"))
-            )
+                new Diff(
+                        new DiffableEntity(createPerson("4")),
+                        new DiffableEntity(createPerson("4"))
+                )
         );
 
-        var expected = "4 [label=\"person-4\", color=blue, fontcolor=blue, shape=Mrecord];";
+        var expected = "4 [label=\"person-4\", color=black, fontcolor=black, shape=Mrecord];";
 
         assertThat(actual, equalTo(expected));
     }
 
-    private void appendln(StringBuilder builder, String line){
+    private void appendln(StringBuilder builder, String line) {
         builder.append(line).append("\n");
     }
 

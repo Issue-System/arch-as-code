@@ -1,12 +1,10 @@
 package net.trilogy.arch.services;
 
-import java.util.Set;
-
 import net.trilogy.arch.domain.diff.Diff;
-import net.trilogy.arch.domain.c4.Entity;
-import net.trilogy.arch.domain.diff.Diffable;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
+
+import java.util.Set;
 
 public class DiffToDotCalculator {
 
@@ -17,7 +15,7 @@ public class DiffToDotCalculator {
         return dot.toString();
     }
 
-    private static class Dot{
+    private static class Dot {
         private final StringBuilder builder = new StringBuilder();
 
         public String toString() {
@@ -29,29 +27,47 @@ public class DiffToDotCalculator {
         }
     }
 
-    static String getDotShape(DiffableEntity entity) { 
+    static String getDotShape(DiffableEntity entity) {
         return "Mrecord";
     }
 
-    static String getDotColor(Diff diff) { 
-        return "blue";
+    static String getDotColor(Diff diff) {
+        switch (diff.getStatus()) {
+            case CREATED:
+                return "darkgreen";
+
+            case DELETED:
+                return "red";
+
+            case UPDATED:
+                return "blue";
+
+            case NO_UPDATE_BUT_CHILDREN_UPDATED:
+                return "blueviolet";
+
+            case NO_UPDATE:
+                return "black";
+
+            default:
+                return "black";
+        }
     }
 
-    static String toDot(Diff diff){ 
-        if(diff.getElement() instanceof DiffableEntity) {
+    static String toDot(Diff diff) {
+        if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
-            return entity.getId() + 
-                " [label=\"" + entity.getName() +
-                "\", color=" + getDotColor(diff) +
-                ", fontcolor=" + getDotColor(diff) +
-                ", shape=" + getDotShape(entity) +
-                "];";
+            return entity.getId() +
+                    " [label=\"" + entity.getName() +
+                    "\", color=" + getDotColor(diff) +
+                    ", fontcolor=" + getDotColor(diff) +
+                    ", shape=" + getDotShape(entity) +
+                    "];";
         }
         final var relationship = (DiffableRelationship) diff.getElement();
-        return relationship.getSourceId() + " -> " + relationship.getRelationship().getWithId() + 
-            " [label=\"" + relationship.getName() +
-            "\", color=" + getDotColor(diff) +
-            ", fontcolor=" + getDotColor(diff) +
-            "];";
+        return relationship.getSourceId() + " -> " + relationship.getRelationship().getWithId() +
+                " [label=\"" + relationship.getName() +
+                "\", color=" + getDotColor(diff) +
+                ", fontcolor=" + getDotColor(diff) +
+                "];";
     }
 }

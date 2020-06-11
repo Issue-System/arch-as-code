@@ -51,6 +51,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.7.0.202003110725-r'
 
+    compile group: 'guru.nidi', name: 'graphviz-java-all-j2v8', version: '0.16.2'
+
     //Command line arguments
     implementation 'info.picocli:picocli:4.2.0'
     annotationProcessor 'info.picocli:picocli-codegen:4.2.0'

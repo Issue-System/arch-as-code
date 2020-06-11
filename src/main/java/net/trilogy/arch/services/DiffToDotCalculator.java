@@ -59,16 +59,18 @@ public class DiffToDotCalculator {
     static String toDot(Diff diff) {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
-            return entity.getId() +
-                    " [label=\"" + entity.getName() +
+            return "\"" + entity.getId() + "\" " +
+                    "[label=\"" + entity.getName() +
                     "\", color=" + getDotColor(diff) +
                     ", fontcolor=" + getDotColor(diff) +
                     ", shape=" + getDotShape(entity) +
                     "];";
         }
         final var relationship = (DiffableRelationship) diff.getElement();
-        return relationship.getSourceId() + " -> " + relationship.getRelationship().getWithId() +
-                " [label=\"" + relationship.getName() +
+        return "\"" + 
+                relationship.getSourceId() + " -> " + relationship.getRelationship().getWithId() +
+                "\" " +
+                "[label=\"" + relationship.getName() +
                 "\", color=" + getDotColor(diff) +
                 ", fontcolor=" + getDotColor(diff) +
                 "];";

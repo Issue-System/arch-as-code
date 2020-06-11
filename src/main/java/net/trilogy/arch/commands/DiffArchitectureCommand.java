@@ -11,8 +11,13 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.parse.Parser;
 
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
 public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
@@ -41,15 +46,16 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     }
 
     @Override
-    public Integer call() {
+    public Integer call() throws IOException {
         final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (currentArch.isEmpty()) return 1;
 
         final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (beforeArch.isEmpty()) return 1;
 
+        final Path outputDir;
         try {
-            filesFacade.createDirectory(outputDirectory.toPath());
+            outputDir = filesFacade.createDirectory(outputDirectory.toPath());
         } catch (Exception e) {
             printError("Unable to create output directory", e);
             return 1;
@@ -58,8 +64,12 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
 
-        // TODO: turn dotGraphs into svgs
-        spec.commandLine().getOut().println(dotGraph);
+        // TODO: Move to adapter
+        final var graph = new Parser().read(dotGraph.replaceAll("\\n", ""));
+        File file = new File(outputDir.resolve("architecture-diff.svg").toAbsolutePath().toString());
+        Graphviz.fromGraph(graph).render(Format.SVG).toFile(file);
+
+        spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
 
         return 0;
     }

@@ -65,7 +65,7 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
 
         // TODO: Move to adapter
-        final var graph = new Parser().read(dotGraph.replaceAll("\\n", ""));
+        final var graph = new Parser().read(dotGraph);
         File file = new File(outputDir.resolve("architecture-diff.svg").toAbsolutePath().toString());
         Graphviz.fromGraph(graph).render(Format.SVG).toFile(file);
 

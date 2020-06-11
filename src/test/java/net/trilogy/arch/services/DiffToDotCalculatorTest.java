@@ -43,7 +43,7 @@ public class DiffToDotCalculatorTest {
         var expected = new StringBuilder();
         appendln(expected, "digraph title {");
         appendln(expected, "    \"1\" [label=\"person-1\", color=black, fontcolor=black, shape=Mrecord];");
-        appendln(expected, "    \"1 -> 4\" [label=\"d10\", color=blue, fontcolor=blue];");
+        appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
@@ -140,7 +140,7 @@ public class DiffToDotCalculatorTest {
                 )
         );
 
-        var expected = "\"4 -> 5\" [label=\"d1\", color=black, fontcolor=black];";
+        var expected = "\"4\" -> \"5\" [label=\"d1\", color=black, fontcolor=black];";
 
         assertThat(actual, equalTo(expected));
     }

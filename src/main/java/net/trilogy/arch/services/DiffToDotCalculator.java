@@ -68,7 +68,7 @@ public class DiffToDotCalculator {
         }
         final var relationship = (DiffableRelationship) diff.getElement();
         return "\"" + 
-                relationship.getSourceId() + " -> " + relationship.getRelationship().getWithId() +
+                relationship.getSourceId() + "\" -> \"" + relationship.getRelationship().getWithId() +
                 "\" " +
                 "[label=\"" + relationship.getName() +
                 "\", color=" + getDotColor(diff) +

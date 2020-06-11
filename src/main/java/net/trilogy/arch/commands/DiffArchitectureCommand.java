@@ -10,6 +10,7 @@ import net.trilogy.arch.services.DiffToDotCalculator;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -28,7 +29,10 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     private File productArchitectureDirectory;
 
     @CommandLine.Option(names = {"-b", "--branch-of-diff-architecture"}, description = "Name of git branch to compare against current architecture. Usually 'master'.", required = true)
-    String baseBranch;
+    private String baseBranch;
+
+    @CommandLine.Option(names = {"-o", "--output-directory"}, description = "New directory in which svg files will be created.", required = true)
+    private File outputDirectory;
 
     public DiffArchitectureCommand(FilesFacade filesFacade, GitInterface gitInterface) {
         this.filesFacade = filesFacade;
@@ -44,8 +48,17 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (beforeArch.isEmpty()) return 1;
 
+        try {
+            filesFacade.createDirectory(outputDirectory.toPath());
+        } catch (Exception e) {
+            printError("Unable to create output directory", e);
+            return 1;
+        }
+
         final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
+
+        // TODO: turn dotGraphs into svgs
         spec.commandLine().getOut().println(dotGraph);
 
         return 0;

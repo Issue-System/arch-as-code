@@ -23,16 +23,7 @@ public class DiffableEntity implements Diffable {
         return entity.getName();
     }
 
-    public int hashCode() {
-        var entity = this.entity.shallowCopy();
-        entity.setRelationships(List.of());
-        final int PRIME = 59;
-        int result = 1;
-        final Object $entity = entity;
-        result = result * PRIME + ($entity == null ? 43 : $entity.hashCode());
-        return result;
-    }
-
+    @Override
     public boolean equals(final Object otherObject) {
         if (!(otherObject instanceof DiffableEntity)) return false;
         final var other = (DiffableEntity) otherObject;
@@ -50,5 +41,12 @@ public class DiffableEntity implements Diffable {
     @Override
     public C4Type getType() {
         return this.getEntity().getType();
+    }
+
+    @Override
+    public int hashCode() {
+        var entity = this.entity.shallowCopy();
+        entity.setRelationships(List.of());
+        return entity.hashCode();
     }
 }

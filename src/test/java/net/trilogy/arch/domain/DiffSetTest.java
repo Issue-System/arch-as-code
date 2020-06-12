@@ -7,61 +7,84 @@ import net.trilogy.arch.domain.c4.C4Person;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
+import net.trilogy.arch.domain.diff.DiffableEntity;
+import net.trilogy.arch.domain.diff.DiffableRelationship;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
 
 public class DiffSetTest {
 
-    @Ignore("WIP")
     @Test
-    public void shouldGetSystemLevelDiffs() throws Exception {
-        // given: a diffset containing various types of diffs
-        DiffSet diffSet = getDiffSet();
+    public void systemLevelDiffsShouldHaveTheRightEntities() throws Exception {
+        DiffSet diffset = getDiffSetWithAllTypesOfDiffs();
+        assertThat(diffset.getSystemLevelDiffs(), contains(getPersonDiff(), getSystemDiff()));
+    }
 
-        // when: diffset.getSystemLevelDiffs() is called
-        Set<Diff> topLevel = diffSet.GetSystemLevelDiffs();
-
-        // then: it should return only the diffs that satisfy the following criteria:
         //  EITHER
         //  - diff must be of type DiffableEntity
         //  - the diffableEntity.getEntity() must be one of the allowed types (C4Person, C4SoftwareSystem)
-        final var result = topLevel.stream()
-                .map(diff -> diff.getClass())
-                .collect(Collectors.toSet());
-
-        System.out.println(result);
-
-        assertThat(
-                result,
-                equalTo(Set.of(C4Person.class, C4SoftwareSystem.class)))
-        ;
-
         //  OR
         //  - diff must be of type DiffableRelationship
         //  - one of [ DiffableRelationship.getSourceId() , DiffableRelationship.getRelationship().getWithId() ] matches
         //    the id of a DiffableEntity that is returned by the previous set of criteria
-
         //  OR
         //  - diff must be of type DiffableEntity
         //  - the diffableEntity.getId() matches one of [ DiffableRelationship.getSourceId() , DiffableRelationship.getRelationship().getWithId() ]
         //    of a DiffableRelationship that is returned by the previous set of criteria.
 
+    private DiffSet getDiffSetWithAllTypesOfDiffs() throws Exception {
+        return new DiffSet(List.of(
+                    getRelationshipDiff(),
+                    getPersonDiff(),
+                    getSystemDiff(),
+                    getContainerDiff(),
+                    getComponentDiff()
+        ));
     }
 
-    private DiffSet getDiffSet() throws Exception {
-        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
-        final ArchitectureDataStructure before = ArchitectureDataStructureHelper.emptyArch().build();
-        final ArchitectureDataStructure after = new WorkspaceReader().load(new File(resource.getPath()));
+    private Diff getPersonDiff() {
+        return new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createPerson("p1")),
+                null
+        );
+    }
 
-        return ArchitectureDiffCalculator.diff(before, after);
+    private Diff getComponentDiff() {
+        return new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createComponent("comp1", "comp1-container")),
+                null
+        );
+    }
+
+    private Diff getContainerDiff() {
+        return new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createContainer("cont1", "cont1-system")),
+                null
+        );
+    }
+
+    private Diff getSystemDiff() {
+        return new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createSystem("s1")),
+                null
+        );
+    }
+
+    private Diff getRelationshipDiff() {
+        return new Diff(
+                new DiffableRelationship("r1-source", ArchitectureDataStructureHelper.createRelationship("r1", "r1-dest")),
+                null
+        );
     }
 }

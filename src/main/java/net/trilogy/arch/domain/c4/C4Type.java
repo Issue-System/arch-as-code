@@ -3,6 +3,7 @@ package net.trilogy.arch.domain.c4;
 import com.structurizr.model.*;
 
 public enum C4Type {
+    relationship,
     person,
     system,
     container,

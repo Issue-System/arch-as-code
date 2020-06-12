@@ -1,5 +1,6 @@
 package net.trilogy.arch.domain;
 
+import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.Diffable;
 import org.junit.Test;
@@ -114,9 +115,11 @@ public class DiffTest {
     private static class Thing implements Diffable {
         @Getter private final String id;
         @Getter private final String name;
+        @Getter private final C4Type type;
         public Thing(String id) {
             this.id = id;
-            this.name = id;
+            this.name = "name";
+            this.type = C4Type.person;
         }
     }
 }

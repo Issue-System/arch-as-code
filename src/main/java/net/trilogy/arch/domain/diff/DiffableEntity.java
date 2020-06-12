@@ -2,6 +2,7 @@ package net.trilogy.arch.domain.diff;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.c4.Entity;
 
 import java.util.List;
@@ -23,9 +24,11 @@ public class DiffableEntity implements Diffable {
     }
 
     public int hashCode() {
+        var entity = this.entity.shallowCopy();
+        entity.setRelationships(List.of());
         final int PRIME = 59;
         int result = 1;
-        final Object $entity = this.entity;
+        final Object $entity = entity;
         result = result * PRIME + ($entity == null ? 43 : $entity.hashCode());
         return result;
     }
@@ -42,5 +45,10 @@ public class DiffableEntity implements Diffable {
         a.setRelationships(List.of());
         b.setRelationships(List.of());
         return a.equals(b);
+    }
+
+    @Override
+    public C4Type getType() {
+        return this.getEntity().getType();
     }
 }

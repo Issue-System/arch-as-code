@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.c4.C4Relationship;
+import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.c4.Entity;
 
 @EqualsAndHashCode
@@ -41,5 +42,10 @@ public class DiffableRelationship implements Diffable {
     @Override
     public String getName() {
         return this.relationship.getDescription();
+    }
+
+    @Override
+    public C4Type getType() {
+        return C4Type.relationship;
     }
 }

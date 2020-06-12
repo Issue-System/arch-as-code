@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 import org.junit.Test;
@@ -18,7 +19,6 @@ public class DiffToDotCalculatorTest {
     @Test
     public void shouldGenerateEmptyGraph() {
         var actual = DiffToDotCalculator.toDot("title", Set.of());
-
         var expected = new StringBuilder();
         appendln(expected, "digraph title {");
         appendln(expected, "    graph [rankdir=LR];");
@@ -33,12 +33,12 @@ public class DiffToDotCalculatorTest {
     public void shouldGenerateEntireGraph() {
         var actual = DiffToDotCalculator.toDot("title", List.of(
                 new Diff(
-                        new DiffableEntity(createPerson("1")),
-                        new DiffableEntity(createPerson("1"))
+                    new DiffableEntity(createPerson("1")),
+                    new DiffableEntity(createPerson("1"))
                 ),
                 new Diff(
-                        new DiffableRelationship("1", createRelationship("10", "3")),
-                        new DiffableRelationship("1", createRelationship("10", "4"))
+                    new DiffableRelationship("1", createRelationship("10", "3")),
+                    new DiffableRelationship("1", createRelationship("10", "4"))
                 )
         ));
 

@@ -1,10 +1,12 @@
 package net.trilogy.arch.services;
 
+import java.util.Collection;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
-
-import java.util.Collection;
 
 public class DiffToDotCalculator {
 
@@ -32,32 +34,30 @@ public class DiffToDotCalculator {
         }
     }
 
+    @VisibleForTesting
     static String getDotShape(DiffableEntity entity) {
         return "Mrecord";
     }
 
+    @VisibleForTesting
     static String getDotColor(Diff diff) {
         switch (diff.getStatus()) {
             case CREATED:
                 return "darkgreen";
-
             case DELETED:
                 return "red";
-
             case UPDATED:
                 return "blue";
-
             case NO_UPDATE_BUT_CHILDREN_UPDATED:
                 return "blueviolet";
-
             case NO_UPDATE:
                 return "black";
-
             default:
                 return "black";
         }
     }
 
+    @VisibleForTesting
     static String toDot(Diff diff) {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();

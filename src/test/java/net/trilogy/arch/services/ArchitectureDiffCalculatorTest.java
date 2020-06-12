@@ -2,6 +2,7 @@ package net.trilogy.arch.services;
 
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.domain.diff.Diff.Status;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
@@ -26,7 +27,7 @@ public class ArchitectureDiffCalculatorTest {
         final ArchitectureDataStructure first = emptyArch().build();
         final ArchitectureDataStructure second = emptyArch().build();
 
-        assertThat(ArchitectureDiffCalculator.diff(first, second), equalTo(Set.of()));
+        assertThat(ArchitectureDiffCalculator.diff(first, second), equalTo(new DiffSet(Set.of())));
     }
 
     @Test
@@ -50,8 +51,8 @@ public class ArchitectureDiffCalculatorTest {
 
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
-        expected.forEach(e -> collector.checkThat(actual, hasItem(e)));
-        collector.checkThat(actual.size(), equalTo(expected.size()));
+        expected.forEach(e -> collector.checkThat(actual.getDiffs(), hasItem(e)));
+        collector.checkThat(actual.getDiffs().size(), equalTo(expected.size()));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ArchitectureDiffCalculatorTest {
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(
-                actual.stream()
+                actual.getDiffs().stream()
                         .filter(it -> it.getElement().getId() == "rel1")
                         .findAny()
                         .orElseThrow()
@@ -102,7 +103,7 @@ public class ArchitectureDiffCalculatorTest {
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(
-                actual.stream()
+                actual.getDiffs().stream()
                         .filter(it -> it.getElement().getId() == "1")
                         .findAny()
                         .orElseThrow()
@@ -131,7 +132,7 @@ public class ArchitectureDiffCalculatorTest {
         );
         var actual = ArchitectureDiffCalculator.diff(first, second);
 
-        collector.checkThat(actual, hasItem(expected));
+        collector.checkThat(actual.getDiffs(), hasItem(expected));
     }
 
     @Test
@@ -152,7 +153,7 @@ public class ArchitectureDiffCalculatorTest {
         var diffs = ArchitectureDiffCalculator.diff(first, second);
 
         collector.checkThat(
-                diffs.stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
+                diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
                 equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
         );
     }

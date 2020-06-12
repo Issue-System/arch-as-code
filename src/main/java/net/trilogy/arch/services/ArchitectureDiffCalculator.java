@@ -3,6 +3,7 @@ package net.trilogy.arch.services;
 import com.google.common.collect.Sets;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.domain.diff.Diffable;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ArchitectureDiffCalculator {
-    public static Set<Diff> diff(ArchitectureDataStructure beforeArch, ArchitectureDataStructure afterArch) {
+    public static DiffSet diff(ArchitectureDataStructure beforeArch, ArchitectureDataStructure afterArch) {
         final Set<Diff> firstDiffs = getAllDiffables(beforeArch).stream()
                 .map(diffableInFirst -> {
                         var diffableInSecond = findById(afterArch, diffableInFirst.getId()).orElse(null);
@@ -33,7 +34,7 @@ public class ArchitectureDiffCalculator {
                 )
                 .collect(Collectors.toSet());
 
-        return Sets.union(firstDiffs, secondDiffs);
+        return new DiffSet(Sets.union(firstDiffs, secondDiffs));
     }
 
     private static Diff makeDiff(ArchitectureDataStructure firstArch,

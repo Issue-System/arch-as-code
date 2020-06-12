@@ -5,6 +5,7 @@ import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObject
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import net.trilogy.arch.services.DiffToDotCalculator;
@@ -64,8 +65,8 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
             return 1;
         }
 
-        final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
+        final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffSet.getDiffs());
 
         try {
             graphvizInterface.render(dotGraph, outputDir.resolve("architecture-diff.svg"));

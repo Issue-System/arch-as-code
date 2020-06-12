@@ -5,6 +5,7 @@ import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
+import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
@@ -25,6 +26,8 @@ import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -109,8 +112,38 @@ public class DiffArchitectureCommandE2ETest {
         collector.checkThat(err.toString(), equalTo(""));
         collector.checkThat(status, equalTo(0));
 
-        // final var svgContent = Files.readString(outputPath.resolve("architecture-diff.svg"));
-        // collector.checkThat(svgContent, containsString("16"));
-        // collector.checkThat(svgContent, containsString("116"));
+        final var svgContent = Files.readString(outputPath.resolve("architecture-diff.svg"));
+        collector.checkThat(svgContent, containsString("16"));
+        collector.checkThat(svgContent, containsString("116"));
+    }
+
+    @Test
+    public void shouldHandleIfGraphvizFails() throws Exception {
+        // GIVEN
+        final String architectureAsString = new FilesFacade()
+                .readString(rootDir.toPath().resolve("product-architecture.yml"))
+                .replaceAll("id: \"16\"", "id: \"116\"");
+        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper()
+                .readValue(architectureAsString);
+        when(mockedGitInterface.load("master",
+                rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
+        
+        final var mockedGraphvizInterface = mock(GraphvizInterface.class);
+        doThrow(new RuntimeException("BOOM!")).when(mockedGraphvizInterface).render(any(), any());
+
+        var app = Application.builder()
+            .gitInterface(mockedGitInterface)
+            .graphvizInterface(mockedGraphvizInterface)
+            .build();
+
+        // WHEN
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+        final Integer status = execute(app,
+                "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(err.toString(), containsString("Unable to render SVG"));
+        collector.checkThat(out.toString(), equalTo(""));
     }
 }

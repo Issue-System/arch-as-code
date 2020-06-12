@@ -49,7 +49,7 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     }
 
     @Override
-    public Integer call() throws IOException {
+    public Integer call() {
         final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (currentArch.isEmpty()) return 1;
 
@@ -67,9 +67,12 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
 
-        final var graph = new Parser().read(dotGraph);
-        File file = new File(outputDir.resolve("architecture-diff.svg").toAbsolutePath().toString());
-        Graphviz.fromGraph(graph).render(Format.SVG).toFile(file);
+        try {
+            graphvizInterface.render(dotGraph, outputDir.resolve("architecture-diff.svg"));
+        } catch (Exception e) {
+            printError("Unable to render SVG", e);
+            return 1;
+        }
 
         spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
 

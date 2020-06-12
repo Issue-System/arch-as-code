@@ -21,6 +21,8 @@ public class DiffToDotCalculatorTest {
 
         var expected = new StringBuilder();
         appendln(expected, "digraph title {");
+        appendln(expected, "    graph [rankdir=LR];");
+        appendln(expected, "");
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
@@ -42,6 +44,8 @@ public class DiffToDotCalculatorTest {
 
         var expected = new StringBuilder();
         appendln(expected, "digraph title {");
+        appendln(expected, "    graph [rankdir=LR];");
+        appendln(expected, "");
         appendln(expected, "    \"1\" [label=\"person-1\", color=black, fontcolor=black, shape=Mrecord];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");

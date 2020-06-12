@@ -11,6 +11,8 @@ public class DiffToDotCalculator {
     public static String toDot(String title, Collection<Diff> diffs) {
         final var dot = new Dot();
         dot.add(0, "digraph " + title + " {");
+        dot.add(1, "graph [rankdir=LR];");
+        dot.add(0, "");
         diffs.stream()
                 .map(d -> toDot(d))
                 .forEach(line -> dot.add(1, line));

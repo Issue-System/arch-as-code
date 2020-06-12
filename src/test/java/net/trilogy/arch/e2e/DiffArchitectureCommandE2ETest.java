@@ -54,8 +54,7 @@ public class DiffArchitectureCommandE2ETest {
         outputDirParent = Files.createTempDirectory("aac").toFile();
 
         mockedGitInterface = mock(GitInterface.class);
-        app = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(),
-                new FilesFacade(), mockedGitInterface);
+        app = Application.builder().gitInterface(mockedGitInterface).build();
     }
 
     @After

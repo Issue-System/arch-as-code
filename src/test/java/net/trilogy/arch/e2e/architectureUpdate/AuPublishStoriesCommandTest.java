@@ -76,7 +76,12 @@ public class AuPublishStoriesCommandTest {
 
         mockedGitInterface = mock(GitInterface.class);
 
-        app = new Application(mockedGoogleApiFactory, mockedJiraApiFactory, spiedFilesFacade, mockedGitInterface);
+        app = Application.builder()
+            .googleDocsAuthorizedApiFactory(mockedGoogleApiFactory)
+            .jiraApiFactory(mockedJiraApiFactory)
+            .filesFacade(spiedFilesFacade)
+            .gitInterface(mockedGitInterface)
+            .build();
 
         Files.copy(rootDir.toPath().resolve("architecture-updates/test.yml"), rootDir.toPath().resolve("architecture-updates/test-clone.yml"));
     }
@@ -86,7 +91,7 @@ public class AuPublishStoriesCommandTest {
         Path auPath = rootDir.toPath().resolve("architecture-updates/test-clone.yml");
         mockGitInterface();
 
-        var newApp = new Application(new GoogleDocsAuthorizedApiFactory(), new JiraApiFactory(), new FilesFacade(), mockedGitInterface);
+        var newApp = Application.builder().gitInterface(mockedGitInterface).build();
 
         int status = execute(newApp, "au publish -b master -u user -p password " + auPath.toAbsolutePath().toString() + " " + rootDir.getAbsolutePath());
 

@@ -68,8 +68,7 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldAnnotate() throws Exception {
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
@@ -90,14 +89,12 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldRefreshAnnotations() throws Exception {
         // GIVEN
-        TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+        TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
 
         Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-29"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
@@ -117,8 +114,7 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldHandleNoComponents() throws Exception {
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
-                "au annotate " + str(changedAuWithoutComponentsPath) + " " + str(rootPath));
+        int status = TestHelper.execute("au", "annotate", str(changedAuWithoutComponentsPath), str(rootPath));
 
         var actual = Files.readString(changedAuWithoutComponentsPath);
 
@@ -136,8 +132,7 @@ public class AuAnnotateCommandTest {
         Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-404"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, new FilesFacade(), new GitInterface()),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
@@ -161,7 +156,7 @@ public class AuAnnotateCommandTest {
         when(mockedFilesFacade.readString(changedAuWithComponentsPath)).thenThrow(new IOException("error-message", new RuntimeException("Boom!")));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitInterface()),
+        int status = TestHelper.execute(Application.builder().filesFacade(mockedFilesFacade).build(),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN
@@ -180,7 +175,7 @@ public class AuAnnotateCommandTest {
         doThrow(new IOException("error-message", new RuntimeException("Boom!"))).when(spyedFilesFacade).readString(eq(a));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, spyedFilesFacade, new GitInterface()),
+        int status = TestHelper.execute(Application.builder().filesFacade(spyedFilesFacade).build(),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN
@@ -199,7 +194,7 @@ public class AuAnnotateCommandTest {
         when(mockedFilesFacade.writeString(any(), any())).thenThrow(new IOException("Ran out of bytes!"));
 
         // WHEN
-        int status = TestHelper.execute(new Application(null, null, mockedFilesFacade, new GitInterface()),
+        int status = TestHelper.execute(Application.builder().filesFacade(mockedFilesFacade).build(),
                 "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
 
         // THEN

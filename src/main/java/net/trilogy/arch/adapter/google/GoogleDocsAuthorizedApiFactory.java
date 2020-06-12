@@ -37,10 +37,14 @@ public class GoogleDocsAuthorizedApiFactory {
     private final AuthorizationCodeInstalledAppFactory authorizationCodeInstalledAppFactory;
     private final DocsFactory docsFactory;
 
-    public GoogleDocsAuthorizedApiFactory() throws GeneralSecurityException, IOException {
+    public GoogleDocsAuthorizedApiFactory() {
         this.clientCredentialsFileName = GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
         this.credentialsDirectory = GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
-        this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        try {
+            this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         this.jsonFactory = JacksonFactory.getDefaultInstance();
         this.docsFactory = new DocsFactory();
         this.codeFlowBuilderFactory = new CodeFlowBuilderFactory();

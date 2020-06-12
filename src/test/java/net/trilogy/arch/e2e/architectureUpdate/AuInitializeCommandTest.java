@@ -171,7 +171,10 @@ public class AuInitializeCommandTest {
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
 
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
+        var app = Application.builder()
+            .jiraApiFactory(mock(JiraApiFactory.class))
+            .filesFacade(mockedFilesFacade)
+            .build();
 
         // WHEN:
         int status = execute(app, "au init -c c -p p -s s " + str(rootDir));
@@ -195,7 +198,7 @@ public class AuInitializeCommandTest {
         ).thenThrow(
                 new IOException("Something horrible has happened. Maybe we ran out of bytes.")
         );
-        var app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
+        var app = Application.builder().jiraApiFactory(mock(JiraApiFactory.class)).filesFacade(mockedFilesFacade).build();
 
         // when
         Integer status = execute(app, "au init -c c -p p -s s " + str(tempDirPath));

@@ -3,6 +3,7 @@ package net.trilogy.arch.commands;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
+import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
@@ -23,6 +24,7 @@ import guru.nidi.graphviz.parse.Parser;
 public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
     @Getter private final GitInterface gitInterface;
     @Getter private final FilesFacade filesFacade;
+    private final GraphvizInterface graphvizInterface;
     @Getter private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
 
     @Getter
@@ -39,9 +41,10 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     @CommandLine.Option(names = {"-o", "--output-directory"}, description = "New directory in which svg files will be created.", required = true)
     private File outputDirectory;
 
-    public DiffArchitectureCommand(FilesFacade filesFacade, GitInterface gitInterface) {
+    public DiffArchitectureCommand(FilesFacade filesFacade, GitInterface gitInterface, GraphvizInterface graphvizInterface) {
         this.filesFacade = filesFacade;
         this.gitInterface = gitInterface;
+        this.graphvizInterface = graphvizInterface;
         this.architectureDataStructureObjectMapper = new ArchitectureDataStructureObjectMapper();
     }
 
@@ -64,7 +67,6 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
         final Set<Diff> diffs = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs);
 
-        // TODO: Move to adapter
         final var graph = new Parser().read(dotGraph);
         File file = new File(outputDir.resolve("architecture-diff.svg").toAbsolutePath().toString());
         Graphviz.fromGraph(graph).render(Format.SVG).toFile(file);

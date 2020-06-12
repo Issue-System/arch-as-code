@@ -65,7 +65,12 @@ public class AuNewCommandTest {
         filesFacadeSpy = spy(new FilesFacade());
         gitInterfaceSpy = spy(new GitInterface());
 
-        app = new Application(googleDocsApiFactoryMock, mock(JiraApiFactory.class), filesFacadeSpy, gitInterfaceSpy);
+        app = Application.builder()
+            .googleDocsAuthorizedApiFactory(googleDocsApiFactoryMock)
+            .jiraApiFactory(mock(JiraApiFactory.class))
+            .filesFacade(filesFacadeSpy)
+            .gitInterface(gitInterfaceSpy)
+            .build();
     }
 
     @After
@@ -291,7 +296,10 @@ public class AuNewCommandTest {
         when(mockedFilesFacade.writeString(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new IOException("No disk space!"));
 
-        Application app = new Application(new GoogleDocsAuthorizedApiFactory(), mock(JiraApiFactory.class), mockedFilesFacade, new GitInterface());
+        Application app = Application.builder()
+            .jiraApiFactory(mock(JiraApiFactory.class))
+            .filesFacade(mockedFilesFacade)
+            .build();
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));

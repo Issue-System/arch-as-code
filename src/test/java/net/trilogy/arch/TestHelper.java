@@ -44,7 +44,11 @@ public abstract class TestHelper {
     public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";
 
     public static Integer execute(String... args) throws Exception {
-        return new Application().execute(args);
+        return Application.builder().build().execute(args);
+    }
+
+    public static Integer execute(String command) throws Exception {
+        return Application.builder().build().execute(command.split(" "));
     }
 
     public static Integer execute(Application application, String command) {

@@ -46,7 +46,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "digraph title {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1\", color=black, fontcolor=black, shape=Mrecord];");
+        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=black, fontcolor=black, shape=Mrecord];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");
 
@@ -158,7 +158,7 @@ public class DiffToDotCalculatorTest {
                 )
         );
 
-        var expected = "\"4\" [label=\"person-4\", color=black, fontcolor=black, shape=Mrecord];";
+        var expected = "\"4\" [label=\"person-4 | person\", color=black, fontcolor=black, shape=Mrecord];";
 
         assertThat(actual, equalTo(expected));
     }

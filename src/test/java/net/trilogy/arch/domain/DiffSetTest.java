@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.trilogy.arch.ArchitectureDataStructureHelper;
@@ -22,6 +23,22 @@ public class DiffSetTest {
         assertThat(diffset.getSystemLevelDiffs(), equalTo(Set.of(getPersonDiff(), getSystemDiff())));
     }
 
+    // TODO: Trying out this new behaviour
+    @Test
+    public void systemLevelDiffsShouldHaveTheRelationships() {
+        var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "bleh");
+        var relWithDestination = getRelationshipDiff("2", "bleh", getId(getPersonDiff()));
+        var relWithBoth = getRelationshipDiff("3", getId(getPersonDiff()), getId(getSystemDiff()));
+
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
+
+        assertThat(
+                diffset.getSystemLevelDiffs(),
+                equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithBoth))
+        );
+    }
+
+    @Ignore("TODO: Trying out contrary behaviour")
     @Test
     public void systemLevelDiffsShouldHaveTheRelationshipsThatReferToSystemsOrPeople() {
         var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "bleh");
@@ -36,6 +53,7 @@ public class DiffSetTest {
         );
     }
 
+    @Ignore("TODO: Trying out contrary behaviour")
     @Test
     public void systemLevelDiffsShouldHaveTheEntitiesThatAreRelatedToSystemsOrPeople() {
         var container = getContainerDiff("container-id", "bleh");

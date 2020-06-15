@@ -62,7 +62,11 @@ public class DiffToDotCalculator {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
             return "\"" + entity.getId() + "\" " +
-                    "[label=\"" + entity.getName() +
+                    "[label=\"" + entity.getName() + 
+                    
+                    // TODO: Temporary, until shapes are added
+                    " | " + entity.getType() + 
+
                     "\", color=" + getDotColor(diff) +
                     ", fontcolor=" + getDotColor(diff) +
                     ", shape=" + getDotShape(entity) +

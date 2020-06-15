@@ -22,18 +22,9 @@ public class DiffSet {
     }
 
     public Set<Diff> getSystemLevelDiffs() {
-        var systemsAndPeople = systemAndPeopleDiffs();
-        var relationships = relationshipsThatReferToAnyOf(systemsAndPeople);
-
-        var related = relationships.stream()
-            .flatMap(r -> {
-                var rel = (DiffableRelationship) r.getElement();
-                return Stream.of(rel.getSourceId(), rel.getRelationship().getWithId());
-            })
-            .flatMap(id -> byId(id).stream())
-            .collect(Collectors.toSet());
-
-        return setOf(systemsAndPeople, relationships, related);
+        var systemsAndPeople = findSystemAndPeopleDiffs();
+        var relationships = findRelationshipsAmong(systemsAndPeople);
+        return setOf(systemsAndPeople, relationships);
     }
 
     @SafeVarargs
@@ -43,18 +34,46 @@ public class DiffSet {
             .collect(Collectors.toSet());
     }
 
-    private List<Diff> byId(String id) {
+    private List<Diff> findById(String id) {
         return this.diffs.stream()
             .filter(it -> it.getElement().getId().equals(id))
             .collect(Collectors.toList());
     }
 
-    private List<Diff> relationshipsThatReferToAnyOf(Collection<Diff> diffs) {
+    private List<Diff> findDiffsReferredToBy(Collection<Diff> relationshipDiffs) {
+        return relationshipDiffs.stream()
+            .flatMap(r -> {
+                var rel = (DiffableRelationship) r.getElement();
+                return Stream.of(rel.getSourceId(), rel.getRelationship().getWithId());
+            })
+            .flatMap(id -> findById(id).stream())
+            .collect(Collectors.toList());
+    }
+
+    private List<Diff> findRelationshipsAmong(Collection<Diff> entityDiffs) {
         return relationshipDiffs()
             .stream()
             .filter(relDiff -> {
                 var element = ((DiffableRelationship) relDiff.getElement());
-                return diffs.stream().anyMatch(it -> 
+                return entityDiffs.stream().anyMatch(it -> 
+                    it.getElement().getId().equals(element.getSourceId())
+                );
+            })
+            .filter(relDiff -> {
+                var element = ((DiffableRelationship) relDiff.getElement());
+                return entityDiffs.stream().anyMatch(it -> 
+                    it.getElement().getId().equals(element.getRelationship().getWithId())
+                );
+            })
+            .collect(Collectors.toList());
+    }
+
+    private List<Diff> findRelationshipsThatReferToAnyOf(Collection<Diff> entityDiffs) {
+        return relationshipDiffs()
+            .stream()
+            .filter(relDiff -> {
+                var element = ((DiffableRelationship) relDiff.getElement());
+                return entityDiffs.stream().anyMatch(it -> 
                         it.getElement().getId().equals(element.getSourceId()) ||
                         it.getElement().getId().equals(element.getRelationship().getWithId())
                 );
@@ -68,7 +87,7 @@ public class DiffSet {
             .collect(Collectors.toList());
     }
 
-    private List<Diff> systemAndPeopleDiffs() {
+    private List<Diff> findSystemAndPeopleDiffs() {
         return this.diffs.stream()
             .filter(diff -> Set.of(C4Type.system, C4Type.person).contains(diff.getElement().getType()))
             .collect(Collectors.toList());

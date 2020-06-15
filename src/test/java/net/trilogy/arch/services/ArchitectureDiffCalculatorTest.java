@@ -1,5 +1,6 @@
 package net.trilogy.arch.services;
 
+import net.trilogy.arch.ArchitectureDataStructureHelper;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
@@ -11,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
+import java.util.List;
 import java.util.Set;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.*;
@@ -136,7 +138,7 @@ public class ArchitectureDiffCalculatorTest {
     }
 
     @Test
-    public void shouldDiffWithCorrectDescendants() {
+    public void shouldDiffWithCorrectDescendantEntities() {
         var arch = emptyArch();
 
         var system1 = createSystem("1");
@@ -146,6 +148,31 @@ public class ArchitectureDiffCalculatorTest {
         var system2 = createSystem("1");
         var container2 = createContainer("2", "1");
         var component2 = createComponent("4", "2");
+
+        var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
+        var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
+
+        var diffs = ArchitectureDiffCalculator.diff(first, second);
+
+        collector.checkThat(
+                diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
+                equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
+        );
+    }
+
+    @Test
+    public void shouldDiffWithCorrectDescendantRelationships() {
+        var arch = emptyArch();
+
+        var system1 = createSystem("1");
+        var container1 = createContainer("2", "1");
+        var component1 = createComponent("3", "2");
+        component1.setRelationships(List.of(ArchitectureDataStructureHelper.createRelationship("r", "100")));
+
+        var system2 = createSystem("1");
+        var container2 = createContainer("2", "1");
+        var component2 = createComponent("3", "2");
+        component2.setRelationships(List.of(ArchitectureDataStructureHelper.createRelationship("r", "999")));
 
         var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
         var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());

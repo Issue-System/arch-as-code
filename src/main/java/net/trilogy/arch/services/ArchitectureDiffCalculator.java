@@ -47,22 +47,40 @@ public class ArchitectureDiffCalculator {
         );
     }
 
-    private static Set<DiffableEntity> getDescendants(Diffable diffable, ArchitectureDataStructure arch) {
-        if(!(diffable instanceof DiffableEntity)) return Set.of();
+    private static Set<Diffable> getDescendants(Diffable diffable, ArchitectureDataStructure arch) {
+        return getDescendants(diffable, arch, false);
+    }
+    private static Set<Diffable> getDescendants(Diffable diffable, ArchitectureDataStructure arch, boolean shouldAddRelationships) {
+        if(!(diffable instanceof DiffableEntity)) {
+            return Set.of();
+        }
         final var entity = ((DiffableEntity) diffable).getEntity();
+        final var results = new HashSet<Diffable>();
+
+        if(shouldAddRelationships){
+            results.addAll(
+                entity.getRelationships()
+                    .stream()
+                    .map(it -> new DiffableRelationship(entity, it))
+                    .collect(Collectors.toList())
+            );
+        }
+
         if(entity instanceof C4SoftwareSystem) {
-            Set<DiffableEntity> results = new HashSet<>();
             Set<C4Container> containers = getContainers((C4SoftwareSystem) entity, arch);
             for (C4Container container : containers) {
                 results.add(new DiffableEntity(container));
-                results.addAll(getDescendants(new DiffableEntity(container), arch));
+                results.addAll(getDescendants(new DiffableEntity(container), arch, true));
             }
-            return results;
         }
         if(entity instanceof C4Container) {
-            return getComponents((C4Container) entity, arch).stream().map(DiffableEntity::new).collect(Collectors.toSet());
+            Set<C4Component> components = getComponents((C4Container) entity, arch);
+            for (C4Component component : components) {
+                results.add(new DiffableEntity(component));
+                results.addAll(getDescendants(new DiffableEntity(component), arch, true));
+            }
         }
-        return Set.of();
+        return results;
     }
 
     private static Set<C4Container> getContainers(C4SoftwareSystem system, ArchitectureDataStructure arch) {

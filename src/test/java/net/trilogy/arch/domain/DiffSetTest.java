@@ -31,10 +31,7 @@ public class DiffSetTest {
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
         var actual = diffset.getSystemLevelDiffs();
 
-        assertThat(
-                actual,
-                equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithBoth))
-        );
+        assertThat(actual, equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithBoth)));
     }
 
     @Test
@@ -45,10 +42,7 @@ public class DiffSetTest {
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(containerOwnedBySystem, componentOwnedBySystem);
         var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
-        assertThat(
-                actual,
-                equalTo(Set.of(containerOwnedBySystem))
-        );
+        assertThat(actual, equalTo(Set.of(containerOwnedBySystem)));
     }
 
     @Test
@@ -69,10 +63,38 @@ public class DiffSetTest {
         );
         var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
-        assertThat(
-                actual,
-                equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth))
+        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth)));
+    }
+
+    @Test
+    public void componentLevelDiffsShouldHaveComponentsOwnedByContainer() {
+        var componentOwnedByContainer = getComponentDiff("component-id", getId(getContainerDiff()));
+
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(componentOwnedByContainer);
+        var actual = diffset.getComponentLevelDiffs(getContainerDiff().getElement().getId());
+
+        assertThat(actual, equalTo(Set.of(componentOwnedByContainer)));
+    }
+
+    @Test
+    public void componentLevelDiffsShouldHaveTheirRelationships() {
+        var component1OwnedByContainer = getComponentDiff("component-id-2", getId(getContainerDiff()));
+        var component2OwnedByContainer = getComponentDiff("component-id-1", getId(getContainerDiff()));
+
+        var relWithSource = getRelationshipDiff("1", getId(component1OwnedByContainer), getId(getComponentDiff()));
+        var relWithDestination = getRelationshipDiff("2", getId(getComponentDiff()), getId(component2OwnedByContainer));
+        var relWithBoth = getRelationshipDiff("3", getId(component1OwnedByContainer), getId(component2OwnedByContainer));
+
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(
+                component1OwnedByContainer,
+                component2OwnedByContainer,
+                relWithBoth,
+                relWithDestination,
+                relWithSource
         );
+        var actual = diffset.getComponentLevelDiffs(getContainerDiff().getElement().getId());
+
+        assertThat(actual, equalTo(Set.of(component1OwnedByContainer, component2OwnedByContainer, relWithBoth)));
     }
 
     private DiffSet getDiffSetWithAllTypesOfDiffs() {

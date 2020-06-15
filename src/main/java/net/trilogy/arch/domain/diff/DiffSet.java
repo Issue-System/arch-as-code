@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4Type;
 
@@ -39,6 +40,16 @@ public class DiffSet {
         var containers = this.diffs.stream()
                 .filter(diff -> diff.getElement().getType().equals(C4Type.container))
                 .filter(diff -> ((C4Container)((DiffableEntity) diff.getElement()).getEntity()).getSystemId().equals(systemId))
+                .collect(Collectors.toSet());
+
+        var relationships = findRelationshipsAmong(containers);
+        return setOf(containers, relationships);
+    }
+
+    public Set<Diff> getComponentLevelDiffs(String containerId) {
+        var containers = this.diffs.stream()
+                .filter(diff -> diff.getElement().getType().equals(C4Type.component))
+                .filter(diff -> ((C4Component)((DiffableEntity) diff.getElement()).getEntity()).getContainerId().equals(containerId))
                 .collect(Collectors.toSet());
 
         var relationships = findRelationshipsAmong(containers);
@@ -98,5 +109,4 @@ public class DiffSet {
             })
             .collect(Collectors.toList());
     }
-
 }

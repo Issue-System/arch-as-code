@@ -1,18 +1,19 @@
 package net.trilogy.arch.domain;
 
-import net.trilogy.arch.ArchitectureDataStructureHelper;
-import net.trilogy.arch.domain.diff.Diff;
-import net.trilogy.arch.domain.diff.DiffSet;
-import net.trilogy.arch.domain.diff.DiffableEntity;
-import net.trilogy.arch.domain.diff.DiffableRelationship;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import org.junit.Test;
+
+import net.trilogy.arch.ArchitectureDataStructureHelper;
+import net.trilogy.arch.domain.diff.Diff;
+import net.trilogy.arch.domain.diff.DiffSet;
+import net.trilogy.arch.domain.diff.DiffableEntity;
+import net.trilogy.arch.domain.diff.DiffableRelationship;
 
 public class DiffSetTest {
     @Test

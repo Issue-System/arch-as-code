@@ -1,27 +1,5 @@
 package net.trilogy.arch.e2e;
 
-import net.trilogy.arch.Application;
-import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.adapter.git.GitInterface;
-import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
-import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
-import net.trilogy.arch.adapter.jira.JiraApiFactory;
-import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.facade.FilesFacade;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.nio.file.Files;
-
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,7 +9,27 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DiffArchitectureCommandE2ETest {
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.nio.file.Files;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+
+import net.trilogy.arch.Application;
+import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.git.GitInterface;
+import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
+
+public class DiffCommandE2ETest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 

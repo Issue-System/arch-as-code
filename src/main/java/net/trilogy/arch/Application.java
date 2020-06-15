@@ -37,7 +37,7 @@ public class Application {
                 .addSubcommand(new PublishCommand())
                 .addSubcommand(new ImportCommand())
                 .addSubcommand(new ListComponentsCommand(filesFacade))
-                .addSubcommand(new DiffArchitectureCommand(filesFacade, gitInterface, graphvizInterface))
+                .addSubcommand(new DiffCommand(filesFacade, gitInterface, graphvizInterface))
                 .addSubcommand(
                         new CommandLine(new AuCommand())
                                 .addSubcommand(new AuInitializeCommand(filesFacade))

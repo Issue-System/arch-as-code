@@ -1,28 +1,21 @@
 package net.trilogy.arch.commands;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.concurrent.Callable;
+
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
-import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import net.trilogy.arch.services.DiffToDotCalculator;
 import picocli.CommandLine;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.concurrent.Callable;
-
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.parse.Parser;
-
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
-public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
+public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
     @Getter private final GitInterface gitInterface;
     @Getter private final FilesFacade filesFacade;
     private final GraphvizInterface graphvizInterface;
@@ -42,7 +35,7 @@ public class DiffArchitectureCommand implements Callable<Integer>, LoadArchitect
     @CommandLine.Option(names = {"-o", "--output-directory"}, description = "New directory in which svg files will be created.", required = true)
     private File outputDirectory;
 
-    public DiffArchitectureCommand(FilesFacade filesFacade, GitInterface gitInterface, GraphvizInterface graphvizInterface) {
+    public DiffCommand(FilesFacade filesFacade, GitInterface gitInterface, GraphvizInterface graphvizInterface) {
         this.filesFacade = filesFacade;
         this.gitInterface = gitInterface;
         this.graphvizInterface = graphvizInterface;

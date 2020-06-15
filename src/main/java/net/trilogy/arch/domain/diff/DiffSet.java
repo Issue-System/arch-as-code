@@ -1,20 +1,15 @@
 package net.trilogy.arch.domain.diff;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import net.trilogy.arch.domain.c4.C4Person;
-import net.trilogy.arch.domain.c4.C4SoftwareSystem;
-import net.trilogy.arch.domain.c4.C4Type;
-
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Sets;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import net.trilogy.arch.domain.c4.C4Type;
 
 @EqualsAndHashCode
 public class DiffSet {

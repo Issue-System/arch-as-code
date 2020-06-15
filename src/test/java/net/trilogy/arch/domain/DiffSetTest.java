@@ -1,17 +1,12 @@
 package net.trilogy.arch.domain;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.collect.Sets;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,15 +18,12 @@ import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 
 public class DiffSetTest {
-
-    @Ignore("TODO: FLAKY")
     @Test
     public void systemLevelDiffsShouldHaveSystemsAndPeople() throws Exception {
         DiffSet diffset = getDiffSetWithAllTypesOfDiffs();
-        assertThat(diffset.getSystemLevelDiffs(), contains(getPersonDiff(), getSystemDiff()));
+        assertThat(diffset.getSystemLevelDiffs(), equalTo(Set.of(getPersonDiff(), getSystemDiff())));
     }
 
-    @Ignore("TODO: FLAKY")
     @Test
     public void systemLevelDiffsShouldHaveTheRelationshipsThatReferToSystemsOrPeople() throws Exception {
         var relWithSource = new Diff(
@@ -42,10 +34,17 @@ public class DiffSetTest {
                 createRelationship("2", "bleh", getId(getSystemDiff())),
                 null
         );
+        var relWithBoth = new Diff(
+                createRelationship("2", getId(getPersonDiff()), getId(getSystemDiff())),
+                null
+        );
 
-        var diffset = getDiffSetWithAppTypesOfDiffsPlus(relWithSource, relWithDestination);
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
 
-        assertThat(diffset.getSystemLevelDiffs(), contains(getPersonDiff(), getSystemDiff(), relWithSource, relWithDestination));
+        assertThat(
+                diffset.getSystemLevelDiffs(),
+                equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithSource, relWithDestination, relWithBoth))
+        );
     }
 
     @Ignore("TODO")
@@ -76,7 +75,7 @@ public class DiffSetTest {
         ));
     }
 
-    private DiffSet getDiffSetWithAppTypesOfDiffsPlus(Diff... additionalDiffs) throws Exception {
+    private DiffSet getDiffSetWithAllTypesOfDiffsPlus(Diff... additionalDiffs) throws Exception {
         var diffs = new HashSet<Diff>(Set.of(additionalDiffs));
         diffs.addAll(getDiffSetWithAllTypesOfDiffs().getDiffs());
         return new DiffSet(diffs);

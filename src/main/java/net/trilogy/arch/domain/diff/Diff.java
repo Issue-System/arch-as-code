@@ -22,7 +22,6 @@ public class Diff {
     }
 
     public String toString() {
-        // TODO: Temporary solution until we play diagramming card
         String marker;
         if (status.equals(Status.UPDATED)) marker = "*";
         else if (status.equals(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)) marker = "~";

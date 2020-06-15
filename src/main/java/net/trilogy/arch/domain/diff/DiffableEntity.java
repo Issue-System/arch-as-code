@@ -45,8 +45,8 @@ public class DiffableEntity implements Diffable {
 
     @Override
     public int hashCode() {
-        var entity = this.entity.shallowCopy();
-        entity.setRelationships(List.of());
-        return entity.hashCode();
+        var dup = this.entity.shallowCopy();
+        dup.setRelationships(List.of());
+        return dup.hashCode();
     }
 }

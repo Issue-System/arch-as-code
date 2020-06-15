@@ -9,28 +9,46 @@ import java.util.stream.Stream;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4Type;
 
 @EqualsAndHashCode
 public class DiffSet {
 
-    @Getter
-    private final Set<Diff> diffs;
+    @Getter private final Set<Diff> diffs;
+
+    private final List<Diff> relationships;
 
     public DiffSet(Collection<Diff> diffs) {
         this.diffs = new LinkedHashSet<>(diffs);
+        this.relationships = this.diffs.stream()
+                .filter(diff -> C4Type.relationship.equals(diff.getElement().getType()))
+                .collect(Collectors.toList());
     }
 
     public Set<Diff> getSystemLevelDiffs() {
-        var systemsAndPeople = findSystemAndPeopleDiffs();
+        var systemsAndPeople = this.diffs.stream()
+                .filter(diff -> Set.of(C4Type.system, C4Type.person).contains(diff.getElement().getType()))
+                .collect(Collectors.toList());
+
         var relationships = findRelationshipsAmong(systemsAndPeople);
         return setOf(systemsAndPeople, relationships);
+    }
+
+    public Set<Diff> getContainerLevelDiffs(String systemId) {
+        var containers = this.diffs.stream()
+                .filter(diff -> diff.getElement().getType().equals(C4Type.container))
+                .filter(diff -> ((C4Container)((DiffableEntity) diff.getElement()).getEntity()).getSystemId().equals(systemId))
+                .collect(Collectors.toSet());
+
+        var relationships = findRelationshipsAmong(containers);
+        return setOf(containers, relationships);
     }
 
     @SafeVarargs
     private <T> Set<T> setOf(Collection<T>... itemCollections) {
         return Stream.of(itemCollections)
-            .flatMap(it -> it.stream())
+            .flatMap(Collection::stream)
             .collect(Collectors.toSet());
     }
 
@@ -51,7 +69,7 @@ public class DiffSet {
     }
 
     private List<Diff> findRelationshipsAmong(Collection<Diff> entityDiffs) {
-        return relationshipDiffs()
+        return relationships
             .stream()
             .filter(relDiff -> {
                 var element = ((DiffableRelationship) relDiff.getElement());
@@ -69,7 +87,7 @@ public class DiffSet {
     }
 
     private List<Diff> findRelationshipsThatReferToAnyOf(Collection<Diff> entityDiffs) {
-        return relationshipDiffs()
+        return relationships
             .stream()
             .filter(relDiff -> {
                 var element = ((DiffableRelationship) relDiff.getElement());
@@ -81,15 +99,4 @@ public class DiffSet {
             .collect(Collectors.toList());
     }
 
-    private List<Diff> relationshipDiffs() {
-        return this.diffs.stream()
-            .filter(diff -> C4Type.relationship.equals(diff.getElement().getType()))
-            .collect(Collectors.toList());
-    }
-
-    private List<Diff> findSystemAndPeopleDiffs() {
-        return this.diffs.stream()
-            .filter(diff -> Set.of(C4Type.system, C4Type.person).contains(diff.getElement().getType()))
-            .collect(Collectors.toList());
-    }
 }

@@ -1,82 +1,87 @@
 package net.trilogy.arch.domain;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import net.trilogy.arch.ArchitectureDataStructureHelper;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class DiffSetTest {
     @Test
     public void systemLevelDiffsShouldHaveSystemsAndPeople() {
-        DiffSet diffset = getDiffSetWithAllTypesOfDiffs();
-        assertThat(diffset.getSystemLevelDiffs(), equalTo(Set.of(getPersonDiff(), getSystemDiff())));
+        var diffset = getDiffSetWithAllTypesOfDiffs();
+        var actual = diffset.getSystemLevelDiffs();
+        assertThat(actual, equalTo(Set.of(getPersonDiff(), getSystemDiff())));
     }
 
-    // TODO: Trying out this new behaviour
     @Test
-    public void systemLevelDiffsShouldHaveTheRelationships() {
+    public void systemLevelDiffsShouldHaveTheirRelationships() {
         var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "bleh");
         var relWithDestination = getRelationshipDiff("2", "bleh", getId(getPersonDiff()));
         var relWithBoth = getRelationshipDiff("3", getId(getPersonDiff()), getId(getSystemDiff()));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
+        var actual = diffset.getSystemLevelDiffs();
 
         assertThat(
-                diffset.getSystemLevelDiffs(),
+                actual,
                 equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithBoth))
         );
     }
 
-    @Ignore("TODO: Trying out contrary behaviour")
     @Test
-    public void systemLevelDiffsShouldHaveTheRelationshipsThatReferToSystemsOrPeople() {
-        var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "bleh");
-        var relWithDestination = getRelationshipDiff("2", "bleh", getId(getPersonDiff()));
-        var relWithBoth = getRelationshipDiff("3", getId(getPersonDiff()), getId(getSystemDiff()));
+    public void containerLevelDiffsShouldHaveContainersOwnedBySystem() {
+        var containerOwnedBySystem = getContainerDiff("container-id", getId(getSystemDiff()));
+        var componentOwnedBySystem = getComponentDiff("component-id", getId(containerOwnedBySystem));
 
-        var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(containerOwnedBySystem, componentOwnedBySystem);
+        var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
         assertThat(
-                diffset.getSystemLevelDiffs(),
-                equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithSource, relWithDestination, relWithBoth))
+                actual,
+                equalTo(Set.of(containerOwnedBySystem))
         );
     }
 
-    @Ignore("TODO: Trying out contrary behaviour")
     @Test
-    public void systemLevelDiffsShouldHaveTheEntitiesThatAreRelatedToSystemsOrPeople() {
-        var container = getContainerDiff("container-id", "bleh");
-        var component = getComponentDiff("component-id", "bleh");
+    public void containerLevelDiffsShouldHaveTheirRelationships() {
+        var container1OwnedBySystem = getContainerDiff("container-id-2", getId(getSystemDiff()));
+        var container2OwnedBySystem = getContainerDiff("container-id-1", getId(getSystemDiff()));
 
-        var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "container-id");
-        var relWithDestination = getRelationshipDiff("2", "component-id", getId(getPersonDiff()));
+        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), getId(getContainerDiff()));
+        var relWithDestination = getRelationshipDiff("2", getId(getContainerDiff()), getId(container1OwnedBySystem));
+        var relWithBoth = getRelationshipDiff("3", getId(container1OwnedBySystem), getId(container2OwnedBySystem));
 
-        var diffset = getDiffSetWithAllTypesOfDiffsPlus(container, component, relWithDestination, relWithSource);
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(
+                container1OwnedBySystem,
+                container2OwnedBySystem,
+                relWithBoth,
+                relWithDestination,
+                relWithSource
+        );
+        var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
         assertThat(
-                diffset.getSystemLevelDiffs(),
-                equalTo(Set.of(getPersonDiff(), getSystemDiff(), relWithSource, relWithDestination, container, component))
+                actual,
+                equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth))
         );
     }
 
     private DiffSet getDiffSetWithAllTypesOfDiffs() {
         return new DiffSet(List.of(
-                    getRelationshipDiff(),
-                    getPersonDiff(),
-                    getSystemDiff(),
-                    getContainerDiff(),
-                    getComponentDiff()
+                getRelationshipDiff(),
+                getPersonDiff(),
+                getSystemDiff(),
+                getContainerDiff(),
+                getComponentDiff()
         ));
     }
 

@@ -48,7 +48,9 @@ public class Diff {
     }
 
     private Status calculateStatus() {
-        if (before == null && after == null) throw new UnsupportedOperationException();
+        if (before == null && after == null) throw new IllegalArgumentException(
+                "Can't create Diff if states 'before' and 'after' are both null."
+        );
         if (before == null) return Status.CREATED;
         if (after == null) return Status.DELETED;
         if (!before.equals(after)) return Status.UPDATED;

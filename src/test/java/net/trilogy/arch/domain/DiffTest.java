@@ -16,6 +16,16 @@ import java.util.Set;
 
 public class DiffTest {
 
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotCreateIfBothStatesNull_1() {
+        new Diff(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotCreateIfBothStatesNull_2() {
+        new Diff(null, Set.of(), null, Set.of());
+    }
+
     @Test
     public void shouldCalculateCreatedStatus() {
         final Diff diff = new Diff(

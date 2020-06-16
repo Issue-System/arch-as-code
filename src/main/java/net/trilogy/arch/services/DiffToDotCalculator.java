@@ -1,22 +1,32 @@
 package net.trilogy.arch.services;
 
-import java.util.Collection;
-
 import com.google.common.annotations.VisibleForTesting;
-
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+
 public class DiffToDotCalculator {
 
-    public static String toDot(String title, Collection<Diff> diffs) {
+    public static String toDot(String title, Collection<Diff> diffs, @Nullable Diff parentEntityDiff) {
         final var dot = new Dot();
-        dot.add(0, "digraph " + title + " {");
+        dot.add(0, "digraph \"" + title + "\" {");
         dot.add(1, "graph [rankdir=LR];");
         dot.add(0, "");
+        if (parentEntityDiff != null) {
+            dot.add(1, "subgraph \"cluster_" + parentEntityDiff.getElement().getId() + "\" {");
+            dot.add(2, "label=\"" + parentEntityDiff.getElement().getName() + "\";");
+            parentEntityDiff.getDescendants()
+                    .stream()
+                    .map(it -> "\""+it.getId()+"\";")
+                    .forEach(it -> dot.add(2, it));
+            dot.add(1, "}");
+            dot.add(0, "");
+        }
         diffs.stream()
-                .map(d -> toDot(d))
+                .map(DiffToDotCalculator::toDot)
                 .forEach(line -> dot.add(1, line));
         dot.add(0, "}");
         return dot.toString();

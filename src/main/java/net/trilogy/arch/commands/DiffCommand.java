@@ -59,7 +59,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         }
 
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        final String dotGraph = DiffToDotCalculator.toDot("diff", diffSet.getDiffs());
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffSet.getDiffs(), null);
 
         try {
             graphvizInterface.render(dotGraph, outputDir.resolve("architecture-diff.svg"));

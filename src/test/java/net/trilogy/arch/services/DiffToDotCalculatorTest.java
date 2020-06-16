@@ -1,7 +1,7 @@
 package net.trilogy.arch.services;
 
+import net.trilogy.arch.ArchitectureDataStructureHelper;
 import net.trilogy.arch.domain.diff.Diff;
-import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
 import org.junit.Test;
@@ -18,9 +18,9 @@ public class DiffToDotCalculatorTest {
 
     @Test
     public void shouldGenerateEmptyGraph() {
-        var actual = DiffToDotCalculator.toDot("title", Set.of());
+        var actual = DiffToDotCalculator.toDot("title", Set.of(), null);
         var expected = new StringBuilder();
-        appendln(expected, "digraph title {");
+        appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
         appendln(expected, "}");
@@ -28,22 +28,41 @@ public class DiffToDotCalculatorTest {
         assertThat(actual, equalTo(expected.toString()));
     }
 
+    @Test
+    public void shouldGenerateEmptyGraphWithParent() {
+        var parentSystem = new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createSystem("parent-system")),
+                null
+        );
+        var actual = DiffToDotCalculator.toDot("title", Set.of(), parentSystem);
+        var expected = new StringBuilder();
+        appendln(expected, "digraph \"title\" {");
+        appendln(expected, "    graph [rankdir=LR];");
+        appendln(expected, "");
+        appendln(expected, "    subgraph \"cluster_parent-system\" {");
+        appendln(expected, "        label=\"system-parent-system\";");
+        appendln(expected, "    }");
+        appendln(expected, "");
+        appendln(expected, "}");
+
+        assertThat(actual, equalTo(expected.toString()));
+    }
 
     @Test
-    public void shouldGenerateEntireGraph() {
+    public void shouldGenerateGraph() {
         var actual = DiffToDotCalculator.toDot("title", List.of(
                 new Diff(
-                    new DiffableEntity(createPerson("1")),
-                    new DiffableEntity(createPerson("1"))
+                        new DiffableEntity(createPerson("1")),
+                        new DiffableEntity(createPerson("1"))
                 ),
                 new Diff(
-                    new DiffableRelationship("1", createRelationship("10", "3")),
-                    new DiffableRelationship("1", createRelationship("10", "4"))
+                        new DiffableRelationship("1", createRelationship("10", "3")),
+                        new DiffableRelationship("1", createRelationship("10", "4"))
                 )
-        ));
+        ), null);
 
         var expected = new StringBuilder();
-        appendln(expected, "digraph title {");
+        appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
         appendln(expected, "    \"1\" [label=\"person-1 | person\", color=black, fontcolor=black, shape=Mrecord];");
@@ -51,8 +70,41 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
-
     }
+
+    @Test
+    public void shouldRenderNodesInsideParent() {
+        Diff diffOwnedByParent = new Diff(new DiffableEntity(createPerson("1")), null);
+        Diff diffNotOwnedByParent = new Diff(new DiffableEntity(createPerson("2")), null);
+        var diffs = List.of(
+                diffOwnedByParent,
+                diffNotOwnedByParent,
+                new Diff(new DiffableRelationship("1", createRelationship("10", "2")), null)
+        );
+        var parentSystem = new Diff(
+                new DiffableEntity(ArchitectureDataStructureHelper.createSystem("parent-system")),
+                Set.of(diffOwnedByParent.getElement()),
+                null,
+                null
+        );
+        var actual = DiffToDotCalculator.toDot("title", diffs, parentSystem);
+        var expected = new StringBuilder();
+        appendln(expected, "digraph \"title\" {");
+        appendln(expected, "    graph [rankdir=LR];");
+        appendln(expected, "");
+        appendln(expected, "    subgraph \"cluster_parent-system\" {");
+        appendln(expected, "        label=\"system-parent-system\";");
+        appendln(expected, "        \"1\";");
+        appendln(expected, "    }");
+        appendln(expected, "");
+        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=red, fontcolor=red, shape=Mrecord];");
+        appendln(expected, "    \"2\" [label=\"person-2 | person\", color=red, fontcolor=red, shape=Mrecord];");
+        appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red];");
+        appendln(expected, "}");
+
+        assertThat(actual, equalTo(expected.toString()));
+    }
+
 
     @Test
     public void shouldCalculateRightShape() {

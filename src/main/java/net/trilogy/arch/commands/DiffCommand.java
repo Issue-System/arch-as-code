@@ -2,12 +2,14 @@ package net.trilogy.arch.commands;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
+import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.services.ArchitectureDiffCalculator;
@@ -59,17 +61,26 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         }
 
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
-        final String dotGraph = DiffToDotCalculator.toDot("diff", diffSet.getDiffs(), null);
 
-        try {
-            graphvizInterface.render(dotGraph, outputDir.resolve("architecture-diff.svg"));
-        } catch (Exception e) {
-            printError("Unable to render SVG", e);
+        if (!render(diffSet.getDiffs(), null, outputDir.resolve("architecture-diff.svg"))) {
             return 1;
         }
 
         spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
 
         return 0;
+    }
+
+    private boolean render(Set<Diff> diffs, Diff parentEntityDiff, Path outputFile) {
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff);
+
+        try {
+            graphvizInterface.render(dotGraph, outputFile);
+        } catch (Exception e) {
+            printError("Unable to render SVG", e);
+            return false;
+        }
+
+        return true;
     }
 }

@@ -63,13 +63,21 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         Set<Diff> systemLevelDiffs = diffSet.getSystemLevelDiffs();
 
-        var success = render(systemLevelDiffs, null, outputDir.resolve("system-context-diagram.svg"));
+        // TODO: [TESTING] gap: not tested if the right linkPrefix is used
+        var success = render(systemLevelDiffs, null, outputDir.resolve("system-context-diagram.svg"), "assets/");
         for(var system : systemLevelDiffs) {
             if(!success) return 1;
             String systemId = system.getElement().getId();
             Set<Diff> containerLevelDiffs = diffSet.getContainerLevelDiffs(systemId);
             if(containerLevelDiffs.size() == 0) continue;
-            success = render(containerLevelDiffs, system, outputDir.resolve("assets/" + systemId + ".svg"));
+            success = render(containerLevelDiffs, system, outputDir.resolve("assets/" + systemId + ".svg"), "");
+            for(var container : containerLevelDiffs) {
+                if(!success) return 1;
+                String containerId = container.getElement().getId();
+                Set<Diff> componentLevelDiffs = diffSet.getComponentLevelDiffs(containerId);
+                if(componentLevelDiffs.size() == 0) continue;
+                success = render(componentLevelDiffs, container, outputDir.resolve("assets/" + containerId + ".svg"), "");
+            }
         }
         if(!success) return 1;
 
@@ -78,8 +86,8 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         return 0;
     }
 
-    private boolean render(Set<Diff> diffs, Diff parentEntityDiff, Path outputFile) {
-        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff, "assets");
+    private boolean render(Set<Diff> diffs, Diff parentEntityDiff, Path outputFile, String linkPrefix) {
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff, linkPrefix);
 
         try {
             graphvizInterface.render(dotGraph, outputFile);

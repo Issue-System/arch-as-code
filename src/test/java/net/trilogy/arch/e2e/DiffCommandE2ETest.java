@@ -125,11 +125,11 @@ public class DiffCommandE2ETest {
         execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
-        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(1L));
+        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(2L));
     }
 
     @Test
-    public void shouldCreateContainerLevelDiffSvgs() throws Exception {
+    public void shouldCreateContainerLevelDiffSvg() throws Exception {
         // GIVEN
         mockGitInterface();
         final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
@@ -146,6 +146,27 @@ public class DiffCommandE2ETest {
         collector.checkThat(svgContent, containsString("<title>12</title>"));
         collector.checkThat(svgContent, containsString("<title>11</title>"));
         collector.checkThat(svgContent, containsString("<title>10</title>"));
+    }
+
+    @Test
+    public void shouldCreateComponentLevelDiffSvg() throws Exception {
+        // GIVEN
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+
+        // WHEN
+        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
+        collector.checkThat(Files.exists(outputPath.resolve("assets/13.svg")), is(true));
+
+        final var svgContent = Files.readString(outputPath.resolve("assets/13.svg"));
+        collector.checkThat(svgContent, containsString("cluster_13"));
+        collector.checkThat(svgContent, containsString("<title>16</title>"));
+        collector.checkThat(svgContent, containsString("<title>14</title>"));
+        collector.checkThat(svgContent, containsString("<title>38</title>"));
+        collector.checkThat(svgContent, containsString("<title>15</title>"));
+        collector.checkThat(svgContent, containsString("<title>[SAMPLE&#45;COMPONENT&#45;ID]</title>"));
     }
 
     private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {

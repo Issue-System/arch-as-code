@@ -77,7 +77,7 @@ public class DiffToDotCalculator {
     static String getUrl(Diff diff, String linkPrefix) {
         boolean shouldHaveDiagram = diff.getDescendants().stream().anyMatch(it -> Set.of(C4Type.component, C4Type.container).contains(it.getType()));
         if (!shouldHaveDiagram) return "";
-        return linkPrefix + "/" + diff.getElement().getId() + ".svg";
+        return linkPrefix + diff.getElement().getId() + ".svg";
     }
 
     @VisibleForTesting

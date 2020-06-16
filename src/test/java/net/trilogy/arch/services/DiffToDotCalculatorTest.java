@@ -230,7 +230,7 @@ public class DiffToDotCalculatorTest {
                 null,
                 null
         );
-        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        String url = DiffToDotCalculator.getUrl(diff, "prefix/");
         assertThat(url, equalTo(""));
     }
 
@@ -242,7 +242,7 @@ public class DiffToDotCalculatorTest {
                 null,
                 null
         );
-        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        String url = DiffToDotCalculator.getUrl(diff, "prefix/");
         assertThat(url, equalTo("prefix/5.svg"));
     }
 
@@ -254,7 +254,7 @@ public class DiffToDotCalculatorTest {
                 null,
                 null
         );
-        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        String url = DiffToDotCalculator.getUrl(diff, "prefix/");
         assertThat(url, equalTo("prefix/5.svg"));
     }
 

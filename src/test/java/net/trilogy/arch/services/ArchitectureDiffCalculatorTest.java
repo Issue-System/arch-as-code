@@ -14,6 +14,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -139,6 +140,7 @@ public class ArchitectureDiffCalculatorTest {
 
     @Test
     public void shouldDiffWithCorrectDescendantEntities() {
+        // GIVEN
         var arch = emptyArch();
 
         var system1 = createSystem("1");
@@ -152,16 +154,26 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
         var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
 
+        // WHEN
         var diffs = ArchitectureDiffCalculator.diff(first, second);
 
+        // THEN
+        var actual = diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get();
+
         collector.checkThat(
-                diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
+                actual.getDescendants().stream().map(it -> it.getId()).collect(Collectors.toSet()),
+                equalTo(Set.of("2", "4"))
+        );
+
+        collector.checkThat(
+                actual.getStatus(),
                 equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
         );
     }
 
     @Test
     public void shouldDiffWithCorrectDescendantRelationships() {
+        // GIVEN
         var arch = emptyArch();
 
         var system1 = createSystem("1");
@@ -177,10 +189,19 @@ public class ArchitectureDiffCalculatorTest {
         var first = getArch(arch, Set.of(), Set.of(system1), Set.of(container1), Set.of(component1), Set.of());
         var second = getArch(arch, Set.of(), Set.of(system2), Set.of(container2), Set.of(component2), Set.of());
 
+        // WHEN
         var diffs = ArchitectureDiffCalculator.diff(first, second);
 
+        // THEN
+        var actual = diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get();
+
         collector.checkThat(
-                diffs.getDiffs().stream().filter(it -> it.getElement().getId() == "1").findAny().get().getStatus(),
+                actual.getDescendants().stream().map(it -> it.getId()).collect(Collectors.toSet()),
+                equalTo(Set.of("2", "3", "r"))
+        );
+
+        collector.checkThat(
+                actual.getStatus(),
                 equalTo(Status.NO_UPDATE_BUT_CHILDREN_UPDATED)
         );
     }

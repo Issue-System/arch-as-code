@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import com.google.common.annotations.VisibleForTesting;
+import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
@@ -8,10 +9,12 @@ import net.trilogy.arch.domain.diff.DiffableRelationship;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
 public class DiffToDotCalculator {
 
-    public static String toDot(String title, Collection<Diff> diffs, @Nullable Diff parentEntityDiff) {
+    public static String toDot(String title, Collection<Diff> diffs, @Nullable Diff parentEntityDiff, String linkPrefix) {
         final var dot = new Dot();
         dot.add(0, "digraph \"" + title + "\" {");
         dot.add(1, "graph [rankdir=LR];");
@@ -29,7 +32,7 @@ public class DiffToDotCalculator {
             dot.add(0, "");
         }
         diffs.stream()
-                .map(DiffToDotCalculator::toDot)
+                .map(diff -> toDot(diff, linkPrefix))
                 .forEach(line -> dot.add(1, line));
         dot.add(0, "}");
         return dot.toString();
@@ -71,18 +74,26 @@ public class DiffToDotCalculator {
     }
 
     @VisibleForTesting
-    static String toDot(Diff diff) {
+    static String getUrl(Diff diff, String linkPrefix) {
+        boolean shouldHaveDiagram = diff.getDescendants().stream().anyMatch(it -> Set.of(C4Type.component, C4Type.container).contains(it.getType()));
+        if (!shouldHaveDiagram) return "";
+        return linkPrefix + "/" + diff.getElement().getId() + ".svg";
+    }
+
+    @VisibleForTesting
+    static String toDot(Diff diff, String linkPrefix) {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
             return "\"" + entity.getId() + "\" " +
-                    "[label=\"" + entity.getName() + 
-                    
+                    "[label=\"" + entity.getName() +
+
                     // TODO: Temporary, until shapes are added
-                    " | " + entity.getType() + 
+                    " | " + entity.getType() +
 
                     "\", color=" + getDotColor(diff) +
                     ", fontcolor=" + getDotColor(diff) +
                     ", shape=" + getDotShape(entity) +
+                    ", URL=\"" + getUrl(diff, linkPrefix) + "\"" +
                     "];";
         }
         final var relationship = (DiffableRelationship) diff.getElement();

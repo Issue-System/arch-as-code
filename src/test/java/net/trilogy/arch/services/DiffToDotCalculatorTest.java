@@ -1,26 +1,29 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.ArchitectureDataStructureHelper;
-import net.trilogy.arch.domain.c4.C4Relationship;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
 
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createComponent;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createContainer;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createPersonWithRelationshipsTo;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createSystem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.fail;
 
 public class DiffToDotCalculatorTest {
 
     @Test
     public void shouldGenerateEmptyGraph() {
-        var actual = DiffToDotCalculator.toDot("title", Set.of(), null);
+        var actual = DiffToDotCalculator.toDot("title", Set.of(), null, "");
         var expected = new StringBuilder();
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
@@ -36,7 +39,7 @@ public class DiffToDotCalculatorTest {
                 new DiffableEntity(ArchitectureDataStructureHelper.createSystem("parent-system")),
                 null
         );
-        var actual = DiffToDotCalculator.toDot("title", Set.of(), parentSystem);
+        var actual = DiffToDotCalculator.toDot("title", Set.of(), parentSystem, "");
         var expected = new StringBuilder();
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
@@ -61,13 +64,13 @@ public class DiffToDotCalculatorTest {
                         new DiffableRelationship("1", createRelationship("10", "3")),
                         new DiffableRelationship("1", createRelationship("10", "4"))
                 )
-        ), null);
+        ), null, "");
 
         var expected = new StringBuilder();
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=black, fontcolor=black, shape=Mrecord];");
+        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");
 
@@ -91,7 +94,7 @@ public class DiffToDotCalculatorTest {
                 null,
                 null
         );
-        var actual = DiffToDotCalculator.toDot("title", diffsToDisplay, parentSystem);
+        var actual = DiffToDotCalculator.toDot("title", diffsToDisplay, parentSystem, "");
         var expected = new StringBuilder();
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
@@ -101,8 +104,8 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "        \"1\";");
         appendln(expected, "    }");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=red, fontcolor=red, shape=Mrecord];");
-        appendln(expected, "    \"2\" [label=\"person-2 | person\", color=red, fontcolor=red, shape=Mrecord];");
+        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"2\" [label=\"person-2 | person\", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red];");
         appendln(expected, "}");
 
@@ -197,12 +200,62 @@ public class DiffToDotCalculatorTest {
                 new Diff(
                         new DiffableRelationship(createPerson("4"), createRelationship("1", "5")),
                         new DiffableRelationship(createPerson("4"), createRelationship("1", "5"))
-                )
-        );
+                ),
+                "");
 
         var expected = "\"4\" -> \"5\" [label=\"d1\", color=black, fontcolor=black];";
 
         assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldNotGenerateUrlIfNoChildren() {
+        var diff = new Diff(
+                new DiffableEntity(createPerson("5")),
+                null
+        );
+        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        assertThat(url, equalTo(""));
+    }
+
+    @Test
+    public void shouldNotGenerateUrlIfWrongTypeOfChildren() {
+        var diff = new Diff(
+                new DiffableEntity(createPerson("5")),
+                Set.of(
+                        new DiffableEntity(createPerson("4")),
+                        new DiffableEntity(createSystem("3")),
+                        new DiffableRelationship("2", createRelationship("3", "4"))
+                ),
+                null,
+                null
+        );
+        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        assertThat(url, equalTo(""));
+    }
+
+    @Test
+    public void shouldGenerateUrlIfHasContainerChild() {
+        var diff = new Diff(
+                new DiffableEntity(createPerson("5")),
+                Set.of( new DiffableEntity(createContainer("4", "3")) ),
+                null,
+                null
+        );
+        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        assertThat(url, equalTo("prefix/5.svg"));
+    }
+
+    @Test
+    public void shouldGenerateUrlIfHasComponentChild() {
+        var diff = new Diff(
+                new DiffableEntity(createPerson("5")),
+                Set.of( new DiffableEntity(createComponent("4", "3")) ),
+                null,
+                null
+        );
+        String url = DiffToDotCalculator.getUrl(diff, "prefix");
+        assertThat(url, equalTo("prefix/5.svg"));
     }
 
     @Test
@@ -211,10 +264,10 @@ public class DiffToDotCalculatorTest {
                 new Diff(
                         new DiffableEntity(createPerson("4")),
                         new DiffableEntity(createPerson("4"))
-                )
-        );
+                ),
+                "assets");
 
-        var expected = "\"4\" [label=\"person-4 | person\", color=black, fontcolor=black, shape=Mrecord];";
+        var expected = "\"4\" [label=\"person-4 | person\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];";
 
         assertThat(actual, equalTo(expected));
     }

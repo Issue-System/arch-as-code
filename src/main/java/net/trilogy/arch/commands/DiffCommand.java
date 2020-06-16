@@ -79,7 +79,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
     }
 
     private boolean render(Set<Diff> diffs, Diff parentEntityDiff, Path outputFile) {
-        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff);
+        final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff, "assets");
 
         try {
             graphvizInterface.render(dotGraph, outputFile);

@@ -19,7 +19,6 @@ public class DiffToDotCalculator {
         if (parentEntityDiff != null) {
             dot.add(1, "subgraph \"cluster_" + parentEntityDiff.getElement().getId() + "\" {");
             dot.add(2, "label=\"" + parentEntityDiff.getElement().getName() + "\";");
-            dot.add(2, "style=filled;");
             parentEntityDiff.getDescendants()
                     .stream()
                     .filter(it -> diffs.stream().anyMatch(diff -> it.getId().equals(diff.getElement().getId())))

@@ -125,13 +125,10 @@ public class DiffCommandE2ETest {
         execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
-        collector.checkThat(Files.exists(outputPath.resolve("assets/6.svg")), is(true));
-        collector.checkThat(Files.exists(outputPath.resolve("assets/5.svg")), is(true));
-        collector.checkThat(Files.exists(outputPath.resolve("assets/7.svg")), is(true));
-        collector.checkThat(Files.exists(outputPath.resolve("assets/8.svg")), is(true));
-        collector.checkThat(Files.exists(outputPath.resolve("assets/9.svg")), is(true));
+        collector.checkThat(Files.list(outputPath.resolve("assets/container-level-diagrams")).count(), equalTo(1L));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/container-level-diagrams/9.svg")), is(true));
 
-        final var svgContent = Files.readString(outputPath.resolve("assets/9.svg"));
+        final var svgContent = Files.readString(outputPath.resolve("assets/container-level-diagrams/9.svg"));
         collector.checkThat(svgContent, containsString("cluster_9"));
         collector.checkThat(svgContent, containsString("<title>13</title>"));
         collector.checkThat(svgContent, containsString("<title>12</title>"));

@@ -67,7 +67,9 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         for(var system : systemLevelDiffs) {
             if(!success) return 1;
             String systemId = system.getElement().getId();
-            success = render(diffSet.getContainerLevelDiffs(systemId), system, outputDir.resolve("assets/" + systemId + ".svg"));
+            Set<Diff> containerLevelDiffs = diffSet.getContainerLevelDiffs(systemId);
+            if(containerLevelDiffs.size() == 0) continue;
+            success = render(containerLevelDiffs, system, outputDir.resolve("assets/container-level-diagrams/" + systemId + ".svg"));
         }
         if(!success) return 1;
 

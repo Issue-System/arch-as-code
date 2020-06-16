@@ -105,8 +105,8 @@ public class DiffSetTest {
         var component1OwnedByContainer = getComponentDiff("component-id-2", getId(getContainerDiff()));
         var component2OwnedByContainer = getComponentDiff("component-id-1", getId(getContainerDiff()));
 
-        var relWithSource = getRelationshipDiff("1", getId(component1OwnedByContainer), getId(getComponentDiff()));
-        var relWithDestination = getRelationshipDiff("2", getId(getComponentDiff()), getId(component2OwnedByContainer));
+        var relWithSource = getRelationshipDiff("1", getId(component1OwnedByContainer), "nonexistant-id");
+        var relWithDestination = getRelationshipDiff("2", "nonexistant-id", getId(component2OwnedByContainer));
         var relWithBoth = getRelationshipDiff("3", getId(component1OwnedByContainer), getId(component2OwnedByContainer));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(
@@ -118,7 +118,28 @@ public class DiffSetTest {
         );
         var actual = diffset.getComponentLevelDiffs(getContainerDiff().getElement().getId());
 
-        assertThat(actual, equalTo(Set.of(component1OwnedByContainer, component2OwnedByContainer, relWithBoth)));
+        assertThat(actual, equalTo(Set.of(component1OwnedByContainer, component2OwnedByContainer, relWithBoth, relWithSource, relWithDestination)));
+    }
+
+    @Test
+    public void componentLevelDiffsShouldHaveExternalEntities() {
+        var component = getComponentDiff("component", getId(getContainerDiff()));
+        var componentOutsideContainer = getComponentDiff("other-component", "nonexistant-owner");
+        var personOutsideContainer = getPersonDiff("other-person");
+
+        var relWithSource = getRelationshipDiff("1", getId(component),getId(componentOutsideContainer));
+        var relWithDestination = getRelationshipDiff("2",getId(personOutsideContainer), getId(component));
+
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(
+                component,
+                componentOutsideContainer,
+                personOutsideContainer,
+                relWithDestination,
+                relWithSource
+        );
+        var actual = diffset.getComponentLevelDiffs(getContainerDiff().getElement().getId());
+
+        assertThat(actual, equalTo(Set.of(component, componentOutsideContainer, personOutsideContainer, relWithSource, relWithDestination)));
     }
 
     private DiffSet getDiffSetWithAllTypesOfDiffs() {

@@ -54,8 +54,9 @@ public class DiffSet {
                 .filter(diff -> ((C4Component)((DiffableEntity) diff.getElement()).getEntity()).getContainerId().equals(containerId))
                 .collect(Collectors.toSet());
 
-        var relationships = findRelationshipsAmong(containers);
-        return setOf(containers, relationships);
+        var relationships = findRelationshipsThatReferToAnyOf(containers);
+        var otherRelatedEntities = findDiffsReferredToBy(relationships);
+        return setOf(containers, relationships, otherRelatedEntities);
     }
 
     @SafeVarargs

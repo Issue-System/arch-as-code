@@ -62,7 +62,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
 
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
 
-        if (!render(diffSet.getDiffs(), null, outputDir.resolve("architecture-diff.svg"))) {
+        if (!render(diffSet.getSystemLevelDiffs(), null, outputDir.resolve("system-context-diagram.svg"))) {
             return 1;
         }
 

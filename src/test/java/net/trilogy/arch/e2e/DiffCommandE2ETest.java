@@ -1,5 +1,24 @@
 package net.trilogy.arch.e2e;
 
+import net.trilogy.arch.Application;
+import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.adapter.git.GitInterface;
+import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
+import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.nio.file.Files;
+
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,26 +27,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.nio.file.Files;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
-import net.trilogy.arch.Application;
-import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.adapter.git.GitInterface;
-import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
-import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.facade.FilesFacade;
 
 public class DiffCommandE2ETest {
     @Rule
@@ -50,8 +49,7 @@ public class DiffCommandE2ETest {
         System.setOut(new PrintStream(out));
         System.setErr(new PrintStream(err));
 
-        rootDir = new File(
-                getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_DIFF_COMMAND).getPath());
+        rootDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_DIFF_COMMAND).getPath());
         outputDirParent = Files.createTempDirectory("aac").toFile();
 
         mockedGitInterface = mock(GitInterface.class);
@@ -87,7 +85,7 @@ public class DiffCommandE2ETest {
     }
 
     @Test
-    public void shouldCreateArchitectureDiffSvg() throws Exception {
+    public void shouldCreateSystemLevelDiffSvg() throws Exception {
         // GIVEN
         final String architectureAsString = new FilesFacade()
                 .readString(rootDir.toPath().resolve("product-architecture.yml"))
@@ -105,14 +103,16 @@ public class DiffCommandE2ETest {
         // THEN
         collector.checkThat(out.toString(),
                 equalTo("SVG files created in " + outputPath.toString() + "\n"));
-        collector.checkThat(Files.exists(outputPath.resolve("architecture-diff.svg")),
+        collector.checkThat(Files.exists(outputPath.resolve("system-context-diagram.svg")),
                 equalTo(true));
         collector.checkThat(err.toString(), equalTo(""));
         collector.checkThat(status, equalTo(0));
 
-        final var svgContent = Files.readString(outputPath.resolve("architecture-diff.svg"));
-        collector.checkThat(svgContent, containsString("16"));
-        collector.checkThat(svgContent, containsString("116"));
+        final var svgContent = Files.readString(outputPath.resolve("system-context-diagram.svg"));
+        collector.checkThat(svgContent, containsString("<title>2</title>")); // person
+        collector.checkThat(svgContent, containsString("<title>6</title>")); // system
+        collector.checkThat(svgContent, not(containsString("<title>13</title>"))); // container
+        collector.checkThat(svgContent, not(containsString("<title>14</title>"))); // component
     }
 
     @Test

@@ -42,8 +42,10 @@ public class DiffSet {
                 .filter(diff -> ((C4Container)((DiffableEntity) diff.getElement()).getEntity()).getSystemId().equals(systemId))
                 .collect(Collectors.toSet());
 
-        var relationships = findRelationshipsAmong(containers);
-        return setOf(containers, relationships);
+        var relationships = findRelationshipsThatReferToAnyOf(containers);
+        var otherRelatedEntities = findDiffsReferredToBy(relationships);
+
+        return setOf(containers, relationships, otherRelatedEntities);
     }
 
     public Set<Diff> getComponentLevelDiffs(String containerId) {

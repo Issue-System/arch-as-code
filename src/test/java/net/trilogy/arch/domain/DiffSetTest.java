@@ -24,8 +24,8 @@ public class DiffSetTest {
 
     @Test
     public void systemLevelDiffsShouldHaveTheirRelationships() {
-        var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "bleh");
-        var relWithDestination = getRelationshipDiff("2", "bleh", getId(getPersonDiff()));
+        var relWithSource = getRelationshipDiff("1", getId(getSystemDiff()), "nonexistant-id");
+        var relWithDestination = getRelationshipDiff("2", "nonexistant-id", getId(getPersonDiff()));
         var relWithBoth = getRelationshipDiff("3", getId(getPersonDiff()), getId(getSystemDiff()));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(relWithSource, relWithDestination, relWithBoth);
@@ -50,8 +50,8 @@ public class DiffSetTest {
         var container1OwnedBySystem = getContainerDiff("container-id-2", getId(getSystemDiff()));
         var container2OwnedBySystem = getContainerDiff("container-id-1", getId(getSystemDiff()));
 
-        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), getId(getContainerDiff()));
-        var relWithDestination = getRelationshipDiff("2", getId(getContainerDiff()), getId(container1OwnedBySystem));
+        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), "nonexistant-id");
+        var relWithDestination = getRelationshipDiff("2", "nonexistant-id", getId(container1OwnedBySystem));
         var relWithBoth = getRelationshipDiff("3", getId(container1OwnedBySystem), getId(container2OwnedBySystem));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(
@@ -63,7 +63,31 @@ public class DiffSetTest {
         );
         var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
-        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth)));
+        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth, relWithSource, relWithDestination)));
+    }
+
+    @Test
+    public void containerLevelDiffsShouldHaveExternalEntities() {
+        // GIVEN
+        var container = getContainerDiff("container", getId(getSystemDiff()));
+        var componentOutsideSystem = getComponentDiff("other-component", "nonexistant-owner");
+        var personOutsideSystem = getPersonDiff("other-person");
+
+        var relWithSource = getRelationshipDiff("1", getId(container), getId(componentOutsideSystem));
+        var relWithDestination = getRelationshipDiff("2", getId(personOutsideSystem), getId(container));
+
+        // WHEN
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(
+                container,
+                componentOutsideSystem,
+                personOutsideSystem,
+                relWithDestination,
+                relWithSource
+        );
+        var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
+
+        // THEN
+        assertThat(actual, equalTo(Set.of(container, componentOutsideSystem, personOutsideSystem, relWithSource, relWithDestination)));
     }
 
     @Test

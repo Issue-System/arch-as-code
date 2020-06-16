@@ -8,6 +8,7 @@ import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,12 +17,14 @@ import org.junit.rules.ErrorCollector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 
 import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -66,13 +69,7 @@ public class DiffCommandE2ETest {
     @Test
     public void shouldFailIfCannotCreateDirectory() throws Exception {
         // GIVEN
-        final String architectureAsString = new FilesFacade()
-                .readString(rootDir.toPath().resolve("product-architecture.yml"))
-                .replaceAll("id: \"16\"", "id: \"116\"");
-        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper()
-                .readValue(architectureAsString);
-        when(mockedGitInterface.load("master",
-                rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
+        mockGitInterface();
 
         // WHEN
         final int status = execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o "
@@ -85,29 +82,32 @@ public class DiffCommandE2ETest {
     }
 
     @Test
-    public void shouldCreateSystemLevelDiffSvg() throws Exception {
+    public void shouldHaveRightOutput() throws Exception {
         // GIVEN
-        final String architectureAsString = new FilesFacade()
-                .readString(rootDir.toPath().resolve("product-architecture.yml"))
-                .replaceAll("id: \"16\"", "id: \"116\"");
-        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper()
-                .readValue(architectureAsString);
-        when(mockedGitInterface.load("master",
-                rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
 
         // WHEN
-        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
         final Integer status = execute(app,
                 "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
         collector.checkThat(out.toString(),
                 equalTo("SVG files created in " + outputPath.toString() + "\n"));
-        collector.checkThat(Files.exists(outputPath.resolve("system-context-diagram.svg")),
-                equalTo(true));
         collector.checkThat(err.toString(), equalTo(""));
         collector.checkThat(status, equalTo(0));
+    }
 
+    @Test
+    public void shouldCreateSystemLevelDiffSvg() throws Exception {
+        // GIVEN
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+
+        // WHEN
+        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
         final var svgContent = Files.readString(outputPath.resolve("system-context-diagram.svg"));
         collector.checkThat(svgContent, containsString("<title>2</title>")); // person
         collector.checkThat(svgContent, containsString("<title>6</title>")); // system
@@ -116,8 +116,30 @@ public class DiffCommandE2ETest {
     }
 
     @Test
-    public void shouldHandleIfGraphvizFails() throws Exception {
+    public void shouldCreateContainerLevelDiffSvgs() throws Exception {
         // GIVEN
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+
+        // WHEN
+        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
+        collector.checkThat(Files.exists(outputPath.resolve("assets/6.svg")), is(true));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/5.svg")), is(true));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/7.svg")), is(true));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/8.svg")), is(true));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/9.svg")), is(true));
+
+        final var svgContent = Files.readString(outputPath.resolve("assets/9.svg"));
+        collector.checkThat(svgContent, containsString("cluster_9"));
+        collector.checkThat(svgContent, containsString("<title>13</title>"));
+        collector.checkThat(svgContent, containsString("<title>12</title>"));
+        collector.checkThat(svgContent, containsString("<title>11</title>"));
+        collector.checkThat(svgContent, containsString("<title>10</title>"));
+    }
+
+    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
         final String architectureAsString = new FilesFacade()
                 .readString(rootDir.toPath().resolve("product-architecture.yml"))
                 .replaceAll("id: \"16\"", "id: \"116\"");
@@ -125,7 +147,13 @@ public class DiffCommandE2ETest {
                 .readValue(architectureAsString);
         when(mockedGitInterface.load("master",
                 rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
-        
+    }
+
+    @Test
+    public void shouldHandleIfGraphvizFails() throws Exception {
+        // GIVEN
+        mockGitInterface();
+
         final var mockedGraphvizInterface = mock(GraphvizInterface.class);
         doThrow(new RuntimeException("BOOM!")).when(mockedGraphvizInterface).render(any(), any());
 

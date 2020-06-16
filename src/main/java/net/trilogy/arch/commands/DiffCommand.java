@@ -61,10 +61,15 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         }
 
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
+        Set<Diff> systemLevelDiffs = diffSet.getSystemLevelDiffs();
 
-        if (!render(diffSet.getSystemLevelDiffs(), null, outputDir.resolve("system-context-diagram.svg"))) {
-            return 1;
+        var success = render(systemLevelDiffs, null, outputDir.resolve("system-context-diagram.svg"));
+        for(var system : systemLevelDiffs) {
+            if(!success) return 1;
+            String systemId = system.getElement().getId();
+            success = render(diffSet.getContainerLevelDiffs(systemId), system, outputDir.resolve("assets/" + systemId + ".svg"));
         }
+        if(!success) return 1;
 
         spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
 

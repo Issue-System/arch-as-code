@@ -116,6 +116,19 @@ public class DiffCommandE2ETest {
     }
 
     @Test
+    public void shouldCreateRightNumberOfDiagrams() throws Exception {
+        // GIVEN
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+
+        // WHEN
+        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
+        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(1L));
+    }
+
+    @Test
     public void shouldCreateContainerLevelDiffSvgs() throws Exception {
         // GIVEN
         mockGitInterface();
@@ -125,10 +138,9 @@ public class DiffCommandE2ETest {
         execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
-        collector.checkThat(Files.list(outputPath.resolve("assets/container-level-diagrams")).count(), equalTo(1L));
-        collector.checkThat(Files.exists(outputPath.resolve("assets/container-level-diagrams/9.svg")), is(true));
+        collector.checkThat(Files.exists(outputPath.resolve("assets/9.svg")), is(true));
 
-        final var svgContent = Files.readString(outputPath.resolve("assets/container-level-diagrams/9.svg"));
+        final var svgContent = Files.readString(outputPath.resolve("assets/9.svg"));
         collector.checkThat(svgContent, containsString("cluster_9"));
         collector.checkThat(svgContent, containsString("<title>13</title>"));
         collector.checkThat(svgContent, containsString("<title>12</title>"));

@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.ArchitectureDataStructureHelper;
+import net.trilogy.arch.domain.c4.C4Relationship;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.createPersonWithRelationshipsTo;
 import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -76,14 +78,15 @@ public class DiffToDotCalculatorTest {
     public void shouldRenderNodesInsideParent() {
         Diff diffOwnedByParent = new Diff(new DiffableEntity(createPerson("1")), null);
         Diff diffNotOwnedByParent = new Diff(new DiffableEntity(createPerson("2")), null);
+        Diff diffOfRelationship = new Diff(new DiffableRelationship("1", createRelationship("10", "2")), null);
         var diffs = List.of(
                 diffOwnedByParent,
                 diffNotOwnedByParent,
-                new Diff(new DiffableRelationship("1", createRelationship("10", "2")), null)
+                diffOfRelationship
         );
         var parentSystem = new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createSystem("parent-system")),
-                Set.of(diffOwnedByParent.getElement()),
+                Set.of(diffOwnedByParent.getElement(), diffOfRelationship.getElement()),
                 null,
                 null
         );

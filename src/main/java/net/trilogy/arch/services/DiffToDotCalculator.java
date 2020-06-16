@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import com.google.common.annotations.VisibleForTesting;
+import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
@@ -20,6 +21,7 @@ public class DiffToDotCalculator {
             dot.add(2, "label=\"" + parentEntityDiff.getElement().getName() + "\";");
             parentEntityDiff.getDescendants()
                     .stream()
+                    .filter(it -> !it.getType().equals(C4Type.relationship))
                     .map(it -> "\""+it.getId()+"\";")
                     .forEach(it -> dot.add(2, it));
             dot.add(1, "}");

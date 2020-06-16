@@ -21,6 +21,7 @@ public class DiffToDotCalculator {
             dot.add(2, "label=\"" + parentEntityDiff.getElement().getName() + "\";");
             parentEntityDiff.getDescendants()
                     .stream()
+                    .filter(it -> diffs.stream().anyMatch(diff -> it.getId().equals(diff.getElement().getId())))
                     .filter(it -> !it.getType().equals(C4Type.relationship))
                     .map(it -> "\""+it.getId()+"\";")
                     .forEach(it -> dot.add(2, it));

@@ -79,18 +79,19 @@ public class DiffToDotCalculatorTest {
         Diff diffOwnedByParent = new Diff(new DiffableEntity(createPerson("1")), null);
         Diff diffNotOwnedByParent = new Diff(new DiffableEntity(createPerson("2")), null);
         Diff diffOfRelationship = new Diff(new DiffableRelationship("1", createRelationship("10", "2")), null);
-        var diffs = List.of(
+        Diff descendentDiffToNotDisplay = new Diff(new DiffableEntity(createPerson("3")), null);
+        var diffsToDisplay = List.of(
                 diffOwnedByParent,
                 diffNotOwnedByParent,
                 diffOfRelationship
         );
         var parentSystem = new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createSystem("parent-system")),
-                Set.of(diffOwnedByParent.getElement(), diffOfRelationship.getElement()),
+                Set.of(diffOwnedByParent.getElement(), diffOfRelationship.getElement(), descendentDiffToNotDisplay.getElement()),
                 null,
                 null
         );
-        var actual = DiffToDotCalculator.toDot("title", diffs, parentSystem);
+        var actual = DiffToDotCalculator.toDot("title", diffsToDisplay, parentSystem);
         var expected = new StringBuilder();
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");

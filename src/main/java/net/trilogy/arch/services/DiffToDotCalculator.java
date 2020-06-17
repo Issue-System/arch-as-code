@@ -1,7 +1,6 @@
 package net.trilogy.arch.services;
 
 import com.google.common.annotations.VisibleForTesting;
-import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
@@ -9,7 +8,6 @@ import net.trilogy.arch.domain.diff.DiffableRelationship;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 public class DiffToDotCalculator {
@@ -26,7 +24,7 @@ public class DiffToDotCalculator {
                     .stream()
                     .filter(it -> diffs.stream().anyMatch(diff -> it.getId().equals(diff.getElement().getId())))
                     .filter(it -> !it.getType().equals(C4Type.relationship))
-                    .map(it -> "\""+it.getId()+"\";")
+                    .map(it -> "\"" + it.getId() + "\";")
                     .forEach(it -> dot.add(2, it));
             dot.add(1, "}");
             dot.add(0, "");
@@ -75,8 +73,12 @@ public class DiffToDotCalculator {
 
     @VisibleForTesting
     static String getUrl(Diff diff, String linkPrefix) {
-        boolean shouldHaveDiagram = diff.getDescendants().stream().anyMatch(it -> Set.of(C4Type.component, C4Type.container).contains(it.getType()));
+        boolean shouldHaveDiagram = diff.getDescendants().stream()
+                .anyMatch(it -> Set.of(C4Type.component, C4Type.container)
+                        .contains(it.getType()));
+
         if (!shouldHaveDiagram) return "";
+
         return linkPrefix + diff.getElement().getId() + ".svg";
     }
 
@@ -97,7 +99,7 @@ public class DiffToDotCalculator {
                     "];";
         }
         final var relationship = (DiffableRelationship) diff.getElement();
-        return "\"" + 
+        return "\"" +
                 relationship.getSourceId() + "\" -> \"" + relationship.getRelationship().getWithId() +
                 "\" " +
                 "[label=\"" + relationship.getName() +

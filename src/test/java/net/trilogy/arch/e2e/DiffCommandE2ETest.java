@@ -22,14 +22,9 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DiffCommandE2ETest {
     @Rule
@@ -105,7 +100,7 @@ public class DiffCommandE2ETest {
         final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
 
         // WHEN
-        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+        execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
         final var svgContent = Files.readString(outputPath.resolve("system-context-diagram.svg"));
@@ -113,19 +108,7 @@ public class DiffCommandE2ETest {
         collector.checkThat(svgContent, containsString("<title>6</title>")); // system
         collector.checkThat(svgContent, not(containsString("<title>13</title>"))); // container
         collector.checkThat(svgContent, not(containsString("<title>14</title>"))); // component
-    }
-
-    @Test
-    public void shouldCreateRightNumberOfDiagrams() throws Exception {
-        // GIVEN
-        mockGitInterface();
-        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
-
-        // WHEN
-        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
-
-        // THEN
-        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(2L));
+        collector.checkThat(svgContent, containsString("<a xlink:href=\"assets/9.svg\"")); // system url
     }
 
     @Test
@@ -135,7 +118,7 @@ public class DiffCommandE2ETest {
         final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
 
         // WHEN
-        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+        execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
         collector.checkThat(Files.exists(outputPath.resolve("assets/9.svg")), is(true));
@@ -146,6 +129,7 @@ public class DiffCommandE2ETest {
         collector.checkThat(svgContent, containsString("<title>12</title>"));
         collector.checkThat(svgContent, containsString("<title>11</title>"));
         collector.checkThat(svgContent, containsString("<title>10</title>"));
+        collector.checkThat(svgContent, containsString("<a xlink:href=\"13.svg\"")); // container url
     }
 
     @Test
@@ -155,7 +139,7 @@ public class DiffCommandE2ETest {
         final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
 
         // WHEN
-        execute(app,"diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+        execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
         collector.checkThat(Files.exists(outputPath.resolve("assets/13.svg")), is(true));
@@ -169,14 +153,17 @@ public class DiffCommandE2ETest {
         collector.checkThat(svgContent, containsString("<title>[SAMPLE&#45;COMPONENT&#45;ID]</title>"));
     }
 
-    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
-        final String architectureAsString = new FilesFacade()
-                .readString(rootDir.toPath().resolve("product-architecture.yml"))
-                .replaceAll("id: \"16\"", "id: \"116\"");
-        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper()
-                .readValue(architectureAsString);
-        when(mockedGitInterface.load("master",
-                rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
+    @Test
+    public void shouldCreateRightNumberOfDiagrams() throws Exception {
+        // GIVEN
+        mockGitInterface();
+        final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
+
+        // WHEN
+        execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
+
+        // THEN
+        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(2L));
     }
 
     @Test
@@ -188,9 +175,9 @@ public class DiffCommandE2ETest {
         doThrow(new RuntimeException("BOOM!")).when(mockedGraphvizInterface).render(any(), any());
 
         var app = Application.builder()
-            .gitInterface(mockedGitInterface)
-            .graphvizInterface(mockedGraphvizInterface)
-            .build();
+                .gitInterface(mockedGitInterface)
+                .graphvizInterface(mockedGraphvizInterface)
+                .build();
 
         // WHEN
         final var outputPath = outputDirParent.toPath().resolve("ourOutputDir").toAbsolutePath();
@@ -201,5 +188,15 @@ public class DiffCommandE2ETest {
         collector.checkThat(status, not(equalTo(0)));
         collector.checkThat(err.toString(), containsString("Unable to render SVG"));
         collector.checkThat(out.toString(), equalTo(""));
+    }
+
+    private void mockGitInterface() throws IOException, GitAPIException, GitInterface.BranchNotFoundException {
+        final String architectureAsString = new FilesFacade()
+                .readString(rootDir.toPath().resolve("product-architecture.yml"))
+                .replaceAll("id: \"16\"", "id: \"116\"");
+        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper()
+                .readValue(architectureAsString);
+        when(mockedGitInterface.load("master",
+                rootDir.toPath().resolve("product-architecture.yml"))).thenReturn(dataStructure);
     }
 }

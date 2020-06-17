@@ -1,10 +1,5 @@
 package net.trilogy.arch.commands;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.concurrent.Callable;
-
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
@@ -16,12 +11,20 @@ import net.trilogy.arch.services.ArchitectureDiffCalculator;
 import net.trilogy.arch.services.DiffToDotCalculator;
 import picocli.CommandLine;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.concurrent.Callable;
+
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
 public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
-    @Getter private final GitInterface gitInterface;
-    @Getter private final FilesFacade filesFacade;
+    @Getter
+    private final GitInterface gitInterface;
+    @Getter
+    private final FilesFacade filesFacade;
     private final GraphvizInterface graphvizInterface;
-    @Getter private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
+    @Getter
+    private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
 
     @Getter
     @CommandLine.Spec
@@ -63,23 +66,22 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         final DiffSet diffSet = ArchitectureDiffCalculator.diff(beforeArch.get(), currentArch.get());
         Set<Diff> systemLevelDiffs = diffSet.getSystemLevelDiffs();
 
-        // TODO: [TESTING] gap: not tested if the right linkPrefix is used
         var success = render(systemLevelDiffs, null, outputDir.resolve("system-context-diagram.svg"), "assets/");
-        for(var system : systemLevelDiffs) {
-            if(!success) return 1;
+        for (var system : systemLevelDiffs) {
+            if (!success) return 1;
             String systemId = system.getElement().getId();
             Set<Diff> containerLevelDiffs = diffSet.getContainerLevelDiffs(systemId);
-            if(containerLevelDiffs.size() == 0) continue;
+            if (containerLevelDiffs.size() == 0) continue;
             success = render(containerLevelDiffs, system, outputDir.resolve("assets/" + systemId + ".svg"), "");
-            for(var container : containerLevelDiffs) {
-                if(!success) return 1;
+            for (var container : containerLevelDiffs) {
+                if (!success) return 1;
                 String containerId = container.getElement().getId();
                 Set<Diff> componentLevelDiffs = diffSet.getComponentLevelDiffs(containerId);
-                if(componentLevelDiffs.size() == 0) continue;
+                if (componentLevelDiffs.size() == 0) continue;
                 success = render(componentLevelDiffs, container, outputDir.resolve("assets/" + containerId + ".svg"), "");
             }
         }
-        if(!success) return 1;
+        if (!success) return 1;
 
         spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
 

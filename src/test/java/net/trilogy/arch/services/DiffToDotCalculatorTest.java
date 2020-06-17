@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.ArchitectureDataStructureHelper;
+import net.trilogy.arch.domain.c4.C4Path;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
@@ -70,7 +71,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=\"person-1 | person | \", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");
 
@@ -104,8 +105,8 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "        \"1\";");
         appendln(expected, "    }");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person\", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
-        appendln(expected, "    \"2\" [label=\"person-2 | person\", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=\"person-1 | person | \", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"2\" [label=\"person-2 | person | \", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red];");
         appendln(expected, "}");
 
@@ -260,14 +261,16 @@ public class DiffToDotCalculatorTest {
 
     @Test
     public void shouldGenerateEntityDotEntry() {
+        var person = createPerson("4");
+        person.setPath(C4Path.path("@person-4"));
         var actual = DiffToDotCalculator.toDot(
                 new Diff(
-                        new DiffableEntity(createPerson("4")),
-                        new DiffableEntity(createPerson("4"))
+                        new DiffableEntity(person),
+                        new DiffableEntity(person)
                 ),
                 "assets");
 
-        var expected = "\"4\" [label=\"person-4 | person\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];";
+        var expected = "\"4\" [label=\"person-4 | person | @person-4\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];";
 
         assertThat(actual, equalTo(expected));
     }

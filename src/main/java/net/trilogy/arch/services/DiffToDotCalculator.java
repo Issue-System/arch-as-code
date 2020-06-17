@@ -82,6 +82,10 @@ public class DiffToDotCalculator {
         return linkPrefix + diff.getElement().getId() + ".svg";
     }
 
+    private static String getPath(DiffableEntity entity) {
+        return entity.getEntity().getPath() == null ? "" : entity.getEntity().getPath().getPath();
+    }
+
     @VisibleForTesting
     static String toDot(Diff diff, String linkPrefix) {
         if (diff.getElement() instanceof DiffableEntity) {
@@ -92,6 +96,7 @@ public class DiffToDotCalculator {
                     // TODO: Temporary, until shapes are added
                     " | " + entity.getType() +
 
+                    " | " + getPath(entity) +
                     "\", color=" + getDotColor(diff) +
                     ", fontcolor=" + getDotColor(diff) +
                     ", shape=" + getDotShape(entity) +

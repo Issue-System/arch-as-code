@@ -42,7 +42,15 @@ public class DiffSet {
                 .filter(diff -> ((C4Container)((DiffableEntity) diff.getElement()).getEntity()).getSystemId().equals(systemId))
                 .collect(Collectors.toSet());
 
-        var relationships = findRelationshipsThatReferToAnyOf(containers);
+        var relationships = findRelationshipsThatReferToAnyOf(containers).stream()
+                .filter(r -> {
+                    final String sourceId = ((DiffableRelationship) r.getElement()).getSourceId();
+                    return findById(sourceId).stream().noneMatch(it -> it.getElement().getType().equals(C4Type.component));
+                })        .filter(r -> {
+                    final String destId = ((DiffableRelationship) r.getElement()).getRelationship().getWithId();
+                    return findById(destId).stream().noneMatch(it -> it.getElement().getType().equals(C4Type.component));
+                })
+                .collect(Collectors.toSet());
         var otherRelatedEntities = findDiffsReferredToBy(relationships);
 
         return setOf(containers, relationships, otherRelatedEntities);

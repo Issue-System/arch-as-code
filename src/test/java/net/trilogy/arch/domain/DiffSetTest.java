@@ -50,8 +50,9 @@ public class DiffSetTest {
         var container1OwnedBySystem = getContainerDiff("container-id-2", getId(getSystemDiff()));
         var container2OwnedBySystem = getContainerDiff("container-id-1", getId(getSystemDiff()));
 
-        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), "nonexistant-id");
-        var relWithDestination = getRelationshipDiff("2", "nonexistant-id", getId(container1OwnedBySystem));
+        final Diff externalContainer = getContainerDiff();
+        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), getId(externalContainer));
+        var relWithDestination = getRelationshipDiff("2", getId(externalContainer), getId(container1OwnedBySystem));
         var relWithBoth = getRelationshipDiff("3", getId(container1OwnedBySystem), getId(container2OwnedBySystem));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(
@@ -63,31 +64,64 @@ public class DiffSetTest {
         );
         var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
-        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, relWithBoth, relWithSource, relWithDestination)));
+        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem, externalContainer, relWithBoth, relWithSource, relWithDestination)));
+    }
+
+    @Test
+    public void containerLevelDiffsShouldNotHaveComponentsAndTheirRelationships() {
+        var container1OwnedBySystem = getContainerDiff("container-id-2", getId(getSystemDiff()));
+        var container2OwnedBySystem = getContainerDiff("container-id-1", getId(getSystemDiff()));
+
+        var relWithSource = getRelationshipDiff("1", getId(container1OwnedBySystem), getId(getComponentDiff()));
+        var relWithDestination = getRelationshipDiff("2", getId(getComponentDiff()), getId(container1OwnedBySystem));
+
+        var diffset = getDiffSetWithAllTypesOfDiffsPlus(
+                container1OwnedBySystem,
+                container2OwnedBySystem,
+                relWithDestination,
+                relWithSource
+        );
+        var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
+
+        assertThat(actual, equalTo(Set.of(container1OwnedBySystem, container2OwnedBySystem)));
     }
 
     @Test
     public void containerLevelDiffsShouldHaveExternalEntities() {
         // GIVEN
         var container = getContainerDiff("container", getId(getSystemDiff()));
-        var componentOutsideSystem = getComponentDiff("other-component", "nonexistant-owner");
         var personOutsideSystem = getPersonDiff("other-person");
+        var outsideSystem = getSystemDiff("other-system");
+        var containerOutsideSystem = getContainerDiff("other-container", "other-system");
 
-        var relWithSource = getRelationshipDiff("1", getId(container), getId(componentOutsideSystem));
-        var relWithDestination = getRelationshipDiff("2", getId(personOutsideSystem), getId(container));
+
+        var relWithSystem = getRelationshipDiff("1", getId(container), getId(outsideSystem));
+        var relWithPerson = getRelationshipDiff("2", getId(personOutsideSystem), getId(container));
+        var relWithContainer = getRelationshipDiff("3", getId(containerOutsideSystem), getId(container));
+
 
         // WHEN
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(
                 container,
-                componentOutsideSystem,
                 personOutsideSystem,
-                relWithDestination,
-                relWithSource
+                outsideSystem,
+                containerOutsideSystem,
+                relWithSystem,
+                relWithPerson,
+                relWithContainer
         );
         var actual = diffset.getContainerLevelDiffs(getSystemDiff().getElement().getId());
 
         // THEN
-        assertThat(actual, equalTo(Set.of(container, componentOutsideSystem, personOutsideSystem, relWithSource, relWithDestination)));
+        assertThat(actual, equalTo(
+                Set.of(container,
+                        personOutsideSystem,
+                        outsideSystem,
+                        containerOutsideSystem,
+                        relWithSystem,
+                        relWithPerson,
+                        relWithContainer)
+        ));
     }
 
     @Test
@@ -127,8 +161,8 @@ public class DiffSetTest {
         var componentOutsideContainer = getComponentDiff("other-component", "nonexistant-owner");
         var personOutsideContainer = getPersonDiff("other-person");
 
-        var relWithSource = getRelationshipDiff("1", getId(component),getId(componentOutsideContainer));
-        var relWithDestination = getRelationshipDiff("2",getId(personOutsideContainer), getId(component));
+        var relWithSource = getRelationshipDiff("1", getId(component), getId(componentOutsideContainer));
+        var relWithDestination = getRelationshipDiff("2", getId(personOutsideContainer), getId(component));
 
         var diffset = getDiffSetWithAllTypesOfDiffsPlus(
                 component,
@@ -161,6 +195,7 @@ public class DiffSetTest {
     private Diff getPersonDiff() {
         return getPersonDiff("p1");
     }
+
     private Diff getPersonDiff(String id) {
         return new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createPerson(id)),
@@ -171,6 +206,7 @@ public class DiffSetTest {
     private Diff getComponentDiff() {
         return getComponentDiff("comp1", "comp1-system");
     }
+
     private Diff getComponentDiff(String id, String containerId) {
         return new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createComponent(id, containerId)),
@@ -181,6 +217,7 @@ public class DiffSetTest {
     private Diff getContainerDiff() {
         return getContainerDiff("cont1", "cont1-system");
     }
+
     private Diff getContainerDiff(String id, String systemId) {
         return new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createContainer(id, systemId)),
@@ -191,6 +228,7 @@ public class DiffSetTest {
     private Diff getSystemDiff() {
         return getSystemDiff("s1");
     }
+
     private Diff getSystemDiff(String id) {
         return new Diff(
                 new DiffableEntity(ArchitectureDataStructureHelper.createSystem(id)),
@@ -201,6 +239,7 @@ public class DiffSetTest {
     private Diff getRelationshipDiff() {
         return getRelationshipDiff("r1", "r1-source", "r1-dest");
     }
+
     private Diff getRelationshipDiff(String id, String sourceId, String destinationId) {
         return new Diff(
                 new DiffableRelationship(

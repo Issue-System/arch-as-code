@@ -44,7 +44,8 @@ public class GitInterfaceTest {
         var git = Git.init().setDirectory(repoDir).call();
 
         rootDir = Files.createDirectory(repoDir.toPath().resolve("root")).toFile();
-        archPath = rootDir.toPath().resolve("product-architecture.yml");
+
+        archPath = rootDir.toPath().resolve("./product-architecture.yml"); // the "./" is added to ensure relative pathing works
 
         architectureAsString = TestHelper.loadResource(getClass(), TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY);
         // First commit

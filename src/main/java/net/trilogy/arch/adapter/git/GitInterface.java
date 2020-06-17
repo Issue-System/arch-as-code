@@ -55,10 +55,17 @@ public class GitInterface {
     }
 
     private String getRelativePath(Path architectureYamlFilePath, Git git) {
+        var repoDirAbsolutePath = git.getRepository()
+            .getDirectory()
+            .getParentFile()
+            .getAbsolutePath() 
+            .replaceAll("\\./", "")
+            + "/";
         return architectureYamlFilePath
                 .toAbsolutePath()
                 .toString()
-                .replaceAll(git.getRepository().getDirectory().getParentFile().getAbsolutePath() + "/", "");
+                .replaceAll("\\./", "")
+                .replaceAll(repoDirAbsolutePath, "");
     }
 
     private String getContent(Git git, RevCommit commit, String path) throws IOException {

@@ -11,8 +11,10 @@ import net.trilogy.arch.domain.c4.Entity;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class DiffableRelationship implements Diffable {
-    @Getter private final String sourceId;
-    @Getter private final C4Relationship relationship;
+    @Getter
+    private final String sourceId;
+    @Getter
+    private final C4Relationship relationship;
 
     public DiffableRelationship(Entity entity, C4Relationship c4Relationship) {
         this.sourceId = entity.getId();
@@ -32,6 +34,10 @@ public class DiffableRelationship implements Diffable {
 
         this.sourceId = source.getId();
         this.relationship = c4Relationship;
+    }
+
+    public String getDestinationId() {
+        return relationship.getWithId();
     }
 
     @Override

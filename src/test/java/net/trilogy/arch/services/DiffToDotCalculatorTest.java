@@ -60,6 +60,10 @@ public class DiffToDotCalculatorTest {
     public void shouldGenerateGraph() {
         var actual = DiffToDotCalculator.toDot("title", List.of(
                 new Diff(
+                        new DiffableEntity(createPerson("4")),
+                        null
+                ),
+                new Diff(
                         new DiffableEntity(createPerson("1")),
                         new DiffableEntity(createPerson("1"))
                 ),
@@ -73,8 +77,9 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
+        appendln(expected, "    \"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];");
-        appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
+        appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue, tooltip=\"person-1 -> person-4\", labeltooltip=\"person-1 -> person-4\"];");
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
@@ -111,7 +116,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "");
         appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"2\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-2</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
-        appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red];");
+        appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red, tooltip=\"person-1 -> person-2\", labeltooltip=\"person-1 -> person-2\"];");
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
@@ -189,14 +194,17 @@ public class DiffToDotCalculatorTest {
 
     @Test
     public void shouldGenerateRelationshipDotEntry() {
+        var p4 = createPerson("4");
+        var p5 = createPerson("5");
+        var rel = createRelationship("r", "5");
+        var diff = new Diff(new DiffableRelationship(p4, rel), null);
         var actual = DiffToDotCalculator.toDot(
-                new Diff(
-                        new DiffableRelationship(createPerson("4"), createRelationship("1", "5")),
-                        new DiffableRelationship(createPerson("4"), createRelationship("1", "5"))
-                ),
-                "");
+                diff,
+                Set.of(new Diff(new DiffableEntity(p4), null), new Diff(new DiffableEntity(p5), null), diff),
+                ""
+        );
 
-        var expected = "\"4\" -> \"5\" [label=\"d1\", color=black, fontcolor=black];";
+        var expected = "\"4\" -> \"5\" [label=\"dr\", color=red, fontcolor=red, tooltip=\"person-4 -> person-5\", labeltooltip=\"person-4 -> person-5\"];";
 
         assertThat(actual, equalTo(expected));
     }
@@ -252,15 +260,30 @@ public class DiffToDotCalculatorTest {
     }
 
     @Test
+    public void shouldCalculateTooltipForRelationships(){
+        var p1Diff = new Diff(new DiffableEntity(createPerson("1")), null);
+        var p2Diff = new Diff(null, new DiffableEntity(createPerson("2")));
+        var rel = new DiffableRelationship("1", createRelationship("r", "2"));
+        var relDiff = new Diff(rel, null);
+
+        String tooltip = DiffToDotCalculator.getTooltip(rel, Set.of(p1Diff, p2Diff, relDiff));
+
+        assertThat(tooltip, equalTo("person-1 -> person-2"));
+    }
+
+    @Test
     public void shouldGenerateEntityDotEntry() {
         var person = createPerson("4");
         person.setPath(C4Path.path("@person-4"));
+        var diff = new Diff(
+                new DiffableEntity(person),
+                new DiffableEntity(person)
+        );
         var actual = DiffToDotCalculator.toDot(
-                new Diff(
-                        new DiffableEntity(person),
-                        new DiffableEntity(person)
-                ),
-                "assets");
+                diff,
+                Set.of(diff),
+                "assets"
+        );
 
         var expected = "\"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>person</TD></TR><TR><TD>@person-4</TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];";
 

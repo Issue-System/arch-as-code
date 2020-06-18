@@ -9,6 +9,7 @@ import net.trilogy.arch.domain.diff.DiffableRelationship;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class DiffToDotCalculator {
 
@@ -32,7 +33,7 @@ public class DiffToDotCalculator {
             dot.add(0, "");
         }
         diffs.stream()
-                .map(diff -> toDot(diff, linkPrefix))
+                .map(diff -> toDot(diff, diffs, linkPrefix))
                 .forEach(line -> dot.add(1, line));
         dot.add(0, "}");
         return dot.toString();
@@ -89,7 +90,7 @@ public class DiffToDotCalculator {
     }
 
     @VisibleForTesting
-    static String toDot(Diff diff, String linkPrefix) {
+    static String toDot(Diff diff, Collection<Diff> allDiffs, String linkPrefix) {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
             return "\"" + entity.getId() + "\" " +
@@ -107,6 +108,23 @@ public class DiffToDotCalculator {
                 "[label=\"" + relationship.getName() +
                 "\", color=" + getDotColor(diff) +
                 ", fontcolor=" + getDotColor(diff) +
+                ", tooltip=\"" + getTooltip(relationship, allDiffs) + "\"" +
+                ", labeltooltip=\"" + getTooltip(relationship, allDiffs) + "\"" +
                 "];";
+    }
+
+    @VisibleForTesting
+    static String getTooltip(DiffableRelationship rel, Collection<Diff> allDiffs) {
+        String source = allDiffs.stream()
+            .filter(it -> it.getElement().getId().equals(rel.getSourceId()))
+            .findAny()
+            .map(it -> it.getElement().getName())
+            .orElse(rel.getSourceId());
+        String destination = allDiffs.stream()
+            .filter(it -> it.getElement().getId().equals(rel.getDestinationId()))
+            .findAny()
+            .map(it -> it.getElement().getName())
+            .orElse(rel.getDestinationId());
+        return source + " -> " + destination;
     }
 }

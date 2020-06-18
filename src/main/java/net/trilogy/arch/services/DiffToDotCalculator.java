@@ -49,8 +49,8 @@ public class DiffToDotCalculator {
     }
 
     @VisibleForTesting
-    static String getDotShape(DiffableEntity entity) {
-        return "Mrecord";
+    static String getDotLabel(DiffableEntity entity) {
+        return "<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>"+entity.getName()+"</TD></TR><TR><TD>"+entity.getType()+"</TD></TR><TR><TD>"+getPath(entity)+"</TD></TR></TABLE>>";
     }
 
     @VisibleForTesting
@@ -91,15 +91,10 @@ public class DiffToDotCalculator {
         if (diff.getElement() instanceof DiffableEntity) {
             final var entity = (DiffableEntity) diff.getElement();
             return "\"" + entity.getId() + "\" " +
-                    "[label=\"" + entity.getName() +
-
-                    // TODO: Temporary, until shapes are added
-                    " | " + entity.getType() +
-
-                    " | " + getPath(entity) +
-                    "\", color=" + getDotColor(diff) +
+                    "[label=" + getDotLabel(entity) +
+                    ", color=" + getDotColor(diff) +
                     ", fontcolor=" + getDotColor(diff) +
-                    ", shape=" + getDotShape(entity) +
+                    ", shape=plaintext" +
                     ", URL=\"" + getUrl(diff, linkPrefix) + "\"" +
                     "];";
         }

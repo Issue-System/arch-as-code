@@ -71,7 +71,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person | \", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue];");
         appendln(expected, "}");
 
@@ -105,24 +105,12 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "        \"1\";");
         appendln(expected, "    }");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=\"person-1 | person | \", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
-        appendln(expected, "    \"2\" [label=\"person-2 | person | \", color=red, fontcolor=red, shape=Mrecord, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
+        appendln(expected, "    \"2\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-2</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red];");
         appendln(expected, "}");
 
         assertThat(actual, equalTo(expected.toString()));
-    }
-
-
-    @Test
-    public void shouldCalculateRightShape() {
-        var actual = DiffToDotCalculator.getDotShape(
-                new DiffableEntity(createPerson("4"))
-        );
-
-        var expected = "Mrecord";
-
-        assertThat(actual, equalTo(expected));
     }
 
     @Test
@@ -270,7 +258,7 @@ public class DiffToDotCalculatorTest {
                 ),
                 "assets");
 
-        var expected = "\"4\" [label=\"person-4 | person | @person-4\", color=black, fontcolor=black, shape=Mrecord, URL=\"\"];";
+        var expected = "\"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>person</TD></TR><TR><TD>@person-4</TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];";
 
         assertThat(actual, equalTo(expected));
     }

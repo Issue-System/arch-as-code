@@ -21,7 +21,7 @@ public class DiffToDotCalculator {
         if (parentEntityDiff != null) {
             dot.add(1, "subgraph \"cluster_" + parentEntityDiff.getElement().getId() + "\" {");
             dot.add(2, "style=filled;");
-            dot.add(2, "color=grey96;");
+            dot.add(2, "color=grey92;");
             dot.add(2, "label=\"" + parentEntityDiff.getElement().getName() + "\";");
             parentEntityDiff.getDescendants()
                     .stream()

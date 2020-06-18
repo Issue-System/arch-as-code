@@ -47,7 +47,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "");
         appendln(expected, "    subgraph \"cluster_parent-system\" {");
         appendln(expected, "        style=filled;");
-        appendln(expected, "        color=grey96;");
+        appendln(expected, "        color=grey92;");
         appendln(expected, "        label=\"system-parent-system\";");
         appendln(expected, "    }");
         appendln(expected, "");
@@ -109,7 +109,7 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "");
         appendln(expected, "    subgraph \"cluster_parent-system\" {");
         appendln(expected, "        style=filled;");
-        appendln(expected, "        color=grey96;");
+        appendln(expected, "        color=grey92;");
         appendln(expected, "        label=\"system-parent-system\";");
         appendln(expected, "        \"1\";");
         appendln(expected, "    }");

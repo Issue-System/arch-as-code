@@ -6,6 +6,7 @@ import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObject
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -32,6 +32,7 @@ public class GitInterfaceTest {
     private File rootDir;
     private Path archPath;
     private String architectureAsString;
+    private String sha;
 
     @After
     public void tearDown() throws Exception {
@@ -56,7 +57,8 @@ public class GitInterfaceTest {
         // Second commit
         Files.writeString(archPath, architectureAsString);
         git.add().addFilepattern("root/product-architecture.yml").call();
-        git.commit().setMessage("commit architecture to master").call();
+        final RevCommit commit = git.commit().setMessage("commit architecture to master").call();
+        sha = commit.getName();
 
 
         collector.checkThat(
@@ -80,6 +82,14 @@ public class GitInterfaceTest {
     @Test
     public void shouldLoadMasterBranchArchitecture() throws Exception {
         var actual = new GitInterface().load("master", archPath);
+        var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
+
+        collector.checkThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldLoadArbitraryCommitArchitecture() throws Exception {
+        var actual = new GitInterface().load(sha, archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
         collector.checkThat(actual, equalTo(expected));

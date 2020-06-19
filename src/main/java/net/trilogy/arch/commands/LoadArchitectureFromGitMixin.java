@@ -6,19 +6,18 @@ import net.trilogy.arch.domain.ArchitectureDataStructure;
 import java.io.File;
 import java.util.Optional;
 
-public interface LoadArchitectureFromGitBranchMixin extends DisplaysErrorMixin {
+public interface LoadArchitectureFromGitMixin extends DisplaysErrorMixin {
 
     File getProductArchitectureDirectory();
-
     GitInterface getGitInterface();
 
-    default Optional<ArchitectureDataStructure> loadArchitectureOfBranchOrPrintError(String branch, String errorMessageIfFailed) {
+    default Optional<ArchitectureDataStructure> loadArchitectureFromGitOrPrintError(String gitReference, String errorMessageIfFailed) {
         final var productArchitecturePath = getProductArchitectureDirectory()
                 .toPath()
                 .resolve("product-architecture.yml");
         try {
             return Optional.of(
-                    getGitInterface().load(branch, productArchitecturePath)
+                    getGitInterface().load(gitReference, productArchitecturePath)
             );
         } catch (final Exception e) {
             printError(errorMessageIfFailed, e);

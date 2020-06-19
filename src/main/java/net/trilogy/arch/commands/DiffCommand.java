@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
-public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
+public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitMixin {
     @Getter
     private final GitInterface gitInterface;
     @Getter
@@ -34,7 +34,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
     @CommandLine.Parameters(index = "0", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-diff-architecture"}, description = "Name of git branch to compare against current architecture. Usually 'master'.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-diff-architecture"}, description = "Name of git branch to compare against current architecture. Usually 'master'. Also can be a git commit.", required = true)
     private String baseBranch;
 
     @CommandLine.Option(names = {"-o", "--output-directory"}, description = "New directory in which svg files will be created.", required = true)
@@ -52,7 +52,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (currentArch.isEmpty()) return 1;
 
-        final var beforeArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
+        final var beforeArch = loadArchitectureFromGitOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (beforeArch.isEmpty()) return 1;
 
         final Path outputDir;

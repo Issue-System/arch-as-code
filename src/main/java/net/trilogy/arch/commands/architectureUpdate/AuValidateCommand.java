@@ -5,7 +5,7 @@ import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectM
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
-import net.trilogy.arch.commands.LoadArchitectureFromGitBranchMixin;
+import net.trilogy.arch.commands.LoadArchitectureFromGitMixin;
 import net.trilogy.arch.commands.LoadArchitectureMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
@@ -28,7 +28,7 @@ import static picocli.CommandLine.Parameters;
 import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
-public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureFromGitBranchMixin, LoadArchitectureMixin {
+public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureFromGitMixin, LoadArchitectureMixin {
 
     @Getter
     @Spec
@@ -45,7 +45,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin,
     @Getter private final FilesFacade filesFacade;
     @Getter private final GitInterface gitInterface;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'. Also can be a commit.", required = true)
     String baseBranch;
 
     @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs only")
@@ -68,7 +68,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin,
         final var auBranchArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (auBranchArch.isEmpty()) return 1;
 
-        final var baseBranchArch = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
+        final var baseBranchArch = loadArchitectureFromGitOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (baseBranchArch.isEmpty()) return 1;
 
         final var au = loadAu();

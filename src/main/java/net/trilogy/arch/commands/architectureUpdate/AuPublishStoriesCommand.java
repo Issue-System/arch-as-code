@@ -8,7 +8,7 @@ import net.trilogy.arch.adapter.jira.JiraApi;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.commands.DisplaysErrorMixin;
-import net.trilogy.arch.commands.LoadArchitectureFromGitBranchMixin;
+import net.trilogy.arch.commands.LoadArchitectureFromGitMixin;
 import net.trilogy.arch.commands.LoadArchitectureMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
-public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureMixin, LoadArchitectureFromGitBranchMixin {
+public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureMixin, LoadArchitectureFromGitMixin {
 
     private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
 
@@ -44,7 +44,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
     @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to get names of components. Usually 'master'.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to get names of components. Usually 'master'. Also can be a commit.", required = true)
     String baseBranch;
 
     @CommandLine.Option(names = {"-u", "--username"}, description = "Jira username", required = true)
@@ -71,7 +71,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
         var au = loadAu(auPath);
         if (au.isEmpty()) return 1;
 
-        final var beforeAuArchitecture = loadArchitectureOfBranchOrPrintError(baseBranch, "Unable to load product architecture in branch: " + baseBranch);
+        final var beforeAuArchitecture = loadArchitectureFromGitOrPrintError(baseBranch, "Unable to load product architecture in branch: " + baseBranch);
         if (beforeAuArchitecture.isEmpty()) return 1;
 
         final var afterAuArchitecture = loadArchitectureOrPrintError("Unable to load architecture.");

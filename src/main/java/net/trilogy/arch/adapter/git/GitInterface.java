@@ -27,19 +27,19 @@ public class GitInterface {
         this.objMapper = objMapper;
     }
 
-    public ArchitectureDataStructure load(String branchName, Path architectureYamlFilePath)
+    public ArchitectureDataStructure load(String commitReference, Path architectureYamlFilePath)
             throws IOException, GitAPIException, BranchNotFoundException {
 
         var git = openParentRepo(architectureYamlFilePath.toFile());
-        final ObjectId resolvedBranch = git.getRepository().resolve(branchName);
+        final ObjectId resolvedCommitReference = git.getRepository().resolve(commitReference);
 
-        if (resolvedBranch == null) {
+        if (resolvedCommitReference == null) {
             throw new BranchNotFoundException();
         }
 
-        final RevCommit lastCommit = git.log().add(resolvedBranch).call().iterator().next();
+        final RevCommit commit = git.log().add(resolvedCommitReference).call().iterator().next();
         final String relativePath = getRelativePath(architectureYamlFilePath, git);
-        final String archAsString = getContent(git, lastCommit, relativePath);
+        final String archAsString = getContent(git, commit, relativePath);
 
         return objMapper.readValue(archAsString);
     }

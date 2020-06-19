@@ -91,8 +91,11 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
     private boolean render(Set<Diff> diffs, Diff parentEntityDiff, Path outputFile, String linkPrefix) {
         final String dotGraph = DiffToDotCalculator.toDot("diff", diffs, parentEntityDiff, linkPrefix);
 
+        var name = outputFile.getFileName().toString().replaceAll(".svg", ".gv");
+
         try {
             graphvizInterface.render(dotGraph, outputFile);
+            filesFacade.writeString(outputFile.getParent().resolve(name), dotGraph);
         } catch (Exception e) {
             printError("Unable to render SVG", e);
             return false;

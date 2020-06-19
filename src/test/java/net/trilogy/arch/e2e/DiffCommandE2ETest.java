@@ -163,7 +163,7 @@ public class DiffCommandE2ETest {
         execute(app, "diff -b master " + rootDir.getAbsolutePath() + " -o " + outputPath.toString());
 
         // THEN
-        collector.checkThat(Files.list(outputPath.resolve("assets")).count(), equalTo(2L));
+        collector.checkThat(Files.list(outputPath.resolve("assets")).filter(it -> it.getFileName().toString().contains(".svg")).count(), equalTo(2L));
     }
 
     @Test

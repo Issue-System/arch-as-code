@@ -32,7 +32,8 @@ public class GitInterfaceTest {
     private File rootDir;
     private Path archPath;
     private String architectureAsString;
-    private String sha;
+    private String masterCommitSha;
+    private String masterCommitTagName = "masterCommitTagName";
 
     @After
     public void tearDown() throws Exception {
@@ -58,8 +59,8 @@ public class GitInterfaceTest {
         Files.writeString(archPath, architectureAsString);
         git.add().addFilepattern("root/product-architecture.yml").call();
         final RevCommit commit = git.commit().setMessage("commit architecture to master").call();
-        sha = commit.getName();
-
+        masterCommitSha = commit.getName();
+        git.tag().setAnnotated(true).setName(masterCommitTagName).setMessage("blah").call();
 
         collector.checkThat(
                 "PRECONDITION CHECK: Architecture must exist in master branch.",
@@ -80,7 +81,7 @@ public class GitInterfaceTest {
     }
 
     @Test
-    public void shouldLoadMasterBranchArchitecture() throws Exception {
+    public void shouldLoadArchitectureFromBranch() throws Exception {
         var actual = new GitInterface().load("master", archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
@@ -88,8 +89,16 @@ public class GitInterfaceTest {
     }
 
     @Test
-    public void shouldLoadArbitraryCommitArchitecture() throws Exception {
-        var actual = new GitInterface().load(sha, archPath);
+    public void shouldLoadArchitectureFromCommit() throws Exception {
+        var actual = new GitInterface().load(masterCommitSha, archPath);
+        var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
+
+        collector.checkThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldLoadArchitectureFromTag() throws Exception {
+        var actual = new GitInterface().load(masterCommitTagName, archPath);
         var expected = new ArchitectureDataStructureObjectMapper().readValue(architectureAsString);
 
         collector.checkThat(actual, equalTo(expected));

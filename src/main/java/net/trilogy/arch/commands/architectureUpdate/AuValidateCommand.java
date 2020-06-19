@@ -28,7 +28,7 @@ import static picocli.CommandLine.Parameters;
 import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
-public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureFromGitMixin, LoadArchitectureMixin {
+public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFromGitMixin, LoadArchitectureMixin {
 
     @Getter
     @Spec
@@ -45,7 +45,7 @@ public class AuValidateCommand implements Callable<Integer>, DisplaysErrorMixin,
     @Getter private final FilesFacade filesFacade;
     @Getter private final GitInterface gitInterface;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'. Also can be a commit.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to validate changes. Usually 'master'. Also can be a commit or tag.", required = true)
     String baseBranch;
 
     @CommandLine.Option(names = {"-t", "--TDDs"}, description = "Run validation for TDDs only")

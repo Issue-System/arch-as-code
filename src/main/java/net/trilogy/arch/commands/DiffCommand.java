@@ -34,7 +34,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
     @CommandLine.Parameters(index = "0", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-diff-architecture"}, description = "Name of git branch to compare against current architecture. Usually 'master'. Also can be a git commit.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-diff-architecture"}, description = "Name of git branch to compare against current architecture. Usually 'master'. Also can be a git commit or tag.", required = true)
     private String baseBranch;
 
     @CommandLine.Option(names = {"-o", "--output-directory"}, description = "New directory in which svg files will be created.", required = true)

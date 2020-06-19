@@ -24,9 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "publish", description = "Publish stories.", mixinStandardHelpOptions = true)
-public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysErrorMixin, LoadArchitectureMixin, LoadArchitectureFromGitMixin {
-
-    private static final Log logger = LogFactory.getLog(AuPublishStoriesCommand.class);
+public class AuPublishStoriesCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitMixin {
 
     private final JiraApiFactory jiraApiFactory;
     private final ArchitectureUpdateObjectMapper architectureUpdateObjectMapper;
@@ -44,7 +42,7 @@ public class AuPublishStoriesCommand implements Callable<Integer>, DisplaysError
     @CommandLine.Parameters(index = "1", description = "Product architecture root directory")
     private File productArchitectureDirectory;
 
-    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to get names of components. Usually 'master'. Also can be a commit.", required = true)
+    @CommandLine.Option(names = {"-b", "--branch-of-base-architecture"}, description = "Name of git branch from which this AU was branched. Used to get names of components. Usually 'master'. Also can be a commit or tag.", required = true)
     String baseBranch;
 
     @CommandLine.Option(names = {"-u", "--username"}, description = "Jira username", required = true)

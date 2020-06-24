@@ -11,6 +11,10 @@ public interface DisplaysErrorMixin {
     }
 
     default void printError(String errorMessage, Exception exception) {
-        getSpec().commandLine().getErr().println(errorMessage + "\nError thrown: " + exception + "\nCause: " + exception.getCause());
+        printError(errorMessage);
+        printError("Error thrown: " + exception);
+        if(exception.getCause() != null) {
+            printError("Cause: " + exception.getCause());
+        }
     }
 }

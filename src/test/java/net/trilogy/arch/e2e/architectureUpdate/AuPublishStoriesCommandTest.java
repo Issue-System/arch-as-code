@@ -306,7 +306,7 @@ public class AuPublishStoriesCommandTest {
 
         Integer statusCode = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
-        assertThat(err.toString(), equalTo("Jira API failed\nError thrown: net.trilogy.arch.adapter.jira.JiraApi$JiraApiException: OOPS!\nCause: null\n"));
+        assertThat(err.toString(), equalTo("Jira API failed\nError thrown: net.trilogy.arch.adapter.jira.JiraApi$JiraApiException: OOPS!\n"));
         assertThat(out.toString(), equalTo("Not re-creating stories:\n  - story that should not be created\n\nChecking epic...\n\n"));
         assertThat(statusCode, not(equalTo(0)));
     }
@@ -318,7 +318,7 @@ public class AuPublishStoriesCommandTest {
         final Integer status = execute(app, "au publish -b master -u user -p password " + rootDir.getAbsolutePath() + "/architecture-updates/test-clone.yml " + rootDir.getAbsolutePath());
 
         collector.checkThat(out.toString(), equalTo(""));
-        collector.checkThat(err.toString(), equalTo("Unable to load product architecture in branch: master\nError thrown: java.lang.RuntimeException: Boom!\nCause: null\n"));
+        collector.checkThat(err.toString(), equalTo("Unable to load product architecture in branch: master\nError thrown: java.lang.RuntimeException: Boom!\n"));
         collector.checkThat(status, not(equalTo(0)));
     }
 

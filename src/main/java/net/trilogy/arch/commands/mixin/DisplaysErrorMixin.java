@@ -1,4 +1,4 @@
-package net.trilogy.arch.commands;
+package net.trilogy.arch.commands.mixin;
 
 import picocli.CommandLine;
 

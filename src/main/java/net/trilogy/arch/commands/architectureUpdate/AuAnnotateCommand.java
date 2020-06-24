@@ -2,8 +2,7 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
-import net.trilogy.arch.commands.LoadArchitectureMixin;
+import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine.Command;

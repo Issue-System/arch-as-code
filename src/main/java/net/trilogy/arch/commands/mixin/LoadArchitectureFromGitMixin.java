@@ -1,6 +1,7 @@
-package net.trilogy.arch.commands;
+package net.trilogy.arch.commands.mixin;
 
 import net.trilogy.arch.adapter.git.GitInterface;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import java.io.File;

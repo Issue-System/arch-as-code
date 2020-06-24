@@ -1,6 +1,7 @@
-package net.trilogy.arch.commands;
+package net.trilogy.arch.commands.mixin;
 
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 

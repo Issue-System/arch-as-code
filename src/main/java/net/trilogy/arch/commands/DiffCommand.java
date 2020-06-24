@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
+import net.trilogy.arch.commands.mixin.LoadArchitectureFromGitMixin;
+import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffSet;
 import net.trilogy.arch.facade.FilesFacade;

@@ -6,7 +6,7 @@ import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.google.GoogleDocumentReader;
-import net.trilogy.arch.commands.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;

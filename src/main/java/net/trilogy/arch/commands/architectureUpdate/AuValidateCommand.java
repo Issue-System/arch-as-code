@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureFromGitMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
@@ -27,7 +29,7 @@ import static picocli.CommandLine.Parameters;
 import static picocli.CommandLine.Spec;
 
 @Command(name = "validate", description = "Validate Architecture Update", mixinStandardHelpOptions = true)
-public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFromGitMixin, LoadArchitectureMixin {
+public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFromGitMixin, LoadArchitectureMixin, DisplaysErrorMixin, DisplaysOutputMixin {
 
     @Getter
     @Spec
@@ -83,11 +85,11 @@ public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFro
         if (!areAllStagesValid) {
             final List<ValidationError> errors = getErrorsOfStages(stages, validationResults);
             final String resultToDisplay = getPrettyStringOfErrors(errors, baseBranch);
-            spec.commandLine().getErr().println(resultToDisplay);
+            printError(resultToDisplay);
             return 1;
         }
 
-        spec.commandLine().getOut().println("Success, no errors found.");
+        print("Success, no errors found.");
         return 0;
     }
 

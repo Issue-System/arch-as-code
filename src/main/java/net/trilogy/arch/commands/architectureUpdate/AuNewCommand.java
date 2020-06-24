@@ -7,6 +7,7 @@ import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.google.GoogleDocumentReader;
 import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "new", mixinStandardHelpOptions = true, description = "Create a new architecture update.")
-public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
+public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin, DisplaysOutputMixin {
     private static final ArchitectureUpdateObjectMapper objectMapper = new ArchitectureUpdateObjectMapper();
     private final GoogleDocsAuthorizedApiFactory googleDocsApiFactory;
     private final FilesFacade filesFacade;
@@ -53,7 +54,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin {
 
         if (!writeAu(auFile.get(), au.get())) return 1;
 
-        spec.commandLine().getOut().println(String.format("AU created - %s", auFile.get().toPath()));
+        print(String.format("AU created - %s", auFile.get().toPath()));
         return 0;
     }
 

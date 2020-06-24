@@ -1,6 +1,7 @@
 package net.trilogy.arch.commands;
 
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -15,7 +16,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "list-components", mixinStandardHelpOptions = true, description = "Outputs a CSV formatted list of components and their IDs, which are present in the architecture.")
-public class ListComponentsCommand implements Callable<Integer>, LoadArchitectureMixin {
+public class ListComponentsCommand implements Callable<Integer>, LoadArchitectureMixin, DisplaysOutputMixin {
 
     @Getter
     @Spec
@@ -59,6 +60,6 @@ public class ListComponentsCommand implements Callable<Integer>, LoadArchitectur
                             )
                             .collect(Collectors.joining());
 
-        spec.commandLine().getOut().println("ID, Name, Path" + toOutput);
+        print("ID, Name, Path" + toOutput);
     }
 }

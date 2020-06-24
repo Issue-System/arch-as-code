@@ -1,5 +1,8 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import lombok.Getter;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -14,7 +17,7 @@ import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOO
 import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 
 @Command(name = "initialize", aliases = "init", mixinStandardHelpOptions = true, description = "Initialize the architecture updates work space within a single product's existing workspace. Sets up Google API credentials to import P1 documents.")
-public class AuInitializeCommand implements Callable<Integer> {
+public class AuInitializeCommand implements Callable<Integer>, DisplaysOutputMixin, DisplaysErrorMixin {
     private final FilesFacade filesFacade;
 
     @CommandLine.Option(names = {"-c", "--client-id"}, description = "Google API client id", required = true)
@@ -29,6 +32,7 @@ public class AuInitializeCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "Product workspace directory, containng the product's architecture")
     private File productArchitectureDirectory;
 
+    @Getter
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
@@ -53,7 +57,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         if (!makeGoogleApiCredentialsFolder()) return 1;
         if (!createGoogleApiClientCredentialsFile(googleApiClientId, googleApiProjectId, googleApiSecret)) return 1;
 
-        spec.commandLine().getOut().println(String.format("Architecture updates initialized under - %s", productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
+        print(String.format("Architecture updates initialized under - %s", productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
@@ -64,7 +68,7 @@ public class AuInitializeCommand implements Callable<Integer> {
             filesFacade.writeString(file.toPath(), buildJiraSettingsJsonString());
             return true;
         } catch (IOException e) {
-            spec.commandLine().getErr().println(String.format("Unable to create %s", file.getAbsolutePath()));
+            printError(String.format("Unable to create %s", file.getAbsolutePath()));
             return false;
         }
     }
@@ -76,7 +80,7 @@ public class AuInitializeCommand implements Callable<Integer> {
             filesFacade.writeString(file.toPath(), credentialJsonString);
             return true;
         } catch (IOException e) {
-            spec.commandLine().getOut().println(String.format("Unable to create %s", file.getAbsolutePath()));
+            print(String.format("Unable to create %s", file.getAbsolutePath()));
             return false;
         }
     }
@@ -112,7 +116,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
-            spec.commandLine().getErr().println(String.format("Unable to create %s", auFolder.getAbsolutePath()));
+            printError(String.format("Unable to create %s", auFolder.getAbsolutePath()));
             return false;
         }
         return true;
@@ -124,7 +128,7 @@ public class AuInitializeCommand implements Callable<Integer> {
 
         boolean credSucceeded = auCredentialFolder.mkdirs();
         if (!credSucceeded) {
-            spec.commandLine().getErr().println(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));
+            printError(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));
             return false;
         }
         return true;

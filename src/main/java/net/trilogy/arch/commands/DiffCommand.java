@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureFromGitMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.diff.Diff;
@@ -19,7 +21,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "diff", mixinStandardHelpOptions = true, description = "Display the diff between product architecture in current branch and specified branch.")
-public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitMixin {
+public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, LoadArchitectureFromGitMixin, DisplaysOutputMixin, DisplaysErrorMixin {
     @Getter
     private final GitInterface gitInterface;
     @Getter
@@ -85,7 +87,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
         }
         if (!success) return 1;
 
-        spec.commandLine().getOut().println("SVG files created in " + outputDir.toAbsolutePath().toString());
+        print("SVG files created in " + outputDir.toAbsolutePath().toString());
 
         return 0;
     }

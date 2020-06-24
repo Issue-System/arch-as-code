@@ -2,6 +2,8 @@ package net.trilogy.arch.commands.architectureUpdate;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
@@ -16,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Command(name = "annotate", description = "Annotates the architecture update with comments detailing the full paths of all components referenced by ID. Makes the AU easier to read.", mixinStandardHelpOptions = true)
-public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMixin {
+public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMixin, DisplaysOutputMixin, DisplaysErrorMixin {
 
     @Parameters(index = "0", description = "File name of architecture update to annotate")
     private File architectureUpdateFilePath;
@@ -74,12 +76,12 @@ public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMix
             return 2;
         }
 
-        spec.commandLine().getOut().println("AU has been annotated with component paths.");
+        print("AU has been annotated with component paths.");
         return 0;
     }
 
     private void printError(Exception e, String s) {
-        spec.commandLine().getErr().println(s +
+        printError(s +
                 "\nError: " + e + "\nCause: " + e.getCause());
     }
 

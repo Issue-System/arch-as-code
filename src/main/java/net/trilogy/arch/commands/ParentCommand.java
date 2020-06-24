@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
+import lombok.Getter;
+import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import picocli.CommandLine.Command;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
@@ -18,13 +20,14 @@ import picocli.CommandLine.Spec;
         mixinStandardHelpOptions = true,
         versionProvider = ParentCommand.VersionProvider.class
 )
-public class ParentCommand implements Callable<Integer> {
+public class ParentCommand implements Callable<Integer>, DisplaysOutputMixin {
+    @Getter
     @Spec
     private CommandSpec spec;
 
     @Override
     public Integer call() {
-        spec.commandLine().getOut().println(spec.commandLine().getUsageMessage());
+        print(spec.commandLine().getUsageMessage());
         return 0;
     }
 

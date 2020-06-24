@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class ArchitectureDataStructureWriter {
-    private static final Log logger = LogFactory.getLog(ArchitectureDataStructureWriter.class);
-
     public File export(ArchitectureDataStructure dataStructure) throws IOException {
         File tempFile = File.createTempFile("arch-as-code", ".yml");
 
@@ -20,7 +18,6 @@ public class ArchitectureDataStructureWriter {
     public File export(ArchitectureDataStructure dataStructure, File writeFile) throws IOException {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
         new FilesFacade().writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
-        logger.info(String.format("Architecture data structure written to - %s", writeFile.getAbsolutePath()));
         return writeFile;
     }
 

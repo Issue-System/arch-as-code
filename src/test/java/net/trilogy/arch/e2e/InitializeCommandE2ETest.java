@@ -1,7 +1,6 @@
 package net.trilogy.arch.e2e;
 
 
-import net.trilogy.arch.commands.InitializeCommand;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +9,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,8 +31,8 @@ public class InitializeCommandE2ETest {
 
     @Test
     public void shouldInitializeCredentials() throws Exception {
-        InitializeCommand command = new InitializeCommand("key", "secret", "1234", tempProductDirectory.toFile());
-        assertThat(command.call(), equalTo(0));
+        Integer status = execute("init -i key -k secret -s 1234 " + tempProductDirectory.toAbsolutePath());
+        assertThat(status, equalTo(0));
 
         File file = tempProductDirectory.resolve(".arch-as-code/structurizr/credentials.json").toFile();
         assertTrue(file.exists());
@@ -43,8 +43,8 @@ public class InitializeCommandE2ETest {
 
     @Test
     public void shouldInitializeDataStructureYamlFile() throws Exception {
-        InitializeCommand command = new InitializeCommand("key", "secret", "1234", tempProductDirectory.toFile());
-        assertThat(command.call(), equalTo(0));
+        Integer status = execute("init -i key -k secret -s 1234 " + tempProductDirectory.toAbsolutePath());
+        assertThat(status, equalTo(0));
 
         File file = tempProductDirectory.resolve("product-architecture.yml").toFile();
         assertTrue(file.exists());

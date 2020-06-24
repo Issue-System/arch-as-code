@@ -66,11 +66,11 @@ public class AuNewCommandTest {
         gitInterfaceSpy = spy(new GitInterface());
 
         app = Application.builder()
-            .googleDocsAuthorizedApiFactory(googleDocsApiFactoryMock)
-            .jiraApiFactory(mock(JiraApiFactory.class))
-            .filesFacade(filesFacadeSpy)
-            .gitInterface(gitInterfaceSpy)
-            .build();
+                .googleDocsAuthorizedApiFactory(googleDocsApiFactoryMock)
+                .jiraApiFactory(mock(JiraApiFactory.class))
+                .filesFacade(filesFacadeSpy)
+                .gitInterface(gitInterfaceSpy)
+                .build();
     }
 
     @After
@@ -83,6 +83,7 @@ public class AuNewCommandTest {
     @Test
     public void shouldFailGracefullyIfGitApiFails() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
+        out.reset();
 
         doThrow(new RuntimeException("Boom!")).when(gitInterfaceSpy).getBranch(any());
 
@@ -98,6 +99,7 @@ public class AuNewCommandTest {
     @Test
     public void shouldFailIfBranchNameDoesNotMatch() throws Exception {
         execute("au", "init", "-c c", "-p p", "-s s", str(rootDir.toPath()));
+        out.reset();
 
         int status = execute("au", "new", "not-au-name", str(rootDir.toPath()));
 
@@ -297,9 +299,9 @@ public class AuNewCommandTest {
                 .thenThrow(new IOException("No disk space!"));
 
         Application app = Application.builder()
-            .jiraApiFactory(mock(JiraApiFactory.class))
-            .filesFacade(mockedFilesFacade)
-            .build();
+                .jiraApiFactory(mock(JiraApiFactory.class))
+                .filesFacade(mockedFilesFacade)
+                .build();
         final String command = "au new " + auName + " " + str(rootDir);
 
         assertThat(execute(app, command), not(equalTo(0)));

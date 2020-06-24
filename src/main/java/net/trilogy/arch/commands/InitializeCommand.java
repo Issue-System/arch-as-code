@@ -2,8 +2,6 @@ package net.trilogy.arch.commands;
 
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -14,7 +12,6 @@ import static net.trilogy.arch.adapter.structurizr.Credentials.createCredentials
 
 @CommandLine.Command(name = "init", description = "Initializes a new workspace directory to contain a single project architecture, AUs, documentation, and credentials for Structurizr imports and exports. This is generally the first command to be run.", mixinStandardHelpOptions = true)
 public class InitializeCommand implements Callable<Integer> {
-    private static final Log logger = LogFactory.getLog(InitializeCommand.class);
 
     @CommandLine.Option(names = {"-i", "--workspace-id"}, description = "Structurizr workspace id", required = true)
     private String workspaceId;
@@ -27,6 +24,9 @@ public class InitializeCommand implements Callable<Integer> {
 
     @CommandLine.Parameters(index = "0", description = "Directory to initialize")
     private File productArchitectureDirectory;
+
+    @CommandLine.Spec
+    private CommandLine.Model.CommandSpec spec;
 
     // for testing purposes
     public InitializeCommand(String workspaceId, String apiKey, String apiSecret, File productArchitectureDirectory) {
@@ -42,14 +42,13 @@ public class InitializeCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        logger.info(String.format("Architecture as code initialized under - %s\n", productArchitectureDirectory.getAbsolutePath()));
+        spec.commandLine().getOut().println(String.format("Architecture as code initialized under - %s", productArchitectureDirectory.getAbsolutePath()));
 
         // TODO [TESTING]: Add sad path e2e testing
         createCredentials(productArchitectureDirectory, workspaceId, apiKey, apiSecret);
         createManifest();
 
-        // TODO [LOGGING] [OUTPUT]: Across the application, use stdout/stderr for display, and use a file for logging
-        logger.info("You're ready to go!!");
+        spec.commandLine().getOut().println("You're ready to go!!");
 
         return 0;
     }
@@ -58,7 +57,7 @@ public class InitializeCommand implements Callable<Integer> {
         ArchitectureDataStructure data = createSampleDataStructure();
         String toFilePath = productArchitectureDirectory.getAbsolutePath() + File.separator + "product-architecture.yml";
         write(data, toFilePath);
-        logger.info(String.format("Manifest file written to - %s", toFilePath));
+        spec.commandLine().getOut().println("Manifest file written to - " + toFilePath);
     }
 
     private void write(ArchitectureDataStructure data, String toFilePath) throws IOException {

@@ -1,8 +1,6 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
 import net.trilogy.arch.facade.FilesFacade;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -11,13 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CLIENT_CREDENTIALS_FILE_NAME;
 import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
+import static net.trilogy.arch.adapter.jira.JiraApiFactory.JIRA_API_SETTINGS_FILE_PATH;
 
 @Command(name = "initialize", aliases = "init", mixinStandardHelpOptions = true, description = "Initialize the architecture updates work space within a single product's existing workspace. Sets up Google API credentials to import P1 documents.")
 public class AuInitializeCommand implements Callable<Integer> {
-    private static final Log logger = LogFactory.getLog(AuInitializeCommand.class);
     private final FilesFacade filesFacade;
 
     @CommandLine.Option(names = {"-c", "--client-id"}, description = "Google API client id", required = true)
@@ -31,6 +28,9 @@ public class AuInitializeCommand implements Callable<Integer> {
 
     @Parameters(index = "0", description = "Product workspace directory, containng the product's architecture")
     private File productArchitectureDirectory;
+
+    @CommandLine.Spec
+    private CommandLine.Model.CommandSpec spec;
 
     private final String INITIAL_GOOGLE_API_AUTH_URI = "https://accounts.google.com/o/oauth2/auth";
     private final String INITIAL_GOOGLE_API_TOKEN_URI = "https://oauth2.googleapis.com/token";
@@ -53,7 +53,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         if (!makeGoogleApiCredentialsFolder()) return 1;
         if (!createGoogleApiClientCredentialsFile(googleApiClientId, googleApiProjectId, googleApiSecret)) return 1;
 
-        logger.info(String.format("Architecture updates initialized under - %s", productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
+        spec.commandLine().getOut().println(String.format("Architecture updates initialized under - %s", productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile()));
         return 0;
     }
 
@@ -64,7 +64,7 @@ public class AuInitializeCommand implements Callable<Integer> {
             filesFacade.writeString(file.toPath(), buildJiraSettingsJsonString());
             return true;
         } catch (IOException e) {
-            logger.error(String.format("Unable to create %s", file.getAbsolutePath()));
+            spec.commandLine().getErr().println(String.format("Unable to create %s", file.getAbsolutePath()));
             return false;
         }
     }
@@ -76,7 +76,7 @@ public class AuInitializeCommand implements Callable<Integer> {
             filesFacade.writeString(file.toPath(), credentialJsonString);
             return true;
         } catch (IOException e) {
-            logger.error(String.format("Unable to create %s", file.getAbsolutePath()));
+            spec.commandLine().getOut().println(String.format("Unable to create %s", file.getAbsolutePath()));
             return false;
         }
     }
@@ -112,7 +112,7 @@ public class AuInitializeCommand implements Callable<Integer> {
         File auFolder = productArchitectureDirectory.toPath().resolve(AuCommand.ARCHITECTURE_UPDATES_ROOT_FOLDER).toFile();
         boolean succeeded = auFolder.mkdir();
         if (!succeeded) {
-            logger.error(String.format("Unable to create %s", auFolder.getAbsolutePath()));
+            spec.commandLine().getErr().println(String.format("Unable to create %s", auFolder.getAbsolutePath()));
             return false;
         }
         return true;
@@ -124,7 +124,7 @@ public class AuInitializeCommand implements Callable<Integer> {
 
         boolean credSucceeded = auCredentialFolder.mkdirs();
         if (!credSucceeded) {
-            logger.error(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));
+            spec.commandLine().getErr().println(String.format("Unable to create %s", auCredentialFolder.getAbsolutePath()));
             return false;
         }
         return true;

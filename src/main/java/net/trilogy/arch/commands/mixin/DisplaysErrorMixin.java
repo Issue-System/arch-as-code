@@ -1,7 +1,6 @@
 package net.trilogy.arch.commands.mixin;
 
 import org.apache.logging.log4j.LogManager;
-import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 public interface DisplaysErrorMixin {

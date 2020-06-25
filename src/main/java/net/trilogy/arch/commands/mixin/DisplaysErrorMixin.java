@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands.mixin;
 
+import org.apache.logging.log4j.LogManager;
 import picocli.CommandLine;
 
 public interface DisplaysErrorMixin {
@@ -16,5 +17,7 @@ public interface DisplaysErrorMixin {
         if(exception.getCause() != null) {
             printError("Cause: " + exception.getCause());
         }
+
+        LogManager.getLogger(getClass()).error(errorMessage, exception);
     }
 }

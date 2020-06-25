@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands.mixin;
 
+import org.apache.logging.log4j.LogManager;
 import picocli.CommandLine;
 
 public interface DisplaysOutputMixin {
@@ -7,5 +8,7 @@ public interface DisplaysOutputMixin {
 
     default void print(String message) {
         getSpec().commandLine().getOut().println(message);
+
+        LogManager.getLogger(getClass()).debug(message);
     }
 }

@@ -10,21 +10,22 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 
 import java.net.URI;
+import java.nio.file.Paths;
 
 public class LoggingConfigurationFactory extends ConfigurationFactory {
 
   private final String logFilePath;
 
   public LoggingConfigurationFactory(String logFilePath) {
-    this.logFilePath = logFilePath;
+    this.logFilePath = Paths.get(logFilePath).normalize().toString();
   }
 
-   Configuration createConfiguration(final String name, ConfigurationBuilder<BuiltConfiguration> builder) {
+  Configuration createConfiguration(final String name, ConfigurationBuilder<BuiltConfiguration> builder) {
     builder.setConfigurationName(name);
     builder.setStatusLevel(Level.TRACE);
 
-     AppenderComponentBuilder appenderBuilder = builder.newAppender("file-appender", "File").
-             addAttribute("fileName", logFilePath);
+    AppenderComponentBuilder appenderBuilder = builder.newAppender("file-appender", "File").
+            addAttribute("fileName", logFilePath);
     appenderBuilder.addAttribute("immediateFlush", true);
     appenderBuilder.addAttribute("append", true);
     appenderBuilder.add(builder.newLayout("PatternLayout").
@@ -48,6 +49,6 @@ public class LoggingConfigurationFactory extends ConfigurationFactory {
 
   @Override
   protected String[] getSupportedTypes() {
-    return new String[] {"*"};
+    return new String[]{"*"};
   }
 }

@@ -10,7 +10,6 @@ import java.nio.file.Files;
 
 import net.trilogy.arch.Application;
 import net.trilogy.arch.config.AppConfig;
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,6 +58,8 @@ public class ParentCommandE2ETest {
     public void rootCommandShouldLogOutputToFileButNotConsole() throws Exception {
         // WHEN
         var file = File.createTempFile("aac", "");
+        originalOut.println(file.getAbsolutePath());
+
         var app = Application.builder().appConfig(AppConfig.builder().logPath(file.getAbsolutePath()).build()).build();
         app.execute(new String[]{});
 
@@ -72,7 +73,8 @@ public class ParentCommandE2ETest {
                 containsString("INFO : Usage")
         );
 
-        FileUtils.forceDelete(file);
+
+        //FileUtils.forceDelete(file);
     }
 
 }

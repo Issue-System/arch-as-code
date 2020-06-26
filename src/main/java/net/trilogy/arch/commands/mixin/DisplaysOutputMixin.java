@@ -9,6 +9,6 @@ public interface DisplaysOutputMixin {
     default void print(String message) {
         getSpec().commandLine().getOut().println(message);
 
-        LogManager.getLogger(getClass()).debug(message);
+        LogManager.getLogger(getClass()).info(message);
     }
 }

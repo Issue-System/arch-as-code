@@ -6,18 +6,19 @@ import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.*;
+import net.trilogy.arch.config.AppConfig;
+import net.trilogy.arch.config.LoggingConfigurationFactory;
 import net.trilogy.arch.facade.FilesFacade;
+import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 
 @Builder
-@RequiredArgsConstructor
 public class Application {
+
+    @Builder.Default
+    private final AppConfig appConfig = AppConfig.builder().build();
 
     @Builder.Default
     private final GoogleDocsAuthorizedApiFactory googleDocsAuthorizedApiFactory = new GoogleDocsAuthorizedApiFactory();
@@ -48,7 +49,7 @@ public class Application {
                 );
     }
 
-    public static void main(String[] args) throws GeneralSecurityException, IOException {
+    public static void main(String[] args) {
         final var app = Application.builder().build();
 
         int exitCode = app.execute(args);
@@ -56,7 +57,12 @@ public class Application {
         System.exit(exitCode);
     }
 
-    protected int execute(String[] args) {
+    public int execute(String[] args) {
+        initializeLogger();
         return getCli().execute(args);
+    }
+
+    private void initializeLogger() {
+        ConfigurationFactory.setConfigurationFactory(new LoggingConfigurationFactory(appConfig.getLogPath()));
     }
 }

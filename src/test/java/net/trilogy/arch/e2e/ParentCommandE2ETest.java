@@ -1,12 +1,16 @@
 package net.trilogy.arch.e2e;
 
 import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Files;
 
+import net.trilogy.arch.Application;
+import net.trilogy.arch.config.AppConfig;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -49,4 +53,26 @@ public class ParentCommandE2ETest {
                 containsString("Usage:")
         );
     }
+
+
+    @Test
+    public void rootCommandShouldLogOutputToFileButNotConsole() throws Exception {
+        // WHEN
+        var file = File.createTempFile("aac", "");
+        var app = Application.builder().appConfig(AppConfig.builder().logPath(file.getAbsolutePath()).build()).build();
+        app.execute(new String[]{});
+
+        // THEN
+        collector.checkThat(
+                out.toString(),
+                not(containsString("INFO"))
+        );
+        collector.checkThat(
+                Files.readString(file.toPath()),
+                containsString("INFO : Usage")
+        );
+
+        FileUtils.forceDelete(file);
+    }
+
 }

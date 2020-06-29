@@ -7,9 +7,7 @@ import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.*;
 import net.trilogy.arch.config.AppConfig;
-import net.trilogy.arch.config.LoggingConfigurationFactory;
 import net.trilogy.arch.facade.FilesFacade;
-import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import picocli.CommandLine;
 
 import lombok.Builder;
@@ -54,15 +52,15 @@ public class Application {
 
         int exitCode = app.execute(args);
 
+        if (exitCode != 0) {
+            app.getCli().getCommandSpec().commandLine().getOut().println("Command failed, for more info please check log file at: " + System.getProperty("user.home") +
+                    "/.arch-as-code/arch-as-code.log");
+        }
         System.exit(exitCode);
     }
 
     public int execute(String[] args) {
-        initializeLogger();
         return getCli().execute(args);
     }
 
-    private void initializeLogger() {
-        ConfigurationFactory.setConfigurationFactory(new LoggingConfigurationFactory(appConfig.getLogPath()));
-    }
 }

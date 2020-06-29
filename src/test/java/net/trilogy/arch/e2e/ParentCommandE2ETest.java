@@ -53,28 +53,4 @@ public class ParentCommandE2ETest {
         );
     }
 
-
-    @Test
-    public void rootCommandShouldLogOutputToFileButNotConsole() throws Exception {
-        // WHEN
-        var file = File.createTempFile("aac", "");
-        originalOut.println(file.getAbsolutePath());
-
-        var app = Application.builder().appConfig(AppConfig.builder().logPath(file.getAbsolutePath()).build()).build();
-        app.execute(new String[]{});
-
-        // THEN
-        collector.checkThat(
-                out.toString(),
-                not(containsString("INFO"))
-        );
-        collector.checkThat(
-                Files.readString(file.toPath()),
-                containsString("INFO : Usage")
-        );
-
-
-        //FileUtils.forceDelete(file);
-    }
-
 }

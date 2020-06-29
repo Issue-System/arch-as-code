@@ -1,15 +1,17 @@
 package net.trilogy.arch.adapter.out;
 
 import lombok.SneakyThrows;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.DocumentationSection;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -45,13 +47,48 @@ public class ArchitectureDataStructureWriterTest {
     }
 
     @Test
-    public void shouldWriteYamlToSpecifiedDirectory() throws IOException {
+    public void shouldWriteYamlToSpecifiedDirectory() throws Exception {
         final File tempFile = File.createTempFile("aac", "test");
 
         File writtenYamlFile = new ArchitectureDataStructureWriter()
                 .export(new ArchitectureDataStructure(), tempFile);
 
         assertThat(tempFile.getAbsoluteFile(), equalTo(writtenYamlFile.getAbsoluteFile()));
+    }
+
+    @Test
+    public void shouldWriteDocumentationToCorrectLocation() throws Exception {
+        // Given
+        final Path rootDir = Files.createTempDirectory("aacDir");
+        final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
+        final String content = "##Content";
+        ArchitectureDataStructure arch = getArchWithDocumentation(content);
+
+        // When
+        final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
+        final Path pathToDoc = Paths.get(exportedYaml.getParent().toString()).resolve("documentation").resolve("DocTitle.md");
+        String docAsString = Files.readString(pathToDoc);
+
+        // Then
+        assertThat(docAsString, equalTo(content));
+    }
+
+    @Test
+    public void shouldNotComplainIfDocumentationDirectoryAlreadyExists() throws Exception {
+        // Given
+        final Path rootDir = Files.createTempDirectory("aacDir");
+        Files.createDirectory(rootDir.resolve("documentation"));  // with existing documentation directory
+        final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
+        final String content = "##Content";
+        ArchitectureDataStructure arch = getArchWithDocumentation(content);
+
+        // When
+        final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
+        final Path pathToDoc = Paths.get(exportedYaml.getParent().toString()).resolve("documentation").resolve("DocTitle.md");
+        String docAsString = Files.readString(pathToDoc);
+
+        // Then
+        assertThat(docAsString, equalTo(content));
     }
 
     @SneakyThrows
@@ -61,7 +98,7 @@ public class ArchitectureDataStructureWriterTest {
         df.parse(str);
     }
 
-    private List<String> extractDates(File writtenYamlFile) throws IOException {
+    private List<String> extractDates(File writtenYamlFile) throws Exception {
         return Files.readAllLines(writtenYamlFile.toPath())
                 .stream()
                 .filter(it -> it.contains("date"))
@@ -75,10 +112,20 @@ public class ArchitectureDataStructureWriterTest {
         return s.replaceAll("^\"|\"$", "");
     }
 
-    private void assertYamlContentsEqual(File actual, File expected) throws IOException {
+    private void assertYamlContentsEqual(File actual, File expected) throws Exception {
         ArchitectureDataStructure actualData = new ArchitectureDataStructureReader(new FilesFacade()).load(actual);
         ArchitectureDataStructure expectedData = new ArchitectureDataStructureReader(new FilesFacade()).load(expected);
         assertThat(actualData, is(equalTo(expectedData)));
+    }
+
+    private ArchitectureDataStructure getArchWithDocumentation(String content) {
+        return ArchitectureDataStructure.builder()
+                .name("name")
+                .businessUnit("businessUnit")
+                .description("description")
+                .documentation(List.of(
+                        new DocumentationSection("1", "DocTitle", 1, "Markdown", content)
+                )).build();
     }
 
 }

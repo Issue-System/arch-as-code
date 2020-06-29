@@ -20,6 +20,8 @@ import java.util.TimeZone;
 import static java.util.stream.Collectors.toList;
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_GENERALLY;
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES;
+import static net.trilogy.arch.domain.DocumentationSection.Format.ASCIIDOC;
+import static net.trilogy.arch.domain.DocumentationSection.Format.MARKDOWN;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -64,11 +66,11 @@ public class ArchitectureDataStructureWriterTest {
         final Path rootDir = Files.createTempDirectory("aacDir");
         final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
         final String content = "##Content";
-        ArchitectureDataStructure arch = getArchWithDocumentation(content);
+        ArchitectureDataStructure arch = getArchWithDocumentation(content, MARKDOWN);
 
         // When
         final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
-        final Path pathToDoc = Paths.get(exportedYaml.getParent().toString()).resolve("documentation").resolve("DocTitle.md");
+        final Path pathToDoc = Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("DocTitle.md");
         String docAsString = Files.readString(pathToDoc);
 
         // Then
@@ -82,11 +84,11 @@ public class ArchitectureDataStructureWriterTest {
         Files.createDirectory(rootDir.resolve("documentation"));  // with existing documentation directory
         final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
         final String content = "##Content";
-        ArchitectureDataStructure arch = getArchWithDocumentation(content);
+        ArchitectureDataStructure arch = getArchWithDocumentation(content, ASCIIDOC);
 
         // When
         final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
-        final Path pathToDoc = Paths.get(exportedYaml.getParent().toString()).resolve("documentation").resolve("DocTitle.md");
+        final Path pathToDoc = Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("DocTitle.txt");
         String docAsString = Files.readString(pathToDoc);
 
         // Then
@@ -125,13 +127,13 @@ public class ArchitectureDataStructureWriterTest {
         assertThat(actualData, is(equalTo(expectedData)));
     }
 
-    private ArchitectureDataStructure getArchWithDocumentation(String content) {
+    private ArchitectureDataStructure getArchWithDocumentation(String content, DocumentationSection.Format format) {
         return ArchitectureDataStructure.builder()
                 .name("name")
                 .businessUnit("businessUnit")
                 .description("description")
                 .documentation(List.of(
-                        new DocumentationSection("1", "DocTitle", 1, "Markdown", content)
+                        new DocumentationSection("1", "DocTitle", 1, format, content)
                 )).build();
     }
 

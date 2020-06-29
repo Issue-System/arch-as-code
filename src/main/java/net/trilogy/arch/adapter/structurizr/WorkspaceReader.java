@@ -332,8 +332,15 @@ public class WorkspaceReader {
                 d.getElementId(),
                 d.getTitle(),
                 d.getOrder(),
-                d.getFormat().toString(),
+                getFormat(d),
                 d.getContent())
         ).collect(toList());
+    }
+
+    private DocumentationSection.Format getFormat(Section d) {
+        DocumentationSection.Format format;
+        if (d.getFormat().toString().equals("Markdown")) format = DocumentationSection.Format.MARKDOWN;
+        else format = DocumentationSection.Format.ASCIIDOC;
+        return format;
     }
 }

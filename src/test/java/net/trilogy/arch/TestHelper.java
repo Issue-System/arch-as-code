@@ -24,7 +24,7 @@ public abstract class TestHelper {
     public static final String MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES = "/view/bigBank/product-architecture.yml";
     public static final String MANIFEST_PATH_TO_TEST_VIEWS = "/view/bigBank/product-architecture.yml";
 
-    public static final String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/BigBank.json";
+    public static final String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/big-bank.json";
     public static final String JSON_STRUCTURIZR_THINK3_SOCOCO = "/structurizr/Think3-Sococo.c4model.json";
     public static final String JSON_STRUCTURIZR_EMPTY = "/structurizr/empty-workspace.json";
     public static final String JSON_STRUCTURIZR_NO_SYSTEM = "/structurizr/no-system-deployment-view-workspace.json";

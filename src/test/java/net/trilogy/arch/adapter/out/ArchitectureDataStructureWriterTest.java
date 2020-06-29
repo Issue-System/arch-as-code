@@ -1,7 +1,7 @@
 package net.trilogy.arch.adapter.out;
 
 import lombok.SneakyThrows;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.DocumentationSection;
@@ -29,8 +29,9 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteHumanReadableDates() throws Exception {
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_GENERALLY).getPath());
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(existingYamlFile);
-
+        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper().readValue(
+                new FilesFacade().readString(existingYamlFile.toPath())
+        );
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
 
         extractDates(writtenYamlFile).forEach(this::parseDateAsIsoOrThrow);
@@ -39,8 +40,9 @@ public class ArchitectureDataStructureWriterTest {
     @Test
     public void shouldWriteTheSameYamlAsWhatWasRead() throws Exception {
         File existingYamlFile = new File(getClass().getResource(MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES).getPath());
-        ArchitectureDataStructure dataStructure = new ArchitectureDataStructureReader(new FilesFacade()).load(existingYamlFile);
-
+        final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper().readValue(
+                new FilesFacade().readString(existingYamlFile.toPath())
+        );
         File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
 
         assertYamlContentsEqual(writtenYamlFile, existingYamlFile);
@@ -113,8 +115,13 @@ public class ArchitectureDataStructureWriterTest {
     }
 
     private void assertYamlContentsEqual(File actual, File expected) throws Exception {
-        ArchitectureDataStructure actualData = new ArchitectureDataStructureReader(new FilesFacade()).load(actual);
-        ArchitectureDataStructure expectedData = new ArchitectureDataStructureReader(new FilesFacade()).load(expected);
+        final ArchitectureDataStructure actualData = new ArchitectureDataStructureObjectMapper().readValue(
+                new FilesFacade().readString(actual.toPath())
+        );
+        final ArchitectureDataStructure expectedData = new ArchitectureDataStructureObjectMapper().readValue(
+                new FilesFacade().readString(expected.toPath())
+        );
+
         assertThat(actualData, is(equalTo(expectedData)));
     }
 

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
@@ -203,5 +204,18 @@ public class WorkspaceReaderTest {
         expected.add(new C4Reference("34", null));
 
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldReadDocumentation() throws Exception {
+        URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
+        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
+
+        final int size = dataStructure.getDocumentation().size();
+        final Set<String> titles = dataStructure.getDocumentation().stream()
+                .map(doc -> doc.getTitle()).collect(Collectors.toSet());
+
+        assertThat(size, equalTo(5));
+        assertThat(titles, containsInAnyOrder("Context", "Components", "Development Environment", "Containers", "Deployment"));
     }
 }

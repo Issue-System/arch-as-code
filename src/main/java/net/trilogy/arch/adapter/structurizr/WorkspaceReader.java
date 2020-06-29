@@ -3,11 +3,13 @@ package net.trilogy.arch.adapter.structurizr;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
+import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.StaticView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.DocumentationSection;
 import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.*;
 import net.trilogy.arch.domain.c4.view.*;
@@ -52,9 +54,11 @@ public class WorkspaceReader {
         List<ImportantTechnicalDecision> decisions = decisions(workspace);
         architectureDataStructure.setDecisions(decisions);
 
+        List<DocumentationSection> documentation = documentation(workspace);
+        architectureDataStructure.setDocumentation(documentation);
+
         return architectureDataStructure;
     }
-
 
     private List<C4SystemView> systemViews(ViewSet views) {
         return views
@@ -278,11 +282,12 @@ public class WorkspaceReader {
 
     private List<String> getSrcMappings(Component co) {
         try {
-            return List.of(new ObjectMapper().readValue( 
-                co.getProperties().get("Source Code Mappings"),
-                String[].class
+            return List.of(new ObjectMapper().readValue(
+                    co.getProperties().get("Source Code Mappings"),
+                    String[].class
             ));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return List.of();
     }
 
@@ -319,5 +324,16 @@ public class WorkspaceReader {
                 .title(d.getTitle())
                 .build())
                 .collect(toList());
+    }
+
+    private List<DocumentationSection> documentation(Workspace workspace) {
+        Set<Section> docs = workspace.getDocumentation().getSections();
+        return docs.stream().map(d -> new DocumentationSection(
+                d.getElementId(),
+                d.getTitle(),
+                d.getOrder(),
+                d.getFormat().toString(),
+                d.getContent())
+        ).collect(toList());
     }
 }

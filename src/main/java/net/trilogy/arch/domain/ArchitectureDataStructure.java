@@ -1,11 +1,12 @@
 package net.trilogy.arch.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
 import lombok.*;
-import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Tag;
+import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class ArchitectureDataStructure {
     @NonNull
     @Builder.Default
     private List<ImportantTechnicalDecision> decisions = ImmutableList.of();
+    @NonNull
+    @Builder.Default
+    @JsonIgnore
+    private List<DocumentationSection> documentation = ImmutableList.of();
     @NonNull
     @Builder.Default
     private C4Model model = C4Model.NONE;

@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import picocli.CommandLine;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "import", mixinStandardHelpOptions = true, description = "Imports existing structurizr workspace, overwriting the existing product architecture.")
-public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin {
+public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin, DisplaysErrorMixin {
 
     @CommandLine.Parameters(index = "0", paramLabel = "EXPORTED_WORKSPACE", description = "Exported structurizr workspace json file location.")
     private File exportedWorkspacePath;
@@ -28,11 +29,16 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin {
     // TODO: [TESTING] Sad path
     public Integer call() throws Exception {
         logArgs();
-        ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
-        File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
+        try {
+            ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
+            File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
 
-        File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
-        print(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));
-        return 0;
+            File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
+            print(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));
+            return 0;
+        } catch (Exception e) {
+            printError("Failed to import", e);
+            return 1;
+        }
     }
 }

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DisplaysOutputMixinTest {
-    class TestCommand implements DisplaysOutputMixin {
+    static class TestCommand implements DisplaysOutputMixin {
         @Override
         public CommandLine.Model.CommandSpec getSpec() {
             return null;

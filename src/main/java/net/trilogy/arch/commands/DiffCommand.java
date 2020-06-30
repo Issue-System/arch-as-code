@@ -53,6 +53,7 @@ public class DiffCommand implements Callable<Integer>, LoadArchitectureMixin, Lo
 
     @Override
     public Integer call() {
+        logArgs();
         final var currentArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (currentArch.isEmpty()) return 1;
 

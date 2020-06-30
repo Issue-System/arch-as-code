@@ -44,6 +44,7 @@ public class AuNewCommand implements Callable<Integer>, DisplaysErrorMixin, Disp
 
     @Override
     public Integer call() {
+        logArgs();
         if (!checkBranchNameEquals(name)) return 1;
 
         var auFile = getNewAuFilePath();

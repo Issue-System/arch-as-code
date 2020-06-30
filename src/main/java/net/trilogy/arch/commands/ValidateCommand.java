@@ -23,6 +23,7 @@ public class ValidateCommand implements Callable<Integer>, DisplaysOutputMixin, 
     @Override
     // TODO [TESTING]: add sad path coverage e2e tests
     public Integer call() {
+        logArgs();
         var fileName = "product-architecture.yml";
         List<String> messageSet;
         try {

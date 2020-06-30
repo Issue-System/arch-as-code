@@ -27,6 +27,7 @@ public class ParentCommand implements Callable<Integer>, DisplaysOutputMixin {
 
     @Override
     public Integer call() {
+        logArgs();
         print(spec.commandLine().getUsageMessage());
         return 0;
     }

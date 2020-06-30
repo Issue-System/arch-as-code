@@ -3,6 +3,8 @@ package net.trilogy.arch.commands.mixin;
 import org.apache.logging.log4j.LogManager;
 import picocli.CommandLine;
 
+import java.util.stream.Collectors;
+
 public interface DisplaysOutputMixin {
     CommandLine.Model.CommandSpec getSpec();
 
@@ -10,5 +12,19 @@ public interface DisplaysOutputMixin {
         getSpec().commandLine().getOut().println(message);
 
         LogManager.getLogger(getClass()).info(message);
+    }
+
+    default void logArgs() {
+        LogManager.getLogger(getClass()).info(getClass().getSimpleName() + " with args : " + getSpec().args().stream().map(s ->
+                maskedParamValue(s)
+        ).collect( Collectors.joining( " ") ));
+    }
+
+    private String maskedParamValue(CommandLine.Model.ArgSpec spec) {
+        String label = spec.paramLabel().toLowerCase();
+        if (label.contains("secret") || label.contains("password")) {
+            return spec.paramLabel() + ":******";
+        }
+        return spec.paramLabel() + ":" + spec.getValue();
     }
 }

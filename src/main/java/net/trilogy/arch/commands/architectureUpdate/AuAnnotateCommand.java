@@ -44,6 +44,7 @@ public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMix
 
     @Override
     public Integer call() {
+        logArgs();
         var regexToGetComponentReferences = Pattern.compile("(\\n\\s+['\"]?Component-)(\\d+)(['\"]?:)[^\\n]*(\\n)");
 
         String au = null;

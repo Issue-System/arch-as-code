@@ -33,6 +33,8 @@ public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin
 
     @Override
     public Integer call() throws Exception {
+        logArgs();
+
         print(String.format("Architecture as code initialized under - %s", productArchitectureDirectory.getAbsolutePath()));
 
         // TODO [TESTING]: Add sad path e2e testing

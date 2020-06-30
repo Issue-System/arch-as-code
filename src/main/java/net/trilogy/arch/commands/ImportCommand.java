@@ -27,6 +27,7 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin {
     @Override
     // TODO: [TESTING] Sad path
     public Integer call() throws Exception {
+        logArgs();
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
         File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
 

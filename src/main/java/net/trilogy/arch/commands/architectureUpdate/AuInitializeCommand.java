@@ -52,6 +52,7 @@ public class AuInitializeCommand implements Callable<Integer>, DisplaysOutputMix
 
     @Override
     public Integer call() {
+        logArgs();
         if (!makeAuFolder()) return 1;
         if (!makeJiraSettingsFile()) return 1;
         if (!makeGoogleApiCredentialsFolder()) return 1;

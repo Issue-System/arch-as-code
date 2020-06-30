@@ -39,6 +39,7 @@ public class ListComponentsCommand implements Callable<Integer>, LoadArchitectur
 
     @Override
     public Integer call() {
+        logArgs();
         final var arch = loadArchitectureOrPrintError("Unable to load architecture");
         if(arch.isEmpty()) return 1;
 

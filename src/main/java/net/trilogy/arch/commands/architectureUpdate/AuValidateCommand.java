@@ -66,6 +66,7 @@ public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFro
 
     @Override
     public Integer call() {
+        logArgs();
         final var auBranchArch = loadArchitectureOrPrintError("Unable to load architecture file");
         if (auBranchArch.isEmpty()) return 1;
 

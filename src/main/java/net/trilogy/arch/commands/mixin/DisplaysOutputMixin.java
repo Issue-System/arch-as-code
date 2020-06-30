@@ -20,7 +20,7 @@ public interface DisplaysOutputMixin {
         ).collect( Collectors.joining( " ") ));
     }
 
-    private String maskedParamValue(CommandLine.Model.ArgSpec spec) {
+    default String maskedParamValue(CommandLine.Model.ArgSpec spec) {
         String label = spec.paramLabel().toLowerCase();
         if (label.contains("secret") || label.contains("password")) {
             return spec.paramLabel() + ":******";

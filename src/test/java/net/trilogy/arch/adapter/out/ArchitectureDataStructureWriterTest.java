@@ -65,16 +65,20 @@ public class ArchitectureDataStructureWriterTest {
         // Given
         final Path rootDir = Files.createTempDirectory("aacDir");
         final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
-        final String content = "##Content";
-        ArchitectureDataStructure arch = getArchWithDocumentation(content, MARKDOWN);
+
+        ArchitectureDataStructure arch = getArchWithDocumentation(List.of(
+                new DocumentationSection(null, "ordered", 1, MARKDOWN, "ordered content"),
+                new DocumentationSection(null, "unordered", null, MARKDOWN, "unordered content")
+        ));
 
         // When
         final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
-        final Path pathToDoc = Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("DocTitle.md");
-        String docAsString = Files.readString(pathToDoc);
+        String unorderedDocAsString = Files.readString(Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("unordered.md"));
+        String orderedDocAsString = Files.readString(Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("1_ordered.md"));
 
         // Then
-        assertThat(docAsString, equalTo(content));
+        assertThat(unorderedDocAsString, equalTo("unordered content"));
+        assertThat(orderedDocAsString, equalTo("ordered content"));
     }
 
     @Test
@@ -84,7 +88,9 @@ public class ArchitectureDataStructureWriterTest {
         Files.createDirectory(rootDir.resolve("documentation"));  // with existing documentation directory
         final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
         final String content = "##Content";
-        ArchitectureDataStructure arch = getArchWithDocumentation(content, ASCIIDOC);
+        ArchitectureDataStructure arch = getArchWithDocumentation(List.of(
+                new DocumentationSection(null, "DocTitle", null, ASCIIDOC, content)
+        ));
 
         // When
         final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
@@ -127,14 +133,12 @@ public class ArchitectureDataStructureWriterTest {
         assertThat(actualData, is(equalTo(expectedData)));
     }
 
-    private ArchitectureDataStructure getArchWithDocumentation(String content, DocumentationSection.Format format) {
+    private ArchitectureDataStructure getArchWithDocumentation(List<DocumentationSection> documentationSections) {
         return ArchitectureDataStructure.builder()
                 .name("name")
                 .businessUnit("businessUnit")
                 .description("description")
-                .documentation(List.of(
-                        new DocumentationSection("1", "DocTitle", 1, format, content)
-                )).build();
+                .documentation(documentationSections).build();
     }
 
 }

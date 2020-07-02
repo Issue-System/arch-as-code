@@ -60,4 +60,18 @@ public class DocumentationSectionTest {
         assertThat(doc.getContent(), equalTo("content"));
         assertThat(doc.getOrder(), equalTo(null));
     }
+
+    @Test
+    public void shouldCalculateDocumentationFilename() {
+        final DocumentationSection orderedDoc = new DocumentationSection(null, "OrderedTitle", 1, MARKDOWN, "");
+        final DocumentationSection unorderedDoc = new DocumentationSection(null, "UnorderedTitle", null, MARKDOWN, "");
+        final DocumentationSection orderedNoExtension = new DocumentationSection(null, "NoExtension", 2, null, "");
+        final DocumentationSection unorderedNoExtension = new DocumentationSection(null, "NoExtension", null, null, "");
+
+        assertThat(orderedDoc.getFileName(), equalTo("1_OrderedTitle.md"));
+        assertThat(unorderedDoc.getFileName(), equalTo("UnorderedTitle.md"));
+        assertThat(orderedNoExtension.getFileName(), equalTo("2_NoExtension"));
+        assertThat(unorderedNoExtension.getFileName(), equalTo("NoExtension"));
+
+    }
 }

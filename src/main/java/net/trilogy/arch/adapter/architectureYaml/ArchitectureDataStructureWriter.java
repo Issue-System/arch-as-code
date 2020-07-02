@@ -23,17 +23,10 @@ public class ArchitectureDataStructureWriter {
         if (!documentation.toFile().exists()) new FilesFacade().createDirectory(documentation);
 
         for (DocumentationSection doc : dataStructure.getDocumentation()) {
-            String type = getFileType(doc);
-            final File docFile = documentation.resolve(doc.getTitle() + type).toFile();
+            final File docFile = documentation.resolve(doc.getFileName()).toFile();
             new FilesFacade().writeString(docFile.toPath(), doc.getContent());
         }
 
         return writeFile;
     }
-
-    private String getFileType(DocumentationSection doc) {
-        if (doc.getFormat().equals(DocumentationSection.Format.MARKDOWN)) return ".md";
-        return ".txt";
-    }
-
 }

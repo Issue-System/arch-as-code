@@ -51,7 +51,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
     implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.7.0.202003110725-r'
 
-    implementation group: 'guru.nidi', name: 'graphviz-java-all-j2v8', version: '0.16.2'
+    implementation group: 'guru.nidi', name: 'graphviz-java-all-j2v8', version: '0.16.3'
 
     //Command line arguments
     implementation 'info.picocli:picocli:4.2.0'
@@ -71,7 +71,8 @@ dependencies {
     //logging
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
-    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.3'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     //Testing
     //Makesure hamcrest is above junit see - https://stackoverflow.com/questions/7869711/getting-nosuchmethoderror-org-hamcrest-matcher-describemismatch-when-running

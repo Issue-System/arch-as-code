@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration>
   <Appenders>
-    <File name="arc-as-code-log" fileName="${sys:user.home}/.arch-as-code/test-output.log" immediateFlush="true" append="true">
+    <File name="arc-as-code-test-log" fileName="${sys:user.home}/.arch-as-code/test-output.log" immediateFlush="true" append="true">
       <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
   </Appenders>
   <Loggers>
-    <Root level="debug" additivity="false">
-      <AppenderRef ref="arc-as-code-log"/>
+    <Root level="warn" additivity="false">
+      <AppenderRef ref="arc-as-code-test-log"/>
     </Root>
   </Loggers>
 </Configuration>

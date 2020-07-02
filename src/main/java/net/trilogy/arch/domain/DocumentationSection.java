@@ -62,7 +62,6 @@ public class DocumentationSection {
     }
 
     private static Format formatFromExtension(String extension) {
-        // TODO: Handle missing extension
         if (extension.equals("md")) return Format.MARKDOWN;
 
         return Format.ASCIIDOC;

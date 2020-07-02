@@ -16,7 +16,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 
 public class DocumentationSectionTest {
-
     @Test
     public void shouldReturnStructurizrFormat() {
         final DocumentationSection markdownDoc = new DocumentationSection("0", "title", 1, MARKDOWN, "markdown content");

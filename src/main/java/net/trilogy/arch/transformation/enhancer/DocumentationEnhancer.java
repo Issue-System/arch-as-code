@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 
 public class DocumentationEnhancer implements WorkspaceEnhancer {
     private final File documentationRoot;
+    private final FilesFacade filesFacade;
 
-    public DocumentationEnhancer(File documentationRoot) {
+    public DocumentationEnhancer(File documentationRoot, FilesFacade filesFacade) {
         this.documentationRoot = documentationRoot;
+        this.filesFacade = filesFacade;
     }
 
     @Override
@@ -51,13 +53,14 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
     }
 
     private DocumentationSection createDocFromFile(File file) {
+        if (file == null) return null;
         if (file.isDirectory()) return null;
 
         DocumentationSection doc = null;
         try {
-            doc = DocumentationSection.createFromFile(file, new FilesFacade());
+            doc = DocumentationSection.createFromFile(file, filesFacade);
         } catch (IOException e) {
-            // TODO: Log error
+            System.err.println("Unable to import documentation: " + file.getName() + "\nError thrown: " + e);
         }
 
         return doc;

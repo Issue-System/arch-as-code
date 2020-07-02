@@ -2,6 +2,7 @@ package net.trilogy.arch.commands;
 
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
+import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
@@ -14,7 +15,7 @@ import java.util.concurrent.Callable;
 import static net.trilogy.arch.adapter.structurizr.Credentials.createCredentials;
 
 @CommandLine.Command(name = "init", description = "Initializes a new workspace directory to contain a single project architecture, AUs, documentation, and credentials for Structurizr imports and exports. This is generally the first command to be run.", mixinStandardHelpOptions = true)
-public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin {
+public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin, DisplaysErrorMixin {
 
     @CommandLine.Option(names = {"-i", "--workspace-id"}, description = "Structurizr workspace id", required = true)
     private String workspaceId;
@@ -39,18 +40,22 @@ public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         logArgs();
 
-        print(String.format("Architecture as code initialized under - %s", productArchitectureDirectory.getAbsolutePath()));
+        try {
+            createCredentials(productArchitectureDirectory, workspaceId, apiKey, apiSecret);
+            createManifest();
+            print(String.format("Architecture as code initialized under - %s", productArchitectureDirectory.getAbsolutePath()));
+            print("You're ready to go!!");
 
-        // TODO [TESTING]: Add sad path e2e testing
-        createCredentials(productArchitectureDirectory, workspaceId, apiKey, apiSecret);
-        createManifest();
+            return 0;
 
-        print("You're ready to go!!");
+        } catch (Exception e) {
+            printError("Unable to initialize", e);
+        }
 
-        return 0;
+        return 1;
     }
 
     private void createManifest() throws IOException {

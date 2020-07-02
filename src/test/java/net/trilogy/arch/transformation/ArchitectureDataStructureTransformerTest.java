@@ -9,7 +9,6 @@ import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Model;
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -18,6 +17,7 @@ import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Person;
 import net.trilogy.arch.domain.c4.C4SoftwareSystem;
 import net.trilogy.arch.domain.c4.view.C4ViewContainer;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Test;
 
 import java.io.File;
@@ -88,7 +88,7 @@ public class ArchitectureDataStructureTransformerTest {
         assertNotNull(workspace);
         assertThat(workspace.getName(), equalTo(PRODUCT_NAME));
         assertThat(workspace.getDescription(), equalTo(PRODUCT_DESCRIPTION));
-        assertThat(workspace.getDocumentation().getSections().size(), equalTo(2));
+        assertThat(workspace.getDocumentation().getSections().size(), equalTo(4));
         Model model = workspace.getModel();
         assertThat(model.getPeople().size(), equalTo(4));
         assertThat(model.getSoftwareSystems().size(), equalTo(5));

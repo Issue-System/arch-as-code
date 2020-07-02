@@ -43,6 +43,10 @@ public abstract class TestHelper {
     public static final String ROOT_PATH_TO_TEST_VIEWS = "/view/bigBank/";
     public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";
 
+    public static final String MARKDOWN_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/1_context-diagram.md";
+    public static final String ASCII_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/3_Ascii-docs.txt";
+    public static final String NO_ORDER_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/no_order.txt";
+
     public static Integer execute(String... args) throws Exception {
         return Application.builder().build().execute(args);
     }

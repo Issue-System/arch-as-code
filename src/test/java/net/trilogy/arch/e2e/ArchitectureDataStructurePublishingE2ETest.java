@@ -27,7 +27,7 @@ public class ArchitectureDataStructurePublishingE2ETest {
         //then
         StructurizrAdapter adapter = new StructurizrAdapter();
         Workspace workspace = adapter.load(TEST_WORKSPACE_ID);
-        assertThat(workspace.getDocumentation().getSections(), hasSize(2));
+        assertThat(workspace.getDocumentation().getSections(), hasSize(4));
         assertThat(workspace.getDocumentation().getDecisions(), hasSize(2));
         assertThat(workspace.getModel().getSoftwareSystems(), hasSize(5));
         assertThat(workspace.getModel().getPeople(), hasSize(4));

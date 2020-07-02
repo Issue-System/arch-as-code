@@ -1,12 +1,12 @@
 package net.trilogy.arch.commands;
 
-import com.google.common.annotations.VisibleForTesting;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
 import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -25,20 +25,26 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin, Di
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
+    private FilesFacade filesFacade;
+
+    public ImportCommand(FilesFacade filesFacade) {
+        this.filesFacade = filesFacade;
+    }
+
     @Override
-    // TODO: [TESTING] Sad path
-    public Integer call() throws Exception {
+    public Integer call() {
         logArgs();
+
         try {
             ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
             File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
-
-            File exportedFile = new ArchitectureDataStructureWriter().export(dataStructure, writeFile);
+            File exportedFile = new ArchitectureDataStructureWriter(filesFacade).export(dataStructure, writeFile);
             print(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));
-            return 0;
         } catch (Exception e) {
             printError("Failed to import", e);
             return 1;
         }
+
+        return 0;
     }
 }

@@ -9,22 +9,28 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class ArchitectureDataStructureWriter {
+    private FilesFacade filesFacade;
+
+    public ArchitectureDataStructureWriter(FilesFacade filesFacade) {
+        this.filesFacade = filesFacade;
+    }
+
     public File export(ArchitectureDataStructure dataStructure) throws IOException {
-        File tempFile = File.createTempFile("arch-as-code", ".yml");
+        File tempFile = filesFacade.createTempFile("arch-as-code", ".yml");
 
         return export(dataStructure, tempFile);
     }
 
     public File export(ArchitectureDataStructure dataStructure, File writeFile) throws IOException {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
-        new FilesFacade().writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
+        filesFacade.writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
 
         final Path documentation = Path.of(writeFile.getParent()).resolve("documentation");
-        if (!documentation.toFile().exists()) new FilesFacade().createDirectory(documentation);
+        if (!documentation.toFile().exists()) filesFacade.createDirectory(documentation);
 
         for (DocumentationSection doc : dataStructure.getDocumentation()) {
             final File docFile = documentation.resolve(doc.getFileName()).toFile();
-            new FilesFacade().writeString(docFile.toPath(), doc.getContent());
+            filesFacade.writeString(docFile.toPath(), doc.getContent());
         }
 
         return writeFile;

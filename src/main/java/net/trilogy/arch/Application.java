@@ -1,5 +1,6 @@
 package net.trilogy.arch;
 
+import lombok.Builder;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
@@ -9,8 +10,6 @@ import net.trilogy.arch.commands.architectureUpdate.*;
 import net.trilogy.arch.config.AppConfig;
 import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
-
-import lombok.Builder;
 
 @Builder
 public class Application {
@@ -31,10 +30,10 @@ public class Application {
 
     private CommandLine getCli() {
         return new CommandLine(new ParentCommand())
-                .addSubcommand(new InitializeCommand())
+                .addSubcommand(new InitializeCommand(filesFacade))
                 .addSubcommand(new ValidateCommand())
                 .addSubcommand(new PublishCommand())
-                .addSubcommand(new ImportCommand())
+                .addSubcommand(new ImportCommand(filesFacade))
                 .addSubcommand(new ListComponentsCommand(filesFacade))
                 .addSubcommand(new DiffCommand(filesFacade, gitInterface, graphvizInterface))
                 .addSubcommand(

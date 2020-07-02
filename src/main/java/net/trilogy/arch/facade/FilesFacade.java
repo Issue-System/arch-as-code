@@ -1,5 +1,6 @@
 package net.trilogy.arch.facade;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,5 +16,9 @@ public class FilesFacade {
 
     public Path createDirectory(Path path) throws IOException {
         return Files.createDirectory(path);
+    }
+
+    public File createTempFile(String prefix, String suffix) throws IOException {
+        return File.createTempFile(prefix, suffix);
     }
 }

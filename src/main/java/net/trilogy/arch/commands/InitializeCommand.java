@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -31,6 +32,12 @@ public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
+    private FilesFacade filesFacade;
+
+    public InitializeCommand(FilesFacade filesFacade) {
+        this.filesFacade = filesFacade;
+    }
+
     @Override
     public Integer call() throws Exception {
         logArgs();
@@ -55,7 +62,7 @@ public class InitializeCommand implements Callable<Integer>, DisplaysOutputMixin
 
     private void write(ArchitectureDataStructure data, String toFilePath) throws IOException {
         File manifestFile = new File(toFilePath);
-        new ArchitectureDataStructureWriter().export(data, manifestFile);
+        new ArchitectureDataStructureWriter(filesFacade).export(data, manifestFile);
     }
 
     private ArchitectureDataStructure createSampleDataStructure() {

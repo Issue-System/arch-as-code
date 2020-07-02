@@ -269,6 +269,7 @@ public class WorkspaceReader {
             description = "";
         }
         result.setDescription(description);
+
         return result;
     }
 

@@ -34,7 +34,7 @@ public class ArchitectureDataStructureWriterTest {
         final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper().readValue(
                 new FilesFacade().readString(existingYamlFile.toPath())
         );
-        File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
+        File writtenYamlFile = new ArchitectureDataStructureWriter(new FilesFacade()).export(dataStructure);
 
         extractDates(writtenYamlFile).forEach(this::parseDateAsIsoOrThrow);
     }
@@ -45,7 +45,7 @@ public class ArchitectureDataStructureWriterTest {
         final ArchitectureDataStructure dataStructure = new ArchitectureDataStructureObjectMapper().readValue(
                 new FilesFacade().readString(existingYamlFile.toPath())
         );
-        File writtenYamlFile = new ArchitectureDataStructureWriter().export(dataStructure);
+        File writtenYamlFile = new ArchitectureDataStructureWriter(new FilesFacade()).export(dataStructure);
 
         assertYamlContentsEqual(writtenYamlFile, existingYamlFile);
     }
@@ -54,7 +54,7 @@ public class ArchitectureDataStructureWriterTest {
     public void shouldWriteYamlToSpecifiedDirectory() throws Exception {
         final File tempFile = File.createTempFile("aac", "test");
 
-        File writtenYamlFile = new ArchitectureDataStructureWriter()
+        File writtenYamlFile = new ArchitectureDataStructureWriter(new FilesFacade())
                 .export(new ArchitectureDataStructure(), tempFile);
 
         assertThat(tempFile.getAbsoluteFile(), equalTo(writtenYamlFile.getAbsoluteFile()));
@@ -72,7 +72,7 @@ public class ArchitectureDataStructureWriterTest {
         ));
 
         // When
-        final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
+        final File exportedYaml = new ArchitectureDataStructureWriter(new FilesFacade()).export(arch, tempFile);
         String unorderedDocAsString = Files.readString(Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("unordered.md"));
         String orderedDocAsString = Files.readString(Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("1_ordered.md"));
 
@@ -93,7 +93,7 @@ public class ArchitectureDataStructureWriterTest {
         ));
 
         // When
-        final File exportedYaml = new ArchitectureDataStructureWriter().export(arch, tempFile);
+        final File exportedYaml = new ArchitectureDataStructureWriter(new FilesFacade()).export(arch, tempFile);
         final Path pathToDoc = Paths.get(exportedYaml.getParent()).resolve("documentation").resolve("DocTitle.txt");
         String docAsString = Files.readString(pathToDoc);
 

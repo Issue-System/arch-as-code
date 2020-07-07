@@ -47,6 +47,8 @@ public abstract class TestHelper {
     public static final String ASCII_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/3_Ascii-docs.txt";
     public static final String NO_ORDER_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/no_order.txt";
 
+    public static final String IMAGE_THOUGHTWORKS_FILE = "/images/thoughtworks.png";
+
     public static Integer execute(String... args) throws Exception {
         return Application.builder().build().execute(args);
     }

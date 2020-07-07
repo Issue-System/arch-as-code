@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.trilogy.arch.domain.architectureUpdate.Jira;
+import net.trilogy.arch.services.Base64Converter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -206,7 +207,7 @@ public class JiraApi {
 
     private String getEncodeAuth(String username, char[] password) {
         final String s = username + ":" + String.valueOf(password);
-        return Base64.getEncoder().encodeToString(s.getBytes());
+        return Base64Converter.toString(s);
     }
 
     private HttpRequest createGetStoryRequest(String encodedAuth, String ticket) {

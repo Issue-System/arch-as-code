@@ -32,6 +32,10 @@ public class ArchitectureDataStructure {
     private List<DocumentationSection> documentation = ImmutableList.of();
     @NonNull
     @Builder.Default
+    @JsonIgnore
+    private List<DocumentationImage> documentationImages = ImmutableList.of();
+    @NonNull
+    @Builder.Default
     private C4Model model = C4Model.NONE;
     @NonNull
     @Builder.Default

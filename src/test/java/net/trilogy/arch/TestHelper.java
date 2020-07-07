@@ -27,6 +27,7 @@ public abstract class TestHelper {
     public static final String JSON_STRUCTURIZR_BIG_BANK = "/structurizr/big-bank.json";
     public static final String JSON_STRUCTURIZR_THINK3_SOCOCO = "/structurizr/Think3-Sococo.c4model.json";
     public static final String JSON_STRUCTURIZR_EMPTY = "/structurizr/empty-workspace.json";
+    public static final String JSON_STRUCTURIZR_EMBEDDED_IMAGE = "/structurizr/embedded-image.json";
     public static final String JSON_STRUCTURIZR_NO_SYSTEM = "/structurizr/no-system-deployment-view-workspace.json";
     public static final String JSON_STRUCTURIZR_TRICKY_DEPLOYMENT_NODE_SCOPES = "/structurizr/deployment-node-scopes.json";
     public static final String JSON_STRUCTURIZR_MULTIPLE_RELATIONSHIPS = "/structurizr/multiple-relationships-with-same-source-and-destination.json";

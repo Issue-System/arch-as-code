@@ -3,12 +3,14 @@ package net.trilogy.arch.adapter.structurizr;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
+import com.structurizr.documentation.Image;
 import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.StaticView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.DocumentationImage;
 import net.trilogy.arch.domain.DocumentationSection;
 import net.trilogy.arch.domain.ImportantTechnicalDecision;
 import net.trilogy.arch.domain.c4.*;
@@ -56,6 +58,9 @@ public class WorkspaceReader {
 
         List<DocumentationSection> documentation = documentation(workspace);
         architectureDataStructure.setDocumentation(documentation);
+
+        List<DocumentationImage> documentationImages = documentationImages(workspace);
+        architectureDataStructure.setDocumentationImages(documentationImages);
 
         return architectureDataStructure;
     }
@@ -343,5 +348,14 @@ public class WorkspaceReader {
         if (d.getFormat().toString().equals("Markdown")) format = DocumentationSection.Format.MARKDOWN;
         else format = DocumentationSection.Format.ASCIIDOC;
         return format;
+    }
+
+    private List<DocumentationImage> documentationImages(Workspace workspace) {
+        Set<Image> images = workspace.getDocumentation().getImages();
+        return images.stream().map(i -> new DocumentationImage(
+                i.getName(),
+                i.getType(),
+                i.getContent())
+        ).collect(toList());
     }
 }

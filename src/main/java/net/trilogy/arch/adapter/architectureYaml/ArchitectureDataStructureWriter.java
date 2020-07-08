@@ -45,7 +45,7 @@ public class ArchitectureDataStructureWriter {
 
     private void writeDocumentationImages(ArchitectureDataStructure dataStructure, Path writePath) throws IOException {
         for (DocumentationImage image : dataStructure.getDocumentationImages()) {
-            Base64Converter.toFile(image.getContent(), writePath.resolve(image.getName()));
+            Base64Converter.toFile(new FilesFacade(), image.getContent(), writePath.resolve(image.getName()));
         }
     }
 }

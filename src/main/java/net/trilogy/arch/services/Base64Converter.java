@@ -1,5 +1,7 @@
 package net.trilogy.arch.services;
 
+import net.trilogy.arch.facade.FilesFacade;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,9 +24,9 @@ public class Base64Converter {
     }
 
 
-    public static Boolean toFile(String encodedString, Path outputStreamPath) throws IOException {
+    public static Boolean toFile(FilesFacade filesFacade, String encodedString, Path outputStreamPath) throws IOException {
         final byte[] decoded = Base64.getDecoder().decode(encodedString);
-        final FileOutputStream outputStream = new FileOutputStream(outputStreamPath.toString());
+        final FileOutputStream outputStream = filesFacade.newFileOutputStream(outputStreamPath.toString());
 
         outputStream.write(decoded);
         outputStream.flush();

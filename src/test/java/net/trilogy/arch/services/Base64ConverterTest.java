@@ -1,6 +1,7 @@
 package net.trilogy.arch.services;
 
 import net.trilogy.arch.TestHelper;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -36,7 +37,7 @@ public class Base64ConverterTest {
         final Path outfile = Files.createTempDirectory("aac").resolve("test.png");
 
         // When
-        final Boolean success = Base64Converter.toFile(encodedString, outfile);
+        final Boolean success = Base64Converter.toFile(new FilesFacade(), encodedString, outfile);
 
         // Then
         byte[] actual = Files.readAllBytes(outfile);

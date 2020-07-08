@@ -2,14 +2,13 @@ package net.trilogy.arch.integration;
 
 import com.networknt.schema.ValidationMessage;
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.schema.ArchitectureDataStructureSchemaValidator;
+import net.trilogy.arch.schema.SchemaValidator;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,8 +79,8 @@ public class SchemaValidationTest {
     private Set<ValidationMessage> getSchemaValidationMessages(String yamlFileName) throws FileNotFoundException {
         File validationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VALIDATION).getPath());
         File yamlFile = new File(validationRoot + File.separator + yamlFileName);
-        return new ArchitectureDataStructureSchemaValidator()
-                .validate(new FileInputStream(yamlFile));
+        return new SchemaValidator()
+                .validateArchitectureDocument(new FileInputStream(yamlFile));
     }
 
 }

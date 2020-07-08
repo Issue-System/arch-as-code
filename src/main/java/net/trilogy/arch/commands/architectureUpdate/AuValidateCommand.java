@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands.architectureUpdate;
 
+import com.networknt.schema.ValidationMessage;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
@@ -10,6 +11,7 @@ import net.trilogy.arch.commands.mixin.LoadArchitectureFromGitMixin;
 import net.trilogy.arch.commands.mixin.LoadArchitectureMixin;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 import net.trilogy.arch.facade.FilesFacade;
+import net.trilogy.arch.schema.SchemaValidator;
 import net.trilogy.arch.validation.architectureUpdate.ArchitectureUpdateValidator;
 import net.trilogy.arch.validation.architectureUpdate.ValidationError;
 import net.trilogy.arch.validation.architectureUpdate.ValidationErrorType;
@@ -19,8 +21,12 @@ import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -73,7 +79,7 @@ public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFro
         final var baseBranchArch = loadArchitectureFromGitOrPrintError(baseBranch, "Unable to load '" + baseBranch + "' branch architecture");
         if (baseBranchArch.isEmpty()) return 1;
 
-        final var au = loadAu();
+        final var au = loadAndValidateAu();
         if (au.isEmpty()) return 1;
 
         final ValidationResult validationResults = ArchitectureUpdateValidator.validate(
@@ -94,18 +100,30 @@ public class AuValidateCommand implements Callable<Integer>, LoadArchitectureFro
         return 0;
     }
 
-    private Optional<ArchitectureUpdate> loadAu() {
-        // TODO [ENHANCEMENT]: Use JSON schema validation
+    private Optional<ArchitectureUpdate> loadAndValidateAu() {
         try {
-            return Optional.of(
-                    architectureUpdateObjectMapper.readValue(
-                            filesFacade.readString(architectureUpdateFilePath.toPath())
-                    )
-            );
+            if (validateAu()) {
+                return Optional.of(
+                        architectureUpdateObjectMapper.readValue(
+                                filesFacade.readString(architectureUpdateFilePath.toPath())
+                        )
+                );
+            }
         } catch (final Exception e) {
             printError("Unable to load architecture update file", e);
-            return Optional.empty();
         }
+        return Optional.empty();
+    }
+
+    private boolean validateAu() throws FileNotFoundException {
+        InputStream auInputStream = new FileInputStream(architectureUpdateFilePath);
+        Set<ValidationMessage> validationMessages = new SchemaValidator().validateArchitectureUpdateDocument(auInputStream);
+        if (validationMessages.isEmpty()) {
+            return true;
+        }
+        printError("Architecture update schema validation failed.");
+        validationMessages.stream().forEach( m -> printError(m.getMessage()));
+        return false;
     }
 
     private String getPrettyStringOfErrors(final List<ValidationError> errors, final String baseBranchName) {

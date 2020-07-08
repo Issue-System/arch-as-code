@@ -226,4 +226,17 @@ public class AuValidateCommandTest {
                 containsString("Unable to load architecture update file\nError thrown: com.fasterxml")
         );
     }
+
+    @Test
+    public void shouldFindAUSchemaErrors() throws Exception {
+        var auPath = rootDir.getAbsolutePath() + "/architecture-updates/invalid_schema.yml";
+        Integer status = execute("au", "validate", "-b", "master", auPath, rootDir.getAbsolutePath());
+        collector.checkThat(status, not(equalTo(0)));
+        collector.checkThat(out.toString(), equalTo(""));
+
+        collector.checkThat(
+                err.toString(),
+                containsString("$.tdds-per-component[0].tdds.[SAMPLE-TDD-ID-2].text: is missing but it is required")
+        );
+    }
 }

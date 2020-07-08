@@ -3,7 +3,7 @@ package net.trilogy.arch.validation;
 import com.networknt.schema.ValidationMessage;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.schema.ArchitectureDataStructureSchemaValidator;
+import net.trilogy.arch.schema.SchemaValidator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,12 +15,12 @@ import static java.util.stream.Collectors.toList;
 
 public class ArchitectureDataStructureValidator {
     private final List<DataStructureValidator> dataStructureDataStructureValidators;
-    private final ArchitectureDataStructureSchemaValidator architectureDataStructureSchemaValidator;
+    private final SchemaValidator schemaValidator;
     private final ArchitectureDataStructureReader dataStructureReader;
 
-    public ArchitectureDataStructureValidator(List<DataStructureValidator> dataStructureDataStructureValidators, ArchitectureDataStructureSchemaValidator architectureDataStructureSchemaValidator, ArchitectureDataStructureReader dataStructureReader) {
+    public ArchitectureDataStructureValidator(List<DataStructureValidator> dataStructureDataStructureValidators, SchemaValidator schemaValidator, ArchitectureDataStructureReader dataStructureReader) {
         this.dataStructureDataStructureValidators = dataStructureDataStructureValidators;
-        this.architectureDataStructureSchemaValidator = architectureDataStructureSchemaValidator;
+        this.schemaValidator = schemaValidator;
         this.dataStructureReader = dataStructureReader;
     }
 
@@ -31,7 +31,7 @@ public class ArchitectureDataStructureValidator {
         File manifestFile = new File(productArchitectureDirectory.getAbsolutePath() + File.separator + manifestFileName);
         checkArgument(manifestFile.exists(), String.format("Product Architecture manifest file %s does not exist.", manifestFile.getAbsolutePath()));
 
-        List<String> schemaValidationMessages = this.architectureDataStructureSchemaValidator.validate(new FileInputStream(manifestFile)).stream().map(ValidationMessage::getMessage).collect(toList());
+        List<String> schemaValidationMessages = this.schemaValidator.validateArchitectureDocument(new FileInputStream(manifestFile)).stream().map(ValidationMessage::getMessage).collect(toList());
 
         if (schemaValidationMessages.isEmpty()) {
             ArchitectureDataStructure dataStructure = dataStructureReader.load(manifestFile);

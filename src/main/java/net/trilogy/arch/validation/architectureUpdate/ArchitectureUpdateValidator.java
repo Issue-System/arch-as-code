@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 public class ArchitectureUpdateValidator {
 
     private final ArchitectureUpdate architectureUpdate;
-    private final ArchitectureDataStructure architectureAfterUpdate;
-    private final ArchitectureDataStructure architectureBeforeUpdate;
 
     private final Set<String> allComponentIdsInBeforeArchitecture;
     private final Set<String> allComponentIdsInAfterArchitecture;
@@ -49,11 +47,10 @@ public class ArchitectureUpdateValidator {
             ArchitectureDataStructure architectureAfterUpdate,
             ArchitectureDataStructure architectureBeforeUpdate) {
         this.architectureUpdate = architectureUpdate;
-        this.architectureAfterUpdate = architectureAfterUpdate;
-        this.architectureBeforeUpdate = architectureBeforeUpdate;
 
-        allComponentIdsInBeforeArchitecture = getAllComponentIdsIn(this.architectureBeforeUpdate);
-        allComponentIdsInAfterArchitecture = getAllComponentIdsIn(this.architectureAfterUpdate);
+        allComponentIdsInBeforeArchitecture = getAllComponentIdsIn(architectureBeforeUpdate);
+        allComponentIdsInAfterArchitecture = getAllComponentIdsIn(architectureAfterUpdate);
+
         allTddIdsInStories = getAllTddIdsReferencedByStories();
         allTddIds = getAllTddIds();
         allTddIdsInDecisions = getAllTddIdsReferencedByDecisions();

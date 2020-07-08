@@ -10,24 +10,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-public class ArchitectureDataStructureSchemaValidator {
+public class SchemaValidator {
 
-    public Set<ValidationMessage> validate(InputStream manifestInputStream) {
-        JsonSchema schema = getJsonSchemaFromClasspath();
+    public static final String ARCH_DOC_SCHEMA = "schema/dataStructureSchema.json";
+    public static final String ARCH_UPDATE_DOC_SCHEMA = "schema/architectureUpdateSchema.json";
+
+    public Set<ValidationMessage> validateArchitectureDocument(InputStream manifestInputStream) {
+        return validate(manifestInputStream, ARCH_DOC_SCHEMA, "Product architecture data structure yaml file could not be found.");
+    }
+
+    public Set<ValidationMessage> validateArchitectureUpdateDocument(InputStream manifestInputStream) {
+        return validate(manifestInputStream, ARCH_UPDATE_DOC_SCHEMA, "Architecture update yaml file could not be found.");
+    }
+
+    private Set<ValidationMessage> validate(InputStream manifestInputStream, String schemaResource, String errorMessage) {
+        JsonSchema schema = getJsonSchemaFromClasspath(schemaResource);
         Set<ValidationMessage> errors;
 
         try {
             JsonNode node = getYamlFromFile(manifestInputStream);
             errors = schema.validate(node);
         } catch (IOException e) {
-            throw new IllegalStateException("Product architecture data structure yaml file could not be found.", e);
+            throw new IllegalStateException(errorMessage, e);
         }
-
         return errors;
     }
 
-    private JsonSchema getJsonSchemaFromClasspath() {
-        String schemaResource = "schema/dataStructureSchema.json";
+    private JsonSchema getJsonSchemaFromClasspath(String schemaResource) {
         JsonSchemaFactory factory = JsonSchemaFactory.getInstance();
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(schemaResource);
         return factory.getSchema(is);

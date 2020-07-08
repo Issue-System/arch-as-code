@@ -3,7 +3,7 @@ package net.trilogy.arch.validation;
 import com.google.common.collect.ImmutableList;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
-import net.trilogy.arch.schema.ArchitectureDataStructureSchemaValidator;
+import net.trilogy.arch.schema.SchemaValidator;
 
 public abstract class ArchitectureDataStructureValidatorFactory {
 
@@ -12,7 +12,7 @@ public abstract class ArchitectureDataStructureValidatorFactory {
                 ImmutableList.of(
                         new ModelValidator()
                 ),
-                new ArchitectureDataStructureSchemaValidator(),
+                new SchemaValidator(),
                 new ArchitectureDataStructureReader(new FilesFacade())
         );
     }

@@ -25,13 +25,14 @@ public class ArchitectureDataStructurePublisherTest {
         ArchitectureDataStructureReader importer = mock(ArchitectureDataStructureReader.class);
         ArchitectureDataStructureTransformer transformer = mock(ArchitectureDataStructureTransformer.class);
         StructurizrAdapter adapter = mock(StructurizrAdapter.class);
+        FilesFacade filesFacade = mock(FilesFacade.class);
 
         when(importer.load(any())).thenReturn(new ArchitectureDataStructure());
         when(transformer.toWorkSpace(any())).thenReturn(new Workspace("any", "any"));
 
         //when
         when(productArchitectureDirectory.exists()).thenReturn(true);
-        new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, transformer, adapter).publish();
+        new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, filesFacade, transformer, adapter).publish();
 
         //then
         verify(importer, times(1)).load(any(File.class));
@@ -44,6 +45,7 @@ public class ArchitectureDataStructurePublisherTest {
         File productArchitectureDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_GENERALLY).getPath());
         ArchitectureDataStructurePublisher publisher = new ArchitectureDataStructurePublisher(productArchitectureDir,
                 new ArchitectureDataStructureReader(new FilesFacade()),
+                new FilesFacade(),
                 TransformerFactory.create(productArchitectureDir),
                 new StructurizrAdapter());
 

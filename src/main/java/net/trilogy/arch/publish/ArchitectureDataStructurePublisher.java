@@ -15,17 +15,20 @@ import java.io.IOException;
 public class ArchitectureDataStructurePublisher {
     private final File productArchitectureDirectory;
     private final ArchitectureDataStructureReader dataStructureReader;
+    private final FilesFacade filesFacade;
     private final ArchitectureDataStructureTransformer dataStructureTransformer;
     private final StructurizrAdapter structurizrAdapter;
     private final String manifestFileName;
 
     ArchitectureDataStructurePublisher(File productArchitectureDirectory,
                                        ArchitectureDataStructureReader importer,
+                                       FilesFacade filesFacade,
                                        ArchitectureDataStructureTransformer transformer,
                                        StructurizrAdapter structurizrAdapter) {
         this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
+        this.filesFacade = filesFacade;
         this.structurizrAdapter = structurizrAdapter;
         this.manifestFileName = "product-architecture.yml";
 
@@ -33,12 +36,14 @@ public class ArchitectureDataStructurePublisher {
 
     public ArchitectureDataStructurePublisher(File productArchitectureDirectory,
                                               ArchitectureDataStructureReader importer,
+                                              FilesFacade filesFacade,
                                               ArchitectureDataStructureTransformer transformer,
                                               StructurizrAdapter adapter,
                                               String manifestFileName) {
         this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
+        this.filesFacade = filesFacade;
         this.structurizrAdapter = adapter;
         this.manifestFileName = manifestFileName;
     }
@@ -65,6 +70,6 @@ public class ArchitectureDataStructurePublisher {
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productArchitectureDirectory);
         StructurizrAdapter adapter = new StructurizrAdapter();
 
-        return new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, transformer, adapter, manifestFileName);
+        return new ArchitectureDataStructurePublisher(productArchitectureDirectory, importer, filesFacade, transformer, adapter, manifestFileName);
     }
 }

@@ -50,16 +50,21 @@ public abstract class TestHelper {
 
     public static final String IMAGE_THOUGHTWORKS_FILE = "/images/thoughtworks.png";
 
-    public static Integer execute(String... args) throws Exception {
+    public static Integer execute(String... args) {
         return Application.builder().build().execute(args);
     }
 
-    public static Integer execute(String command) throws Exception {
+    public static Integer execute(String command) {
         return Application.builder().build().execute(command.split(" "));
     }
 
     public static Integer execute(Application application, String command) {
         return application.execute(command.split(" "));
+    }
+
+
+    public static Integer execute(Application application, String... args) {
+        return application.execute(args);
     }
 
     public static Path getPath(Class<?> getClassOfCallingClass, String file) {

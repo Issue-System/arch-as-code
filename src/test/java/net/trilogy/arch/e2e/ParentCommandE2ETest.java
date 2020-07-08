@@ -1,20 +1,17 @@
 package net.trilogy.arch.e2e;
 
-import static net.trilogy.arch.TestHelper.execute;
-import static org.hamcrest.Matchers.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.nio.file.Files;
-
-import net.trilogy.arch.Application;
-import net.trilogy.arch.config.AppConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static net.trilogy.arch.TestHelper.execute;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 
 public class ParentCommandE2ETest {
@@ -41,7 +38,7 @@ public class ParentCommandE2ETest {
     }
 
     @Test
-    public void rootCommandShouldPrintUsage() throws Exception {
+    public void rootCommandShouldPrintUsage() {
         collector.checkThat(
                 execute(),
                 equalTo(0)
@@ -52,5 +49,4 @@ public class ParentCommandE2ETest {
                 containsString("Usage:")
         );
     }
-
 }

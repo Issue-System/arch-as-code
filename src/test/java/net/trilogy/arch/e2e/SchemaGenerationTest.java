@@ -7,8 +7,6 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class SchemaGenerationTest {
 
     @Test

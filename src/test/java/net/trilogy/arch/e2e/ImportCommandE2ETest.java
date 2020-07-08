@@ -78,7 +78,7 @@ public class ImportCommandE2ETest {
                 .build();
 
         // When
-        final Integer statusCode = execute(app, "import " + workspacePath.getAbsolutePath() + " " + tempProductDirectory.toAbsolutePath().toString());
+        final Integer statusCode = execute(app, "import", workspacePath.getAbsolutePath(), tempProductDirectory.toAbsolutePath().toString());
 
         // Then
         collector.checkThat(statusCode, not(0));
@@ -102,7 +102,7 @@ public class ImportCommandE2ETest {
                 .build();
 
         // When
-        Integer status = execute(app, "import " + workspacePath.getAbsolutePath() + " " + tempProductDirectory.toAbsolutePath());
+        Integer status = execute(app, "import", workspacePath.getAbsolutePath(), tempProductDirectory.toAbsolutePath().toString());
 
         collector.checkThat(status, not(0));
         collector.checkThat(out.toString(), equalTo(""));

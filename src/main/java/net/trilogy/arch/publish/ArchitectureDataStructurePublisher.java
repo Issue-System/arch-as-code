@@ -2,6 +2,7 @@ package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
+import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
@@ -48,6 +49,29 @@ public class ArchitectureDataStructurePublisher {
         this.manifestFileName = manifestFileName;
     }
 
+    public ArchitectureDataStructurePublisher(FilesFacade filesFacade,
+                                              File productArchitectureDirectory,
+                                              String manifestFileName) {
+        this.filesFacade = filesFacade;
+        this.productArchitectureDirectory = productArchitectureDirectory;
+        this.manifestFileName = manifestFileName;
+        this.dataStructureTransformer = TransformerFactory.create(productArchitectureDirectory);
+        this.structurizrAdapter = new StructurizrAdapter();
+        this.dataStructureReader = null;
+    }
+
+    public ArchitectureDataStructurePublisher(StructurizrAdapter structurizrAdapter,
+                                              FilesFacade filesFacade,
+                                              File productArchitectureDirectory,
+                                              String manifestFileName) {
+        this.filesFacade = filesFacade;
+        this.productArchitectureDirectory = productArchitectureDirectory;
+        this.manifestFileName = manifestFileName;
+        this.dataStructureTransformer = TransformerFactory.create(productArchitectureDirectory);
+        this.structurizrAdapter = structurizrAdapter;
+        this.dataStructureReader = null;
+    }
+
     // TODO [TESTING] [OVERHAUL] [OPTIONAL]: Make testing not require real connection to Structurizr.
     public void publish() throws StructurizrClientException, IOException {
         Workspace workspace = getWorkspace(productArchitectureDirectory, manifestFileName);
@@ -62,7 +86,8 @@ public class ArchitectureDataStructurePublisher {
 
     public ArchitectureDataStructure loadProductArchitecture(File productArchitectureDirectory, String manifestFileName) throws IOException {
         File manifestFile = new File(productArchitectureDirectory + File.separator + manifestFileName);
-        return dataStructureReader.load(manifestFile);
+        String archAsString = this.filesFacade.readString(manifestFile.toPath());
+        return new ArchitectureDataStructureObjectMapper().readValue(archAsString);
     }
 
     public static ArchitectureDataStructurePublisher create(FilesFacade filesFacade, File productArchitectureDirectory, String manifestFileName) {

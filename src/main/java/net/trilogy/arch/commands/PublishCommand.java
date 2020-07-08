@@ -1,7 +1,7 @@
 package net.trilogy.arch.commands;
 
-import com.google.common.annotations.VisibleForTesting;
 import lombok.Getter;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
 import net.trilogy.arch.facade.FilesFacade;
@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 @CommandLine.Command(name = "publish", mixinStandardHelpOptions = true, description = "Publish architecture to structurizr.")
 public class PublishCommand implements Callable<Integer>, DisplaysOutputMixin, DisplaysErrorMixin {
     private final String manifestFileName;
+    private final StructurizrAdapter structurizrAdapter;
 
     @CommandLine.Parameters(index = "0", paramLabel = "PRODUCT_ARCHITECTURE_DIRECTORY", description = "Product architecture root where product-architecture.yml is located.")
     private File productArchitectureDirectory;
@@ -24,31 +25,36 @@ public class PublishCommand implements Callable<Integer>, DisplaysOutputMixin, D
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
-    @VisibleForTesting
-    public PublishCommand(File productArchitectureDirectory, String manifestFileName) {
-        this.productArchitectureDirectory = productArchitectureDirectory;
-        this.manifestFileName = manifestFileName;
-    }
-
     public PublishCommand() {
         this.manifestFileName = "product-architecture.yml";
+        this.structurizrAdapter = new StructurizrAdapter();
+    }
+
+    public PublishCommand(StructurizrAdapter structurizrAdapter) {
+        this.manifestFileName = "product-architecture.yml";
+        this.structurizrAdapter = structurizrAdapter;
     }
 
     @Override
-    // TODO: [TESTING] Sad path
     public Integer call() {
         logArgs();
+        List<String> messageSet = List.of();
         try {
-            List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productArchitectureDirectory, this.manifestFileName);
+            messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productArchitectureDirectory, this.manifestFileName);
 
             if (messageSet.isEmpty()) {
-                new ArchitectureDataStructurePublisher(new FilesFacade(), productArchitectureDirectory, manifestFileName).publish();
+                new ArchitectureDataStructurePublisher(structurizrAdapter, new FilesFacade(), productArchitectureDirectory, manifestFileName).publish();
+                print("Successfully published to Structurizr!");
                 return 0;
             }
         } catch (Exception e) {
-            printError("Unable to publish to Jira", e);
+            printError("Unable to publish to Structurizer", e);
+            return 1;
         }
-        return 1;
+
+        printError(String.format("Invalid product-architecture.yml has %d errors:", messageSet.size()));
+        messageSet.forEach(this::printError);
+        return messageSet.size();
     }
 }
 

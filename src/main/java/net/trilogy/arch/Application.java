@@ -5,6 +5,7 @@ import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.graphviz.GraphvizInterface;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.commands.*;
 import net.trilogy.arch.commands.architectureUpdate.*;
 import net.trilogy.arch.config.AppConfig;
@@ -17,6 +18,8 @@ public class Application {
     @Builder.Default
     private final AppConfig appConfig = AppConfig.builder().build();
 
+    @Builder.Default
+    private final StructurizrAdapter structurizrAdapter = new StructurizrAdapter();
     @Builder.Default
     private final GoogleDocsAuthorizedApiFactory googleDocsAuthorizedApiFactory = new GoogleDocsAuthorizedApiFactory();
     @Builder.Default
@@ -32,7 +35,7 @@ public class Application {
         return new CommandLine(new ParentCommand())
                 .addSubcommand(new InitializeCommand(filesFacade))
                 .addSubcommand(new ValidateCommand())
-                .addSubcommand(new PublishCommand())
+                .addSubcommand(new PublishCommand(structurizrAdapter))
                 .addSubcommand(new ImportCommand(filesFacade))
                 .addSubcommand(new ListComponentsCommand(filesFacade))
                 .addSubcommand(new DiffCommand(filesFacade, gitInterface, graphvizInterface))

@@ -2,6 +2,7 @@ package net.trilogy.arch.e2e;
 
 import com.structurizr.Workspace;
 import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
+import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.publish.ArchitectureDataStructurePublisher;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class ArchitectureDataStructurePublishingE2ETest {
                 new File(getClass().getResource(ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
 
         //when
-        ArchitectureDataStructurePublisher.create(documentationRoot, "product-architecture.yml").publish();
+        ArchitectureDataStructurePublisher.create(new FilesFacade(), documentationRoot, "product-architecture.yml").publish();
 
         //then
         StructurizrAdapter adapter = new StructurizrAdapter();

@@ -52,8 +52,8 @@ public class ArchitectureDataStructurePublisher {
         return dataStructureTransformer.toWorkSpace(dataStructure);
     }
 
-    public static ArchitectureDataStructurePublisher create(File productArchitectureDirectory, String manifestFileName) {
-        ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader(new FilesFacade());
+    public static ArchitectureDataStructurePublisher create(FilesFacade filesFacade, File productArchitectureDirectory, String manifestFileName) {
+        ArchitectureDataStructureReader importer = new ArchitectureDataStructureReader(filesFacade);
         ArchitectureDataStructureTransformer transformer = TransformerFactory.create(productArchitectureDirectory);
         StructurizrAdapter adapter = new StructurizrAdapter();
 

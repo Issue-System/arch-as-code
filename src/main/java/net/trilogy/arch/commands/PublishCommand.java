@@ -1,16 +1,15 @@
 package net.trilogy.arch.commands;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.structurizr.api.StructurizrClientException;
 import lombok.Getter;
 import net.trilogy.arch.commands.mixin.DisplaysErrorMixin;
 import net.trilogy.arch.commands.mixin.DisplaysOutputMixin;
+import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.publish.ArchitectureDataStructurePublisher;
 import net.trilogy.arch.validation.ArchitectureDataStructureValidatorFactory;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -37,13 +36,13 @@ public class PublishCommand implements Callable<Integer>, DisplaysOutputMixin, D
 
     @Override
     // TODO: [TESTING] Sad path
-    public Integer call() throws IOException, StructurizrClientException {
+    public Integer call() {
         logArgs();
         try {
             List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productArchitectureDirectory, this.manifestFileName);
 
             if (messageSet.isEmpty()) {
-                ArchitectureDataStructurePublisher.create(productArchitectureDirectory, manifestFileName).publish();
+                ArchitectureDataStructurePublisher.create(new FilesFacade(), productArchitectureDirectory, manifestFileName).publish();
                 return 0;
             }
         } catch (Exception e) {

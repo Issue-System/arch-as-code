@@ -38,6 +38,7 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
                 .filter(doc -> doc.getOrder() != null)
                 .forEach(doc -> addDocumentationToWorkspace(docTemplate, doc));
 
+
         // Add un-ordered documentation
         docsToAdd.stream()
                 .filter(doc -> doc.getOrder() == null)

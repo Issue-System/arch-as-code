@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.not;
 public class PublishCommandE2ETest {
 
     @Test
-    public void publish() throws Exception {
+    public void publish() {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION).getPath());
 
         Integer statusCode = execute("publish", documentationRoot.getAbsolutePath());
@@ -23,7 +23,7 @@ public class PublishCommandE2ETest {
     }
 
     @Test
-    public void publish_invalid_manifest() throws Exception {
+    public void publish_invalid_manifest() {
         File documentationRoot = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_VALIDATION).getPath());
 
         Integer statusCode = execute("publish", documentationRoot.getAbsolutePath(), "missingMetadata.yml");

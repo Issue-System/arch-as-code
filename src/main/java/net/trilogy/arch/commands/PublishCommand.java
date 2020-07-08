@@ -42,7 +42,7 @@ public class PublishCommand implements Callable<Integer>, DisplaysOutputMixin, D
             List<String> messageSet = ArchitectureDataStructureValidatorFactory.create().validate(productArchitectureDirectory, this.manifestFileName);
 
             if (messageSet.isEmpty()) {
-                ArchitectureDataStructurePublisher.create(new FilesFacade(), productArchitectureDirectory, manifestFileName).publish();
+                new ArchitectureDataStructurePublisher(new FilesFacade(), productArchitectureDirectory, manifestFileName).publish();
                 return 0;
             }
         } catch (Exception e) {

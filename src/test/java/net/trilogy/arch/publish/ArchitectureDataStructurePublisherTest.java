@@ -2,11 +2,9 @@ package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
 import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.transformation.TransformerFactory;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -22,11 +20,11 @@ public class ArchitectureDataStructurePublisherTest {
     public void shouldLoadProductArchitecture() throws Exception {
         // Given
         File productArchitectureDir = new File(getClass().getResource(TestHelper.ROOT_PATH_TO_TEST_GENERALLY).getPath());
-        ArchitectureDataStructurePublisher publisher = new ArchitectureDataStructurePublisher(productArchitectureDir,
-                new ArchitectureDataStructureReader(new FilesFacade()),
+        ArchitectureDataStructurePublisher publisher = new ArchitectureDataStructurePublisher(
+                new StructurizrAdapter(),
                 new FilesFacade(),
-                TransformerFactory.create(productArchitectureDir),
-                new StructurizrAdapter()
+                productArchitectureDir,
+                "product-architecture.yml"
         );
 
         // When

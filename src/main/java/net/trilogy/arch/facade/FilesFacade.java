@@ -1,7 +1,6 @@
 package net.trilogy.arch.facade;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +23,7 @@ public class FilesFacade {
         return File.createTempFile(prefix, suffix);
     }
 
-    public FileOutputStream newFileOutputStream(String name) throws FileNotFoundException {
+    public FileOutputStream newFileOutputStream(String name) throws IOException {
         return new FileOutputStream(name);
     }
 }

@@ -10,10 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -21,6 +18,7 @@ import static net.trilogy.arch.TestHelper.execute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 public class ImportCommandE2ETest {
@@ -86,5 +84,28 @@ public class ImportCommandE2ETest {
         collector.checkThat(statusCode, not(0));
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), containsString("Failed to import\nError thrown: java.io.IOException: Ran out of bytes!"));
+    }
+
+
+    @Test
+    public void shouldGracefullyLogDocumnetationImageWriteErrors() throws Exception {
+        // Given
+        final FilesFacade mockedFilesFacade = Mockito.mock(FilesFacade.class);
+        FileOutputStream mockedFileOutputStream = Mockito.mock(FileOutputStream.class);
+        doThrow(new IOException("Boom!")).when(mockedFileOutputStream).write(any(byte[].class));
+        when(mockedFilesFacade.newFileOutputStream(any())).thenReturn(mockedFileOutputStream);
+
+        File workspacePath = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_EMBEDDED_IMAGE).getPath());
+
+        final Application app = Application.builder()
+                .filesFacade(mockedFilesFacade)
+                .build();
+
+        // When
+        Integer status = execute(app, "import " + workspacePath.getAbsolutePath() + " " + tempProductDirectory.toAbsolutePath());
+
+        collector.checkThat(status, not(0));
+        collector.checkThat(out.toString(), equalTo(""));
+        collector.checkThat(err.toString(), containsString("Failed to import\nError thrown: java.io.IOException: Boom!"));
     }
 }

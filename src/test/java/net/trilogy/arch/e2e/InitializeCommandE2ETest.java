@@ -108,5 +108,4 @@ public class InitializeCommandE2ETest {
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), containsString("Unable to initialize\nError thrown: java.io.IOException: Boom!"));
     }
-
 }

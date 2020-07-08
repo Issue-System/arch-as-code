@@ -31,7 +31,7 @@ public class ArchitectureDataStructureWriter {
         if (!writePath.toFile().exists()) filesFacade.createDirectory(writePath);
 
         writeDocumentation(dataStructure, writePath);
-        writeDocumentationImages(dataStructure, writePath);
+        writeDocumentationImages(filesFacade, dataStructure, writePath);
 
         return writeFile;
     }
@@ -43,9 +43,9 @@ public class ArchitectureDataStructureWriter {
         }
     }
 
-    private void writeDocumentationImages(ArchitectureDataStructure dataStructure, Path writePath) throws IOException {
+    private void writeDocumentationImages(FilesFacade filesFacade, ArchitectureDataStructure dataStructure, Path writePath) throws IOException {
         for (DocumentationImage image : dataStructure.getDocumentationImages()) {
-            Base64Converter.toFile(new FilesFacade(), image.getContent(), writePath.resolve(image.getName()));
+            Base64Converter.toFile(filesFacade, image.getContent(), writePath.resolve(image.getName()));
         }
     }
 }

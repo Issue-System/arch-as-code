@@ -2,10 +2,10 @@ package net.trilogy.arch.publish;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
-import net.trilogy.arch.facade.FilesFacade;
-import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureReader;
+import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
 import net.trilogy.arch.transformation.TransformerFactory;
 
@@ -20,9 +20,9 @@ public class ArchitectureDataStructurePublisher {
     private final String manifestFileName;
 
     ArchitectureDataStructurePublisher(File productArchitectureDirectory,
-                                              ArchitectureDataStructureReader importer,
-                                              ArchitectureDataStructureTransformer transformer,
-                                              StructurizrAdapter structurizrAdapter) {
+                                       ArchitectureDataStructureReader importer,
+                                       ArchitectureDataStructureTransformer transformer,
+                                       StructurizrAdapter structurizrAdapter) {
         this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
@@ -31,7 +31,11 @@ public class ArchitectureDataStructurePublisher {
 
     }
 
-    public ArchitectureDataStructurePublisher(File productArchitectureDirectory, ArchitectureDataStructureReader importer, ArchitectureDataStructureTransformer transformer, StructurizrAdapter adapter, String manifestFileName) {
+    public ArchitectureDataStructurePublisher(File productArchitectureDirectory,
+                                              ArchitectureDataStructureReader importer,
+                                              ArchitectureDataStructureTransformer transformer,
+                                              StructurizrAdapter adapter,
+                                              String manifestFileName) {
         this.productArchitectureDirectory = productArchitectureDirectory;
         this.dataStructureTransformer = transformer;
         this.dataStructureReader = importer;
@@ -46,10 +50,14 @@ public class ArchitectureDataStructurePublisher {
     }
 
     public Workspace getWorkspace(File productArchitectureDirectory, String manifestFileName) throws IOException {
-        File manifestFile = new File(productArchitectureDirectory + File.separator + manifestFileName);
-        ArchitectureDataStructure dataStructure = dataStructureReader.load(manifestFile);
+        ArchitectureDataStructure dataStructure = loadProductArchitecture(productArchitectureDirectory, manifestFileName);
 
         return dataStructureTransformer.toWorkSpace(dataStructure);
+    }
+
+    public ArchitectureDataStructure loadProductArchitecture(File productArchitectureDirectory, String manifestFileName) throws IOException {
+        File manifestFile = new File(productArchitectureDirectory + File.separator + manifestFileName);
+        return dataStructureReader.load(manifestFile);
     }
 
     public static ArchitectureDataStructurePublisher create(FilesFacade filesFacade, File productArchitectureDirectory, String manifestFileName) {

@@ -29,12 +29,6 @@ public class InitializeCommandE2ETest {
 
     private Path tempProductDirectory;
 
-    Path rootPath;
-    Path originalAuWithComponentsPath;
-    Path changedAuWithComponentsPath;
-    Path originalAuWithoutComponentsPath;
-    Path changedAuWithoutComponentsPath;
-
     final PrintStream originalOut = System.out;
     final PrintStream originalErr = System.err;
     final ByteArrayOutputStream out = new ByteArrayOutputStream();

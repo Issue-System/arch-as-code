@@ -3,13 +3,21 @@ package net.trilogy.arch.adapter.structurizr;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.api.StructurizrClientException;
+import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.trilogy.arch.adapter.structurizr.Credentials.config;
 
 public class StructurizrAdapter {
+    @Getter
+    private StructurizrClient client;
 
     public StructurizrAdapter() {
+    }
+
+    public StructurizrAdapter(StructurizrClient client) {
+        this.client = client;
     }
 
     public Workspace load(long workspaceId) throws StructurizrClientException {
@@ -19,22 +27,33 @@ public class StructurizrAdapter {
 
     /**
      * It will use following order to determine which workspace id to use:
-     *  - from environment variable
-     *  - from ./.arch-as-code/structurizr/credentials.json
-     *  - from workspace configured in passed in workspace
+     * - from environment variable
+     * - from ./.arch-as-code/structurizr/credentials.json
+     * - from workspace configured in passed in workspace
+     *
      * @param workspace
-     * @throws StructurizrClientException
      */
-    public void publish(Workspace workspace) throws StructurizrClientException {
+    public Boolean publish(Workspace workspace) {
         checkNotNull(workspace, "Workspace must not be null!");
-        buildClient().putWorkspace(config().getWorkspaceId(), workspace);
+
+        if (client == null) client = buildClient();
+
+        try {
+            client.putWorkspace(config().getWorkspaceId(), workspace);
+        } catch (Exception e) {
+            LogManager.getLogger(getClass()).error("Unable to publish to Structurizr", e);
+
+            return false;
+        }
+
+        return true;
     }
 
     @SuppressWarnings("unchecked")
-    private StructurizrClient buildClient() {
-        StructurizrClient result = new StructurizrClient(config().getApiKey(), config().getApiSecret());
-        result.setWorkspaceArchiveLocation(null);
-        return result;
+    StructurizrClient buildClient() {
+        StructurizrClient client = new StructurizrClient(config().getApiKey(), config().getApiSecret());
+        client.setWorkspaceArchiveLocation(null);
+        return client;
     }
 
 }

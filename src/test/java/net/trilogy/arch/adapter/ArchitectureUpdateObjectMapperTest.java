@@ -43,7 +43,7 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "- name: \"[SAMPLE PERSON NAME]\""
                 , "  email: \"[SAMPLE PERSON EMAIL]\""
                 , "P2:"
-                , "  link: \"[SAMPLE LINK TO P1]\""
+                , "  link: \"[SAMPLE LINK TO P2]\""
                 , "  jira:"
                 , "    ticket: \"[SAMPLE JIRA TICKET]\""
                 , "    link: \"[SAMPLE JIRA TICKET LINK]\""

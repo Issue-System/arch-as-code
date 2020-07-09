@@ -1,7 +1,7 @@
 {
   "type": "object",
   "title": "The root schema",
-  "description": "The root schema comprises the entire JSON document.",
+  "description": "The root schema comprises the entire JSON document for the architecture update document.",
   "default": {},
   "examples": [
     {
@@ -142,7 +142,7 @@
       "$id": "#/properties/name",
       "type": "string",
       "title": "The name schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "The name of the architecture update",
       "default": "",
       "examples": [
         "test-au"
@@ -152,7 +152,7 @@
       "$id": "#/properties/milestone",
       "type": "string",
       "title": "The milestone schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "Release milestone of the architecture update",
       "default": "",
       "examples": [
         "[SAMPLE MILESTONE]"
@@ -162,7 +162,7 @@
       "$id": "#/properties/authors",
       "type": "array",
       "title": "The authors schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "List of authors who are part of the architecture update.",
       "default": [],
       "examples": [
         [
@@ -179,7 +179,7 @@
             "$id": "#/properties/authors/items/anyOf/0",
             "type": "object",
             "title": "The first anyOf schema",
-            "description": "An explanation about the purpose of this instance.",
+            "description": "Author object.",
             "default": {},
             "examples": [
               {
@@ -197,7 +197,7 @@
                 "$id": "#/properties/authors/items/anyOf/0/properties/name",
                 "type": "string",
                 "title": "The name schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "Full name of the author.",
                 "default": "",
                 "examples": [
                   "[SAMPLE PERSON NAME]"
@@ -207,7 +207,7 @@
                 "$id": "#/properties/authors/items/anyOf/0/properties/email",
                 "type": "string",
                 "title": "The email schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "Author's email address.",
                 "default": "",
                 "examples": [
                   "[SAMPLE PERSON EMAIL]"
@@ -223,7 +223,7 @@
       "$id": "#/properties/PCAs",
       "type": "array",
       "title": "The PCAs schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "List of PCAs who are part of this architecture update.",
       "default": [],
       "examples": [
         [
@@ -240,7 +240,7 @@
             "$id": "#/properties/PCAs/items/anyOf/0",
             "type": "object",
             "title": "The first anyOf schema",
-            "description": "An explanation about the purpose of this instance.",
+            "description": "PCA Object.",
             "default": {},
             "examples": [
               {
@@ -258,7 +258,7 @@
                 "$id": "#/properties/PCAs/items/anyOf/0/properties/name",
                 "type": "string",
                 "title": "The name schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "PCA full name.",
                 "default": "",
                 "examples": [
                   "[SAMPLE PERSON NAME]"
@@ -268,7 +268,7 @@
                 "$id": "#/properties/PCAs/items/anyOf/0/properties/email",
                 "type": "string",
                 "title": "The email schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "PCA's email address.",
                 "default": "",
                 "examples": [
                   "[SAMPLE PERSON EMAIL]"
@@ -284,7 +284,7 @@
       "$id": "#/properties/P2",
       "type": "object",
       "title": "The P2 schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "P2 that this architecture update belong to.",
       "default": {},
       "examples": [
         {
@@ -305,7 +305,7 @@
           "$id": "#/properties/P2/properties/link",
           "type": "string",
           "title": "The link schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "Link to the actual P2 document, it should be valid link url.",
           "default": "",
           "examples": [
             "[SAMPLE LINK TO P1]"
@@ -315,7 +315,7 @@
           "$id": "#/properties/P2/properties/jira",
           "type": "object",
           "title": "The jira schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "The Jira epic that represents the P2.",
           "default": {},
           "examples": [
             {
@@ -333,7 +333,7 @@
               "$id": "#/properties/P2/properties/jira/properties/ticket",
               "type": "string",
               "title": "The ticket schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Title of the Jira ticket that represents the P2.",
               "default": "",
               "examples": [
                 "[SAMPLE JIRA TICKET]"
@@ -343,7 +343,7 @@
               "$id": "#/properties/P2/properties/jira/properties/link",
               "type": "string",
               "title": "The link schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Link to the actual Jira ticket, it should be a valid jira url.",
               "default": "",
               "examples": [
                 "[SAMPLE JIRA TICKET LINK]"
@@ -357,7 +357,7 @@
       "$id": "#/properties/P1",
       "type": "object",
       "title": "The P1 schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "P1 that this architecture update belong to.",
       "default": {},
       "examples": [
         {
@@ -380,7 +380,7 @@
           "$id": "#/properties/P1/properties/link",
           "type": "string",
           "title": "The link schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "Link to the actual P1 document, it should be a valid url.",
           "default": "",
           "examples": [
             "[SAMPLE LINK TO P1]"
@@ -390,7 +390,7 @@
           "$id": "#/properties/P1/properties/jira",
           "type": "object",
           "title": "The jira schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "Jira ticket that represents the P1.",
           "default": {},
           "examples": [
             {
@@ -408,7 +408,7 @@
               "$id": "#/properties/P1/properties/jira/properties/ticket",
               "type": "string",
               "title": "The ticket schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Title of the Jira ticket that represents the P1.",
               "default": "",
               "examples": [
                 "[SAMPLE JIRA TICKET]"
@@ -418,7 +418,7 @@
               "$id": "#/properties/P1/properties/jira/properties/link",
               "type": "string",
               "title": "The link schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Link to the Jira epic that represents the P1.",
               "default": "",
               "examples": [
                 "[SAMPLE JIRA TICKET LINK]"
@@ -430,7 +430,7 @@
           "$id": "#/properties/P1/properties/executive-summary",
           "type": "string",
           "title": "The executive-summary schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "A high level explanation about the purpose of P1.",
           "default": "",
           "examples": [
             "[SAMPLE EXECUTIVE SUMMARY]"
@@ -442,7 +442,7 @@
       "$id": "#/properties/useful-links",
       "type": "array",
       "title": "The useful-links schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "A list of links that will be useful to reference for this architecture update.  It can contain links to documents, diagrams and other artifacts that support this architecture update.",
       "default": [],
       "examples": [
         [
@@ -459,7 +459,7 @@
             "$id": "#/properties/useful-links/items/anyOf/0",
             "type": "object",
             "title": "The first anyOf schema",
-            "description": "An explanation about the purpose of this instance.",
+            "description": "A link object.",
             "default": {},
             "examples": [
               {
@@ -477,7 +477,7 @@
                 "$id": "#/properties/useful-links/items/anyOf/0/properties/description",
                 "type": "string",
                 "title": "The description schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "Description of what is that link and the document it refers to.",
                 "default": "",
                 "examples": [
                   "[SAMPLE LINK DESCRIPTION]"
@@ -487,7 +487,7 @@
                 "$id": "#/properties/useful-links/items/anyOf/0/properties/link",
                 "type": "string",
                 "title": "The link schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "The link url to the document.  It should be a valid url.",
                 "default": "",
                 "examples": [
                   "[SAMPLE-LINK]"
@@ -503,7 +503,7 @@
       "$id": "#/properties/milestone-dependencies",
       "type": "array",
       "title": "The milestone-dependencies schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "A List of all milestones that this architecure update release depends on.",
       "default": [],
       "examples": [
         [
@@ -525,7 +525,7 @@
             "$id": "#/properties/milestone-dependencies/items/anyOf/0",
             "type": "object",
             "title": "The first anyOf schema",
-            "description": "An explanation about the purpose of this instance.",
+            "description": "A milestone object.",
             "default": {},
             "examples": [
               {
@@ -548,7 +548,7 @@
                 "$id": "#/properties/milestone-dependencies/items/anyOf/0/properties/description",
                 "type": "string",
                 "title": "The description schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "The title of the dependant milestone.",
                 "default": "",
                 "examples": [
                   "[SAMPLE MILESTONE DEPENDENCY]"
@@ -558,7 +558,7 @@
                 "$id": "#/properties/milestone-dependencies/items/anyOf/0/properties/links",
                 "type": "array",
                 "title": "The links schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "List of links for that given milestone, it can contain Jira, other architecture updates, documents, diagrams of any other artifacts that help understand the milestone dependency.",
                 "default": [],
                 "examples": [
                   [
@@ -575,7 +575,7 @@
                       "$id": "#/properties/milestone-dependencies/items/anyOf/0/properties/links/items/anyOf/0",
                       "type": "object",
                       "title": "The first anyOf schema",
-                      "description": "An explanation about the purpose of this instance.",
+                      "description": "Link object.",
                       "default": {},
                       "examples": [
                         {
@@ -593,7 +593,7 @@
                           "$id": "#/properties/milestone-dependencies/items/anyOf/0/properties/links/items/anyOf/0/properties/description",
                           "type": "string",
                           "title": "The description schema",
-                          "description": "An explanation about the purpose of this instance.",
+                          "description": "A description of the document that the link referes to.",
                           "default": "",
                           "examples": [
                             "[SAMPLE LINK DESCRIPTION]"
@@ -603,7 +603,7 @@
                           "$id": "#/properties/milestone-dependencies/items/anyOf/0/properties/links/items/anyOf/0/properties/link",
                           "type": "string",
                           "title": "The link schema",
-                          "description": "An explanation about the purpose of this instance.",
+                          "description": "The actual link to the document, it should be a vaild url.",
                           "default": "",
                           "examples": [
                             "[SAMPLE-LINK]"
@@ -625,7 +625,7 @@
       "$id": "#/properties/decisions",
       "type": "object",
       "title": "The decisions schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "A list of decisions that are related to the architecture update.",
       "default": {},
       "examples": [
         {
@@ -637,71 +637,40 @@
           }
         }
       ],
-      "required": [
-        "[SAMPLE-DECISION-ID]"
-      ],
-      "additionalProperties": true,
-      "properties": {
-        "[SAMPLE-DECISION-ID]": {
-          "$id": "#/properties/decisions/properties/[SAMPLE-DECISION-ID]",
-          "type": "object",
-          "title": "The [SAMPLE-DECISION-ID] schema",
-          "description": "An explanation about the purpose of this instance.",
-          "default": {},
-          "examples": [
-            {
-              "text": "[SAMPLE DECISION TEXT]",
-              "tdd-references": [
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "text":  { "type":  "string" },
+          "tdd-references": {
+            "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/tdd-references",
+            "type": "array",
+            "title": "The tdd-references schema",
+            "description": "List of all TDD references that are relevant to the the story.",
+            "default": [],
+            "examples": [
+              [
                 "[SAMPLE-TDD-ID]"
               ]
-            }
-          ],
-          "required": [
-            "text",
-            "tdd-references"
-          ],
-          "additionalProperties": true,
-          "properties": {
-            "text": {
-              "$id": "#/properties/decisions/properties/[SAMPLE-DECISION-ID]/properties/text",
-              "type": "string",
-              "title": "The text schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": "",
-              "examples": [
-                "[SAMPLE DECISION TEXT]"
-              ]
-            },
-            "tdd-references": {
-              "$id": "#/properties/decisions/properties/[SAMPLE-DECISION-ID]/properties/tdd-references",
-              "type": "array",
-              "title": "The tdd-references schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": [],
-              "examples": [
-                [
-                  "[SAMPLE-TDD-ID]"
-                ]
+            ],
+            "additionalItems": true,
+            "items": {
+              "anyOf": [
+                {
+                  "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/tdd-references/items/anyOf/0",
+                  "type": "string",
+                  "title": "The first anyOf schema",
+                  "description": "A TDD id that should be referenced in the feature story.",
+                  "default": "",
+                  "examples": [
+                    "[SAMPLE-TDD-ID]"
+                  ]
+                }
               ],
-              "additionalItems": true,
-              "items": {
-                "anyOf": [
-                  {
-                    "$id": "#/properties/decisions/properties/[SAMPLE-DECISION-ID]/properties/tdd-references/items/anyOf/0",
-                    "type": "string",
-                    "title": "The first anyOf schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                      "[SAMPLE-TDD-ID]"
-                    ]
-                  }
-                ],
-                "$id": "#/properties/decisions/properties/[SAMPLE-DECISION-ID]/properties/tdd-references/items"
-              }
+              "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/tdd-references/items"
             }
           }
-        }
+        },
+        "required": ["text", "tdd-references"]
       }
     },
     "tdds-per-component": {
@@ -840,89 +809,20 @@
           }
         }
       ],
-      "required": [
-        "[SAMPLE-REQUIREMENT-ID]"
-      ],
-      "additionalProperties": true,
-      "properties": {
-        "[SAMPLE-REQUIREMENT-ID]": {
-          "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]",
-          "type": "object",
-          "title": "The [SAMPLE-REQUIREMENT-ID] schema",
-          "description": "An explanation about the purpose of this instance.",
-          "default": {},
-          "examples": [
-            {
-              "text": "[SAMPLE REQUIREMENT TEXT]",
-              "source": "[SAMPLE REQUIREMENT SOURCE TEXT]",
-              "tdd-references": [
-                "[SAMPLE-TDD-ID]"
-              ]
-            }
-          ],
-          "required": [
-            "text",
-            "source"
-          ],
-          "additionalProperties": true,
-          "properties": {
-            "text": {
-              "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]/properties/text",
-              "type": "string",
-              "title": "The text schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": "",
-              "examples": [
-                "[SAMPLE REQUIREMENT TEXT]"
-              ]
-            },
-            "source": {
-              "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]/properties/source",
-              "type": "string",
-              "title": "The source schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": "",
-              "examples": [
-                "[SAMPLE REQUIREMENT SOURCE TEXT]"
-              ]
-            },
-            "tdd-references": {
-              "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]/properties/tdd-references",
-              "type": "array",
-              "title": "The tdd-references schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": [],
-              "examples": [
-                [
-                  "[SAMPLE-TDD-ID]"
-                ]
-              ],
-              "additionalItems": true,
-              "items": {
-                "anyOf": [
-                  {
-                    "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]/properties/tdd-references/items/anyOf/0",
-                    "type": "string",
-                    "title": "The first anyOf schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                      "[SAMPLE-TDD-ID]"
-                    ]
-                  }
-                ],
-                "$id": "#/properties/functional-requirements/properties/[SAMPLE-REQUIREMENT-ID]/properties/tdd-references/items"
-              }
-            }
-          }
-        }
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "text":  { "type":  "string" },
+          "source": {"type":  "string"}
+        },
+        "required": ["text", "source"]
       }
     },
     "capabilities": {
       "$id": "#/properties/capabilities",
       "type": "object",
       "title": "The capabilities schema",
-      "description": "An explanation about the purpose of this instance.",
+      "description": "Capability of the architecture update.",
       "default": {},
       "examples": [
         {
@@ -960,7 +860,7 @@
           "$id": "#/properties/capabilities/properties/epic",
           "type": "object",
           "title": "The epic schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "The Jira epic that represents this architecture update.",
           "default": {},
           "examples": [
             {
@@ -981,7 +881,7 @@
               "$id": "#/properties/capabilities/properties/epic/properties/title",
               "type": "string",
               "title": "The title schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "The title of the Jira epic that will describe this architecture update.",
               "default": "",
               "examples": [
                 "Please enter epic title from Jira"
@@ -991,7 +891,7 @@
               "$id": "#/properties/capabilities/properties/epic/properties/jira",
               "type": "object",
               "title": "The jira schema",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Jira object.",
               "default": {},
               "examples": [
                 {
@@ -1009,7 +909,7 @@
                   "$id": "#/properties/capabilities/properties/epic/properties/jira/properties/ticket",
                   "type": "string",
                   "title": "The ticket schema",
-                  "description": "An explanation about the purpose of this instance.",
+                  "description": "The title of the Jira epic.",
                   "default": "",
                   "examples": [
                     "please-enter-epic-ticket-from-jira"
@@ -1019,7 +919,7 @@
                   "$id": "#/properties/capabilities/properties/epic/properties/jira/properties/link",
                   "type": "string",
                   "title": "The link schema",
-                  "description": "An explanation about the purpose of this instance.",
+                  "description": "Link to the Jira epic, it should be a valid Jira url.",
                   "default": "",
                   "examples": [
                     "Please enter epic link from Jira"
@@ -1033,7 +933,7 @@
           "$id": "#/properties/capabilities/properties/feature-stories",
           "type": "array",
           "title": "The feature-stories schema",
-          "description": "An explanation about the purpose of this instance.",
+          "description": "A list of the list of the feature stories that will implement this architecture update.",
           "default": [],
           "examples": [
             [
@@ -1059,7 +959,7 @@
                 "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0",
                 "type": "object",
                 "title": "The first anyOf schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "Feature story object",
                 "default": {},
                 "examples": [
                   {
@@ -1088,7 +988,7 @@
                     "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/title",
                     "type": "string",
                     "title": "The title schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "description": "Title of the feature story.",
                     "default": "",
                     "examples": [
                       "[SAMPLE FEATURE STORY TITLE]"
@@ -1098,7 +998,7 @@
                     "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/jira",
                     "type": "object",
                     "title": "The jira schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "description": "Jira object.",
                     "default": {},
                     "examples": [
                       {
@@ -1116,7 +1016,7 @@
                         "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/jira/properties/ticket",
                         "type": "string",
                         "title": "The ticket schema",
-                        "description": "An explanation about the purpose of this instance.",
+                        "description": "The title of the Jira ticket.",
                         "default": "",
                         "examples": [
                           ""
@@ -1126,7 +1026,7 @@
                         "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/jira/properties/link",
                         "type": "string",
                         "title": "The link schema",
-                        "description": "An explanation about the purpose of this instance.",
+                        "description": "A link to the Jira ticket story, it should be a valid Jira url.",
                         "default": "",
                         "examples": [
                           ""
@@ -1138,7 +1038,7 @@
                     "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/tdd-references",
                     "type": "array",
                     "title": "The tdd-references schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "description": "List of all TDD references that are relevant to the the story.",
                     "default": [],
                     "examples": [
                       [
@@ -1152,7 +1052,7 @@
                           "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/tdd-references/items/anyOf/0",
                           "type": "string",
                           "title": "The first anyOf schema",
-                          "description": "An explanation about the purpose of this instance.",
+                          "description": "A TDD id that should be referenced in the feature story.",
                           "default": "",
                           "examples": [
                             "[SAMPLE-TDD-ID]"
@@ -1166,7 +1066,7 @@
                     "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/functional-requirement-references",
                     "type": "array",
                     "title": "The functional-requirement-references schema",
-                    "description": "An explanation about the purpose of this instance.",
+                    "description": "A list of functional requirements that relevant to the story.",
                     "default": [],
                     "examples": [
                       [
@@ -1180,7 +1080,7 @@
                           "$id": "#/properties/capabilities/properties/feature-stories/items/anyOf/0/properties/functional-requirement-references/items/anyOf/0",
                           "type": "string",
                           "title": "The first anyOf schema",
-                          "description": "An explanation about the purpose of this instance.",
+                          "description": "A functional requirement id that should be referenced in the story.",
                           "default": "",
                           "examples": [
                             "[SAMPLE-REQUIREMENT-ID]"

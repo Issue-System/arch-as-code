@@ -2,7 +2,6 @@ package net.trilogy.arch.adapter.structurizr;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
-import com.structurizr.api.StructurizrClientException;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 
@@ -18,11 +17,6 @@ public class StructurizrAdapter {
 
     public StructurizrAdapter(StructurizrClient client) {
         this.client = client;
-    }
-
-    public Workspace load(long workspaceId) throws StructurizrClientException {
-        StructurizrClient buildClient = buildClient();
-        return buildClient.getWorkspace(workspaceId);
     }
 
     /**

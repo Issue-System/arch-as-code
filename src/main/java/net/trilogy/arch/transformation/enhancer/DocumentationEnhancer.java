@@ -4,7 +4,6 @@ import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
 import com.structurizr.documentation.Section;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.DocumentationImage;
 import net.trilogy.arch.domain.DocumentationSection;
 import net.trilogy.arch.facade.FilesFacade;
 
@@ -13,6 +12,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static net.trilogy.arch.domain.DocumentationImage.isImage;
 
 public class DocumentationEnhancer implements WorkspaceEnhancer {
     private final File documentationRoot;
@@ -45,12 +46,24 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
         docsToAdd.stream()
                 .filter(doc -> doc.getOrder() == null)
                 .forEach(doc -> addDocumentationToWorkspace(docTemplate, doc));
+
+        // Add images
+        Arrays.stream(files)
+                .filter(file -> isImage(file))
+                .forEach(image -> {
+                    try {
+                        docTemplate.addImage(image);
+                    } catch (IOException e) {
+                        // not tested
+                        System.err.println("Unable to import image: " + image.getName() + "\nError thrown: " + e);
+                    }
+                });
     }
 
     private boolean isDocumentation(File file) {
         if (file == null) return false;
         if (file.isDirectory()) return false;
-        if (DocumentationImage.isImage(file)) return false;
+        if (isImage(file)) return false;
 
         return true;
     }

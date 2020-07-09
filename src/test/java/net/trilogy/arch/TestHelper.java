@@ -63,7 +63,6 @@ public abstract class TestHelper {
         return application.execute(command.split(" "));
     }
 
-
     public static Integer execute(Application application, String... args) {
         return application.execute(args);
     }
@@ -76,4 +75,3 @@ public abstract class TestHelper {
         return Files.readString(Path.of(getClassOfCallingClass.getResource(file).toURI()));
     }
 }
-

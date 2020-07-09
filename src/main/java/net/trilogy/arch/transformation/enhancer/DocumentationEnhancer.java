@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.documentation.AutomaticDocumentationTemplate;
 import com.structurizr.documentation.Section;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.domain.DocumentationImage;
 import net.trilogy.arch.domain.DocumentationSection;
 import net.trilogy.arch.facade.FilesFacade;
 
@@ -29,6 +30,7 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
         final AutomaticDocumentationTemplate docTemplate = new AutomaticDocumentationTemplate(workspace);
         final File[] files = documentationPath().listFiles();
         final Set<DocumentationSection> docsToAdd = Arrays.stream(files)
+                .filter(file -> isDocumentation(file))
                 .map(f -> createDocFromFile(f))
                 .filter(doc -> doc != null)
                 .collect(Collectors.toSet());
@@ -43,6 +45,14 @@ public class DocumentationEnhancer implements WorkspaceEnhancer {
         docsToAdd.stream()
                 .filter(doc -> doc.getOrder() == null)
                 .forEach(doc -> addDocumentationToWorkspace(docTemplate, doc));
+    }
+
+    private boolean isDocumentation(File file) {
+        if (file == null) return false;
+        if (file.isDirectory()) return false;
+        if (DocumentationImage.isImage(file)) return false;
+
+        return true;
     }
 
     private void addDocumentationToWorkspace(AutomaticDocumentationTemplate docTemplate, DocumentationSection doc) {

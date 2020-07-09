@@ -23,6 +23,6 @@ public class P2 {
     }
 
     public static P2 blank() {
-        return new P2("[SAMPLE LINK TO P1]", Jira.blank());
+        return new P2("[SAMPLE LINK TO P2]", Jira.blank());
     }
 }

@@ -722,7 +722,7 @@
                 "$id": "#/properties/tdds-per-component/items/anyOf/0/properties/component-id",
                 "type": "string",
                 "title": "The component-id schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "A component id that the TDD references.",
                 "default": "",
                 "examples": [
                   "[SAMPLE-COMPONENT-ID]"
@@ -732,7 +732,7 @@
                 "$id": "#/properties/tdds-per-component/items/anyOf/0/properties/deleted",
                 "type": "boolean",
                 "title": "The deleted schema",
-                "description": "An explanation about the purpose of this instance.",
+                "description": "If the component is deleted.",
                 "default": false,
                 "examples": [
                   false
@@ -763,35 +763,6 @@
         "$id": "#/properties/tdds-per-component/items"
       }
     },
-    "tdd-item-id": {
-      "$id": "#/properties/tdds-per-component/items/anyOf/0/properties/tdds/tdd-item-id",
-      "type": "object",
-      "title": "The [SAMPLE-TDD-ID] schema",
-      "description": "An explanation about the purpose of this instance.",
-      "default": {},
-      "examples": [
-        {
-          "text": "[SAMPLE TDD TEXT]"
-        }
-      ],
-      "required": [
-        "text"
-      ],
-      "additionalProperties": true,
-      "properties": {
-        "text": {
-          "$id": "#/properties/tdds-per-component/items/anyOf/0/properties/tdds/properties/[SAMPLE-TDD-ID]/properties/text",
-          "type": "string",
-          "title": "The text schema",
-          "description": "An explanation about the purpose of this instance.",
-          "default": "",
-          "examples": [
-            "[SAMPLE TDD TEXT]"
-          ]
-        }
-      }
-    },
-
     "functional-requirements": {
       "$id": "#/properties/functional-requirements",
       "type": "object",

@@ -65,12 +65,12 @@ public class C4Path {
                 prefix = "@";
             }
 
-            String path = prefix + element.getName().replaceAll("/", "-");
+            String path = prefix + element.getName().replaceAll("/", "\\\\/");
             return new C4Path(path);
         }
 
         @NonNull String c4Path = buildPath(element.getParent()).getPath();
-        String fullPath = c4Path + "/" + element.getName().replaceAll("/", "-");
+        String fullPath = c4Path + "/" + element.getName().replaceAll("/", "\\\\/");
         return new C4Path(fullPath);
     }
 

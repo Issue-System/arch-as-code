@@ -1,19 +1,25 @@
 package net.trilogy.arch.domain.c4;
 
 import com.structurizr.Workspace;
-import com.structurizr.model.*;
-import org.hamcrest.MatcherAssert;
+import com.structurizr.model.Component;
+import com.structurizr.model.Container;
+import com.structurizr.model.Person;
+import com.structurizr.model.SoftwareSystem;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 
 public class C4PathTest {
+    @Rule
+    public final ErrorCollector collector = new ErrorCollector();
+
     private Workspace workspace;
 
     @Before
@@ -24,97 +30,101 @@ public class C4PathTest {
     @Test
     public void buildPath_for_system() {
         SoftwareSystem element = buildSoftwareSystem();
-        buildPath(element, C4Type.system, "c4://system");
+
+        C4Path path = C4Path.buildPath(element);
+
+        collector.checkThat(path.type(), equalTo(C4Type.system));
+        collector.checkThat(path.getPath(), equalTo("c4://system"));
     }
 
     @Test
     public void buildPath_for_person() {
         Person element = workspace.getModel().addPerson("person", "bar");
-        buildPath(element, C4Type.person, "@person");
+
+        C4Path path = C4Path.buildPath(element);
+
+        collector.checkThat(path.type(), equalTo(C4Type.person));
+        collector.checkThat(path.getPath(), equalTo("@person"));
     }
 
     @Test
     public void buildPath_for_container() {
         Container container = buildContainer();
-        buildPath(container, C4Type.container, "c4://system/container");
+
+        C4Path path = C4Path.buildPath(container);
+
+        collector.checkThat(path.type(), equalTo(C4Type.container));
+        collector.checkThat(path.getPath(), equalTo("c4://system/container"));
     }
 
     @Test
     public void buildPath_for_component() {
         Component component = buildComponent("component");
-        buildPath(component, C4Type.component, "c4://system/container/component");
+
+        C4Path path = C4Path.buildPath(component);
+
+        collector.checkThat(path.type(), equalTo(C4Type.component));
+        collector.checkThat(path.getPath(), equalTo("c4://system/container/component"));
     }
 
     @Test
     public void buildPath_for_component_with_dot() {
         Component component = buildComponent("Sococo.App");
-        buildPath(component, C4Type.component, "c4://system/container/Sococo.App");
+
+        C4Path path = C4Path.buildPath(component);
+
+        collector.checkThat(path.type(), equalTo(C4Type.component));
+        collector.checkThat(path.getPath(), equalTo("c4://system/container/Sococo.App"));
     }
 
     @Test
     public void buildPath_for_component_with_slash() {
         Component component = buildComponent("component/abc");
-        buildPath(component, C4Type.component, "c4://system/container/component-abc");
-    }
 
-    private Component buildComponent(String name) {
-        Container container = buildContainer();
-        return container.addComponent(name, "bar");
-    }
+        C4Path path = C4Path.buildPath(component);
 
-    private Container buildContainer() {
-        SoftwareSystem softwareSystem = buildSoftwareSystem();
-        return softwareSystem.addContainer("container", "bar", "bazz");
-    }
-
-    private SoftwareSystem buildSoftwareSystem() {
-        return workspace.getModel().addSoftwareSystem("system", "bar");
-    }
-
-    private void buildPath(Element element, C4Type expectedType, String expectedPath) {
-        C4Path path = C4Path.buildPath(element);
-        assertThat(path.type(), equalTo(expectedType));
-        assertThat(path.getPath(), equalTo(expectedPath));
+        collector.checkThat(path.type(), equalTo(C4Type.component));
+        collector.checkThat(path.getPath(), equalTo("c4://system/container/component-abc"));
     }
 
     @Test
     public void person() {
         C4Path path = C4Path.path("@PCA");
 
-        assertThat(path.name(), equalTo("PCA"));
-        assertThat(path.type(), equalTo(C4Type.person));
+        collector.checkThat(path.name(), equalTo("PCA"));
+        collector.checkThat(path.type(), equalTo(C4Type.person));
     }
 
     @Test
     public void system() {
         C4Path path = C4Path.path("c4://DevSpaces");
 
-        assertThat(path.name(), equalTo("DevSpaces"));
-        assertThat(path.systemName(), equalTo("DevSpaces"));
-        assertThat(path.type(), equalTo(C4Type.system));
+        collector.checkThat(path.name(), equalTo("DevSpaces"));
+        collector.checkThat(path.systemName(), equalTo("DevSpaces"));
+        collector.checkThat(path.type(), equalTo(C4Type.system));
     }
 
     @Test
     public void container() {
         C4Path path = C4Path.path("c4://DevSpaces/DevSpaces API");
 
-        assertThat(path.name(), equalTo("DevSpaces API"));
-        assertThat(path.systemName(), equalTo("DevSpaces"));
-        assertThat(path.containerName(), equalTo(Optional.of("DevSpaces API")));
+        collector.checkThat(path.name(), equalTo("DevSpaces API"));
+        collector.checkThat(path.systemName(), equalTo("DevSpaces"));
+        collector.checkThat(path.containerName(), equalTo(Optional.of("DevSpaces API")));
 
-        assertThat(path.type(), equalTo(C4Type.container));
+        collector.checkThat(path.type(), equalTo(C4Type.container));
     }
 
     @Test
     public void component() {
         C4Path path = C4Path.path("c4://DevSpaces/DevSpaces API/Sign-In Component");
 
-        assertThat(path.name(), equalTo("Sign-In Component"));
-        assertThat(path.systemName(), equalTo("DevSpaces"));
-        assertThat(path.containerName(), equalTo(Optional.of("DevSpaces API")));
-        assertThat(path.componentName(), equalTo(Optional.of("Sign-In Component")));
+        collector.checkThat(path.name(), equalTo("Sign-In Component"));
+        collector.checkThat(path.systemName(), equalTo("DevSpaces"));
+        collector.checkThat(path.containerName(), equalTo(Optional.of("DevSpaces API")));
+        collector.checkThat(path.componentName(), equalTo(Optional.of("Sign-In Component")));
 
-        assertThat(path.type(), equalTo(C4Type.component));
+        collector.checkThat(path.type(), equalTo(C4Type.component));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -149,40 +159,54 @@ public class C4PathTest {
     @Test
     public void system_path() {
         C4Path path = C4Path.path("c4://sys_1");
-        assertThat(path.systemPath(), equalTo(path));
+        collector.checkThat(path.systemPath(), equalTo(path));
     }
 
     @Test
     public void person_path() {
         C4Path path = C4Path.path("@person");
-        assertThat(path.personPath(), equalTo(path));
+        collector.checkThat(path.personPath(), equalTo(path));
     }
 
     @Test
     public void should_be_able_to_extract_sub_paths_in_container_path() {
         C4Path path = C4Path.path("c4://sys1/container1");
-        MatcherAssert.assertThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
-        assertThat(path.containerPath(), equalTo(path));
+        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
+        collector.checkThat(path.containerPath(), equalTo(path));
     }
 
     @Test
     public void should_be_able_to_extract_sub_paths_in_component_path() {
         C4Path path = C4Path.path("c4://sys1/container1/comp1");
-        MatcherAssert.assertThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
-        MatcherAssert.assertThat(path.containerPath(), equalTo(C4Path.path("c4://sys1/container1")));
-        assertThat(path.componentPath(), equalTo(path));
+        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
+        collector.checkThat(path.containerPath(), equalTo(C4Path.path("c4://sys1/container1")));
+        collector.checkThat(path.componentPath(), equalTo(path));
     }
 
     @Test
     public void should_build_path_from_valid_paths() {
-        MatcherAssert.assertThat(C4Path.path("@Person"), notNullValue());
-        MatcherAssert.assertThat(C4Path.path("c4://system1"), notNullValue());
-        MatcherAssert.assertThat(C4Path.path("c4://system1/container1"), notNullValue());
-        MatcherAssert.assertThat(C4Path.path("c4://system1/container1/component1"), notNullValue());
+        collector.checkThat(C4Path.path("@Person"), notNullValue());
+        collector.checkThat(C4Path.path("c4://system1"), notNullValue());
+        collector.checkThat(C4Path.path("c4://system1/container1"), notNullValue());
+        collector.checkThat(C4Path.path("c4://system1/container1/component1"), notNullValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_fail_to_build_path_if_prefix_is_invalid() {
-        MatcherAssert.assertThat(C4Path.path("{@Person"), notNullValue());
+        collector.checkThat(C4Path.path("{@Person"), notNullValue());
+    }
+
+    private Component buildComponent(String name) {
+        Container container = buildContainer();
+        return container.addComponent(name, "bar");
+    }
+
+    private Container buildContainer() {
+        SoftwareSystem softwareSystem = buildSoftwareSystem();
+        return softwareSystem.addContainer("container", "bar", "bazz");
+    }
+
+    private SoftwareSystem buildSoftwareSystem() {
+        return workspace.getModel().addSoftwareSystem("system", "bar");
     }
 }

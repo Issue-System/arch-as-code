@@ -1,8 +1,6 @@
 package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
-import net.trilogy.arch.adapter.git.GitInterface;
-import net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory;
 import net.trilogy.arch.adapter.jira.JiraApiFactory;
 import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Rule;
@@ -26,6 +24,7 @@ import static org.mockito.Mockito.when;
 public class AuInitializeCommandTest {
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
+
     private final String client_id = "id";
     private final String project_id = "proj";
     private final String secret = "secret";
@@ -172,9 +171,9 @@ public class AuInitializeCommandTest {
         );
 
         var app = Application.builder()
-            .jiraApiFactory(mock(JiraApiFactory.class))
-            .filesFacade(mockedFilesFacade)
-            .build();
+                .jiraApiFactory(mock(JiraApiFactory.class))
+                .filesFacade(mockedFilesFacade)
+                .build();
 
         // WHEN:
         int status = execute(app, "au init -c c -p p -s s " + str(rootDir));

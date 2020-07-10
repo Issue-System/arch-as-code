@@ -178,7 +178,7 @@ project.test {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'net.trilogy.arch.Application'
+        attributes 'Main-Class': 'net.trilogy.arch.Application', "Multi-Release": true
     }
 
     from {

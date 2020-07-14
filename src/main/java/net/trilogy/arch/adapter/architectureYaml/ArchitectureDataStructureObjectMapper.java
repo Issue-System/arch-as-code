@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import net.trilogy.arch.adapter.architectureYaml.DateSerializer;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 
 import javax.validation.constraints.NotNull;

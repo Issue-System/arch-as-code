@@ -24,29 +24,29 @@ public class DiffSet {
     public DiffSet(Collection<Diff> diffs) {
         this.diffs = new LinkedHashSet<>(diffs);
         this.relationships = this.diffs.stream()
-                .filter(diff -> C4Type.relationship.equals(diff.getElement().getType()))
+                .filter(diff -> C4Type.RELATIONSHIP.equals(diff.getElement().getType()))
                 .collect(Collectors.toList());
     }
 
     public Set<Diff> getSystemLevelDiffs() {
         var systemsAndPeople = this.diffs.stream()
-                .filter(diff -> Set.of(C4Type.system, C4Type.person).contains(diff.getElement().getType()))
+                .filter(diff -> Set.of(C4Type.SYSTEM, C4Type.PERSON).contains(diff.getElement().getType()))
                 .collect(Collectors.toList());
 
         var relationships = findRelationshipsThatReferToAnyOf(systemsAndPeople).stream()
-                .filter(r -> doesRelationshipRefersToOneOfTypes(r, Set.of(C4Type.person, C4Type.system)))
+                .filter(r -> doesRelationshipRefersToOneOfTypes(r, Set.of(C4Type.PERSON, C4Type.SYSTEM)))
                 .collect(Collectors.toSet());
         return setOf(systemsAndPeople, relationships);
     }
 
     public Set<Diff> getContainerLevelDiffs(String systemId) {
         var containers = this.diffs.stream()
-                .filter(diff -> diff.getElement().getType().equals(C4Type.container))
+                .filter(diff -> diff.getElement().getType().equals(C4Type.CONTAINER))
                 .filter(diff -> ((C4Container) ((DiffableEntity) diff.getElement()).getEntity()).getSystemId().equals(systemId))
                 .collect(Collectors.toSet());
 
         var relationships = findRelationshipsThatReferToAnyOf(containers).stream()
-                .filter(r -> doesRelationshipRefersToOneOfTypes(r, Set.of(C4Type.person, C4Type.system, C4Type.container)))
+                .filter(r -> doesRelationshipRefersToOneOfTypes(r, Set.of(C4Type.PERSON, C4Type.SYSTEM, C4Type.CONTAINER)))
                 .collect(Collectors.toSet());
         var otherRelatedEntities = findDiffsReferredToBy(relationships);
 
@@ -55,7 +55,7 @@ public class DiffSet {
 
     public Set<Diff> getComponentLevelDiffs(String containerId) {
         var containers = this.diffs.stream()
-                .filter(diff -> diff.getElement().getType().equals(C4Type.component))
+                .filter(diff -> diff.getElement().getType().equals(C4Type.COMPONENT))
                 .filter(diff -> ((C4Component) ((DiffableEntity) diff.getElement()).getEntity()).getContainerId().equals(containerId))
                 .collect(Collectors.toSet());
 

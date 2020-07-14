@@ -9,7 +9,6 @@ import net.trilogy.arch.domain.diff.DiffableRelationship;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class DiffToDotCalculator {
 
@@ -26,7 +25,7 @@ public class DiffToDotCalculator {
             parentEntityDiff.getDescendants()
                     .stream()
                     .filter(it -> diffs.stream().anyMatch(diff -> it.getId().equals(diff.getElement().getId())))
-                    .filter(it -> !it.getType().equals(C4Type.relationship))
+                    .filter(it -> !it.getType().equals(C4Type.RELATIONSHIP))
                     .map(it -> "\"" + it.getId() + "\";")
                     .forEach(it -> dot.add(2, it));
             dot.add(1, "}");
@@ -77,7 +76,7 @@ public class DiffToDotCalculator {
     @VisibleForTesting
     static String getUrl(Diff diff, String linkPrefix) {
         boolean shouldHaveDiagram = diff.getDescendants().stream()
-                .anyMatch(it -> Set.of(C4Type.component, C4Type.container)
+                .anyMatch(it -> Set.of(C4Type.COMPONENT, C4Type.CONTAINER)
                         .contains(it.getType()));
 
         if (!shouldHaveDiagram) return "";

@@ -58,7 +58,7 @@ public class WorkspaceReaderTest {
         ));
         collector.checkThat(component.getDescription(), is(equalTo("Ionic native part for Android")));
         collector.checkThat(component.getContainerId(), is(equalTo("219")));
-        collector.checkThat(component.getType(), is(equalTo(C4Type.component)));
+        collector.checkThat(component.getType(), is(equalTo(C4Type.COMPONENT)));
         collector.checkThat(component.getUrl(), is(nullValue()));
         collector.checkThat(component.getPath(), is(C4Path.path("c4://Sococo Virtual Office/Android App/Ionic")));
         collector.checkThat(component.getRelationships(), contains(

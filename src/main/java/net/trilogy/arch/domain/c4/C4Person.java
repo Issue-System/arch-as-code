@@ -15,7 +15,7 @@ public class C4Person extends Entity implements HasLocation {
     private C4Location location;
 
     public C4Type getType() {
-        return C4Type.person;
+        return C4Type.PERSON;
     }
 
     @Builder(toBuilder=true)
@@ -27,7 +27,7 @@ public class C4Person extends Entity implements HasLocation {
     public static class C4PersonBuilder {
         public C4PersonBuilder path(C4Path path) {
             if(path == null) return this;
-            checkArgument(C4Type.person.equals(path.type()), format("Path %s is not valid for Container.", path));
+            checkArgument(C4Type.PERSON.equals(path.type()), format("Path %s is not valid for Container.", path));
             this.path = path;
             return this;
         }

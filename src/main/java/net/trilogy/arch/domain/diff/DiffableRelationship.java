@@ -52,6 +52,6 @@ public class DiffableRelationship implements Diffable {
 
     @Override
     public C4Type getType() {
-        return C4Type.relationship;
+        return C4Type.RELATIONSHIP;
     }
 }

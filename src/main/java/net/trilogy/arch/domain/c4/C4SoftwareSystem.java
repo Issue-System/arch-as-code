@@ -24,13 +24,13 @@ public class C4SoftwareSystem extends Entity implements HasLocation {
     }
 
     public C4Type getType() {
-        return C4Type.system;
+        return C4Type.SYSTEM;
     }
 
     public static class C4SoftwareSystemBuilder {
         public C4SoftwareSystemBuilder path(C4Path path) {
             if(path == null) return this;
-            checkArgument(C4Type.system.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));
+            checkArgument(C4Type.SYSTEM.equals(path.type()), format("Path %s is not valid for SoftwareSystem.", path));
             this.path = path;
             return this;
         }

@@ -47,7 +47,7 @@ public class C4DeploymentNode extends Entity {
     }
 
     public C4Type getType() {
-        return C4Type.deploymentNode;
+        return C4Type.DEPLOYMENT_NODE;
     }
 
     @Override

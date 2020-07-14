@@ -5,10 +5,10 @@ import com.structurizr.model.Container;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.C4Component;
 import net.trilogy.arch.domain.c4.C4Container;
 import net.trilogy.arch.domain.c4.C4Model;
+import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
@@ -34,16 +34,16 @@ public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView
         return entity -> {
 
             switch (entity.getType()) {
-                case person:
+                case PERSON:
                     view.add(modelMediator.person(entity.getId()));
                     break;
-                case system:
+                case SYSTEM:
                     view.add(modelMediator.softwareSystem(entity.getId()));
                     break;
-                case container:
+                case CONTAINER:
                     view.add(modelMediator.container(entity.getId()));
                     break;
-                case component:
+                case COMPONENT:
                     C4Component comp = (C4Component) entity;
                     String containerId;
                     if (comp.getContainerId() != null) {

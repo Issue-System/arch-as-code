@@ -78,19 +78,19 @@ public class C4Path {
     public String name() {
         String result = null;
         switch (type()) {
-            case person:
+            case PERSON:
                 result = personName();
                 break;
 
-            case system:
+            case SYSTEM:
                 result = systemName();
                 break;
 
-            case container:
+            case CONTAINER:
                 result = containerName().get();
                 break;
 
-            case component:
+            case COMPONENT:
                 result = componentName().get();
                 break;
         }
@@ -99,19 +99,19 @@ public class C4Path {
 
     public C4Type type() {
         if (this.personName() != null) {
-            return person;
+            return PERSON;
         }
 
         if (this.componentName().isPresent()) {
-            return component;
+            return COMPONENT;
         }
 
         if (this.containerName().isPresent()) {
-            return container;
+            return CONTAINER;
         }
 
         if (this.systemName() != null) {
-            return system;
+            return SYSTEM;
         }
 
         return null;

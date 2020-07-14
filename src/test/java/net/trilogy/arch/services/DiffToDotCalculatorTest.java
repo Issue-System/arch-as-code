@@ -5,20 +5,14 @@ import net.trilogy.arch.domain.c4.C4Path;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.DiffableEntity;
 import net.trilogy.arch.domain.diff.DiffableRelationship;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
 
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createComponent;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createContainer;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createPerson;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createRelationship;
-import static net.trilogy.arch.ArchitectureDataStructureHelper.createSystem;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.fail;
 
 public class DiffToDotCalculatorTest {
 
@@ -77,8 +71,8 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "digraph \"title\" {");
         appendln(expected, "    graph [rankdir=LR];");
         appendln(expected, "");
-        appendln(expected, "    \"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
-        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];");
+        appendln(expected, "    \"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>PERSON</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>PERSON</TD></TR><TR><TD></TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"4\" [label=\"d10\", color=blue, fontcolor=blue, tooltip=\"person-1 -> person-4\", labeltooltip=\"person-1 -> person-4\"];");
         appendln(expected, "}");
 
@@ -114,8 +108,8 @@ public class DiffToDotCalculatorTest {
         appendln(expected, "        \"1\";");
         appendln(expected, "    }");
         appendln(expected, "");
-        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
-        appendln(expected, "    \"2\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-2</TD></TR><TR><TD>person</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
+        appendln(expected, "    \"1\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-1</TD></TR><TR><TD>PERSON</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
+        appendln(expected, "    \"2\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-2</TD></TR><TR><TD>PERSON</TD></TR><TR><TD></TD></TR></TABLE>>, color=red, fontcolor=red, shape=plaintext, URL=\"\"];");
         appendln(expected, "    \"1\" -> \"2\" [label=\"d10\", color=red, fontcolor=red, tooltip=\"person-1 -> person-2\", labeltooltip=\"person-1 -> person-2\"];");
         appendln(expected, "}");
 
@@ -285,7 +279,7 @@ public class DiffToDotCalculatorTest {
                 "assets"
         );
 
-        var expected = "\"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>person</TD></TR><TR><TD>@person-4</TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];";
+        var expected = "\"4\" [label=<<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"><TR><TD>person-4</TD></TR><TR><TD>PERSON</TD></TR><TR><TD>@person-4</TD></TR></TABLE>>, color=black, fontcolor=black, shape=plaintext, URL=\"\"];";
 
         assertThat(actual, equalTo(expected));
     }

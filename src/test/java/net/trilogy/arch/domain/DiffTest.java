@@ -1,18 +1,17 @@
 package net.trilogy.arch.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.diff.Diff;
 import net.trilogy.arch.domain.diff.Diffable;
 import org.junit.Test;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-
-import java.util.Set;
 
 public class DiffTest {
 
@@ -129,7 +128,7 @@ public class DiffTest {
         public Thing(String id) {
             this.id = id;
             this.name = "name";
-            this.type = C4Type.person;
+            this.type = C4Type.PERSON;
         }
     }
 }

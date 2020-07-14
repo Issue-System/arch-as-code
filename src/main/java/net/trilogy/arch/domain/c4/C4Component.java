@@ -1,16 +1,15 @@
 package net.trilogy.arch.domain.c4;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -40,13 +39,13 @@ public class C4Component extends Entity implements HasTechnology, HasUrl {
     }
 
     public C4Type getType() {
-        return C4Type.component;
+        return C4Type.COMPONENT;
     }
 
     public static class C4ComponentBuilder {
         public C4ComponentBuilder path(C4Path path) {
             if(path == null) return this;
-            checkArgument(C4Type.component.equals(path.type()), format("Path %s is not valid for Component.", path));
+            checkArgument(C4Type.COMPONENT.equals(path.type()), format("Path %s is not valid for Component.", path));
             this.path = path;
             return this;
         }

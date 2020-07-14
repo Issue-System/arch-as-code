@@ -15,7 +15,7 @@ import static java.util.Optional.ofNullable;
 import static net.trilogy.arch.domain.c4.C4Action.DELIVERS;
 import static net.trilogy.arch.domain.c4.C4Action.INTERACTS_WITH;
 import static net.trilogy.arch.domain.c4.C4Model.NONE;
-import static net.trilogy.arch.domain.c4.C4Type.person;
+import static net.trilogy.arch.domain.c4.C4Type.PERSON;
 
 public class ModelEnhancer implements WorkspaceEnhancer {
 
@@ -111,17 +111,17 @@ public class ModelEnhancer implements WorkspaceEnhancer {
             idGenerator.setNext(r.getId());
 
             switch (type) {
-                case system: {
+                case SYSTEM: {
                     SoftwareSystem systemDestination = modelMediator.softwareSystem(destination.getId());
                     element.uses(systemDestination, r.getDescription(), r.getTechnology());
                     break;
                 }
-                case container: {
+                case CONTAINER: {
                     Container containerDestination = modelMediator.container(destination.getId());
                     element.uses(containerDestination, r.getDescription(), r.getTechnology());
                     break;
                 }
-                case component: {
+                case COMPONENT: {
                     Component component = modelMediator.component(destination.getId());
                     element.uses(component, r.getDescription(), r.getTechnology());
                     break;
@@ -138,7 +138,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
-            if (type.equals(person)) {
+            if (type.equals(PERSON)) {
                 Person person = modelMediator.person(destinationId);
                 idGenerator.setNext(r.getId());
                 element.delivers(person, r.getDescription(), r.getTechnology());
@@ -154,7 +154,7 @@ public class ModelEnhancer implements WorkspaceEnhancer {
             String destinationId = destination.getId();
             C4Type type = destination.getType();
 
-            if (type.equals(C4Type.person)) {
+            if (type.equals(C4Type.PERSON)) {
                 Person personDestination = modelMediator.person(destinationId);
                 idGenerator.setNext(r.getId());
                 person.interactsWith(personDestination, r.getDescription(), r.getTechnology());

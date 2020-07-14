@@ -3,27 +3,27 @@ package net.trilogy.arch.domain.c4;
 import com.structurizr.model.*;
 
 public enum C4Type {
-    relationship,
-    person,
-    system,
-    container,
-    component,
-    deploymentNode,
-    containerInstance;
+    RELATIONSHIP,
+    PERSON,
+    SYSTEM,
+    CONTAINER,
+    COMPONENT,
+    DEPLOYMENT_NODE,
+    CONTAINER_INSTANCE;
 
     public static C4Type from(Element element) {
         if (element instanceof Person) {
-            return person;
+            return PERSON;
         } else if (element instanceof SoftwareSystem) {
-            return system;
+            return SYSTEM;
         } else if (element instanceof Container) {
-            return container;
+            return CONTAINER;
         } else if (element instanceof Component) {
-            return component;
+            return COMPONENT;
         } else if (element instanceof DeploymentNode) {
-            return deploymentNode;
+            return DEPLOYMENT_NODE;
         } else if (element instanceof ContainerInstance) {
-            return containerInstance;
+            return CONTAINER_INSTANCE;
         } else {
             throw new IllegalArgumentException("Unrecognized element type - " + element.getClass().getCanonicalName());
         }

@@ -1,13 +1,10 @@
 package net.trilogy.arch.adapter.architectureYaml;
 
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
+import net.trilogy.arch.facade.FilesFacade;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * This class is being strangle-patterned away.

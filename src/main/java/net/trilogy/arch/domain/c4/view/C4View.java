@@ -3,7 +3,6 @@ package net.trilogy.arch.domain.c4.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import net.trilogy.arch.domain.c4.C4Reference;
 import net.trilogy.arch.domain.c4.C4Tag;
 

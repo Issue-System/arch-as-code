@@ -37,6 +37,7 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin, Di
 
         try {
             ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
+
             File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
             File exportedFile = new ArchitectureDataStructureWriter(filesFacade).export(dataStructure, writeFile);
             print(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));

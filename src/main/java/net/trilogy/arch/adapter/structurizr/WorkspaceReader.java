@@ -45,13 +45,8 @@ public class WorkspaceReader {
         deploymentNodes(model).forEach(c4Model::addDeploymentNode);
         architectureDataStructure.setModel(c4Model);
 
-        C4ViewContainer views = new C4ViewContainer();
         ViewSet workspaceViews = workspace.getViews();
-        views.setSystemViews(systemViews(workspaceViews));
-        views.setContainerViews(containerViews(workspaceViews));
-        views.setComponentViews(componentViews(workspaceViews));
-        views.setDeploymentViews(deploymentViews(workspaceViews, architectureDataStructure.getModel()));
-        architectureDataStructure.setViews(views);
+        architectureDataStructure.setStructurizrViews(workspaceViews);
 
         List<ImportantTechnicalDecision> decisions = decisions(workspace);
         architectureDataStructure.setDecisions(decisions);

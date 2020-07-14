@@ -1,10 +1,12 @@
 package net.trilogy.arch.transformation;
 
 import com.structurizr.Workspace;
+import com.structurizr.view.ViewSet;
 import net.trilogy.arch.adapter.structurizr.Credentials;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.transformation.enhancer.WorkspaceEnhancer;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,6 +25,16 @@ public class ArchitectureDataStructureTransformer {
         workspace.setId(Credentials.config().getWorkspaceId());
 
         this.enhancers.forEach(e -> e.enhance(workspace, dataStructure));
+
+
+        try {
+            Method setViews = Workspace.class.getDeclaredMethod("setViews", ViewSet.class);
+            setViews.setAccessible(true);
+            setViews.invoke(workspace, dataStructure.getStructurizrViews());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return workspace;
     }
 }

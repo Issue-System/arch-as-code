@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public abstract class BaseViewEnhancer<T extends View, G extends C4View> implements WorkspaceEnhancer {
 
-    @Override
+   @Override
     public void enhance(Workspace workspace, ArchitectureDataStructure dataStructure) {
         @NonNull C4Model dataStructureModel = dataStructure.getModel();
         if (dataStructureModel.equals(C4Model.NONE)) {

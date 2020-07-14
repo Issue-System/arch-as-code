@@ -1,5 +1,7 @@
 package net.trilogy.arch.adapter.architectureYaml;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.structurizr.view.ViewSet;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.DocumentationImage;
 import net.trilogy.arch.domain.DocumentationSection;
@@ -11,7 +13,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class ArchitectureDataStructureWriter {
-    private FilesFacade filesFacade;
+    public static final String STRUCTURIZR_VIEWS_FILE_NAME = "structurizrViews.json";
+
+    private final FilesFacade filesFacade;
 
     public ArchitectureDataStructureWriter(FilesFacade filesFacade) {
         this.filesFacade = filesFacade;
@@ -27,13 +31,23 @@ public class ArchitectureDataStructureWriter {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
         filesFacade.writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
 
-        final Path writePath = Path.of(writeFile.getParent()).resolve("documentation");
-        if (!writePath.toFile().exists()) filesFacade.createDirectory(writePath);
+        final Path viewsWritePath = Path.of(writeFile.getParent()).resolve(STRUCTURIZR_VIEWS_FILE_NAME);
+        writeViews(dataStructure.getStructurizrViews(), viewsWritePath);
 
-        writeDocumentation(dataStructure, writePath);
-        writeDocumentationImages(filesFacade, dataStructure, writePath);
+        final Path documentationWritePath = Path.of(writeFile.getParent()).resolve("documentation");
+        if (!documentationWritePath.toFile().exists()) filesFacade.createDirectory(documentationWritePath);
+
+        writeDocumentation(dataStructure, documentationWritePath);
+        writeDocumentationImages(filesFacade, dataStructure, documentationWritePath);
 
         return writeFile;
+    }
+
+    private void writeViews(ViewSet structurizrViews, Path writePath) throws IOException {
+        if (structurizrViews != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            filesFacade.writeString(writePath, mapper.writeValueAsString(structurizrViews));
+        }
     }
 
     private void writeDocumentation(ArchitectureDataStructure dataStructure, Path documentation) throws IOException {

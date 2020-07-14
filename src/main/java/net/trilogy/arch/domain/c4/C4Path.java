@@ -5,7 +5,6 @@ import com.structurizr.model.Element;
 import com.structurizr.model.Person;
 import lombok.*;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,19 +12,21 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static net.trilogy.arch.domain.c4.C4Type.*;
 
 @EqualsAndHashCode
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class C4Path {
-    private static final int COMPONENT_GROUP_NUMBER = 4;
-    private static final int CONTAINER_GROUP_NUMBER = 3;
+    private static final int COMPONENT_GROUP_NUMBER = 8;
+    private static final int CONTAINER_GROUP_NUMBER = 5;
     private static final int SYSTEM_OR_PERSON_GROUP_NUMBER = 2;
     private static final String ENTITY_PREFIX = "c4://";
     private static final String PERSON_PREFIX = "@";
 
-    private static final String regex = "(c4:\\/\\/|\\@)([\\w\\s\\-\\.\\-]+)\\/?([\\w\\s\\.\\-]+)?\\/?([\\w\\s\\.\\-]+)?";
+    private static final String regex = "(c4:\\/\\/|\\@)(([\\w\\s\\-\\.\\-]+(\\\\\\/[\\w\\s\\-\\.\\-])*)+)\\/?(([\\w\\s\\-\\.\\-]+(\\\\\\/[\\w\\s\\-\\.\\-])*)+)?\\/?(([\\w\\s\\-\\.\\-]+(\\\\\\/[\\w\\s\\-\\.\\-])*)+)?";
+
     private static final Pattern pattern = Pattern.compile(regex);
 
     @JsonIgnore
@@ -75,26 +76,42 @@ public class C4Path {
     }
 
     public String name() {
-        return Arrays.stream(path.split("(/|//|\\@)"))
-                .reduce((first, second) -> second)
-                .orElse(null);
+        String result = null;
+        switch (type()) {
+            case person:
+                result = personName();
+                break;
+
+            case system:
+                result = systemName();
+                break;
+
+            case container:
+                result = containerName().get();
+                break;
+
+            case component:
+                result = componentName().get();
+                break;
+        }
+        return result;
     }
 
     public C4Type type() {
         if (this.personName() != null) {
-            return C4Type.person;
+            return person;
         }
 
         if (this.componentName().isPresent()) {
-            return C4Type.component;
+            return component;
         }
 
         if (this.containerName().isPresent()) {
-            return C4Type.container;
+            return container;
         }
 
         if (this.systemName() != null) {
-            return C4Type.system;
+            return system;
         }
 
         return null;
@@ -102,7 +119,7 @@ public class C4Path {
 
     public String personName() {
         if (this.path.startsWith(PERSON_PREFIX)) {
-            return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
+            return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER).replaceAll("\\\\/", "/");
         }
 
         return null;
@@ -110,7 +127,7 @@ public class C4Path {
 
     public String systemName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
-            return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER);
+            return matcher().group(SYSTEM_OR_PERSON_GROUP_NUMBER).replaceAll("\\\\/", "/");
         }
 
         return null;
@@ -118,7 +135,7 @@ public class C4Path {
 
     public Optional<String> containerName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
-            return ofNullable(matcher().group(CONTAINER_GROUP_NUMBER));
+            return ofNullable(matcher().group(CONTAINER_GROUP_NUMBER)).map(name -> name.replaceAll("\\\\/", "/"));
         }
 
         return empty();
@@ -126,21 +143,21 @@ public class C4Path {
 
     public Optional<String> componentName() {
         if (this.path.startsWith(ENTITY_PREFIX)) {
-            return ofNullable(matcher().group(COMPONENT_GROUP_NUMBER));
+            return ofNullable(matcher().group(COMPONENT_GROUP_NUMBER)).map(name -> name.replaceAll("\\\\/", "/"));
         }
 
         return empty();
     }
 
     public C4Path containerPath() {
-        if (!containerName().isPresent()) {
+        if (containerName().isEmpty()) {
             throw new IllegalStateException("Container path does not exist on this path - " + this.getPath());
         }
         return new C4Path(systemPath().getPath() + "/" + containerName().get());
     }
 
     public C4Path componentPath() {
-        if (!componentName().isPresent()) {
+        if (componentName().isEmpty()) {
             throw new IllegalStateException("Component path does not exist on this path - " + this.getPath());
         }
         return new C4Path(containerPath().getPath() + "/" + componentName().get());

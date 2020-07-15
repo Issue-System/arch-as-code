@@ -74,9 +74,14 @@ public class C4PathTest {
     @Test
     public void shouldBuildPathforEntitiesWithSlash() {
         C4Path personPath = C4Path.buildPath(buildPerson("person/1"));
-        C4Path systemPath = C4Path.buildPath(buildSoftwareSystem("system/1"));
-        C4Path containerPath = C4Path.buildPath(buildContainer("container/1"));
-        C4Path componentPath = C4Path.buildPath(buildComponent("component/1"));
+
+        SoftwareSystem system = buildSoftwareSystem("system/1");
+        C4Path systemPath = C4Path.buildPath(system);
+
+        Container container = buildContainer("container/2/system/1", system);
+        C4Path containerPath = C4Path.buildPath(container);
+
+        C4Path componentPath = C4Path.buildPath(buildComponent("component/3/container/2/system/1", container));
 
 
         collector.checkThat(personPath.type(), equalTo(C4Type.PERSON));
@@ -88,12 +93,12 @@ public class C4PathTest {
         collector.checkThat(systemPath.getPath(), equalTo("c4://system\\/1"));
 
         collector.checkThat(containerPath.type(), equalTo(C4Type.CONTAINER));
-        collector.checkThat(containerPath.name(), equalTo("container/1"));
-        collector.checkThat(containerPath.getPath(), equalTo("c4://system/container\\/1"));
+        collector.checkThat(containerPath.name(), equalTo("container/2/system/1"));
+        collector.checkThat(containerPath.getPath(), equalTo("c4://system\\/1/container\\/2\\/system\\/1"));
 
         collector.checkThat(componentPath.type(), equalTo(C4Type.COMPONENT));
-        collector.checkThat(componentPath.name(), equalTo("component/1"));
-        collector.checkThat(componentPath.getPath(), equalTo("c4://system/container/component\\/1"));
+        collector.checkThat(componentPath.name(), equalTo("component/3/container/2/system/1"));
+        collector.checkThat(componentPath.getPath(), equalTo("c4://system\\/1/container\\/2\\/system\\/1/component\\/3\\/container\\/2\\/system\\/1"));
     }
 
     @Test
@@ -193,8 +198,8 @@ public class C4PathTest {
     public void shouldParseEntitiesWithSlashInPath() {
         C4Path personPath = C4Path.path("@person\\/1");
         C4Path systemPath = C4Path.path("c4://system\\/1");
-        C4Path containerPath = C4Path.path("c4://system\\/1/container\\/1");
-        C4Path componentPath = C4Path.path("c4://system\\/1/container\\/1/component\\/1");
+        C4Path containerPath = C4Path.path("c4://system\\/1/container\\/2\\/system\\/1");
+        C4Path componentPath = C4Path.path("c4://system\\/1/container\\/2\\/system\\/1/component\\/3\\/container\\/2\\/system\\/1");
 
         collector.checkThat(personPath.name(), equalTo("person/1"));
         collector.checkThat(personPath.type(), equalTo(C4Type.PERSON));
@@ -204,13 +209,13 @@ public class C4PathTest {
         collector.checkThat(systemPath.type(), equalTo(C4Type.SYSTEM));
         collector.checkThat(systemPath.systemName(), equalTo("system/1"));
 
-        collector.checkThat(containerPath.name(), equalTo("container/1"));
+        collector.checkThat(containerPath.name(), equalTo("container/2/system/1"));
         collector.checkThat(containerPath.type(), equalTo(C4Type.CONTAINER));
-        collector.checkThat(containerPath.containerName(), equalTo(Optional.of("container/1")));
+        collector.checkThat(containerPath.containerName(), equalTo(Optional.of("container/2/system/1")));
 
-        collector.checkThat(componentPath.name(), equalTo("component/1"));
+        collector.checkThat(componentPath.name(), equalTo("component/3/container/2/system/1"));
         collector.checkThat(componentPath.type(), equalTo(C4Type.COMPONENT));
-        collector.checkThat(componentPath.componentName(), equalTo(Optional.of("component/1")));
+        collector.checkThat(componentPath.componentName(), equalTo(Optional.of("component/3/container/2/system/1")));
     }
 
     @Test
@@ -227,16 +232,17 @@ public class C4PathTest {
 
     @Test
     public void shouldBeAbleToExtractSubPathsInContainerPath() {
-        C4Path path = C4Path.path("c4://sys1/container1");
-        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
+        C4Path path = C4Path.path("c4://system\\/1/container\\/2\\/system\\/1");
+
+        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://system\\/1")));
         collector.checkThat(path.containerPath(), equalTo(path));
     }
 
     @Test
     public void shouldBeAbleToExtractSubPathsInComponentPath() {
-        C4Path path = C4Path.path("c4://sys1/container1/comp1");
-        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://sys1")));
-        collector.checkThat(path.containerPath(), equalTo(C4Path.path("c4://sys1/container1")));
+        C4Path path = C4Path.path("c4://system\\/1/container\\/2\\/system\\/1/component\\/3\\/container\\/2\\/system\\/1");
+        collector.checkThat(path.systemPath(), equalTo(C4Path.path("c4://system\\/1")));
+        collector.checkThat(path.containerPath(), equalTo(C4Path.path("c4://system\\/1/container\\/2\\/system\\/1")));
         collector.checkThat(path.componentPath(), equalTo(path));
     }
 
@@ -305,14 +311,28 @@ public class C4PathTest {
 
 
     private Component buildComponent(String componentName) {
-        Container container = buildContainer("container");
+        return buildComponent(componentName, null);
+    }
+
+    private Component buildComponent(String componentName, Container container) {
+        if (container == null) container = buildContainer("container");
+
         return container.addComponent(componentName, "bar");
     }
 
     private Container buildContainer(String containerName) {
-        SoftwareSystem softwareSystem = workspace.getModel().getSoftwareSystemWithName("system");
+        return buildContainer(containerName, null);
+    }
 
-        if (softwareSystem == null) softwareSystem = buildSoftwareSystem("system");
+    private Container buildContainer(String containerName, SoftwareSystem softwareSystem) {
+
+        if (softwareSystem == null) {
+            softwareSystem = workspace.getModel().getSoftwareSystemWithName("system");
+
+            if (softwareSystem == null) {
+                softwareSystem = buildSoftwareSystem("system");
+            }
+        }
 
         return softwareSystem.addContainer(containerName, "bar", "bazz");
     }

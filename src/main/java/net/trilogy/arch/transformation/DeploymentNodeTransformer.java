@@ -23,7 +23,7 @@ public class DeploymentNodeTransformer {
     }
 
     private static void addChildren(Model model, C4Model c4Model, DeploymentNode deploymentNode, C4DeploymentNode c4Node, FunctionalIdGenerator idGenerator) {
-        List<C4ContainerInstance> containerInstances = c4Node.getContainerInstances();
+        Set<C4ContainerInstance> containerInstances = c4Node.getContainerInstances();
         if (!containerInstances.isEmpty()) {
             containerInstances.forEach(instance -> {
                 String containerId = c4Model.findEntityByReference(instance.getContainerReference()).getId();
@@ -70,7 +70,7 @@ public class DeploymentNodeTransformer {
                 .description(node.getDescription())
                 .tags(Set.of())
                 .instances(node.getInstances())
-                .containerInstances(new ArrayList<>())
+                .containerInstances(new TreeSet<>())
                 .children(new TreeSet<>())
                 .build();
 

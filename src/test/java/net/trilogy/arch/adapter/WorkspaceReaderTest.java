@@ -110,13 +110,13 @@ public class WorkspaceReaderTest {
                                 .environment("Live")
                                 .technology("Chrome, Firefox, Safari, or Edge")
                                 .instances(1)
-                                .containerInstances(List.of(
+                                .containerInstances(Set.of(
                                         new C4ContainerInstance("67", "Live", new C4Reference("17", null), 2)
                                 ))
                                 .children(Set.of())
                                 .build()
                 ))
-                .containerInstances(List.of())
+                .containerInstances(Set.of())
                 .environment("Live")
                 .technology("Microsoft Windows or Apple macOS")
                 .instances(1)

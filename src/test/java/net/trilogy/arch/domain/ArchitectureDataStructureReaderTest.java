@@ -184,13 +184,13 @@ public class ArchitectureDataStructureReaderTest {
                                 .environment("Development")
                                 .technology("Oracle 12c")
                                 .instances(1)
-                                .containerInstances(List.of(
+                                .containerInstances(Set.of(
                                         new C4ContainerInstance("53", "development", new C4Reference("12", "c4://Internet Banking System/Database"), 1)
                                 ))
                                 .children(Set.of())
                                 .build()
                 ))
-                .containerInstances(List.of())
+                .containerInstances(Set.of())
                 .description("A Docker container.")
                 .environment("Development")
                 .id("51")

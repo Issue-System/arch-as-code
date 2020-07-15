@@ -1,7 +1,7 @@
 package net.trilogy.arch.domain.c4;
 
-import java.util.List;
+import java.util.Set;
 
 public interface HasRelation {
-    List<C4Relationship> getRelationships();
+    Set<C4Relationship> getRelationships();
 }

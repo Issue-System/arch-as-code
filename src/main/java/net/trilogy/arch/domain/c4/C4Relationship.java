@@ -6,7 +6,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class C4Relationship {
+public class C4Relationship implements Comparable<C4Relationship> {
     private String id;
     private String alias;
     @NonNull
@@ -15,6 +15,12 @@ public class C4Relationship {
     private String withId;
     @NonNull
     private String description;
+
+    @Override
+    public int compareTo(C4Relationship other) {
+        return this.getId().compareTo(other.getId());
+    }
+
     private String technology;
 
     @Builder(toBuilder = true)

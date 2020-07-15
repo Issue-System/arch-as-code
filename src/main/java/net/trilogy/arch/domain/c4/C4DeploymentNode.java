@@ -17,14 +17,14 @@ public class C4DeploymentNode extends Entity {
     private List<C4DeploymentNode> children = new ArrayList<>();
     private List<C4ContainerInstance> containerInstances = new ArrayList<>();
 
-    @Builder(toBuilder=true)
+    @Builder(toBuilder = true)
     C4DeploymentNode(String id,
                      String alias,
                      String name,
                      C4Path path,
                      String description,
                      @Singular Set<C4Tag> tags,
-                     @Singular List<C4Relationship> relationships,
+                     @Singular Set<C4Relationship> relationships,
                      String technology,
                      String environment,
                      Integer instances,

@@ -25,7 +25,18 @@ public class C4Component extends Entity implements HasTechnology, HasUrl {
     protected List<String> srcMappings = emptyList();
 
     @Builder(toBuilder = true)
-    public C4Component(@NonNull String id, String alias, C4Path path, @NonNull String name, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, String containerId, String containerAlias, String technology, String url, List<String> srcMappings) {
+    public C4Component(@NonNull String id,
+                       String alias,
+                       C4Path path,
+                       @NonNull String name,
+                       String description,
+                       @Singular Set<C4Tag> tags,
+                       @Singular Set<C4Relationship> relationships,
+                       String containerId,
+                       String containerAlias,
+                       String technology,
+                       String url,
+                       List<String> srcMappings) {
         super(id, alias, path, name, description, tags, relationships);
         this.containerId = containerId;
         this.containerAlias = containerAlias;

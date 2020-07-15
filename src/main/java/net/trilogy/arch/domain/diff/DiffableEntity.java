@@ -5,13 +5,14 @@ import lombok.RequiredArgsConstructor;
 import net.trilogy.arch.domain.c4.C4Type;
 import net.trilogy.arch.domain.c4.Entity;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class DiffableEntity implements Diffable {
 
-    @Getter private final Entity entity;
+    @Getter
+    private final Entity entity;
 
     @Override
     public String getId() {
@@ -33,8 +34,8 @@ public class DiffableEntity implements Diffable {
 
         var a = entity.shallowCopy();
         var b = other.entity.shallowCopy();
-        a.setRelationships(List.of());
-        b.setRelationships(List.of());
+        a.setRelationships(Set.of());
+        b.setRelationships(Set.of());
         return a.equals(b);
     }
 
@@ -46,7 +47,7 @@ public class DiffableEntity implements Diffable {
     @Override
     public int hashCode() {
         var dup = this.entity.shallowCopy();
-        dup.setRelationships(List.of());
+        dup.setRelationships(Set.of());
         return dup.hashCode();
     }
 }

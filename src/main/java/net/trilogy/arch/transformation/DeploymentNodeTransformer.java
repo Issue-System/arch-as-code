@@ -34,7 +34,7 @@ public class DeploymentNodeTransformer {
             });
         }
 
-        List<C4DeploymentNode> children = c4Node.getChildren();
+        Set<C4DeploymentNode> children = c4Node.getChildren();
         if (!children.isEmpty()) {
             children.forEach(child -> {
                 idGenerator.setNext(child.getId());
@@ -71,7 +71,7 @@ public class DeploymentNodeTransformer {
                 .tags(Set.of())
                 .instances(node.getInstances())
                 .containerInstances(new ArrayList<>())
-                .children(new ArrayList<>())
+                .children(new TreeSet<>())
                 .build();
 
         node.getContainerInstances().forEach(

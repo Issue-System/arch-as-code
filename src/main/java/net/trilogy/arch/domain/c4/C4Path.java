@@ -153,21 +153,21 @@ public class C4Path {
         if (containerName().isEmpty()) {
             throw new IllegalStateException("Container path does not exist on this path - " + this.getPath());
         }
-        return new C4Path(systemPath().getPath() + "/" + containerName().get());
+        return new C4Path(systemPath().getPath() + "/" + containerName().get().replaceAll("/", "\\\\/"));
     }
 
     public C4Path componentPath() {
         if (componentName().isEmpty()) {
             throw new IllegalStateException("Component path does not exist on this path - " + this.getPath());
         }
-        return new C4Path(containerPath().getPath() + "/" + componentName().get());
+        return new C4Path(containerPath().getPath() + "/" + componentName().get().replaceAll("/", "\\\\/"));
     }
 
     public C4Path systemPath() {
         if (systemName() == null) {
             throw new IllegalStateException("Accessing system path on non-system path - " + getPath());
         }
-        return new C4Path("c4://" + systemName());
+        return new C4Path("c4://" + systemName().replaceAll("/", "\\\\/"));
     }
 
     public C4Path personPath() {

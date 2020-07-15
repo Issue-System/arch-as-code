@@ -19,7 +19,14 @@ public class C4Person extends Entity implements HasLocation {
     }
 
     @Builder(toBuilder=true)
-    C4Person(String id, String alias, String name, C4Path path, String description, @Singular Set<C4Tag> tags, @Singular List<C4Relationship> relationships, C4Location location) {
+    C4Person(String id,
+             String alias,
+             String name,
+             C4Path path,
+             String description,
+             @Singular Set<C4Tag> tags,
+             @Singular Set<C4Relationship> relationships,
+             C4Location location) {
         super(id, alias, path, name, description, tags, relationships);
         this.location = location;
     }

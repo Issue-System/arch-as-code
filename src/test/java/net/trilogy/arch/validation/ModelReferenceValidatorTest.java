@@ -5,6 +5,7 @@ import net.trilogy.arch.domain.c4.*;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.ImmutableList.of;
 import static java.util.Collections.emptyList;
@@ -72,7 +73,7 @@ public class ModelReferenceValidatorTest {
         C4Model model = new C4Model();
         C4SoftwareSystem softwareSystem = softwareSystem();
         String nonExistentPersonId = "2";
-        softwareSystem.setRelationships(of(new C4Relationship("101", null, C4Action.DELIVERS, null, nonExistentPersonId, "batch processing", "mainframe")));
+        softwareSystem.setRelationships(Set.of(new C4Relationship("101", null, C4Action.DELIVERS, null, nonExistentPersonId, "batch processing", "mainframe")));
         model.addSoftwareSystem(softwareSystem);
         dataStructure.setModel(model);
 

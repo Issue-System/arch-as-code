@@ -4,10 +4,7 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import lombok.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -23,19 +20,19 @@ public class C4Model {
 
     @NonNull
     @Setter(AccessLevel.PROTECTED)
-    private Set<C4Person> people = new HashSet<>();
+    private Set<C4Person> people = new TreeSet<>();
     @NonNull
     @Setter(AccessLevel.PROTECTED)
-    private Set<C4SoftwareSystem> systems = new HashSet<>();
+    private Set<C4SoftwareSystem> systems = new TreeSet<>();
     @NonNull
     @Setter(AccessLevel.PROTECTED)
-    private Set<C4Container> containers = new HashSet<>();
+    private Set<C4Container> containers = new TreeSet<>();
     @NonNull
     @Setter(AccessLevel.PROTECTED)
-    private Set<C4Component> components = new HashSet<>();
+    private Set<C4Component> components = new TreeSet<>();
     @NonNull
     @Setter(AccessLevel.PROTECTED)
-    private Set<C4DeploymentNode> deploymentNodes = new HashSet<>();
+    private Set<C4DeploymentNode> deploymentNodes = new TreeSet<>();
 
     public C4Model addPerson(C4Person person) {
         checkArgument(!personWithNameExists(person), format("Person with name '%s' already exists.", person.getName()));

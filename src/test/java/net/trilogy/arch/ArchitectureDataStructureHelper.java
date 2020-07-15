@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+
 public class ArchitectureDataStructureHelper {
     public static ArchitectureDataStructure.ArchitectureDataStructureBuilder emptyArch() {
         return ArchitectureDataStructure
@@ -88,6 +91,28 @@ public class ArchitectureDataStructureHelper {
             .build();
     }
 
+    public static C4SoftwareSystem softwareSystem() {
+        return C4SoftwareSystem.builder()
+                .id("1")
+                .alias("c4://OBP")
+                .name("OBP")
+                .description("core banking")
+                .tags(emptySet())
+                .relationships(emptyList())
+                .build();
+    }
+
+    public static C4Model addSystemWithContainer(C4Model model, String systemId, String containerId) {
+        C4SoftwareSystem softwareSystem = softwareSystem();
+        softwareSystem.setId(systemId);
+        softwareSystem.setPath(C4Path.path("c4://ABC"));
+        C4Container container = createContainer(containerId, systemId);
+        container.setPath(C4Path.path("c4://ABC/C1"));
+        model.addSoftwareSystem(softwareSystem);
+        model.addContainer(container);
+        return model;
+    }
+
     public static C4SoftwareSystem createSystemWithRelationshipsTo(String id, Set<Entity> entities) {
         final String systemId = id;
         final Set<C4Relationship> relationships = entities
@@ -98,7 +123,7 @@ public class ArchitectureDataStructureHelper {
                                 null,
                                 e.getId(),
                                 "desc-" + id,
-                                null
+                                "HTTPS"
                         )
                 ).collect(Collectors.toSet());
 

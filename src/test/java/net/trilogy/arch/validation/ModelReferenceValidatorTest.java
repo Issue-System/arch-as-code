@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.ImmutableList.of;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
+import static net.trilogy.arch.ArchitectureDataStructureHelper.softwareSystem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -82,15 +82,6 @@ public class ModelReferenceValidatorTest {
         assertThat(validationList, hasSize(1));
     }
 
-    private C4SoftwareSystem softwareSystem() {
-        return C4SoftwareSystem.builder()
-                .id("1")
-                .alias("c4://OBP")
-                .name("OBP")
-                .description("core banking")
-                .tags(emptySet())
-                .relationships(emptyList())
-                .build();
-    }
+
 
 }

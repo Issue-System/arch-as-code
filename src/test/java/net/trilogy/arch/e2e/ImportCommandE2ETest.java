@@ -53,7 +53,7 @@ public class ImportCommandE2ETest {
     @Test
     public void shouldImportStructurizrJsonFile() throws Exception {
         // Given
-        File workspacePath = new File(getClass().getResource("/structurizr/Think3-Sococo.c4model.json").getPath());
+        File workspacePath = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_THINK3_SOCOCO).getPath());
         final String pathToSococo = workspacePath.getAbsolutePath();
 
         // When
@@ -64,6 +64,22 @@ public class ImportCommandE2ETest {
 
         collector.checkThat(file.exists(), is(true));
         collector.checkThat(Files.readString(file.toPath()).contains("Sococo Import"), is(true));
+    }
+
+    @Test
+    public void shouldImportStructurizrJsonFileWithMultipleSlashes() throws Exception {
+        // Given
+        File workspacePath = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_TEST_SPACES).getPath());
+        final String pathToTestSpaces = workspacePath.getAbsolutePath();
+
+        // When
+        assertThat(execute("import", pathToTestSpaces, tempProductDirectory.toAbsolutePath().toString()), equalTo(0));
+
+        // Then
+        File file = tempProductDirectory.resolve("product-architecture.yml").toFile();
+
+        collector.checkThat(file.exists(), is(true));
+        collector.checkThat(Files.readString(file.toPath()).contains("TestSpaces is a tool!"), is(true));
     }
 
     @Test
@@ -85,7 +101,6 @@ public class ImportCommandE2ETest {
         collector.checkThat(out.toString(), equalTo(""));
         collector.checkThat(err.toString(), containsString("Failed to import\nError thrown: java.io.IOException: Ran out of bytes!"));
     }
-
 
     @Test
     public void shouldGracefullyLogDocumnetationImageWriteErrors() throws Exception {

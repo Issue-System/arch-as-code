@@ -1,0 +1,707 @@
+{
+    "id": 49328,
+    "name": "TestSpaces",
+    "description": "TestSpaces is a tool!",
+    "revision": 781,
+    "lastModifiedDate": "2020-07-15T18:29:51Z",
+    "lastModifiedUser": "runner@fv-az33",
+    "lastModifiedAgent": "structurizr-java/1.3.3",
+    "model": {
+        "people": [
+            {
+                "id": "1",
+                "tags": "Element,Person,DevSpaces Container View,DevSpaces System View,Trilogy System View",
+                "name": "Developer",
+                "description": "Developer building software",
+                "relationships": [
+                    {
+                        "id": "18",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "1",
+                        "destinationId": "8",
+                        "description": "to devolop software",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "20",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "1",
+                        "destinationId": "9",
+                        "description": "creates and manages dev spaces",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "19",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "1",
+                        "destinationId": "6",
+                        "description": "inter-team collaboration",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "17",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "1",
+                        "destinationId": "7",
+                        "description": "as a version control system",
+                        "interactionStyle": "Synchronous"
+                    }
+                ],
+                "location": "Unspecified"
+            },
+            {
+                "id": "3",
+                "tags": "Element,Person,Trilogy System View",
+                "name": "PCA",
+                "description": "Product Chief Architect",
+                "relationships": [
+                    {
+                        "id": "27",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "3",
+                        "destinationId": "6",
+                        "description": "inter-team collaboration",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "26",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "3",
+                        "destinationId": "4",
+                        "description": "to communicate with team",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "25",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "3",
+                        "destinationId": "7",
+                        "description": "as a version control system",
+                        "interactionStyle": "Synchronous"
+                    }
+                ],
+                "location": "Unspecified"
+            },
+            {
+                "id": "2",
+                "tags": "Element,Person,DevSpaces Container View,DevSpaces System View,Trilogy System View",
+                "name": "SaasOps",
+                "description": "SaasOps operating system",
+                "relationships": [
+                    {
+                        "id": "22",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "2",
+                        "destinationId": "8",
+                        "description": "to manage cluster",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "23",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "2",
+                        "destinationId": "6",
+                        "description": "inter-team collaboration",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "24",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "2",
+                        "destinationId": "11",
+                        "description": "to manage instances",
+                        "interactionStyle": "Synchronous"
+                    },
+                    {
+                        "id": "21",
+                        "tags": "Relationship,Synchronous",
+                        "sourceId": "2",
+                        "destinationId": "7",
+                        "description": "as a version control system",
+                        "interactionStyle": "Synchronous"
+                    }
+                ],
+                "location": "Unspecified"
+            }
+        ],
+        "softwareSystems": [
+            {
+                "id": "8",
+                "tags": "Element,Software System,DevSpaces System View",
+                "name": "DevSpaces",
+                "description": "allows developers to collaborate",
+                "location": "Unspecified",
+                "containers": [
+                    {
+                        "id": "12",
+                        "tags": "Element,Container,DevSpaces Container View",
+                        "name": "DevSpaces/DevSpaces API",
+                        "description": "API to programmatically create/manage dev spaces",
+                        "technology": "Spring Boot",
+                        "components": [
+                            {
+                                "id": "16",
+                                "tags": "Element,Component,DevSpaces API Component View",
+                                "properties": {
+                                    "Source Code Mappings": "[]"
+                                },
+                                "name": "DevSpaces/DevSpaces API/E-mail Component",
+                                "description": "Sends emails to users",
+                                "technology": "Spring MVC Rest Controller",
+                                "size": 0
+                            },
+                            {
+                                "id": "15",
+                                "tags": "Element,Component,DevSpaces API Component View",
+                                "properties": {
+                                    "Source Code Mappings": "[]"
+                                },
+                                "name": "DevSpaces/DevSpaces API/Reset Password Controller",
+                                "description": "Allows users to reset their passwords",
+                                "relationships": [
+                                    {
+                                        "id": "32",
+                                        "tags": "Relationship,Synchronous",
+                                        "sourceId": "15",
+                                        "destinationId": "14",
+                                        "description": "Authorizes user",
+                                        "interactionStyle": "Synchronous"
+                                    },
+                                    {
+                                        "id": "33",
+                                        "tags": "Relationship,Synchronous",
+                                        "sourceId": "15",
+                                        "destinationId": "16",
+                                        "description": "sends new password",
+                                        "interactionStyle": "Synchronous"
+                                    }
+                                ],
+                                "technology": "Spring MVC Rest Controller",
+                                "size": 0
+                            },
+                            {
+                                "id": "14",
+                                "tags": "Element,Component,DevSpaces API Component View",
+                                "properties": {
+                                    "Source Code Mappings": "[]"
+                                },
+                                "name": "DevSpaces/DevSpaces API/Security Component",
+                                "description": "Provides functionality related to signing in, changing passwords, permissions, etc.",
+                                "technology": "Spring Bean",
+                                "size": 0
+                            },
+                            {
+                                "id": "13",
+                                "tags": "Element,Component,DevSpaces API Component View",
+                                "properties": {
+                                    "Source Code Mappings": "[]"
+                                },
+                                "name": "DevSpaces/DevSpaces API/Sign In Controller",
+                                "description": "Allows users to sign in",
+                                "relationships": [
+                                    {
+                                        "id": "31",
+                                        "tags": "Relationship,Synchronous",
+                                        "sourceId": "13",
+                                        "destinationId": "14",
+                                        "description": "Authorizes user",
+                                        "interactionStyle": "Synchronous"
+                                    }
+                                ],
+                                "technology": "Spring MVC Rest Controller",
+                                "size": 0
+                            }
+                        ]
+                    },
+                    {
+                        "id": "10",
+                        "tags": "Element,Container,DevSpaces Container View",
+                        "name": "DevSpaces/DevSpaces Backend",
+                        "description": "Restful API providing capabilities for interacting with a DevSpace",
+                        "relationships": [
+                            {
+                                "id": "29",
+                                "tags": "Relationship,Synchronous",
+                                "sourceId": "10",
+                                "destinationId": "12",
+                                "description": "to manipulate dev spaces",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ],
+                        "technology": "Spring Boot"
+                    },
+                    {
+                        "id": "9",
+                        "tags": "Element,Container",
+                        "name": "DevSpaces/DevSpaces CLI",
+                        "description": "Command Line Interface for interacting with DevSpaces Backend",
+                        "relationships": [
+                            {
+                                "id": "28",
+                                "tags": "Relationship,Synchronous",
+                                "sourceId": "9",
+                                "destinationId": "12",
+                                "description": "to manipulate dev spaces",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ],
+                        "technology": "C++"
+                    },
+                    {
+                        "id": "11",
+                        "tags": "Element,Container,DevSpaces Container View",
+                        "name": "DevSpaces/DevSpaces Web Application",
+                        "description": "Manage dev spaces",
+                        "relationships": [
+                            {
+                                "id": "30",
+                                "tags": "Relationship,Synchronous",
+                                "sourceId": "11",
+                                "destinationId": "10",
+                                "description": "Frontend queries backend",
+                                "interactionStyle": "Synchronous"
+                            }
+                        ],
+                        "technology": "Angular"
+                    }
+                ]
+            },
+            {
+                "id": "7",
+                "tags": "Element,Software System,DevSpaces Container View,DevSpaces System View",
+                "name": "GitHub",
+                "description": "Hosts code and used for identity management",
+                "location": "Unspecified"
+            },
+            {
+                "id": "5",
+                "tags": "Element,Software System",
+                "name": "SalesForce",
+                "description": "SalesForce rules",
+                "location": "Unspecified"
+            },
+            {
+                "id": "6",
+                "tags": "Element,Software System,Trilogy System View",
+                "name": "Trilogy Google G Suite",
+                "description": "Team collaboration via sheets, docs and presentations",
+                "location": "Unspecified"
+            },
+            {
+                "id": "4",
+                "tags": "Element,Software System,Trilogy System View",
+                "name": "XO Chat",
+                "description": "Realtime team communication",
+                "location": "Unspecified"
+            }
+        ],
+        "deploymentNodes": []
+    },
+    "documentation": {
+        "sections": [
+            {
+                "title": "3-deployment-view",
+                "order": 2,
+                "format": "Markdown",
+                "content": "## Deployment Diagram\n\nDevSpaces uses DevOps practices and automatically deploys the complete system to an environment using Jenkins CI through release pipelines and automation scripts which builds, tests and deploys all required services for Devspaces to operate.\nThe build pipeline is represented through the Jenkins pipeline GUI, all steps involved in the pipeline are shown below:\n\n\n\nDeployment view of the DevSpace into the Container Management Platform\n\n\n\nThe minimum DevSpace deployment model is one Pod with one Container inside, but the number of Pods in the DevSpace, and the number of containers on every Pod is configured by the Software Developer through a k8s file.\nEvery Pod in the model is synchronized with only one local folder of the Local Development Workspace, and it is persisted into AWS S3 bucket using regular snapshots. It is then downloaded back on pod initialization\nCaused by a Syncthing limitation there is no possible to synchronize subfolders of one synced folder.\n"
+            },
+            {
+                "title": "2-context-diagram",
+                "order": 1,
+                "format": "Markdown",
+                "content": "## Context Diagram\n\nDevSpaces operates with the following elements in mind:\n\nA **client running on the developer’s local workstation** and a server running in the cloud that works together to seamlessly run workloads in the cloud while keeping the developer experience local. \n\nThe client initiates execution requests, synchronizes filesystem changes, and gives developers a view of the execution results.\n\nThe software developer is able to deploy one or more pods/containers in a DevSpace using a kubernetes configuration file... \n\nThe **DevSpaces server** stores the configuration of the DevSpace definitions and synchronizes changes back to the client.\n\nThe **container management platform** composed of a highly scalable, high-performance Kubernetes container management service that supports Docker containers and allows you to easily run applications on a managed cluster.\n"
+            },
+            {
+                "title": "1-functional-overview",
+                "order": 3,
+                "format": "Markdown",
+                "content": "## Functional Overview\n\nArch as code project is to manage **product architecture as code**. \n\nBy following this approach we will be able to **manage our architecture documents, models, decisions and diagrams** in the same way we do code and gain all the **tools and workflows supporting modern development**. Think PR reviews, static code analysis, continuous integration & continuous deployment.\n\nSpecifically we are making use of the [Structurizr](https://structurizr.com/) tool by Simon Brown as the basis for structuring and storing our architecture models, decisions, views and documentation.\n\n### Use Cases\n\n1. Manual Testers should read product architecture before beginning testing.\n1. TPMs should also be reading product architecture.\n1. Feature Architecuts should also be reading product architecture.\n1. Feature Architecuts should also be updating as part of new P1 specs product architecture.\n1. Lorem Ipsum\n"
+            }
+        ],
+        "decisions": [
+            {
+                "id": "1",
+                "date": "2018-11-29T16:04:32Z",
+                "title": "Docker as the containerization technology platform",
+                "status": "Accepted",
+                "content": "## Context\nWe need to choose the default containerization technology that DevSpaces will support\n\n## Decision\nWe will choose Docker as the default platform\n\n## Consequences\nWe will only be able to support Linux based environments for the moment until Docker is able to support full Windows workspaces",
+                "format": "Markdown"
+            },
+            {
+                "id": "2",
+                "date": "2019-11-19T19:07:15Z",
+                "title": "Kubernetes as the container management platform",
+                "status": "Accepted",
+                "content": "## Context\nWe need an orchestration platform that will help us manage all the containers.\n\n## Decision\nKubernetes will be the container orchestration platform\n\n## Consequences.",
+                "format": "Markdown"
+            }
+        ],
+        "images": []
+    },
+    "views": {
+        "systemLandscapeViews": [
+            {
+                "description": "The system landscape diagram for the entire org",
+                "key": "SystemLandscape",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "enterpriseBoundaryVisible": true,
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "2",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "3",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "4",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "5",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "6",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "7",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "8",
+                        "x": 0,
+                        "y": 0
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "18"
+                    },
+                    {
+                        "id": "17"
+                    },
+                    {
+                        "id": "27"
+                    },
+                    {
+                        "id": "26"
+                    },
+                    {
+                        "id": "25"
+                    },
+                    {
+                        "id": "23"
+                    },
+                    {
+                        "id": "22"
+                    },
+                    {
+                        "id": "21"
+                    },
+                    {
+                        "id": "19"
+                    }
+                ],
+                "animations": []
+            }
+        ],
+        "systemContextViews": [
+            {
+                "softwareSystemId": "8",
+                "description": "Internal Trilogy users view of DevSpaces system",
+                "key": "DevSpaces-Internal Trilogy users view of DevSpaces system",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "enterpriseBoundaryVisible": true,
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "2",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "3",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "5",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "6",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "7",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "8",
+                        "x": 0,
+                        "y": 0
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "18"
+                    },
+                    {
+                        "id": "17"
+                    },
+                    {
+                        "id": "27"
+                    },
+                    {
+                        "id": "25"
+                    },
+                    {
+                        "id": "23"
+                    },
+                    {
+                        "id": "22"
+                    },
+                    {
+                        "id": "21"
+                    },
+                    {
+                        "id": "19"
+                    }
+                ],
+                "animations": []
+            },
+            {
+                "softwareSystemId": "6",
+                "description": "Trilogy inter-team communication",
+                "key": "Trilogy Google G Suite-Trilogy inter-team communication",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "enterpriseBoundaryVisible": true,
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "2",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "3",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "4",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "6",
+                        "x": 0,
+                        "y": 0
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "27"
+                    },
+                    {
+                        "id": "26"
+                    },
+                    {
+                        "id": "23"
+                    },
+                    {
+                        "id": "19"
+                    }
+                ],
+                "animations": []
+            }
+        ],
+        "containerViews": [
+            {
+                "softwareSystemId": "8",
+                "description": "DevSpaces Container",
+                "key": "DevSpaces API Container-DevSpaces Container",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "externalSoftwareSystemBoundariesVisible": false,
+                "elements": [
+                    {
+                        "id": "11",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "12",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "1",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "2",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "7",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "10",
+                        "x": 0,
+                        "y": 0
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "29"
+                    },
+                    {
+                        "id": "17"
+                    },
+                    {
+                        "id": "24"
+                    },
+                    {
+                        "id": "21"
+                    },
+                    {
+                        "id": "30"
+                    }
+                ],
+                "animations": []
+            }
+        ],
+        "componentViews": [
+            {
+                "description": "DevSpaces API Components",
+                "key": "DevSpaces API Components-DevSpaces API Components",
+                "automaticLayout": {
+                    "rankDirection": "TopBottom",
+                    "rankSeparation": 300,
+                    "nodeSeparation": 600,
+                    "edgeSeparation": 200,
+                    "vertices": false
+                },
+                "containerId": "12",
+                "externalContainerBoundariesVisible": false,
+                "elements": [
+                    {
+                        "id": "13",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "14",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "15",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "id": "16",
+                        "x": 0,
+                        "y": 0
+                    }
+                ],
+                "relationships": [
+                    {
+                        "id": "33"
+                    },
+                    {
+                        "id": "32"
+                    },
+                    {
+                        "id": "31"
+                    }
+                ],
+                "animations": []
+            }
+        ],
+        "configuration": {
+            "branding": {},
+            "styles": {
+                "elements": [
+                    {
+                        "tag": "Software System",
+                        "background": "#1168bd",
+                        "color": "#ffffff"
+                    },
+                    {
+                        "tag": "Person",
+                        "background": "#08427b",
+                        "color": "#ffffff",
+                        "shape": "Person"
+                    },
+                    {
+                        "tag": "Container",
+                        "background": "#73f275",
+                        "color": "#ffffff"
+                    }
+                ],
+                "relationships": []
+            },
+            "terminology": {},
+            "lastSavedView": "QAAutoDeployment",
+            "themes": []
+        },
+        "dynamicViews": [],
+        "deploymentViews": [],
+        "filteredViews": []
+    }
+}

@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -23,13 +24,16 @@ public class ArchitectureDataStructureObjectMapper {
     public ArchitectureDataStructureObjectMapper() {
         this.mapper = new ObjectMapper(
                 new YAMLFactory()
+                        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
+                        .enable(YAMLGenerator.Feature.ALWAYS_QUOTE_NUMBERS_AS_STRINGS)
                         .configure(YAMLGenerator.Feature.SPLIT_LINES, false)
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
         );
         this.mapper.setVisibility(FIELD, ANY);
         this.mapper.setVisibility(GETTER, NONE);
         this.mapper.setVisibility(IS_GETTER, NONE);
-        this.mapper.registerModule(buildModule());
+        this.mapper.registerModule(dateSerializer());
+        this.mapper.registerModule(setSerializer());
         this.mapper.setSerializationInclusion(NON_NULL);
     }
 
@@ -46,9 +50,15 @@ public class ArchitectureDataStructureObjectMapper {
         return this.mapper.readValue(architectureAsString, ArchitectureDataStructure.class);
     }
 
-    private SimpleModule buildModule() {
+    private SimpleModule dateSerializer() {
         SimpleModule module = new SimpleModule();
         module.addSerializer(new DateSerializer(Date.class));
+        return module;
+    }
+
+    private SimpleModule setSerializer() {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new SetSerializer(Set.class));
         return module;
     }
 }

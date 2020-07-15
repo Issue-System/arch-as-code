@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
+import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.domain.DocumentationImage;
 import net.trilogy.arch.domain.DocumentationSection;
@@ -39,6 +40,23 @@ public class ArchitectureDataStructureWriterTest {
         File writtenYamlFile = new ArchitectureDataStructureWriter(new FilesFacade()).export(dataStructure);
 
         extractDates(writtenYamlFile).forEach(this::parseDateAsIsoOrThrow);
+    }
+
+    @Test
+    public void shouldSerializeArchitectureCorrectly() throws Exception {
+        // Given
+        final Path rootDir = Files.createTempDirectory("aacDir");
+        final File tempFile = File.createTempFile("aac", "test", rootDir.toFile());
+        File workspaceJson = new File(getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK).getFile());
+        ArchitectureDataStructure arch = new WorkspaceReader().load(workspaceJson);
+
+        // When
+        final File exportedYaml = new ArchitectureDataStructureWriter(new FilesFacade()).export(arch, tempFile);
+        String expectedArchString = Files.readString((Path.of(getClass().getResource(TestHelper.MANIFEST_PATH_TO_TEST_SERIALIZATION).getPath())));
+        String actualArchString = Files.readString(exportedYaml.toPath());
+
+        // Then
+        assertThat(actualArchString, equalTo(expectedArchString));
     }
 
     @Test

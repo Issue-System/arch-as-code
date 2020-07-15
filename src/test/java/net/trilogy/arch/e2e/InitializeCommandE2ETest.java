@@ -73,9 +73,9 @@ public class InitializeCommandE2ETest {
         collector.checkThat(file.exists(), equalTo(true));
         collector.checkThat(Files.readAllLines(file.toPath()),
                 contains(
-                        "name: \"Hello World!!!\"",
-                        "businessUnit: \"DevFactory\"",
-                        "description: \"Architecture as code\"",
+                        "name: Hello World!!!",
+                        "businessUnit: DevFactory",
+                        "description: Architecture as code",
                         "decisions: []",
                         "model:",
                         "  people: []",

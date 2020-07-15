@@ -5,6 +5,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,7 +15,7 @@ public class C4DeploymentNode extends Entity {
     private String technology;
     private String environment;
     private Integer instances;
-    private List<C4DeploymentNode> children = new ArrayList<>();
+    private Set<C4DeploymentNode> children = new TreeSet<>();
     private List<C4ContainerInstance> containerInstances = new ArrayList<>();
 
     @Builder(toBuilder = true)
@@ -28,7 +29,7 @@ public class C4DeploymentNode extends Entity {
                      String technology,
                      String environment,
                      Integer instances,
-                     List<C4DeploymentNode> children,
+                     Set<C4DeploymentNode> children,
                      List<C4ContainerInstance> containerInstances) {
         super(id, alias, path, name, description, tags, relationships);
         this.technology = technology;

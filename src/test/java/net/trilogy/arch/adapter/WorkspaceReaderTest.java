@@ -103,7 +103,7 @@ public class WorkspaceReaderTest {
                 .alias(null)
                 .id("65")
                 .name("Customer's computer")
-                .children(List.of(
+                .children(Set.of(
                         C4DeploymentNode.builder()
                                 .id("66")
                                 .name("Web Browser")
@@ -113,7 +113,7 @@ public class WorkspaceReaderTest {
                                 .containerInstances(List.of(
                                         new C4ContainerInstance("67", "Live", new C4Reference("17", null), 2)
                                 ))
-                                .children(List.of())
+                                .children(Set.of())
                                 .build()
                 ))
                 .containerInstances(List.of())

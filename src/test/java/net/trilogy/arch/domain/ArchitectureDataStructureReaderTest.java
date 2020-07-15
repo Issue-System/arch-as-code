@@ -176,7 +176,7 @@ public class ArchitectureDataStructureReaderTest {
         var expected = C4DeploymentNode.builder()
                 .alias(null)
                 .name("Docker Container - Database Server")
-                .children(List.of(
+                .children(Set.of(
                         C4DeploymentNode.builder()
                                 .id("52")
                                 .name("Database Server")
@@ -187,7 +187,7 @@ public class ArchitectureDataStructureReaderTest {
                                 .containerInstances(List.of(
                                         new C4ContainerInstance("53", "development", new C4Reference("12", "c4://Internet Banking System/Database"), 1)
                                 ))
-                                .children(List.of())
+                                .children(Set.of())
                                 .build()
                 ))
                 .containerInstances(List.of())
@@ -196,7 +196,7 @@ public class ArchitectureDataStructureReaderTest {
                 .id("51")
                 .instances(1)
                 .tags(Set.of())
-                .relationships(List.of())
+                .relationships(Set.of())
                 .technology("Docker")
                 .build();
 

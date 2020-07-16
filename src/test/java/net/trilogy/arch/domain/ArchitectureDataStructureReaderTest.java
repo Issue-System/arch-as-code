@@ -91,7 +91,7 @@ public class ArchitectureDataStructureReaderTest {
                 .description("Book keeping")
                 .location(C4Location.EXTERNAL)
                 .relationships(List.of(
-                        new C4Relationship("29", null, C4Action.USES, null, "11", "queries usage details to estimate monthly costs", null)
+                        new C4Relationship("29", null, C4Action.USES, null, "11", "queries usage details to estimate monthly costs", "HTTPS")
                 ))
                 .tags(Set.of(
                         new C4Tag("Element"),
@@ -124,7 +124,7 @@ public class ArchitectureDataStructureReaderTest {
                         new C4Tag("Container")
                 ))
                 .relationships(List.of(
-                        new C4Relationship("32", null, C4Action.USES, null, "13", "to manipulate dev spaces", null)
+                        new C4Relationship("32", null, C4Action.USES, null, "13", "to manipulate dev spaces", "HTTPS")
                 ))
                 .build();
 

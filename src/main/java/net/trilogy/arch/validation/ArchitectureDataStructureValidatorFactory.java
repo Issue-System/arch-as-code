@@ -10,9 +10,9 @@ public abstract class ArchitectureDataStructureValidatorFactory {
     public static ArchitectureDataStructureValidator create() {
         return new ArchitectureDataStructureValidator(
                 ImmutableList.of(
-                        new ModelValidator()
-//                        new ModelReferenceValidator(),
-//                        new RelationsValidator()
+                        new ModelValidator(),
+                        new ModelReferenceValidator(),
+                        new RelationsValidator()
                 ),
                 new SchemaValidator(),
                 new ArchitectureDataStructureReader(new FilesFacade())

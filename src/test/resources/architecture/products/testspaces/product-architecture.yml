@@ -117,6 +117,7 @@ model:
       action: "USES"
       withId: "11"
       description: "queries usage details to estimate monthly costs"
+      technology: HTTPS
     location: "EXTERNAL"
   - id: "5"
     path: "c4://XO Chat"
@@ -141,6 +142,7 @@ model:
       action: "USES"
       withId: "38"
       description: "SSO"
+      technology: HTTPS
     location: "UNSPECIFIED"
   - id: "8"
     path: "c4://GitHub"
@@ -188,6 +190,7 @@ model:
       action: "USES"
       withId: "11"
       description: "Frontend queries backend"
+      technology: HTTPS
     systemId: "9"
     technology: "Angular"
     url: "https://devspaces.io"
@@ -204,6 +207,7 @@ model:
       action: "USES"
       withId: "13"
       description: "to manipulate dev spaces"
+      technology: HTTPS
     systemId: "9"
     technology: "Spring Boot"
   - id: "10"
@@ -219,10 +223,12 @@ model:
       action: "DELIVERS"
       withId: "2"
       description: "system-wide load monitoring reports"
+      technology: HTTPS
     - id: "31"
       action: "USES"
       withId: "13"
       description: "to manipulate dev spaces"
+      technology: HTTPS
     systemId: "9"
     technology: "C++"
   components:
@@ -250,6 +256,7 @@ model:
       action: "DELIVERS"
       withId: "4"
       description: "Delivers report on multiple failed sign-on attempts"
+      technology: HTTPS
     containerId: "13"
     technology: "Spring Bean"
   - id: "38"

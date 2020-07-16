@@ -5,8 +5,7 @@ decisions: []
 model:
   people:
   - id: "1"
-    path:
-      path: '@Personal Banking Customer'
+    path: '@Personal Banking Customer'
     name: Personal Banking Customer
     description: A customer of the bank, with personal bank accounts.
     tags:
@@ -41,8 +40,7 @@ model:
       description: Views account balances, and makes payments using
     location: EXTERNAL
   - id: "12"
-    path:
-      path: '@Customer Service Staff'
+    path: '@Customer Service Staff'
     name: Customer Service Staff
     description: Customer service staff within the bank.
     tags:
@@ -56,8 +54,7 @@ model:
       description: Uses
     location: INTERNAL
   - id: "15"
-    path:
-      path: '@Back Office Staff'
+    path: '@Back Office Staff'
     name: Back Office Staff
     description: Administration and support staff within the bank.
     tags:
@@ -72,8 +69,7 @@ model:
     location: INTERNAL
   systems:
   - id: "2"
-    path:
-      path: c4://Internet Banking System
+    path: c4://Internet Banking System
     name: Internet Banking System
     description: Allows customers to view information about their bank accounts, and make payments.
     tags:
@@ -90,8 +86,7 @@ model:
       description: Sends e-mail using
     location: INTERNAL
   - id: "4"
-    path:
-      path: c4://Mainframe Banking System
+    path: c4://Mainframe Banking System
     name: Mainframe Banking System
     description: Stores all of the core banking information about customers, accounts, transactions, etc.
     tags:
@@ -101,8 +96,7 @@ model:
     relationships: []
     location: INTERNAL
   - id: "6"
-    path:
-      path: c4://E-mail System
+    path: c4://E-mail System
     name: E-mail System
     description: The internal Microsoft Exchange e-mail system.
     tags:
@@ -116,8 +110,7 @@ model:
       description: Sends e-mails to
     location: INTERNAL
   - id: "9"
-    path:
-      path: c4://ATM
+    path: c4://ATM
     name: ATM
     description: Allows customers to withdraw cash.
     tags:
@@ -132,8 +125,7 @@ model:
     location: INTERNAL
   containers:
   - id: "17"
-    path:
-      path: c4://Internet Banking System/Single-Page Application
+    path: c4://Internet Banking System/Single-Page Application
     name: Single-Page Application
     description: Provides all of the Internet banking functionality to customers via their web browser.
     tags:
@@ -164,8 +156,7 @@ model:
     systemId: "2"
     technology: JavaScript and Angular
   - id: "18"
-    path:
-      path: c4://Internet Banking System/Mobile App
+    path: c4://Internet Banking System/Mobile App
     name: Mobile App
     description: Provides a limited subset of the Internet banking functionality to customers via their mobile device.
     tags:
@@ -196,8 +187,7 @@ model:
     systemId: "2"
     technology: Xamarin
   - id: "19"
-    path:
-      path: c4://Internet Banking System/Web Application
+    path: c4://Internet Banking System/Web Application
     name: Web Application
     description: Delivers the static content and the Internet banking single page application.
     tags:
@@ -211,8 +201,7 @@ model:
     systemId: "2"
     technology: Java and Spring MVC
   - id: "20"
-    path:
-      path: c4://Internet Banking System/API Application
+    path: c4://Internet Banking System/API Application
     name: API Application
     description: Provides Internet banking functionality via a JSON/HTTPS API.
     tags:
@@ -237,8 +226,7 @@ model:
     systemId: "2"
     technology: Java and Spring MVC
   - id: "21"
-    path:
-      path: c4://Internet Banking System/Database
+    path: c4://Internet Banking System/Database
     name: Database
     description: Stores user registration information, hashed authentication credentials, access logs, etc.
     tags:
@@ -250,8 +238,7 @@ model:
     technology: Oracle Database Schema
   components:
   - id: "29"
-    path:
-      path: c4://Internet Banking System/API Application/Sign In Controller
+    path: c4://Internet Banking System/API Application/Sign In Controller
     name: Sign In Controller
     description: Allows users to sign in to the Internet Banking System.
     tags:
@@ -266,8 +253,7 @@ model:
     technology: Spring MVC Rest Controller
     src-mappings: []
   - id: "30"
-    path:
-      path: c4://Internet Banking System/API Application/Accounts Summary Controller
+    path: c4://Internet Banking System/API Application/Accounts Summary Controller
     name: Accounts Summary Controller
     description: Provides customers with a summary of their bank accounts.
     tags:
@@ -282,8 +268,7 @@ model:
     technology: Spring MVC Rest Controller
     src-mappings: []
   - id: "31"
-    path:
-      path: c4://Internet Banking System/API Application/Reset Password Controller
+    path: c4://Internet Banking System/API Application/Reset Password Controller
     name: Reset Password Controller
     description: Allows users to reset their passwords with a single use URL.
     tags:
@@ -302,8 +287,7 @@ model:
     technology: Spring MVC Rest Controller
     src-mappings: []
   - id: "32"
-    path:
-      path: c4://Internet Banking System/API Application/Security Component
+    path: c4://Internet Banking System/API Application/Security Component
     name: Security Component
     description: Provides functionality related to signing in, changing passwords, etc.
     tags:
@@ -319,8 +303,7 @@ model:
     technology: Spring Bean
     src-mappings: []
   - id: "33"
-    path:
-      path: c4://Internet Banking System/API Application/Mainframe Banking System Facade
+    path: c4://Internet Banking System/API Application/Mainframe Banking System Facade
     name: Mainframe Banking System Facade
     description: A facade onto the mainframe banking system.
     tags:
@@ -336,8 +319,7 @@ model:
     technology: Spring Bean
     src-mappings: []
   - id: "34"
-    path:
-      path: c4://Internet Banking System/API Application/E-mail Component
+    path: c4://Internet Banking System/API Application/E-mail Component
     name: E-mail Component
     description: Sends e-mails to users.
     tags:

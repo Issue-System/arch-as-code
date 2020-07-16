@@ -14,8 +14,7 @@ decisions:
 model:
   people:
   - id: "2"
-    path:
-      path: "@SaasOps"
+    path: "@SaasOps"
     name: "SaasOps"
     description: "SaasOps operating system"
     tags:
@@ -43,8 +42,7 @@ model:
       description: "inter-team collaboration"
     location: "UNSPECIFIED"
   - id: "3"
-    path:
-      path: "@PCA"
+    path: "@PCA"
     name: "PCA"
     description: "Product Chief Architect"
     tags:
@@ -66,8 +64,7 @@ model:
       description: "as a version control system"
     location: "UNSPECIFIED"
   - id: "1"
-    path:
-      path: "@Developer"
+    path: "@Developer"
     name: "Developer"
     description: "Developer building software"
     tags:
@@ -96,8 +93,7 @@ model:
     location: "UNSPECIFIED"
   systems:
   - id: "4"
-    path:
-      path: "c4://XO Chat"
+    path: "c4://XO Chat"
     name: "XO Chat"
     description: "Realtime team communication"
     tags:
@@ -107,8 +103,7 @@ model:
     relationships: []
     location: "UNSPECIFIED"
   - id: "6"
-    path:
-      path: "c4://Trilogy Google G Suite"
+    path: "c4://Trilogy Google G Suite"
     name: "Trilogy Google G Suite"
     description: "Team collaboration via sheets, docs and presentations"
     tags:
@@ -118,8 +113,7 @@ model:
     relationships: []
     location: "UNSPECIFIED"
   - id: "8"
-    path:
-      path: "c4://DevSpaces"
+    path: "c4://DevSpaces"
     name: "DevSpaces"
     description: "allows developers to collaborate"
     tags:
@@ -129,8 +123,7 @@ model:
     relationships: []
     location: "UNSPECIFIED"
   - id: "5"
-    path:
-      path: "c4://SalesForce"
+    path: "c4://SalesForce"
     name: "SalesForce"
     description: "SalesForce rules"
     tags:
@@ -139,8 +132,7 @@ model:
     relationships: []
     location: "UNSPECIFIED"
   - id: "7"
-    path:
-      path: "c4://GitHub"
+    path: "c4://GitHub"
     name: "GitHub"
     description: "Hosts code and used for identity management"
     tags:
@@ -152,8 +144,7 @@ model:
     location: "UNSPECIFIED"
   containers:
   - id: "12"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces API"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces API"
     name: "DevSpaces/DevSpaces API"
     description: "API to programmatically create/manage dev spaces"
     tags:
@@ -164,8 +155,7 @@ model:
     systemId: "8"
     technology: "Spring Boot"
   - id: "9"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces CLI"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces CLI"
     name: "DevSpaces/DevSpaces CLI"
     description: "Command Line Interface for interacting with DevSpaces Backend"
     tags:
@@ -179,8 +169,7 @@ model:
     systemId: "8"
     technology: "C++"
   - id: "10"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces Backend"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces Backend"
     name: "DevSpaces/DevSpaces Backend"
     description: "Restful API providing capabilities for interacting with a DevSpace"
     tags:
@@ -195,8 +184,7 @@ model:
     systemId: "8"
     technology: "Spring Boot"
   - id: "11"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces Web Application"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces Web Application"
     name: "DevSpaces/DevSpaces Web Application"
     description: "Manage dev spaces"
     tags:
@@ -212,8 +200,7 @@ model:
     technology: "Angular"
   components:
   - id: "14"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Security Component"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Security Component"
     name: "DevSpaces/DevSpaces API/Security Component"
     description: "Provides functionality related to signing in, changing passwords, permissions, etc."
     tags:
@@ -242,8 +229,7 @@ model:
     containerId: "12"
     technology: "Spring MVC Rest Controller"
   - id: "16"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-E-mail Component"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-E-mail Component"
     name: "DevSpaces/DevSpaces API/E-mail Component"
     description: "Sends emails to users"
     tags:
@@ -254,8 +240,7 @@ model:
     containerId: "12"
     technology: "Spring MVC Rest Controller"
   - id: "13"
-    path:
-      path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Sign In Controller"
+    path: "c4://DevSpaces/DevSpaces-DevSpaces API/DevSpaces-DevSpaces API-Sign In Controller"
     name: "DevSpaces/DevSpaces API/Sign In Controller"
     description: "Allows users to sign in"
     tags:

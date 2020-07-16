@@ -11,13 +11,13 @@ import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ContainerView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ContainerContextViewEnhancer extends BaseViewEnhancer<ContainerView, C4ContainerView> {
 
     @Override
-    public List<C4ContainerView> getViews(ArchitectureDataStructure dataStructure) {
+    public Set<C4ContainerView> getViews(ArchitectureDataStructure dataStructure) {
         return dataStructure.getViews().getContainerViews();
     }
 

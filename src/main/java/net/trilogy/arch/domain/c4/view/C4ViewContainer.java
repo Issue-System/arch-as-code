@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.List;
+import java.util.Set;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 
 @Data
 @AllArgsConstructor
@@ -16,11 +16,11 @@ public class C4ViewContainer {
     public static final C4ViewContainer NONE = new C4ViewContainer();
 
     @NonNull
-    private List<C4SystemView> systemViews = emptyList();
+    private Set<C4SystemView> systemViews = emptySet();
     @NonNull
-    private List<C4ContainerView> containerViews = emptyList();
+    private Set<C4ContainerView> containerViews = emptySet();
     @NonNull
-    private List<C4ComponentView> componentViews = emptyList();
+    private Set<C4ComponentView> componentViews = emptySet();
     @NonNull
-    private List<C4DeploymentView> deploymentViews = emptyList();
+    private Set<C4DeploymentView> deploymentViews = emptySet();
 }

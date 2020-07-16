@@ -186,10 +186,10 @@ public class ArchitectureDataStructureTransformerTest {
 
     private C4ViewContainer buildView() {
         return new C4ViewContainer(
-                emptyList(),
-                emptyList(),
-                emptyList(),
-                emptyList()
+                emptySet(),
+                emptySet(),
+                emptySet(),
+                emptySet()
         );
     }
 }

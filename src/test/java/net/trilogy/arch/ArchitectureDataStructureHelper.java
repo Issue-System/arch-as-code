@@ -35,10 +35,10 @@ public class ArchitectureDataStructureHelper {
 
     public static C4ViewContainer emptyViews() {
         return new C4ViewContainer(
-                List.of(),
-                List.of(),
-                List.of(),
-                List.of()
+                Set.of(),
+                Set.of(),
+                Set.of(),
+                Set.of()
         );
     }
 

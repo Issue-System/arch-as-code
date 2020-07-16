@@ -15,7 +15,7 @@ import net.trilogy.arch.domain.c4.C4SoftwareSystem;
 import net.trilogy.arch.domain.c4.view.C4DeploymentView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
-import java.util.List;
+import java.util.Set;
 
 public class DeploymentViewEnhancer implements WorkspaceEnhancer {
     @Override
@@ -25,7 +25,7 @@ public class DeploymentViewEnhancer implements WorkspaceEnhancer {
             return;
         }
 
-        @NonNull List<C4DeploymentView> views = getViews(dataStructure);
+        @NonNull Set<C4DeploymentView> views = getViews(dataStructure);
 
         views.forEach(c4DeploymentView -> {
             DeploymentView view = createView(workspace, dataStructureModel, c4DeploymentView);
@@ -56,7 +56,7 @@ public class DeploymentViewEnhancer implements WorkspaceEnhancer {
     }
 
     @NonNull
-    private List<C4DeploymentView> getViews(ArchitectureDataStructure dataStructure) {
+    private Set<C4DeploymentView> getViews(ArchitectureDataStructure dataStructure) {
         return dataStructure.getViews().getDeploymentViews();
     }
 }

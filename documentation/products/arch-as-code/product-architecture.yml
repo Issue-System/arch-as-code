@@ -155,6 +155,7 @@ model:
           withAlias: "c4://DevSpaces/DevSpaces API"
           withId: "12"
           description: "to manipulate dev spaces"
+          technology: HTTPS
 
     - id: "10"
       alias: "c4://DevSpaces/DevSpaces Backend"
@@ -170,6 +171,7 @@ model:
           withAlias: "c4://DevSpaces/DevSpaces API"
           withId: "12"
           description: "to manipulate dev spaces"
+          technology: HTTPS
 
     - id: "11"
       alias: "c4://DevSpaces/DevSpaces Web Application"
@@ -185,6 +187,7 @@ model:
           withAlias: "c4://DevSpaces/DevSpaces Backend"
           withId: "10"
           description: "Frontend queries backend"
+          technology: HTTPS
 
     - id: "12"
       alias: "c4://DevSpaces/DevSpaces API"
@@ -210,7 +213,7 @@ model:
           withAlias: "c4://DevSpaces/DevSpaces API/Security Component"
           withId: "14"
           description: "Authorizes user"
-
+          technology: HTTPS
 
     - id: "14"
       alias: "c4://DevSpaces/DevSpaces API/Security Component"
@@ -235,12 +238,14 @@ model:
           withAlias: "c4://DevSpaces/DevSpaces API/Security Component"
           withId: "14"
           description: "Authorizes user"
+          technology: HTTPS
 
         - id: "33"
           action: USES
           withAlias: "c4://DevSpaces/DevSpaces API/E-mail Component"
           withId: "16"
           description: "sends new password"
+          technology: HTTPS
 
     - id: "16"
       alias: "c4://DevSpaces/DevSpaces API/E-mail Component"

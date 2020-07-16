@@ -1,13 +1,11 @@
 package net.trilogy.arch.domain.c4;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class C4ContainerInstance implements Comparable<C4ContainerInstance> {
     private String id;
     private String environment;

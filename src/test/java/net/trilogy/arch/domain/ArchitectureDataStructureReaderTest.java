@@ -177,20 +177,26 @@ public class ArchitectureDataStructureReaderTest {
         var expected = C4DeploymentNode.builder()
                 .alias(null)
                 .name("Docker Container - Database Server")
-                .children(Set.of(
-                        C4DeploymentNode.builder()
-                                .id("52")
-                                .name("Database Server")
-                                .description("a database server")
-                                .environment("Development")
-                                .technology("Oracle 12c")
-                                .instances(1)
-                                .containerInstances(Set.of(
-                                        new C4ContainerInstance("53", "development", new C4Reference("12", "c4://Internet Banking System/Database"), 1)
-                                ))
-                                .children(Set.of())
-                                .build()
-                ))
+                .children(
+                        Set.of(
+                                C4DeploymentNode.builder()
+                                        .id("52")
+                                        .name("Database Server")
+                                        .description("a database server")
+                                        .tags(Set.of())
+                                        .relationships(Set.of())
+                                        .environment("Development")
+                                        .technology("Oracle 12c")
+                                        .instances(1)
+                                        .containerInstances(Set.of(
+                                                new C4ContainerInstance("53",
+                                                        "Development",
+                                                        new C4Reference("12", null),
+                                                        1)
+                                        ))
+                                        .children(Set.of())
+                                        .build()
+                        ))
                 .containerInstances(Set.of())
                 .description("A Docker container.")
                 .environment("Development")
@@ -214,18 +220,15 @@ public class ArchitectureDataStructureReaderTest {
         var actual = new ArrayList(data.getViews().getSystemViews()).get(0);
         var expected = C4SystemView.builder()
                 .key("InternetBankingSystem-SystemView")
-                .name("System Context diagram for Internet Banking System")
+                .name("Internet Banking System - System Context")
                 .description("Internet Banking System - System View")
-                .systemAlias("c4://Internet Banking System")
+                .systemId("7")
                 .tags(Set.of())
-                .relationships(Set.of(
-                        new C4Reference("20", null)
-                ))
                 .elements(Set.of(
-                        new C4Reference(null, "@Personal Banking Customer"),
-                        new C4Reference(null, "c4://Internet Banking System"),
-                        new C4Reference(null, "c4://E-mail System"),
-                        new C4Reference(null, "c4://Mainframe Banking System")
+                        new C4Reference("4", null),
+                        new C4Reference("7", null),
+                        new C4Reference("6", null),
+                        new C4Reference("1", null)
                 ))
                 .build();
 
@@ -242,19 +245,19 @@ public class ArchitectureDataStructureReaderTest {
         var actual = new ArrayList<>(data.getViews().getContainerViews()).get(0);
         var expected = C4ContainerView.builder()
                 .key("InternetBankingSystem-ContainerView")
-                .name("Container diagram for Internet Banking System")
-                .systemAlias("c4://Internet Banking System")
+                .name("Internet Banking System - Containers")
+                .systemId("7")
                 .description("Internet Banking System - Container View")
                 .tags(Set.of())
                 .elements(Set.of(
-                        new C4Reference(null, "@Personal Banking Customer"),
-                        new C4Reference(null, "c4://Internet Banking System/Web Application"),
-                        new C4Reference(null, "c4://Internet Banking System/Single-Page Application"),
-                        new C4Reference(null, "c4://Internet Banking System/Mobile App"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application"),
-                        new C4Reference(null, "c4://Internet Banking System/Database"),
-                        new C4Reference(null, "c4://E-mail System"),
-                        new C4Reference(null, "c4://Mainframe Banking System")
+                        new C4Reference("4", null),
+                        new C4Reference("11", null),
+                        new C4Reference("6", null),
+                        new C4Reference("9", null),
+                        new C4Reference("10", null),
+                        new C4Reference("8", null),
+                        new C4Reference("12", null),
+                        new C4Reference("1", null)
                 ))
                 .build();
 
@@ -271,22 +274,22 @@ public class ArchitectureDataStructureReaderTest {
         var actual = new ArrayList<>(data.getViews().getComponentViews()).get(0);
         var expected = C4ComponentView.builder()
                 .key("InternetBankingSystemAPIApplication-ComponentView")
-                .name("Component diagram for Internet Banking System - API Application")
-                .containerAlias("c4://Internet Banking System/API Application")
+                .name("Internet Banking System - Internet Banking System/API Application - Components")
+                .containerId("11")
                 .description("Internet Banking System : API Application - Component View")
                 .tags(Set.of())
                 .elements(Set.of(
-                        new C4Reference(null, "c4://Internet Banking System/API Application/Sign In Controller"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application/Reset Password Controller"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application/Accounts Summary Controller"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application/Security Component"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application/E-mail Component"),
-                        new C4Reference(null, "c4://Internet Banking System/API Application/Mainframe Banking System Facade"),
-                        new C4Reference(null, "c4://Internet Banking System/Single-Page Application"),
-                        new C4Reference(null, "c4://Internet Banking System/Mobile App"),
-                        new C4Reference(null, "c4://Internet Banking System/Database"),
-                        new C4Reference(null, "c4://E-mail System"),
-                        new C4Reference(null, "c4://Mainframe Banking System")
+                        new C4Reference("4", null),
+                        new C4Reference("18", null),
+                        new C4Reference("15", null),
+                        new C4Reference("14", null),
+                        new C4Reference("6", null),
+                        new C4Reference("17", null),
+                        new C4Reference("9", null),
+                        new C4Reference("10", null),
+                        new C4Reference("16", null),
+                        new C4Reference("13", null),
+                        new C4Reference("12", null)
                 ))
                 .build();
 
@@ -305,9 +308,9 @@ public class ArchitectureDataStructureReaderTest {
                 .description("An example development deployment scenario for the Internet Banking System.")
                 .environment("Development")
                 .key("Laptop")
-                .name("Development Deployment")
-                .system(new C4Reference(null, "c4://Internet Banking System"))
-                .elements(Set.of(new C4Reference(null, "Developer Laptop")))
+                .name("Internet Banking System - Deployment - Development")
+                .system(new C4Reference("7", null))
+                .elements(Set.of(new C4Reference("50", null)))
                 .tags(Set.of())
                 .build();
 

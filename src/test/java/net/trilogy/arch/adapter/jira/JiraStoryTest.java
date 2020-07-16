@@ -2,17 +2,10 @@ package net.trilogy.arch.adapter.jira;
 
 import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
-import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.adapter.jira.JiraStory.InvalidStoryException;
 import net.trilogy.arch.domain.ArchitectureDataStructure;
-import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.CapabilitiesContainer;
-import net.trilogy.arch.domain.architectureUpdate.Epic;
-import net.trilogy.arch.domain.architectureUpdate.FeatureStory;
-import net.trilogy.arch.domain.architectureUpdate.FunctionalRequirement;
-import net.trilogy.arch.domain.architectureUpdate.Jira;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
+import net.trilogy.arch.domain.architectureUpdate.*;
+import net.trilogy.arch.facade.FilesFacade;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -21,7 +14,6 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.fail;
 
 public class JiraStoryTest {
 
@@ -84,7 +76,7 @@ public class JiraStoryTest {
         var au = getAu();
         ArchitectureDataStructure architectureAfterAu = getArchitectureAfterAu();
 
-        architectureAfterAu.getModel().getComponents().forEach(c -> c.setPath(null));
+        architectureAfterAu.getModel().getComponents().forEach(c -> c.setPath((String) null));
 
         var featureStory = au.getCapabilityContainer().getFeatureStories().get(0);
 

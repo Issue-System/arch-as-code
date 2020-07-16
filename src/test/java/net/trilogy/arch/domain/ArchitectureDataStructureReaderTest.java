@@ -14,6 +14,7 @@ import java.io.File;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -210,8 +211,9 @@ public class ArchitectureDataStructureReaderTest {
 
         assertThat(data.getViews().getSystemViews().size(), is(equalTo(1)));
 
-        var actual = data.getViews().getSystemViews().get(0);
+        var actual = new ArrayList(data.getViews().getSystemViews()).get(0);
         var expected = C4SystemView.builder()
+                .key("InternetBankingSystem-SystemView")
                 .name("System Context diagram for Internet Banking System")
                 .description("Internet Banking System - System View")
                 .systemAlias("c4://Internet Banking System")
@@ -237,8 +239,9 @@ public class ArchitectureDataStructureReaderTest {
 
         assertThat(data.getViews().getContainerViews().size(), is(equalTo(1)));
 
-        var actual = data.getViews().getContainerViews().get(0);
+        var actual = new ArrayList<>(data.getViews().getContainerViews()).get(0);
         var expected = C4ContainerView.builder()
+                .key("InternetBankingSystem-ContainerView")
                 .name("Container diagram for Internet Banking System")
                 .systemAlias("c4://Internet Banking System")
                 .description("Internet Banking System - Container View")
@@ -265,8 +268,9 @@ public class ArchitectureDataStructureReaderTest {
 
         assertThat(data.getViews().getComponentViews().size(), is(equalTo(1)));
 
-        var actual = data.getViews().getComponentViews().get(0);
+        var actual = new ArrayList<>(data.getViews().getComponentViews()).get(0);
         var expected = C4ComponentView.builder()
+                .key("InternetBankingSystemAPIApplication-ComponentView")
                 .name("Component diagram for Internet Banking System - API Application")
                 .containerAlias("c4://Internet Banking System/API Application")
                 .description("Internet Banking System : API Application - Component View")
@@ -296,7 +300,7 @@ public class ArchitectureDataStructureReaderTest {
 
         assertThat(data.getViews().getDeploymentViews().size(), is(equalTo(1)));
 
-        var actual = data.getViews().getDeploymentViews().get(0);
+        var actual = new ArrayList<>(data.getViews().getDeploymentViews()).get(0);
         var expected = C4DeploymentView.builder()
                 .description("An example development deployment scenario for the Internet Banking System.")
                 .environment("Development")

@@ -12,12 +12,12 @@ import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4ComponentView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ComponentContextViewEnhancer extends BaseViewEnhancer<ComponentView, C4ComponentView> {
     @Override
-    public List<C4ComponentView> getViews(ArchitectureDataStructure dataStructure) {
+    public Set<C4ComponentView> getViews(ArchitectureDataStructure dataStructure) {
         return dataStructure.getViews().getComponentViews();
     }
 

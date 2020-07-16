@@ -60,7 +60,7 @@ public class WorkspaceReader {
         return architectureDataStructure;
     }
 
-    private List<C4SystemView> systemViews(ViewSet views) {
+    private Set<C4SystemView> systemViews(ViewSet views) {
         return views
                 .getSystemContextViews()
                 .stream()
@@ -71,10 +71,10 @@ public class WorkspaceReader {
 
                     return c4SystemView;
                 })
-                .collect(toList());
+                .collect(toSet());
     }
 
-    private List<C4ContainerView> containerViews(ViewSet views) {
+    private Set<C4ContainerView> containerViews(ViewSet views) {
         return views
                 .getContainerViews()
                 .stream()
@@ -85,10 +85,10 @@ public class WorkspaceReader {
 
                     return view;
                 })
-                .collect(toList());
+                .collect(toSet());
     }
 
-    private List<C4ComponentView> componentViews(ViewSet views) {
+    private Set<C4ComponentView> componentViews(ViewSet views) {
         return views
                 .getComponentViews()
                 .stream()
@@ -99,10 +99,10 @@ public class WorkspaceReader {
 
                     return view;
                 })
-                .collect(toList());
+                .collect(toSet());
     }
 
-    private List<C4DeploymentView> deploymentViews(ViewSet views, C4Model c4Model) {
+    private Set<C4DeploymentView> deploymentViews(ViewSet views, C4Model c4Model) {
         return views
                 .getDeploymentViews()
                 .stream()
@@ -131,7 +131,7 @@ public class WorkspaceReader {
                             .elements(elements)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .collect(toSet());
     }
 
     // TODO [TESTING]: Mutation testing reveals lack of coverage here.

@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -193,7 +194,7 @@ public class WorkspaceReaderTest {
         URL resource = getClass().getResource(TestHelper.JSON_STRUCTURIZR_BIG_BANK);
         ArchitectureDataStructure dataStructure = new WorkspaceReader().load(new File(resource.getPath()));
 
-        final Set<C4Reference> actual = dataStructure.getViews().getComponentViews().get(0).getElements();
+        Set<C4Reference> actual = new ArrayList<>(dataStructure.getViews().getComponentViews()).get(0).getElements();
         var expected = new HashSet<C4Reference>();
         expected.add(new C4Reference("4", null));
         expected.add(new C4Reference("6", null));

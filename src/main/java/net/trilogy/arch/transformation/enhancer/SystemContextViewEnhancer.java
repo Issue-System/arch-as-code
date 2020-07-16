@@ -11,13 +11,13 @@ import net.trilogy.arch.domain.c4.Entity;
 import net.trilogy.arch.domain.c4.view.C4SystemView;
 import net.trilogy.arch.domain.c4.view.ModelMediator;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class SystemContextViewEnhancer extends BaseViewEnhancer<SystemContextView, C4SystemView> {
 
     @Override
-    public List<C4SystemView> getViews(ArchitectureDataStructure dataStructure) {
+    public Set<C4SystemView> getViews(ArchitectureDataStructure dataStructure) {
         return dataStructure.getViews().getSystemViews();
     }
 

@@ -398,6 +398,7 @@ model:
 views:
   systemViews:
     - name: "System Context diagram for Internet Banking System"
+      key: "InternetBankingSystem-SystemView"
       systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - System View"
       #        tags:
@@ -412,6 +413,7 @@ views:
 
   containerViews:
     - name: "Container diagram for Internet Banking System"
+      key: "InternetBankingSystem-ContainerView"
       systemAlias: "c4://Internet Banking System"
       description: "Internet Banking System - Container View"
       elements:
@@ -426,6 +428,7 @@ views:
 
   componentViews:
     - name: "Component diagram for Internet Banking System - API Application"
+      key: "InternetBankingSystemAPIApplication-ComponentView"
       containerAlias: "c4://Internet Banking System/API Application"
       description: "Internet Banking System : API Application - Component View"
       elements:

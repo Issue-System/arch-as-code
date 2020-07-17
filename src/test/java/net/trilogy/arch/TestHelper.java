@@ -5,18 +5,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class TestHelper {
-    // TODO [TESTING]: Clean up folder locations
     public static final String MANIFEST_PATH_TO_TEST_GENERALLY = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_DECISIONS = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_MODEL_PEOPLE = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_METADATA = "/architecture/products/testspaces/product-architecture.yml";
-    public static final String MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION = "/auAnnotate/product-architecture.yml";
+    public static final String MANIFEST_PATH_TO_TEST_DECISIONS = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_MODEL_PEOPLE = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_MODEL_SYSTEMS = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_MODEL_CONTAINERS = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_MODEL_COMPONENTS = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_METADATA = MANIFEST_PATH_TO_TEST_GENERALLY;
+    public static final String MANIFEST_PATH_TO_TEST_JIRA_STORY_CREATION = "/au/auAnnotate/product-architecture.yml";
 
-    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE = "/auValidation/unit/archBeforeAu.yml";
-    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE = "/auValidation/unit/archAfterAu.yml";
+    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE = "/au/auValidation/unit/archBeforeAu.yml";
+    public static final String MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE = "/au/auValidation/unit/archAfterAu.yml";
 
     public static final String MANIFEST_PATH_TO_TEST_SERIALIZATION = "/yaml/big-bank.yml";
     public static final String MANIFEST_PATH_TO_TEST_MODEL_DEPLOYMENT_NODES = "/architecture/products/bigBank/product-architecture.yml";
@@ -38,11 +37,13 @@ public abstract class TestHelper {
     public static final String ROOT_PATH_TO_TEST_GENERALLY = "/architecture/products/testspaces/";
     public static final String ROOT_PATH_TO_TEST_PRODUCT_DOCUMENTATION = "/architecture/products/testspaces/";
     public static final String ROOT_PATH_TO_TEST_DIFF_COMMAND = "/architecture/products/testspaces/";
-    public static final String ROOT_PATH_TO_TEST_VALIDATION = "/validation/";
-    public static final String ROOT_PATH_TO_TEST_AU_VALIDATION_E2E = "/auValidation/e2e/";
-    public static final String ROOT_PATH_TO_TEST_AU_PUBLISH = "/auPublish/";
+    public static final String ROOT_PATH_TO_TEST_VALIDATION = "/yaml/validation/";
+    public static final String ROOT_PATH_TO_TEST_AU_VALIDATION_E2E = "/au/auValidation/e2e/";
+    public static final String ROOT_PATH_TO_TEST_AU_PUBLISH = "/au/auPublish/";
     public static final String ROOT_PATH_TO_TEST_VIEWS = "/architecture/products/bigBank/";
-    public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/auAnnotate/";
+    public static final String ROOT_PATH_TO_TEST_AU_ANNOTATE = "/au/auAnnotate/";
+
+    public static final String ROOT_PATH_TO_GOOGLE_DOC_P1S = "google-docs/P1";
 
     public static final String MARKDOWN_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/1_context-diagram.md";
     public static final String ASCII_DOCUMENTATION_FILE = "/architecture/products/testspaces/documentation/3_Ascii-docs.txt";

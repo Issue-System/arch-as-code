@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static net.trilogy.arch.TestHelper.ROOT_PATH_TO_GOOGLE_DOC_P1S;
 import static net.trilogy.arch.adapter.google.GoogleDocsAuthorizedApiFactory.GOOGLE_DOCS_API_CREDENTIALS_FOLDER_PATH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -51,20 +52,20 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | 4  | P1 ITD 1.1  | Chosen P1 decision",
-            "Json/SampleP1-1.json | 4  | P2 IFD 5    | [1.13 Is the P2 IFD identifier linked to the corresponding item in the P2 spec?1.14 Is the P2 IFD represented by at least one capability in the ACC and is the capability (specifically or as part of a set) referenced in a Business Goal Acceptance Criteria?]P2 IFD with just the decision statement.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | 4  | P1 ITD 1.1  | Chosen P1 decision",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | 4  | P2 IFD 5    | [1.13 Is the P2 IFD identifier linked to the corresponding item in the P2 spec?1.14 Is the P2 IFD represented by at least one capability in the ACC and is the capability (specifically or as part of a set) referenced in a Business Goal Acceptance Criteria?]P2 IFD with just the decision statement.",
 
-            "Json/SampleP1-2.json | 23 | P1 ITD 11.4 | Start Basic Processing as soon as the video is uploaded\\, and Complex Processing as soon as video Publishing is initiated",
-            "Json/SampleP1-2.json | 23 | P2 ITD 12   | Transcode media files using AWS Elemental MediaConvert",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | 23 | P1 ITD 11.4 | Start Basic Processing as soon as the video is uploaded\\, and Complex Processing as soon as video Publishing is initiated",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | 23 | P2 ITD 12   | Transcode media files using AWS Elemental MediaConvert",
 
-            "Json/SampleP1-3.json | 11 | P2 ITD 7    | Deliver video content using Amazon CloudFront",
-            "Json/SampleP1-3.json | 11 | P1 ITD 7.3  | Apply on the fly CENC encryption using Lambda@Edge when delivering the video for streaming with download possibility disabled",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | 11 | P2 ITD 7    | Deliver video content using Amazon CloudFront",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | 11 | P1 ITD 7.3  | Apply on the fly CENC encryption using Lambda@Edge when delivering the video for streaming with download possibility disabled",
 
-            "Json/SampleP1-4.json | 7  | P1 ITD 4.1  | Use existing interface to allow forward single document for a single user.",
-            "Json/SampleP1-4.json | 7  | P2 ITD 4    | Modify the existing ForwardDocument API call to support forwarding.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | 7  | P1 ITD 4.1  | Use existing interface to allow forward single document for a single user.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | 7  | P2 ITD 4    | Modify the existing ForwardDocument API call to support forwarding.",
 
-            "Json/SampleP1-5.json | 7  | P1 ITD 1.3  | Introduce a configurable delay between user input event and issuing the data request",
-            "Json/SampleP1-5.json | 7  | P2 IF 1     | Use pagination in front-end app to speed-up UI and decrease memory footprint.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | 7  | P1 ITD 1.3  | Introduce a configurable delay between user input event and issuing the data request",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | 7  | P2 IF 1     | Use pagination in front-end app to speed-up UI and decrease memory footprint.",
     })
     @Test
     public void shouldReturnAuWithRequirements(String file, Integer totalRequirementsInFile, String requirementId, String requirement) throws Exception {
@@ -82,7 +83,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithOrderedRequirements() throws IOException {
-        mockApiWith("Json/SampleP1-4.json", "url");
+        mockApiWith(ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
         List<String> expected = List.of("P2 IFD 1", "P2 IFD 2", "P2 IFD 3", "P2 ITD 4", "P1 ITD 4.1", "P2 ITD 5", "P1 ITD 5.1");
@@ -96,11 +97,11 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | Just a whole bunch of text goes here. Like a bunch of it. Maybe some symbols &@#*!)(@(#&*@.Maybe some paragraphs. Just a bunch\\, yknow?",
-            "Json/SampleP1-2.json | Video processing capabilities will be added to the Video upload mechanism with this milestone using AWS services for generating transcriptions\\, captions\\, thumbnails and video objects/scenes.",
-            "Json/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes.",
-            "Json/SampleP1-4.json | Product Automates supply chain orchestration\\, providing a single view into everything that touches the supply chain ecosystem. In a supply chain ecosystem\\, hundreds or thousands of documents can be submitted through a typical buyer/supplier relationship.  Each of these documents is processed through a workflow that can be configured to place the document in a users individual review workqueue. Currently reviewers can accept or reject these documents. This milestone shall change the Product API and UI to allow user forward documents from his/her review workqueue to other users review workqueue.",
-            "Json/SampleP1-5.json | Currently Product UI load time is drastically slow (>30 secs to load) due to requesting large data sets (1M+ records) from the server. After the Milestone is implemented\\, REST API endpoints are extended to support pagination\\, while retaining backwards compatible behavior of loading the entire data set by default. UIs with performance problems (Appendix 1.3) are modified to take advantage of pagination and limit the initially loaded data set.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | Just a whole bunch of text goes here. Like a bunch of it. Maybe some symbols &@#*!)(@(#&*@.Maybe some paragraphs. Just a bunch\\, yknow?",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | Video processing capabilities will be added to the Video upload mechanism with this milestone using AWS services for generating transcriptions\\, captions\\, thumbnails and video objects/scenes.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | This Milestone introduces the functionality for content streaming and download\\, integrates it with the Product and collects corresponding metrics for analytics purposes.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | Product Automates supply chain orchestration\\, providing a single view into everything that touches the supply chain ecosystem. In a supply chain ecosystem\\, hundreds or thousands of documents can be submitted through a typical buyer/supplier relationship.  Each of these documents is processed through a workflow that can be configured to place the document in a users individual review workqueue. Currently reviewers can accept or reject these documents. This milestone shall change the Product API and UI to allow user forward documents from his/her review workqueue to other users review workqueue.",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | Currently Product UI load time is drastically slow (>30 secs to load) due to requesting large data sets (1M+ records) from the server. After the Milestone is implemented\\, REST API endpoints are extended to support pagination\\, while retaining backwards compatible behavior of loading the entire data set by default. UIs with performance problems (Appendix 1.3) are modified to take advantage of pagination and limit the initially loaded data set.",
     })
     @Test
     public void shouldReturnAuWithExecutiveSummary(String jsonFilename, String expected) throws Exception {
@@ -112,11 +113,11 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | http://fake-link-to-p2.com",
-            "Json/SampleP1-2.json | https://docs.google.com/document/d/15CnasdfasdfasdfLi1p8PDJA/edit#heading=h.ze6rbvelp0",
-            "Json/SampleP1-3.json | https://docs.google.com/document/d/15sCnB9pKdddddddrlYU8F",
-            "Json/SampleP1-4.json | https://docs.google.com/document/d/AAAAfdasfafdsfadfasdfs",
-            "Json/SampleP1-5.json | https://docs.google.com/document/d/15zy2hpZ5OI3XaWhha7ncO6sHWGbeA9WP",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | http://fake-link-to-p2.com",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | https://docs.google.com/document/d/15CnasdfasdfasdfLi1p8PDJA/edit#heading=h.ze6rbvelp0",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | https://docs.google.com/document/d/15sCnB9pKdddddddrlYU8F",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | https://docs.google.com/document/d/AAAAfdasfafdsfadfasdfs",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | https://docs.google.com/document/d/15zy2hpZ5OI3XaWhha7ncO6sHWGbeA9WP",
     })
     @Test
     public void shouldReturnAuWithP2Link(String jsonFilename, String expected) throws Exception {
@@ -129,7 +130,7 @@ public class GoogleDocumentReaderTest {
 
     @Test
     public void shouldReturnAuWithP1Link() throws Exception {
-        mockApiWith("Json/SampleP1-1.json", "url");
+        mockApiWith(ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json", "url");
 
         ArchitectureUpdate result = reader.load("url");
 
@@ -137,11 +138,11 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | ABCD-1231         | http://fake-jira.com",
-            "Json/SampleP1-2.json | SPEC-12312        | https://jira.dev.com/browse/SPEC-12312",
-            "Json/SampleP1-3.json | SPEC-01127 (M1.5) | https://jira.devshop.com/browse/SPEC-01127",
-            "Json/SampleP1-4.json | SPEC-212312       | https://jira.fake.com/browse/SPEC-12321",
-            "Json/SampleP1-5.json | SPEC-18952        | https://jira.dev.com/browse/SPEC-18952",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | ABCD-1231         | http://fake-jira.com",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | SPEC-12312        | https://jira.dev.com/browse/SPEC-12312",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | SPEC-01127 (M1.5) | https://jira.devshop.com/browse/SPEC-01127",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | SPEC-212312       | https://jira.fake.com/browse/SPEC-12321",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | SPEC-18952        | https://jira.dev.com/browse/SPEC-18952",
     })
     @Test
     public void shouldReturnAuWithP1JiraTicket(String jsonFilename, String expectedTicket, String expectedLink) throws Exception {
@@ -154,11 +155,11 @@ public class GoogleDocumentReaderTest {
     }
 
     @Parameters({
-            "Json/SampleP1-1.json | M1.0 First Milestone",
-            "Json/SampleP1-2.json | M1.2 - Video Processing (M1 - Upload\\, Download\\, and Stream Video)",
-            "Json/SampleP1-3.json | M1.5 - Content Delivery and Download (M2 - Upload\\, Download\\, and Stream Content)",
-            "Json/SampleP1-4.json | M1 - Document Forwarding",
-            "Json/SampleP1-5.json | M1 - Pagination",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json | M1.0 First Milestone",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json | M1.2 - Video Processing (M1 - Upload\\, Download\\, and Stream Video)",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json | M1.5 - Content Delivery and Download (M2 - Upload\\, Download\\, and Stream Content)",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json | M1 - Document Forwarding",
+            ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json | M1 - Pagination",
     })
     @Test
     public void shouldReturnAuWithMilestone(String jsonFilename, String expected) throws Exception {
@@ -219,6 +220,7 @@ public class GoogleDocumentReaderTest {
         new ObjectMapper().writeValue(tempFile4.toFile(), response4.asJson());
         new ObjectMapper().writeValue(tempFile5.toFile(), response5.asJson());
 
+        String resourcePath = " src/test/resources/";
         assertThat(
                 "********* STATUS *********" +
                         "\n\nReading doc: " + url1 +
@@ -232,11 +234,11 @@ public class GoogleDocumentReaderTest {
                         "\nWritten to file " + tempFile3.toAbsolutePath() +
                         "\nWritten to file " + tempFile4.toAbsolutePath() +
                         "\nWritten to file " + tempFile5.toAbsolutePath() +
-                        "\n\nRun: \nmv " + tempFile1.toAbsolutePath() + " src/test/resources/Json/SampleP1-1.json" +
-                        " && mv " + tempFile2.toAbsolutePath() + " src/test/resources/Json/SampleP1-2.json" +
-                        " && mv " + tempFile3.toAbsolutePath() + " src/test/resources/Json/SampleP1-3.json" +
-                        " && mv " + tempFile4.toAbsolutePath() + " src/test/resources/Json/SampleP1-4.json" +
-                        " && mv " + tempFile5.toAbsolutePath() + " src/test/resources/Json/SampleP1-5.json" +
+                        "\n\nRun: \nmv " + tempFile1.toAbsolutePath() + resourcePath + ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json" +
+                        " && mv " + tempFile2.toAbsolutePath() + resourcePath + ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-2.json" +
+                        " && mv " + tempFile3.toAbsolutePath() + resourcePath + ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-3.json" +
+                        " && mv " + tempFile4.toAbsolutePath() + resourcePath + ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-4.json" +
+                        " && mv " + tempFile5.toAbsolutePath() + resourcePath + ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-5.json" +
                         "\n\nNow failing test on purpose :)" +
                         "\n\n********* STATUS *********\n\n",
                 true, is(false)

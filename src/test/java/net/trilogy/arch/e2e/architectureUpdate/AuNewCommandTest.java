@@ -3,6 +3,7 @@ package net.trilogy.arch.e2e.architectureUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.trilogy.arch.Application;
+import net.trilogy.arch.TestHelper;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.adapter.google.GoogleDocsApiInterface;
@@ -310,7 +311,7 @@ public class AuNewCommandTest {
     }
 
     private void mockGoogleDocsApi() throws IOException {
-        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("Json/SampleP1-1.json")).getPath()));
+        String rawFileContents = Files.readString(Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource(TestHelper.ROOT_PATH_TO_GOOGLE_DOC_P1S + "/SampleP1-1.json")).getPath()));
         JsonNode jsonFileContents = new ObjectMapper().readValue(rawFileContents, JsonNode.class);
         when(googleDocsApiMock.fetch("url")).thenReturn(new GoogleDocsApiInterface.Response(jsonFileContents, null));
     }

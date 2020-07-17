@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_AU_VALIDATION_AFTER_UPDATE;
 import static net.trilogy.arch.TestHelper.MANIFEST_PATH_TO_TEST_AU_VALIDATION_BEFORE_UPDATE;
+import static net.trilogy.arch.validation.architectureUpdate.ValidationError.*;
 import static org.hamcrest.Matchers.*;
 
 public class ArchitectureUpdateValidatorTest {
@@ -133,7 +134,7 @@ public class ArchitectureUpdateValidatorTest {
                 )
                 .capabilityContainer(
                         new CapabilitiesContainer(
-                                Epic.blank(),
+                                Epic.builder().title("epic").jira(Jira.builder().ticket("ticket").link("N/A").build()).build(),
                                 List.of(
                                         new FeatureStory("Feat Title", Jira.blank(), List.of(
                                                 new Tdd.Id("Valid-TDD-with-requirement-and-story"),
@@ -182,34 +183,35 @@ public class ArchitectureUpdateValidatorTest {
         var actualErrors = ArchitectureUpdateValidator.validate(invalidAu, validDataStructure, hasMissingComponentDataStructure).getErrors();
 
         var expectedErrors = List.of(
-                ValidationError.forTddsMustBeValidReferences(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
-                ValidationError.forTddsMustBeValidReferences(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
+                forTddsMustBeValidReferences(new Decision.Id("Bad-TDD-Decision"), new Tdd.Id("BAD-TDD-ID")),
+                forTddsMustBeValidReferences(new FunctionalRequirement.Id("Bad-TDD-Functional-Requirement"), new Tdd.Id("BAD-TDD-ID")),
 
-                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-1")),
-                ValidationError.forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-2")),
+                forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-1")),
+                forDecisionsMustHaveTdds(new Decision.Id("Missing-TDD-Decision-2")),
 
-                ValidationError.forMustHaveStories(new Tdd.Id("TDD-unused-and-without-story")),
-                ValidationError.forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story")),
+                forMustHaveStories(new Tdd.Id("TDD-unused-and-without-story")),
+                forMustHaveStories(new FunctionalRequirement.Id("Functional-Requirement-Without-Story")),
 
-                ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-and-without-story")),
-                ValidationError.forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-with-story")),
+                forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-and-without-story")),
+                forTddsMustHaveDecisionsOrRequirements(new Tdd.Id("TDD-unused-with-story")),
 
-                ValidationError.forStoriesTddsMustBeValidReferences(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
+                forStoriesTddsMustBeValidReferences(new Tdd.Id("Invalid-TDD-ID"), "Feat Title"),
 
-                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
-                ValidationError.forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id-2")),
-                ValidationError.forDeletedTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Deleted-Component-Id")),
+                forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id")),
+                forTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Component-Id-2")),
+                forDeletedTddsComponentsMustBeValidReferences(new Tdd.ComponentReference("Invalid-Deleted-Component-Id")),
 
-                ValidationError.forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
+                forFunctionalRequirementsMustBeValidReferences("Feat Title 2", new FunctionalRequirement.Id("Bad-Functional-Requirement-ID")),
 
-                ValidationError.forStoriesMustHaveTdds("Feat Title 4"),
+                forStoriesMustHaveTdds("Feat Title 4"),
 
-                ValidationError.forStoriesMustHaveFunctionalRequirements("Feat Title 3"),
+                forStoriesMustHaveFunctionalRequirements("Feat Title 3"),
 
-                ValidationError.forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story")),
+                forDuplicatedTdd(new Tdd.Id("Valid-TDD-with-requirement-and-story")),
 
-                ValidationError.forDuplicatedComponent(new Tdd.ComponentReference("38"))
+                forDuplicatedComponent(new Tdd.ComponentReference("38")),
 
+                forNotAvailableLink("capabilities.epic.jira.link")
         );
 
         expectedErrors.forEach(e ->

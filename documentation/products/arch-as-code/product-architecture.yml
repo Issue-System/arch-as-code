@@ -126,6 +126,13 @@ model:
       description: "Team collaboration via sheets, docs and presentations"
       tags:
         - "Trilogy System View"
+      relationships:
+        - id: "57"
+          action: USES
+          withAlias: "c4://DevSpaces/DevSpaces API"
+          withId: "12"
+          description: "to manipulate dev spaces"
+          technology: HTTPS
 
     - id: "7"
       alias: "c4://GitHub"

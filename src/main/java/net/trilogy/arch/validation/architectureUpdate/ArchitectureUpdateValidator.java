@@ -99,17 +99,22 @@ public class ArchitectureUpdateValidator {
         links.add(Pair.of("capabilities.epic.jira.link", architectureUpdate.getCapabilityContainer().getEpic().getJira().getLink()));
 
 
-        architectureUpdate.getMilestoneDependencies().forEach(m ->  m.getLinks().forEach(l ->
-                links.add(Pair.of("Milestone dependency " + m.getDescription() + " link", l.getLink()))
-            )
-        );
+        List<MilestoneDependency> milestoneDependencies = architectureUpdate.getMilestoneDependencies();
+
+        if (milestoneDependencies != null) {
+            milestoneDependencies.forEach(m -> m.getLinks().forEach(l ->
+                            links.add(Pair.of("Milestone dependency " + m.getDescription() + " link", l.getLink()))
+                    )
+            );
+            milestoneDependencies.forEach(m ->  m.getLinks().forEach(l ->
+                            links.add(Pair.of("Milestone dependency " + m.getDescription() + " link", l.getLink()))
+                    )
+            );
+        }
         architectureUpdate.getUsefulLinks().forEach(l ->
             links.add(Pair.of("Useful link " + l.getDescription() + " link", l.getLink()))
         );
-        architectureUpdate.getMilestoneDependencies().forEach(m ->  m.getLinks().forEach(l ->
-                        links.add(Pair.of("Milestone dependency " + m.getDescription() + " link", l.getLink()))
-                )
-        );
+
         architectureUpdate.getCapabilityContainer().getFeatureStories().forEach(s ->
                 links.add(Pair.of("capabilities.featurestory.jira.ticket " + s.getJira().getTicket()  + " link", s.getJira().getLink()))
         );

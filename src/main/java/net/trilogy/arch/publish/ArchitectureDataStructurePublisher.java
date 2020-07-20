@@ -13,6 +13,7 @@ import net.trilogy.arch.transformation.TransformerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import static net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter.STRUCTURIZR_VIEWS_FILE_NAME;
 
@@ -56,10 +57,22 @@ public class ArchitectureDataStructurePublisher {
     public Workspace getWorkspace(File productArchitectureDirectory, String manifestFileName) throws IOException {
         ArchitectureDataStructure dataStructure = loadProductArchitecture(productArchitectureDirectory, manifestFileName);
 
-        ViewSet viewSet = loadStructurizrViews(productArchitectureDirectory);
-        dataStructure.setStructurizrViews(viewSet);
+        Workspace workspace = dataStructureTransformer.toWorkSpace(dataStructure);
 
-        return dataStructureTransformer.toWorkSpace(dataStructure);
+        loadAndSetViews(productArchitectureDirectory, workspace);
+
+        return workspace;
+    }
+
+    private void loadAndSetViews(File productArchitectureDirectory, Workspace workspace) throws IOException {
+        ViewSet viewSet = loadStructurizrViews(productArchitectureDirectory);
+        try {
+            Method setViews = Workspace.class.getDeclaredMethod("setViews", ViewSet.class);
+            setViews.setAccessible(true);
+            setViews.invoke(workspace, viewSet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private ViewSet loadStructurizrViews(File productArchitectureDirectory) throws IOException {

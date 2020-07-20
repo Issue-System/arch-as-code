@@ -1,0 +1,3179 @@
+{
+  "systemLandscapeViews": [],
+  "systemContextViews": [
+    {
+      "softwareSystemId": "5",
+      "description": "System Context diagram for Sococo Virtual Office showin customer support interactions.",
+      "key": "SococoSystemContextCustomerSupport",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "5"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "24",
+            "2",
+            "47"
+          ],
+          "relationships": [
+            "55",
+            "123",
+            "71"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "1"
+          ],
+          "relationships": [
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "7",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1620,
+              "y": 220
+            }
+          ]
+        },
+        {
+          "id": "8",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 400,
+              "y": 1295
+            }
+          ]
+        },
+        {
+          "id": "55",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "145",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "146",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "123",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 200,
+          "y": 20
+        },
+        {
+          "id": "24",
+          "x": 655,
+          "y": 430
+        },
+        {
+          "id": "2",
+          "x": 1395,
+          "y": 480
+        },
+        {
+          "id": "47",
+          "x": 1435,
+          "y": 1100
+        },
+        {
+          "id": "5",
+          "x": 630,
+          "y": 1145
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "System context diagram for marketing processes",
+      "key": "SococoSystemContextMarketing",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "2"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "22",
+            "23",
+            "1",
+            "47"
+          ],
+          "relationships": [
+            "122",
+            "145",
+            "7",
+            "72"
+          ]
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "72",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "7",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "122",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "145",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "22",
+          "x": 380,
+          "y": 730
+        },
+        {
+          "id": "23",
+          "x": 160,
+          "y": 95
+        },
+        {
+          "id": "1",
+          "x": 945,
+          "y": 95
+        },
+        {
+          "id": "2",
+          "x": 1345,
+          "y": 730
+        },
+        {
+          "id": "47",
+          "x": 1730,
+          "y": 95
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "This context diagram shows usage of main functional areas by an already existing customer. It doesn't show customer support or analytics, see #SococoSystemContextCustomerSupport, #SococoSystemContextMarketing.",
+      "key": "SococoSystemContextCustomer",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "2"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "1"
+          ],
+          "relationships": [
+            "7"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "12",
+            "4",
+            "6"
+          ],
+          "relationships": [
+            "11",
+            "13",
+            "57",
+            "10"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "102"
+          ],
+          "relationships": [
+            "120"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "109"
+          ],
+          "relationships": [
+            "112",
+            "119"
+          ]
+        },
+        {
+          "order": 6,
+          "elements": [
+            "3"
+          ],
+          "relationships": [
+            "9"
+          ]
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "119",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "13",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "11",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "120",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "7",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "9",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "10",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "57",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "112",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "234",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 320,
+          "y": 40
+        },
+        {
+          "id": "12",
+          "x": 1725,
+          "y": 452
+        },
+        {
+          "id": "2",
+          "x": 940,
+          "y": 660
+        },
+        {
+          "id": "102",
+          "x": 160,
+          "y": 565
+        },
+        {
+          "id": "3",
+          "x": 945,
+          "y": 1165
+        },
+        {
+          "id": "4",
+          "x": 1725,
+          "y": 90
+        },
+        {
+          "id": "6",
+          "x": 1725,
+          "y": 815
+        },
+        {
+          "id": "109",
+          "x": 135,
+          "y": 1165
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "System context diagram for customers with Enterprise subscription",
+      "key": "SococoSystemContextCustomerEnterprise",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "2"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "102"
+          ],
+          "relationships": [
+            "118"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "109"
+          ],
+          "relationships": [
+            "112",
+            "119"
+          ]
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "119",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "118",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "112",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "2",
+          "x": 990,
+          "y": 785
+        },
+        {
+          "id": "102",
+          "x": 255,
+          "y": 165
+        },
+        {
+          "id": "109",
+          "x": 1510,
+          "y": 105
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Diagram of devices where Sococo product can be used by customers.",
+      "key": "SococoDevices",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "2"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "1",
+            "134",
+            "135",
+            "140"
+          ],
+          "relationships": [
+            "137",
+            "7",
+            "139",
+            "142"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "148"
+          ],
+          "relationships": [
+            "149"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "129"
+          ],
+          "relationships": []
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "142",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "151",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "7",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "150",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "149",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "139",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "137",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 231,
+          "y": 32
+        },
+        {
+          "id": "134",
+          "x": 1800,
+          "y": 85
+        },
+        {
+          "id": "2",
+          "x": 830,
+          "y": 665
+        },
+        {
+          "id": "135",
+          "x": 1725,
+          "y": 667
+        },
+        {
+          "id": "148",
+          "x": 30,
+          "y": 615
+        },
+        {
+          "id": "129",
+          "x": 30,
+          "y": 1125
+        },
+        {
+          "id": "140",
+          "x": 1725,
+          "y": 1100
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Shows billing integration and process.",
+      "key": "SococoSystemContextCustomerBilling",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "2"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "3"
+          ],
+          "relationships": [
+            "9"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "23"
+          ],
+          "relationships": [
+            "147"
+          ]
+        }
+      ],
+      "enterpriseBoundaryVisible": true,
+      "relationships": [
+        {
+          "id": "9",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "147",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "23",
+          "x": 400,
+          "y": 345
+        },
+        {
+          "id": "2",
+          "x": 1270,
+          "y": 1035
+        },
+        {
+          "id": "3",
+          "x": 1265,
+          "y": 390
+        }
+      ]
+    }
+  ],
+  "containerViews": [
+    {
+      "softwareSystemId": "2",
+      "description": "High-level diagram of AVC call through Zoom, Vidyo.io or in-house AVC  (also see #SococoComponentCallSococoAVC)",
+      "key": "DELETEDSococoContainerCallAvc",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "17"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "68"
+          ],
+          "relationships": [
+            "94"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "12"
+          ],
+          "relationships": [
+            "84"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "129"
+          ],
+          "relationships": [
+            "198",
+            "130"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "130",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "84",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "198",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1505,
+              "y": 380
+            },
+            {
+              "x": 1155,
+              "y": 380
+            }
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "12",
+          "x": 265,
+          "y": 110
+        },
+        {
+          "id": "68",
+          "x": 760,
+          "y": 640
+        },
+        {
+          "id": "17",
+          "x": 1430,
+          "y": 1140
+        },
+        {
+          "id": "129",
+          "x": 1890,
+          "y": 55
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Electron Desktop Application shows SPA in Chromium browser.",
+      "key": "SococoContainerDiagramDesktopApp",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "15",
+            "18"
+          ],
+          "relationships": [
+            "143"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "44",
+            "43"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "1"
+          ],
+          "relationships": [
+            "204"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "148"
+          ],
+          "relationships": [
+            "205"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "102"
+          ],
+          "relationships": [
+            "208"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "205",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "204",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "43",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "44",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "143",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "208",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 522,
+          "y": 70
+        },
+        {
+          "id": "102",
+          "x": 10,
+          "y": 70
+        },
+        {
+          "id": "15",
+          "x": 465,
+          "y": 635
+        },
+        {
+          "id": "148",
+          "x": 1035,
+          "y": 70
+        },
+        {
+          "id": "17",
+          "x": 465,
+          "y": 1160
+        },
+        {
+          "id": "18",
+          "x": 1325,
+          "y": 635
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Single-Page Application + RocketShorts server container interactions with multimedia services",
+      "key": "SococoContainerDiagramAppUsageBrowser",
+      "paperSize": "A4_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "1",
+            "35",
+            "68",
+            "36",
+            "14",
+            "37",
+            "38",
+            "39",
+            "17",
+            "129"
+          ],
+          "relationships": [
+            "199",
+            "101",
+            "202",
+            "81",
+            "94",
+            "161",
+            "173",
+            "196",
+            "153",
+            "197"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "18"
+          ],
+          "relationships": [
+            "44",
+            "200",
+            "169",
+            "40",
+            "172",
+            "195",
+            "43"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "154"
+          ],
+          "relationships": [
+            "155",
+            "157"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "172",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "195",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "173",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "197",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "81",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "196",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "40",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "200",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "43",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "161",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "44",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "157",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 840,
+              "y": 1235
+            }
+          ]
+        },
+        {
+          "id": "155",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 240,
+              "y": 980
+            }
+          ]
+        },
+        {
+          "id": "101",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "199",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "169",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "35",
+          "x": 1955,
+          "y": 487
+        },
+        {
+          "id": "68",
+          "x": 1060,
+          "y": 165
+        },
+        {
+          "id": "36",
+          "x": 1960,
+          "y": 80
+        },
+        {
+          "id": "14",
+          "x": 510,
+          "y": 155
+        },
+        {
+          "id": "37",
+          "x": 1955,
+          "y": 895
+        },
+        {
+          "id": "38",
+          "x": 530,
+          "y": 1790
+        },
+        {
+          "id": "39",
+          "x": 1050,
+          "y": 1790
+        },
+        {
+          "id": "17",
+          "x": 595,
+          "y": 830
+        },
+        {
+          "id": "18",
+          "x": 1035,
+          "y": 1305
+        },
+        {
+          "id": "154",
+          "x": 5,
+          "y": 1085
+        },
+        {
+          "id": "1",
+          "x": 2775,
+          "y": 1145
+        },
+        {
+          "id": "129",
+          "x": 2775,
+          "y": 220
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Shows generic mobile application container diagram, including software systems involved.",
+      "key": "SococoAbstractMobileApp",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "1",
+            "134",
+            "148",
+            "38",
+            "16",
+            "129"
+          ],
+          "relationships": [
+            "136",
+            "213",
+            "207",
+            "151"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "12"
+          ],
+          "relationships": [
+            "198",
+            "216",
+            "130"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "210",
+            "101",
+            "202"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "216",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "213",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1915,
+              "y": 640
+            }
+          ]
+        },
+        {
+          "id": "130",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 275,
+              "y": 955
+            }
+          ]
+        },
+        {
+          "id": "151",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "210",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "101",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1835,
+              "y": 120
+            }
+          ]
+        },
+        {
+          "id": "198",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 645,
+              "y": 1240
+            }
+          ]
+        },
+        {
+          "id": "136",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "207",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 1280,
+          "y": 1230
+        },
+        {
+          "id": "12",
+          "x": 445,
+          "y": 750
+        },
+        {
+          "id": "134",
+          "x": 2035,
+          "y": 985
+        },
+        {
+          "id": "148",
+          "x": 255,
+          "y": 85
+        },
+        {
+          "id": "38",
+          "x": 1940,
+          "y": 90
+        },
+        {
+          "id": "16",
+          "x": 1220,
+          "y": 755
+        },
+        {
+          "id": "17",
+          "x": 1220,
+          "y": 150
+        },
+        {
+          "id": "129",
+          "x": 75,
+          "y": 1140
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Mobile App interactions",
+      "key": "SococoContainerDiagramMobileApp",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "154",
+            "38",
+            "16",
+            "17"
+          ],
+          "relationships": [
+            "210",
+            "202",
+            "213",
+            "209"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "211"
+          ],
+          "relationships": [
+            "212"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "1"
+          ],
+          "relationships": [
+            "41"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "36"
+          ],
+          "relationships": [
+            "215"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "215",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "213",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "212",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "41",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "210",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "209",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "154",
+          "x": 1495,
+          "y": 1145
+        },
+        {
+          "id": "1",
+          "x": 15,
+          "y": 625
+        },
+        {
+          "id": "211",
+          "x": 100,
+          "y": 1150
+        },
+        {
+          "id": "36",
+          "x": 180,
+          "y": 90
+        },
+        {
+          "id": "38",
+          "x": 2000,
+          "y": 155
+        },
+        {
+          "id": "16",
+          "x": 880,
+          "y": 675
+        },
+        {
+          "id": "17",
+          "x": 880,
+          "y": 165
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "User is browsing the website to sign-up, customers use support, Hubspot (Customer Support) displays widget on the website, Google Analytics (Analytics) captures user statistics.",
+      "key": "SococoContainerDiagramWebsiteCustomers",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "1",
+            "14",
+            "4"
+          ],
+          "relationships": [
+            "57"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "25"
+          ],
+          "relationships": [
+            "26"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "45"
+          ],
+          "relationships": [
+            "46"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "47"
+          ],
+          "relationships": [
+            "56",
+            "48"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "27",
+            "49"
+          ]
+        },
+        {
+          "order": 6,
+          "elements": [
+            "53"
+          ],
+          "relationships": [
+            "54"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "27",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "26",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "54",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "56",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1575,
+              "y": 105
+            },
+            {
+              "x": 1115,
+              "y": 105
+            }
+          ]
+        },
+        {
+          "id": "46",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "57",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "48",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "49",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1695,
+              "y": 990
+            }
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 1050,
+          "y": 205
+        },
+        {
+          "id": "45",
+          "x": 215,
+          "y": 1105
+        },
+        {
+          "id": "47",
+          "x": 445,
+          "y": 205
+        },
+        {
+          "id": "14",
+          "x": 1055,
+          "y": 1110
+        },
+        {
+          "id": "25",
+          "x": 1060,
+          "y": 775
+        },
+        {
+          "id": "4",
+          "x": 1805,
+          "y": 255
+        },
+        {
+          "id": "17",
+          "x": 1805,
+          "y": 1110
+        },
+        {
+          "id": "53",
+          "x": 220,
+          "y": 750
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "The container diagram for Sococo Virtual Office Single Page Application.",
+      "key": "SococoContainerDiagramAppUsageBrowserAnalytics",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "14",
+            "17"
+          ],
+          "relationships": [
+            "153"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "18"
+          ],
+          "relationships": [
+            "44",
+            "43"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "1"
+          ],
+          "relationships": [
+            "40"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "154"
+          ],
+          "relationships": [
+            "155",
+            "157"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "68"
+          ],
+          "relationships": [
+            "94"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "40",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "43",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "44",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "157",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "155",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1150,
+              "y": 1065
+            },
+            {
+              "x": 350,
+              "y": 1060
+            }
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "154",
+          "x": 125,
+          "y": 685
+        },
+        {
+          "id": "1",
+          "x": 1200,
+          "y": 90
+        },
+        {
+          "id": "68",
+          "x": 1865,
+          "y": 655
+        },
+        {
+          "id": "14",
+          "x": 720,
+          "y": 1155
+        },
+        {
+          "id": "17",
+          "x": 1480,
+          "y": 1155
+        },
+        {
+          "id": "18",
+          "x": 1185,
+          "y": 685
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "RocketShorts server container interactions with external subsystems.",
+      "key": "SococoContainerDiagramRocketShortsServer",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "154",
+            "34",
+            "68",
+            "14",
+            "38",
+            "17",
+            "50",
+            "32"
+          ],
+          "relationships": [
+            "155",
+            "188",
+            "201",
+            "202",
+            "203",
+            "94",
+            "153"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "102"
+          ],
+          "relationships": [
+            "117"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "203",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "201",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "155",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "188",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "117",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "154",
+          "x": 1520,
+          "y": 1095
+        },
+        {
+          "id": "34",
+          "x": 65,
+          "y": 690
+        },
+        {
+          "id": "68",
+          "x": 1465,
+          "y": 75
+        },
+        {
+          "id": "102",
+          "x": 2065,
+          "y": 290
+        },
+        {
+          "id": "14",
+          "x": 775,
+          "y": 35
+        },
+        {
+          "id": "38",
+          "x": 65,
+          "y": 1090
+        },
+        {
+          "id": "17",
+          "x": 780,
+          "y": 560
+        },
+        {
+          "id": "50",
+          "x": 65,
+          "y": 290
+        },
+        {
+          "id": "32",
+          "x": 725,
+          "y": 1240
+        }
+      ]
+    },
+    {
+      "softwareSystemId": "2",
+      "description": "Rocketshorts Server container",
+      "key": "SococoContainerDiagramGeneral",
+      "paperSize": "A4_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "33",
+            "34",
+            "35",
+            "68",
+            "36",
+            "37",
+            "17",
+            "154",
+            "108",
+            "50",
+            "51",
+            "32"
+          ],
+          "relationships": [
+            "155",
+            "81",
+            "94"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "14",
+            "15",
+            "38",
+            "16",
+            "39",
+            "18"
+          ],
+          "relationships": [
+            "44",
+            "143",
+            "101",
+            "157",
+            "169",
+            "172",
+            "43",
+            "153"
+          ]
+        }
+      ],
+      "relationships": [
+        {
+          "id": "172",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "195",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "215",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "203",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "213",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "81",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "201",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "200",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "210",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "43",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "182",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "209",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "44",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "157",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "155",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "143",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "101",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "199",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "177",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "188",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "169",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "33",
+          "x": 1035,
+          "y": 40
+        },
+        {
+          "id": "34",
+          "x": 2605,
+          "y": 1670
+        },
+        {
+          "id": "35",
+          "x": 75,
+          "y": 1255
+        },
+        {
+          "id": "68",
+          "x": 1910,
+          "y": 730
+        },
+        {
+          "id": "36",
+          "x": 2660,
+          "y": 585
+        },
+        {
+          "id": "14",
+          "x": 2030,
+          "y": 1700
+        },
+        {
+          "id": "37",
+          "x": 2655,
+          "y": 935
+        },
+        {
+          "id": "15",
+          "x": 645,
+          "y": 555
+        },
+        {
+          "id": "38",
+          "x": 2655,
+          "y": 1290
+        },
+        {
+          "id": "16",
+          "x": 1320,
+          "y": 560
+        },
+        {
+          "id": "39",
+          "x": 80,
+          "y": 930
+        },
+        {
+          "id": "17",
+          "x": 1315,
+          "y": 1545
+        },
+        {
+          "id": "18",
+          "x": 915,
+          "y": 1070
+        },
+        {
+          "id": "154",
+          "x": 70,
+          "y": 1610
+        },
+        {
+          "id": "108",
+          "x": 2130,
+          "y": 55
+        },
+        {
+          "id": "50",
+          "x": 90,
+          "y": 570
+        },
+        {
+          "id": "51",
+          "x": 90,
+          "y": 240
+        },
+        {
+          "id": "32",
+          "x": 1335,
+          "y": 2085
+        }
+      ]
+    }
+  ],
+  "componentViews": [
+    {
+      "description": "Mobile App in Ionic 2 with Cordova native modules",
+      "key": "SococoComponentDiagramMobileAppiOS",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "221",
+            "134",
+            "16",
+            "97"
+          ],
+          "relationships": [
+            "242",
+            "237",
+            "240"
+          ]
+        }
+      ],
+      "containerId": "218",
+      "relationships": [
+        {
+          "id": "240",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "242",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "244",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "237",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "221",
+          "x": 1035,
+          "y": 785
+        },
+        {
+          "id": "134",
+          "x": 1810,
+          "y": 150
+        },
+        {
+          "id": "16",
+          "x": 290,
+          "y": 485
+        },
+        {
+          "id": "97",
+          "x": 1040,
+          "y": 225
+        }
+      ]
+    },
+    {
+      "description": "Single Page Application components",
+      "key": "SococoComponentDiagramSinglePageApplication",
+      "paperSize": "A4_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "160",
+            "95",
+            "162",
+            "174"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "14",
+            "39"
+          ],
+          "relationships": [
+            "163"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "35"
+          ],
+          "relationships": [
+            "167"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "258",
+            "153"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "36"
+          ],
+          "relationships": [
+            "199"
+          ]
+        }
+      ],
+      "containerId": "18",
+      "relationships": [
+        {
+          "id": "153",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "163",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "167",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "199",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "258",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "35",
+          "x": 7,
+          "y": 148
+        },
+        {
+          "id": "36",
+          "x": 1490,
+          "y": 1510
+        },
+        {
+          "id": "14",
+          "x": 2685,
+          "y": 2025
+        },
+        {
+          "id": "39",
+          "x": 15,
+          "y": 1325
+        },
+        {
+          "id": "17",
+          "x": 2695,
+          "y": 1530
+        },
+        {
+          "id": "160",
+          "x": 880,
+          "y": 785
+        },
+        {
+          "id": "95",
+          "x": 2530,
+          "y": 1000
+        },
+        {
+          "id": "162",
+          "x": 895,
+          "y": 275
+        },
+        {
+          "id": "174",
+          "x": 1730,
+          "y": 630
+        }
+      ]
+    },
+    {
+      "description": "Mobile App in Ionic 2 with Cordova native modules",
+      "key": "SococoComponentDiagramMobileAppAndroid",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "220",
+            "134",
+            "98"
+          ],
+          "relationships": [
+            "243",
+            "238"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "16"
+          ],
+          "relationships": [
+            "239"
+          ]
+        }
+      ],
+      "containerId": "219",
+      "relationships": [
+        {
+          "id": "239",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "243",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "245",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "238",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "220",
+          "x": 1050,
+          "y": 795
+        },
+        {
+          "id": "134",
+          "x": 1930,
+          "y": 150
+        },
+        {
+          "id": "16",
+          "x": 235,
+          "y": 555
+        },
+        {
+          "id": "98",
+          "x": 1045,
+          "y": 225
+        }
+      ]
+    },
+    {
+      "description": "Shows Slack OAuth and callbacks",
+      "key": "SococoComponentDiagramSlackIntegration",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "223",
+            "224"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "227"
+          ]
+        }
+      ],
+      "containerId": "38",
+      "relationships": [
+        {
+          "id": "227",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "223",
+          "x": 1030,
+          "y": 585
+        },
+        {
+          "id": "224",
+          "x": 1025,
+          "y": 245
+        },
+        {
+          "id": "17",
+          "x": 195,
+          "y": 935
+        }
+      ]
+    },
+    {
+      "description": "Shows AVC call connected through Sococo AVC",
+      "key": "SococoComponentCallAvcSococoAVC",
+      "paperSize": "A4_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "58",
+            "59",
+            "60"
+          ],
+          "relationships": [
+            "133",
+            "76"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "68"
+          ],
+          "relationships": [
+            "78"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "17"
+          ],
+          "relationships": [
+            "94"
+          ]
+        },
+        {
+          "order": 4,
+          "elements": [
+            "1",
+            "2",
+            "129"
+          ],
+          "relationships": [
+            "132",
+            "7",
+            "150"
+          ]
+        }
+      ],
+      "containerId": "36",
+      "relationships": [
+        {
+          "id": "94",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "76",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "7",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "150",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "78",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "132",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "133",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 135,
+          "y": 120
+        },
+        {
+          "id": "2",
+          "x": 935,
+          "y": 170
+        },
+        {
+          "id": "68",
+          "x": 2379,
+          "y": 863
+        },
+        {
+          "id": "58",
+          "x": 1509,
+          "y": 788
+        },
+        {
+          "id": "59",
+          "x": 1509,
+          "y": 1253
+        },
+        {
+          "id": "17",
+          "x": 2374,
+          "y": 1613
+        },
+        {
+          "id": "129",
+          "x": 1995,
+          "y": 120
+        },
+        {
+          "id": "60",
+          "x": 820,
+          "y": 765
+        }
+      ]
+    },
+    {
+      "description": "duplicates #SococoComponentSococoCallAVC and #SococoContainerCallAvc",
+      "key": "SococoComponentRocketshortsSococoAVC",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "89",
+            "36"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 2,
+          "elements": [
+            "68"
+          ],
+          "relationships": [
+            "81",
+            "92"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "2"
+          ],
+          "relationships": [
+            "88"
+          ]
+        }
+      ],
+      "containerId": "17",
+      "relationships": [
+        {
+          "id": "81",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "92",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "88",
+          "description": "",
+          "order": "",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "89",
+          "x": 590,
+          "y": 650
+        },
+        {
+          "id": "2",
+          "x": 1450,
+          "y": 1220
+        },
+        {
+          "id": "68",
+          "x": 1025,
+          "y": 125
+        },
+        {
+          "id": "36",
+          "x": 1455,
+          "y": 725
+        }
+      ]
+    },
+    {
+      "description": "RocketShorts components breakdown",
+      "key": "SococoComponentDiagramRocketShorts",
+      "paperSize": "A3_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "89",
+            "38",
+            "16",
+            "104",
+            "105",
+            "106",
+            "18",
+            "218"
+          ],
+          "relationships": [
+            "113",
+            "213",
+            "246",
+            "248",
+            "249",
+            "229"
+          ]
+        },
+        {
+          "order": 2,
+          "elements": [
+            "36",
+            "219"
+          ],
+          "relationships": [
+            "200",
+            "247",
+            "215"
+          ]
+        },
+        {
+          "order": 3,
+          "elements": [
+            "250",
+            "251"
+          ],
+          "relationships": []
+        },
+        {
+          "order": 4,
+          "elements": [
+            "70"
+          ],
+          "relationships": [
+            "253"
+          ]
+        },
+        {
+          "order": 5,
+          "elements": [
+            "259"
+          ],
+          "relationships": [
+            "260"
+          ]
+        }
+      ],
+      "containerId": "17",
+      "relationships": [
+        {
+          "id": "215",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "229",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "213",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "200",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "260",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "253",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "113",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "247",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "246",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "249",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 1085,
+              "y": 275
+            }
+          ]
+        },
+        {
+          "id": "248",
+          "description": "",
+          "order": "",
+          "vertices": [
+            {
+              "x": 345,
+              "y": 140
+            },
+            {
+              "x": 1875,
+              "y": 135
+            }
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "89",
+          "x": 2510,
+          "y": 110
+        },
+        {
+          "id": "36",
+          "x": 470,
+          "y": 235
+        },
+        {
+          "id": "38",
+          "x": 1150,
+          "y": 650
+        },
+        {
+          "id": "16",
+          "x": 715,
+          "y": 1205
+        },
+        {
+          "id": "18",
+          "x": 120,
+          "y": 1205
+        },
+        {
+          "id": "250",
+          "x": 2510,
+          "y": 870
+        },
+        {
+          "id": "251",
+          "x": 2510,
+          "y": 490
+        },
+        {
+          "id": "104",
+          "x": 1925,
+          "y": 855
+        },
+        {
+          "id": "105",
+          "x": 1930,
+          "y": 485
+        },
+        {
+          "id": "259",
+          "x": 3310,
+          "y": 895
+        },
+        {
+          "id": "106",
+          "x": 1930,
+          "y": 115
+        },
+        {
+          "id": "218",
+          "x": 635,
+          "y": 1655
+        },
+        {
+          "id": "70",
+          "x": 3310,
+          "y": 475
+        },
+        {
+          "id": "219",
+          "x": 1215,
+          "y": 1660
+        }
+      ]
+    },
+    {
+      "description": "Mobile App in Ionic 2 with Cordova native modules",
+      "key": "SococoComponentDiagramMobileApp",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "animations": [
+        {
+          "order": 1,
+          "elements": [
+            "144",
+            "124",
+            "125",
+            "97",
+            "98"
+          ],
+          "relationships": []
+        }
+      ],
+      "containerId": "16",
+      "relationships": [],
+      "elements": [
+        {
+          "id": "144",
+          "x": 320,
+          "y": 660
+        },
+        {
+          "id": "124",
+          "x": 1720,
+          "y": 90
+        },
+        {
+          "id": "125",
+          "x": 1715,
+          "y": 625
+        },
+        {
+          "id": "97",
+          "x": 1185,
+          "y": 1255
+        },
+        {
+          "id": "98",
+          "x": 620,
+          "y": 1250
+        }
+      ]
+    }
+  ],
+  "dynamicViews": [
+    {
+      "description": "",
+      "key": "SupportFromWebsiteWidget",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "elementId": "17",
+      "relationships": [
+        {
+          "id": "26",
+          "description": "",
+          "order": "1",
+          "vertices": []
+        },
+        {
+          "id": "8",
+          "description": "",
+          "order": "2",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "1",
+          "x": 1015,
+          "y": 535
+        },
+        {
+          "id": "25",
+          "x": 85,
+          "y": 660
+        },
+        {
+          "id": "5",
+          "x": 1730,
+          "y": 370
+        }
+      ]
+    },
+    {
+      "description": "Shows the workflow for authenticating Slack and OAuth callbacks",
+      "key": "SococoDynamicDiagramSlackOAuthIntegration",
+      "paperSize": "A5_Landscape",
+      "automaticLayout": null,
+      "title": null,
+      "elementId": "38",
+      "relationships": [
+        {
+          "id": "235",
+          "description": "",
+          "order": "",
+          "vertices": []
+        },
+        {
+          "id": "119",
+          "description": "",
+          "order": "0",
+          "vertices": []
+        },
+        {
+          "id": "111",
+          "description": "",
+          "order": "1",
+          "vertices": []
+        },
+        {
+          "id": "227",
+          "description": "",
+          "order": "2",
+          "vertices": []
+        },
+        {
+          "id": "228",
+          "description": "",
+          "order": "3",
+          "vertices": []
+        }
+      ],
+      "elements": [
+        {
+          "id": "2",
+          "x": 70,
+          "y": 745
+        },
+        {
+          "id": "223",
+          "x": 960,
+          "y": 1085
+        },
+        {
+          "id": "102",
+          "x": 1900,
+          "y": 740
+        },
+        {
+          "id": "17",
+          "x": 193,
+          "y": 257
+        },
+        {
+          "id": "109",
+          "x": 1295,
+          "y": 340
+        }
+      ]
+    }
+  ],
+  "deploymentViews": [],
+  "filteredViews": [],
+  "configuration": {
+    "branding": {
+      "logo": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjIyOUFCMTZGNkQxRDExRTRBQjk4QjAxODU3RDEzNDdGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjIyOUFCMTcwNkQxRDExRTRBQjk4QjAxODU3RDEzNDdGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MjI5QUIxNkQ2RDFEMTFFNEFCOThCMDE4NTdEMTM0N0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MjI5QUIxNkU2RDFEMTFFNEFCOThCMDE4NTdEMTM0N0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4fxM50AAALh0lEQVR42uxdXWhc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",
+      "font": {
+        "name": "Open Sans",
+        "url": null
+      }
+    },
+    "styles": {
+      "elements": [
+        {
+          "tag": "Product"
+        },
+        {
+          "tag": "Person",
+          "background": "#08427b",
+          "color": "#ffffff",
+          "shape": "Person"
+        },
+        {
+          "tag": "External",
+          "background": "#c0c0c0"
+        },
+        {
+          "tag": "DB",
+          "shape": "Cylinder"
+        },
+        {
+          "tag": "SHARED_LIBRARY",
+          "shape": "Folder"
+        },
+        {
+          "tag": "Phone",
+          "background": "#73d100"
+        },
+        {
+          "tag": "MobileDevice",
+          "shape": "MobileDevicePortrait"
+        },
+        {
+          "tag": "Browser",
+          "shape": "WebBrowser"
+        },
+        {
+          "tag": "Desktop",
+          "shape": "RoundedBox"
+        },
+        {
+          "tag": "Staff",
+          "background": "#c9c9c9",
+          "color": "#000000",
+          "shape": "Person"
+        }
+      ],
+      "relationships": [
+        {
+          "tag": "Relationship",
+          "thickness": 2,
+          "dashed": false
+        },
+        {
+          "tag": "Data",
+          "dashed": true
+        },
+        {
+          "tag": "Meta",
+          "dashed": true
+        }
+      ]
+    },
+    "terminology": {
+      "enterprise": "Product"
+    },
+    "defaultView": null,
+    "lastSavedView": "SococoComponentDiagramRocketShorts",
+    "viewSortOrder": null
+  }
+}

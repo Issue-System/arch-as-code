@@ -3,12 +3,10 @@ package net.trilogy.arch.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
-import com.structurizr.view.ViewSet;
 import lombok.*;
 import net.trilogy.arch.domain.c4.C4Model;
 import net.trilogy.arch.domain.c4.C4Tag;
 import net.trilogy.arch.domain.c4.Entity;
-import net.trilogy.arch.domain.c4.view.C4ViewContainer;
 
 import java.util.List;
 import java.util.Set;
@@ -38,14 +36,6 @@ public class ArchitectureDataStructure {
     @NonNull
     @Builder.Default
     private C4Model model = C4Model.NONE;
-    @NonNull
-    @Builder.Default
-    private C4ViewContainer views = C4ViewContainer.NONE;
-
-    @NonNull
-    @Builder.Default
-    @JsonIgnore
-    private ViewSet structurizrViews = null;
 
     public Set<Entity> getAllWithTag(C4Tag tag) {
         return model.findWithTag(tag);

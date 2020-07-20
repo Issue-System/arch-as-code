@@ -101,6 +101,7 @@ public class UserJourneyTest {
     @Test
     public void publishes_workspace_when_workspace_path_passed_to_validate_command() throws Exception {
         init();
+        importWorkspace();
         execute("validate", workspaceRoot);
 
         int exitCode = execute("publish", workspaceRoot);
@@ -122,7 +123,7 @@ public class UserJourneyTest {
         assertThat(exitCode, equalTo(0));
     }
 
-    private int init() throws Exception {
+    private int init() {
         return execute("init",
                 "-i", String.valueOf(config.getWorkspaceId()),
                 "-k", config.getApiKey(),
@@ -130,7 +131,7 @@ public class UserJourneyTest {
                 workspaceRoot);
     }
 
-    private int importWorkspace() throws Exception {
+    private int importWorkspace() {
         return execute("import", exportedWorkspacePath.getAbsolutePath(), workspaceRoot);
     }
 }

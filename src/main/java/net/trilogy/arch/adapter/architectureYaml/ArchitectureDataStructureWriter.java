@@ -31,9 +31,6 @@ public class ArchitectureDataStructureWriter {
         ArchitectureDataStructureObjectMapper mapper = new ArchitectureDataStructureObjectMapper();
         filesFacade.writeString(writeFile.toPath(), mapper.writeValueAsString(dataStructure));
 
-        final Path viewsWritePath = Path.of(writeFile.getParent()).resolve(STRUCTURIZR_VIEWS_FILE_NAME);
-        writeViews(dataStructure.getStructurizrViews(), viewsWritePath);
-
         final Path documentationWritePath = Path.of(writeFile.getParent()).resolve("documentation");
         if (!documentationWritePath.toFile().exists()) filesFacade.createDirectory(documentationWritePath);
 
@@ -43,11 +40,13 @@ public class ArchitectureDataStructureWriter {
         return writeFile;
     }
 
-    private void writeViews(ViewSet structurizrViews, Path writePath) throws IOException {
+    public Path writeViews(ViewSet structurizrViews, Path parentPath) throws IOException {
+        final Path viewsWritePath = parentPath.resolve(STRUCTURIZR_VIEWS_FILE_NAME);
         if (structurizrViews != null) {
             ObjectMapper mapper = new ObjectMapper();
-            filesFacade.writeString(writePath, mapper.writeValueAsString(structurizrViews));
+            filesFacade.writeString(viewsWritePath, mapper.writeValueAsString(structurizrViews));
         }
+        return viewsWritePath;
     }
 
     private void writeDocumentation(ArchitectureDataStructure dataStructure, Path documentation) throws IOException {

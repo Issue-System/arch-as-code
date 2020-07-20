@@ -1,5 +1,6 @@
 package net.trilogy.arch.commands;
 
+import com.structurizr.view.ViewSet;
 import lombok.Getter;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureWriter;
 import net.trilogy.arch.adapter.structurizr.WorkspaceReader;
@@ -10,6 +11,7 @@ import net.trilogy.arch.facade.FilesFacade;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "import", mixinStandardHelpOptions = true, description = "Imports existing structurizr workspace, overwriting the existing product architecture.")
@@ -37,10 +39,15 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin, Di
 
         try {
             ArchitectureDataStructure dataStructure = new WorkspaceReader().load(this.exportedWorkspacePath);
+            ViewSet workspaceViews = new WorkspaceReader().loadViews(filesFacade, this.exportedWorkspacePath);
 
             File writeFile = this.productArchitectureDirectory.toPath().resolve("product-architecture.yml").toFile();
-            File exportedFile = new ArchitectureDataStructureWriter(filesFacade).export(dataStructure, writeFile);
+            ArchitectureDataStructureWriter architectureDataStructureWriter = new ArchitectureDataStructureWriter(filesFacade);
+            File exportedFile = architectureDataStructureWriter.export(dataStructure, writeFile);
             print(String.format("Architecture data structure written to - %s", exportedFile.getAbsolutePath()));
+
+            Path viewsPath = architectureDataStructureWriter.writeViews(workspaceViews, productArchitectureDirectory.toPath());
+            print(String.format("Views were written to - %s", viewsPath));
         } catch (Exception e) {
             printError("Failed to import", e);
             return 1;
@@ -48,4 +55,5 @@ public class ImportCommand implements Callable<Integer>, DisplaysOutputMixin, Di
 
         return 0;
     }
+
 }

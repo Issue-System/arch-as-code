@@ -3,7 +3,12 @@ package net.trilogy.arch.adapter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
+import net.trilogy.arch.domain.architectureUpdate.Tdd;
+import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,72 +32,101 @@ public class ArchitectureUpdateObjectMapperTest {
     @Test
     public void shouldWriteBlankYamlWithOverriddenName() throws Exception {
         String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.builderPreFilledWithBlanks().name("OVERRIDDEN").build());
-        String expected = getBlankYamlText().replace("[SAMPLE NAME]", "OVERRIDDEN");
+        String expected = getBlankYamlText().replace("'[SAMPLE NAME]'", "OVERRIDDEN");
+        assertThat(actual.trim(), equalTo(expected.trim()));
+    }
+
+    @Test
+    public void shouldWriteBlankYamlWithMultilineTdd() throws Exception {
+        String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(
+                ArchitectureUpdate.builderPreFilledWithBlanks()
+                        .tddContainersByComponent(
+                                List.of(
+                                        new TddContainerByComponent(
+                                                new Tdd.ComponentReference("[SAMPLE-COMPONENT-ID]"),
+                                                false,
+                                                Map.of(
+                                                        new Tdd.Id("[SAMPLE-TDD-ID]"), new Tdd("## Long multi-line TDD\nline 2: **BOLD**\nline 3: *italic*\nline 4: `code`")
+                                                )
+                                        )
+                                )
+                        )
+                        .build()
+        );
+
+        String tddText = ""
+                + "|-\n" +
+                "        ## Long multi-line TDD\n" +
+                "        line 2: **BOLD**\n" +
+                "        line 3: *italic*\n" +
+                "        line 4: `code`";
+
+        String expected = getBlankYamlText().replace("'[SAMPLE TDD TEXT]'", tddText);
         assertThat(actual.trim(), equalTo(expected.trim()));
     }
 
     private String getBlankYamlText() {
         return String.join("\n"
                 , ""
-                , "name: \"[SAMPLE NAME]\""
-                , "milestone: \"[SAMPLE MILESTONE]\""
+                , "name: '[SAMPLE NAME]'"
+                , "milestone: '[SAMPLE MILESTONE]'"
                 , "authors:"
-                , "- name: \"[SAMPLE PERSON NAME]\""
-                , "  email: \"[SAMPLE PERSON EMAIL]\""
+                , "- name: '[SAMPLE PERSON NAME]'"
+                , "  email: '[SAMPLE PERSON EMAIL]'"
                 , "PCAs:"
-                , "- name: \"[SAMPLE PERSON NAME]\""
-                , "  email: \"[SAMPLE PERSON EMAIL]\""
+                , "- name: '[SAMPLE PERSON NAME]'"
+                , "  email: '[SAMPLE PERSON EMAIL]'"
                 , "P2:"
-                , "  link: \"[SAMPLE LINK TO P2]\""
+                , "  link: '[SAMPLE LINK TO P2]'"
                 , "  jira:"
-                , "    ticket: \"[SAMPLE JIRA TICKET]\""
-                , "    link: \"[SAMPLE JIRA TICKET LINK]\""
+                , "    ticket: '[SAMPLE JIRA TICKET]'"
+                , "    link: '[SAMPLE JIRA TICKET LINK]'"
                 , "P1:"
-                , "  link: \"[SAMPLE LINK TO P1]\""
+                , "  link: '[SAMPLE LINK TO P1]'"
                 , "  jira:"
-                , "    ticket: \"[SAMPLE JIRA TICKET]\""
-                , "    link: \"[SAMPLE JIRA TICKET LINK]\""
-                , "  executive-summary: \"[SAMPLE EXECUTIVE SUMMARY]\""
+                , "    ticket: '[SAMPLE JIRA TICKET]'"
+                , "    link: '[SAMPLE JIRA TICKET LINK]'"
+                , "  executive-summary: '[SAMPLE EXECUTIVE SUMMARY]'"
                 , "useful-links:"
-                , "- description: \"[SAMPLE LINK DESCRIPTION]\""
-                , "  link: \"[SAMPLE-LINK]\""
+                , "- description: '[SAMPLE LINK DESCRIPTION]'"
+                , "  link: '[SAMPLE-LINK]'"
                 , "milestone-dependencies:"
-                , "- description: \"[SAMPLE MILESTONE DEPENDENCY]\""
+                , "- description: '[SAMPLE MILESTONE DEPENDENCY]'"
                 , "  links:"
-                , "  - description: \"[SAMPLE LINK DESCRIPTION]\""
-                , "    link: \"[SAMPLE-LINK]\""
+                , "  - description: '[SAMPLE LINK DESCRIPTION]'"
+                , "    link: '[SAMPLE-LINK]'"
                 , "decisions:"
                 , "  '[SAMPLE-DECISION-ID]':"
-                , "    text: \"[SAMPLE DECISION TEXT]\""
+                , "    text: '[SAMPLE DECISION TEXT]'"
                 , "    tdd-references:"
-                , "    - \"[SAMPLE-TDD-ID]\""
+                , "    - '[SAMPLE-TDD-ID]'"
                 , "tdds-per-component:"
-                , "- component-id: \"[SAMPLE-COMPONENT-ID]\""
+                , "- component-id: '[SAMPLE-COMPONENT-ID]'"
                 , "  deleted: false"
                 , "  tdds:"
                 , "    '[SAMPLE-TDD-ID]':"
-                , "      text: \"[SAMPLE TDD TEXT]\""
+                , "      text: '[SAMPLE TDD TEXT]'"
                 , "functional-requirements:"
                 , "  '[SAMPLE-REQUIREMENT-ID]':"
-                , "    text: \"[SAMPLE REQUIREMENT TEXT]\""
-                , "    source: \"[SAMPLE REQUIREMENT SOURCE TEXT]\""
+                , "    text: '[SAMPLE REQUIREMENT TEXT]'"
+                , "    source: '[SAMPLE REQUIREMENT SOURCE TEXT]'"
                 , "    tdd-references:"
-                , "    - \"[SAMPLE-TDD-ID]\""
+                , "    - '[SAMPLE-TDD-ID]'"
                 , "capabilities:"
                 , "  epic:"
-                , "    title: \"Please enter epic title from Jira\""
+                , "    title: Please enter epic title from Jira"
                 , "    jira:"
-                , "      ticket: \"please-enter-epic-ticket-from-jira\""
-                , "      link: \"Please enter epic link from Jira\""
+                , "      ticket: please-enter-epic-ticket-from-jira"
+                , "      link: Please enter epic link from Jira"
                 , "  feature-stories:"
-                , "  - title: \"[SAMPLE FEATURE STORY TITLE]\""
+                , "  - title: '[SAMPLE FEATURE STORY TITLE]'"
                 , "    jira:"
                 , "      ticket: \"\""
                 , "      link: \"\""
                 , "    tdd-references:"
-                , "    - \"[SAMPLE-TDD-ID]\""
+                , "    - '[SAMPLE-TDD-ID]'"
                 , "    functional-requirement-references:"
-                , "    - \"[SAMPLE-REQUIREMENT-ID]\""
+                , "    - '[SAMPLE-REQUIREMENT-ID]'"
         );
     }
 }

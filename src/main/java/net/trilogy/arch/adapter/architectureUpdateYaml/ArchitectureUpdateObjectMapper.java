@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
 
 import java.io.IOException;
@@ -13,9 +12,7 @@ import java.io.IOException;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
-import static com.fasterxml.jackson.annotation.PropertyAccessor.GETTER;
-import static com.fasterxml.jackson.annotation.PropertyAccessor.IS_GETTER;
+import static com.fasterxml.jackson.annotation.PropertyAccessor.*;
 
 public class ArchitectureUpdateObjectMapper {
     private final ObjectMapper mapper;
@@ -24,6 +21,7 @@ public class ArchitectureUpdateObjectMapper {
         this.mapper = new ObjectMapper(
                 new YAMLFactory()
                         .configure(YAMLGenerator.Feature.SPLIT_LINES, false)
+                        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
                         .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
         );

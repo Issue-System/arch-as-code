@@ -3,12 +3,7 @@ package net.trilogy.arch.adapter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.trilogy.arch.adapter.architectureUpdateYaml.ArchitectureUpdateObjectMapper;
 import net.trilogy.arch.domain.architectureUpdate.ArchitectureUpdate;
-import net.trilogy.arch.domain.architectureUpdate.Tdd;
-import net.trilogy.arch.domain.architectureUpdate.TddContainerByComponent;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,35 +28,6 @@ public class ArchitectureUpdateObjectMapperTest {
     public void shouldWriteBlankYamlWithOverriddenName() throws Exception {
         String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(ArchitectureUpdate.builderPreFilledWithBlanks().name("OVERRIDDEN").build());
         String expected = getBlankYamlText().replace("'[SAMPLE NAME]'", "OVERRIDDEN");
-        assertThat(actual.trim(), equalTo(expected.trim()));
-    }
-
-    @Test
-    public void shouldWriteBlankYamlWithMultilineTdd() throws Exception {
-        String actual = new ArchitectureUpdateObjectMapper().writeValueAsString(
-                ArchitectureUpdate.builderPreFilledWithBlanks()
-                        .tddContainersByComponent(
-                                List.of(
-                                        new TddContainerByComponent(
-                                                new Tdd.ComponentReference("[SAMPLE-COMPONENT-ID]"),
-                                                false,
-                                                Map.of(
-                                                        new Tdd.Id("[SAMPLE-TDD-ID]"), new Tdd("## Long multi-line TDD\nline 2: **BOLD**\nline 3: *italic*\nline 4: `code`")
-                                                )
-                                        )
-                                )
-                        )
-                        .build()
-        );
-
-        String tddText = ""
-                + "|-\n" +
-                "        ## Long multi-line TDD\n" +
-                "        line 2: **BOLD**\n" +
-                "        line 3: *italic*\n" +
-                "        line 4: `code`";
-
-        String expected = getBlankYamlText().replace("'[SAMPLE TDD TEXT]'", tddText);
         assertThat(actual.trim(), equalTo(expected.trim()));
     }
 
@@ -105,7 +71,10 @@ public class ArchitectureUpdateObjectMapperTest {
                 , "  deleted: false"
                 , "  tdds:"
                 , "    '[SAMPLE-TDD-ID]':"
-                , "      text: '[SAMPLE TDD TEXT]'"
+                , "      text: |-"
+                , "        [SAMPLE TDD TEXT LONG TEXT FORMAT]"
+                , "        Line 2"
+                , "        Line 3"
                 , "functional-requirements:"
                 , "  '[SAMPLE-REQUIREMENT-ID]':"
                 , "    text: '[SAMPLE REQUIREMENT TEXT]'"

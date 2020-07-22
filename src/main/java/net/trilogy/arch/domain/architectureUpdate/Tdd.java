@@ -23,7 +23,7 @@ public class Tdd {
     }
 
     public static Tdd blank() {
-        return new Tdd("[SAMPLE TDD TEXT]");
+        return new Tdd("[SAMPLE TDD TEXT LONG TEXT FORMAT]\nLine 2\nLine 3");
     }
 
     @EqualsAndHashCode

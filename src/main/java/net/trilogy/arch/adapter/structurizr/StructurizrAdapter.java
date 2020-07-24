@@ -36,8 +36,10 @@ public class StructurizrAdapter {
             client.putWorkspace(config().getWorkspaceId(), workspace);
         } catch (Exception e) {
             LogManager.getLogger(getClass()).error("Unable to publish to Structurizr", e);
-            throw new RuntimeException("Failed to publish to Structurizr", e);
+
+            return false;
         }
+
         return true;
     }
 

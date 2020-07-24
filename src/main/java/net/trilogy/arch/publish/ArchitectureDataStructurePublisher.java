@@ -3,7 +3,6 @@ package net.trilogy.arch.publish;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClientException;
-import com.structurizr.view.Configuration;
 import com.structurizr.view.ViewSet;
 import net.trilogy.arch.adapter.architectureYaml.ArchitectureDataStructureObjectMapper;
 import net.trilogy.arch.adapter.structurizr.StructurizrAdapter;
@@ -11,8 +10,6 @@ import net.trilogy.arch.domain.ArchitectureDataStructure;
 import net.trilogy.arch.facade.FilesFacade;
 import net.trilogy.arch.transformation.ArchitectureDataStructureTransformer;
 import net.trilogy.arch.transformation.TransformerFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +23,6 @@ public class ArchitectureDataStructurePublisher {
     private final ArchitectureDataStructureTransformer dataStructureTransformer;
     private final StructurizrAdapter structurizrAdapter;
     private final String manifestFileName;
-
-    private static final Logger logger = LogManager.getLogger(ArchitectureDataStructurePublisher.class);
 
     public ArchitectureDataStructurePublisher(FilesFacade filesFacade,
                                               File productArchitectureDirectory,
@@ -53,14 +48,9 @@ public class ArchitectureDataStructurePublisher {
     // TODO [TESTING] [OVERHAUL] [OPTIONAL]: Make testing not require real connection to Structurizr.
     public void publish() throws StructurizrClientException, IOException {
         Workspace workspace = getWorkspace(productArchitectureDirectory, manifestFileName);
-
-        File file = new File(productArchitectureDirectory + File.separator + "workspace.json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(file, workspace);
-
-        // read the exported file as is
-//        File exportedFile = new File(productArchitectureDirectory + File.separator + "structurizr-49344-workspace_3.json");
-//        workspace = objectMapper.readValue(exportedFile, Workspace.class);
+//        File file = new File(productArchitectureDirectory + File.separator + "workspace.json");
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.writeValue(file, workspace);
         structurizrAdapter.publish(workspace);
     }
 
@@ -76,24 +66,12 @@ public class ArchitectureDataStructurePublisher {
 
     private void loadAndSetViews(File productArchitectureDirectory, Workspace workspace) throws IOException {
         ViewSet viewSet = loadStructurizrViews(productArchitectureDirectory);
-        logger.info("Loaded view file from " + productArchitectureDirectory);
-        //viewSet.getSystemLandscapeViews().stream().forEach(v -> {v.disableAutomaticLayout(); v.setPaperSize(null); });
-        Configuration configuration = viewSet.getConfiguration();
-        try {
-            Method setLastSavedView = Configuration.class.getDeclaredMethod("setLastSavedView", String.class);
-            setLastSavedView.setAccessible(true);
-            setLastSavedView.invoke(configuration, (Object[]) new String[] {null});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         try {
             Method setViews = Workspace.class.getDeclaredMethod("setViews", ViewSet.class);
             setViews.setAccessible(true);
             setViews.invoke(workspace, viewSet);
         } catch (Exception e) {
-            logger.error("Unable to set views on Structurizr workspace.", e);
             e.printStackTrace();
-            throw new RuntimeException("Failed to set views on workspace.", e);
         }
     }
 

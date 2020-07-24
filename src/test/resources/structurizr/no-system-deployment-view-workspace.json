@@ -17,7 +17,8 @@
                     {
                         "id": "3",
                         "tags": "Element,Container",
-                        "name": "Database"
+                        "name": "Database",
+                        "technology": "mysql"
                     }
                 ]
             },
@@ -30,7 +31,8 @@
                     {
                         "id": "6",
                         "tags": "Element,Container",
-                        "name": "API"
+                        "name": "API",
+                        "technology": "java"
                     }
                 ]
             }

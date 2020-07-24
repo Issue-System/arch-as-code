@@ -325,7 +325,8 @@
                     {
                       "required": [
                         "action",
-                        "description"
+                        "description",
+                        "technology"
                       ],
                       "properties": {
                         "id": {
@@ -364,7 +365,8 @@
             {
               "required": [
                 "id",
-                "name"
+                "name",
+                "technology"
               ],
               "properties": {
                 "id": {
@@ -402,7 +404,8 @@
                     {
                       "required": [
                         "action",
-                        "description"
+                        "description",
+                        "technology"
                       ],
                       "properties": {
                         "id": {

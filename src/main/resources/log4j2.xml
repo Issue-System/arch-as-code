@@ -6,7 +6,7 @@
     </File>
   </Appenders>
   <Loggers>
-    <Root level="debug" additivity="false">
+    <Root level="info" additivity="false">
       <AppenderRef ref="arc-as-code-log"/>
     </Root>
   </Loggers>

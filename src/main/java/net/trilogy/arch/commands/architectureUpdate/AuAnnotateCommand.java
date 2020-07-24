@@ -36,6 +36,7 @@ public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMix
 
     @Getter
     private final ArchitectureDataStructureObjectMapper architectureDataStructureObjectMapper;
+    private static final String REGEX = "(\\n\\s*-\\s['\\\"]?component-id['\\\"]?:\\s+['\\\"]?(\\d+)['\\\"]?).*((^\\n)*\\n)";
 
     public AuAnnotateCommand(FilesFacade filesFacade) {
         this.filesFacade = filesFacade;
@@ -45,7 +46,7 @@ public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMix
     @Override
     public Integer call() {
         logArgs();
-        var regexToGetComponentReferences = Pattern.compile("(\\n\\s+['\"]?Component-)(\\d+)(['\"]?:)[^\\n]*(\\n)");
+        var regexToGetComponentReferences = Pattern.compile(REGEX);
 
         String au = null;
         try {
@@ -58,15 +59,13 @@ public class AuAnnotateCommand implements Callable<Integer>, LoadArchitectureMix
         final Matcher matcher = regexToGetComponentReferences.matcher(au);
 
         final var architecture = loadArchitectureOrPrintError("Unable to load Architecture product-architecture.yml.");
-        if(architecture.isEmpty()) return 2;
+        if (architecture.isEmpty()) return 2;
 
         while (matcher.find()) {
-            au = matcher.replaceAll((res) -> 
-                    res.group(1) + 
-                    res.group(2) + 
-                    res.group(3) + 
-                    getComponentPathComment(res.group(2), architecture.get()) +
-                    res.group(4)
+            au = matcher.replaceAll((res) ->
+                    res.group(1) +
+                            getComponentPathComment(res.group(2), architecture.get()) +
+                            res.group(3)
             );
         }
 

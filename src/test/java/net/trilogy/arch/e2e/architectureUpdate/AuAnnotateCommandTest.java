@@ -2,7 +2,6 @@ package net.trilogy.arch.e2e.architectureUpdate;
 
 import net.trilogy.arch.Application;
 import net.trilogy.arch.TestHelper;
-import net.trilogy.arch.adapter.git.GitInterface;
 import net.trilogy.arch.facade.FilesFacade;
 import org.junit.After;
 import org.junit.Before;
@@ -68,18 +67,18 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldAnnotate() throws Exception {
         // WHEN
-        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
+        int status = TestHelper.execute("au", "annotate", toString(changedAuWithComponentsPath), toString(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
         // THEN
         var expected = Files.readString(originalAuWithComponentsPath)
-                .replaceFirst("'Component-31':",
-                        "'Component-31':  # c4://Internet Banking System/API Application/Reset Password Controller")
-                .replaceFirst("Component-30:",
-                        "Component-30:  # c4://Internet Banking System/API Application/Accounts Summary Controller")
-                .replaceFirst("\"Component-34\":",
-                        "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
+                .replaceFirst("component-id: '31'",
+                        "component-id: '31'  # c4://Internet Banking System/API Application/Reset Password Controller")
+                .replaceFirst("component-id: \"30\"",
+                        "component-id: \"30\"  # c4://Internet Banking System/API Application/Accounts Summary Controller")
+                .replaceFirst("component-id: 34",
+                        "component-id: 34  # c4://Internet Banking System/API Application/E-mail Component");
 
         collector.checkThat(out.toString(), equalTo("AU has been annotated with component paths.\n"));
         collector.checkThat(status, equalTo(0));
@@ -89,23 +88,23 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldRefreshAnnotations() throws Exception {
         // GIVEN
-        TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
+        TestHelper.execute("au", "annotate", toString(changedAuWithComponentsPath), toString(rootPath));
 
-        Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-29"));
+        Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("component-id: '31'", "component-id: '29'"));
 
         // WHEN
-        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
+        int status = TestHelper.execute("au", "annotate", toString(changedAuWithComponentsPath), toString(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
         // THEN
         var expected = Files.readString(originalAuWithComponentsPath)
-                .replaceFirst("'Component-31':",
-                        "'Component-29':  # c4://Internet Banking System/API Application/Sign In Controller")
-                .replaceFirst("Component-30:",
-                        "Component-30:  # c4://Internet Banking System/API Application/Accounts Summary Controller")
-                .replaceFirst("\"Component-34\":",
-                        "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
+                .replaceFirst("component-id: '31'",
+                        "component-id: '29'  # c4://Internet Banking System/API Application/Sign In Controller")
+                .replaceFirst("component-id: \"30\"",
+                        "component-id: \"30\"  # c4://Internet Banking System/API Application/Accounts Summary Controller")
+                .replaceFirst("component-id: 34",
+                        "component-id: 34  # c4://Internet Banking System/API Application/E-mail Component");
 
         collector.checkThat(status, equalTo(0));
         collector.checkThat(actual, equalTo(expected));
@@ -114,7 +113,7 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldHandleNoComponents() throws Exception {
         // WHEN
-        int status = TestHelper.execute("au", "annotate", str(changedAuWithoutComponentsPath), str(rootPath));
+        int status = TestHelper.execute("au", "annotate", toString(changedAuWithoutComponentsPath), toString(rootPath));
 
         var actual = Files.readString(changedAuWithoutComponentsPath);
 
@@ -129,20 +128,20 @@ public class AuAnnotateCommandTest {
     @Test
     public void shouldIgnoreInvalidComponents() throws Exception {
         // GIVEN
-        Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("Component-31", "Component-404"));
+        Files.writeString(changedAuWithComponentsPath, Files.readString(changedAuWithComponentsPath).replace("component-id: 34", "component-id: '404'"));
 
         // WHEN
-        int status = TestHelper.execute("au", "annotate", str(changedAuWithComponentsPath), str(rootPath));
+        int status = TestHelper.execute("au", "annotate", toString(changedAuWithComponentsPath), toString(rootPath));
 
         var actual = Files.readString(changedAuWithComponentsPath);
 
         // THEN
         var expected = Files.readString(originalAuWithComponentsPath)
-                .replaceFirst("'Component-31':", "'Component-404':")
-                .replaceFirst("Component-30:",
-                        "Component-30:  # c4://Internet Banking System/API Application/Accounts Summary Controller")
-                .replaceFirst("\"Component-34\":",
-                        "\"Component-34\":  # c4://Internet Banking System/API Application/E-mail Component");
+                .replaceFirst("component-id: 34", "component-id: '404'")
+                .replaceFirst("component-id: \"30\"",
+                        "component-id: \"30\"  # c4://Internet Banking System/API Application/Accounts Summary Controller")
+                .replaceFirst("component-id: '31'",
+                        "component-id: '31'  # c4://Internet Banking System/API Application/Reset Password Controller");
 
         collector.checkThat(out.toString(), equalTo("AU has been annotated with component paths.\n"));
         collector.checkThat(actual, equalTo(expected));
@@ -157,7 +156,7 @@ public class AuAnnotateCommandTest {
 
         // WHEN
         int status = TestHelper.execute(Application.builder().filesFacade(mockedFilesFacade).build(),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+                "au annotate " + toString(changedAuWithComponentsPath) + " " + toString(rootPath));
 
         // THEN
         collector.checkThat(out.toString(), equalTo(""));
@@ -176,7 +175,7 @@ public class AuAnnotateCommandTest {
 
         // WHEN
         int status = TestHelper.execute(Application.builder().filesFacade(spyedFilesFacade).build(),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+                "au annotate " + toString(changedAuWithComponentsPath) + " " + toString(rootPath));
 
         // THEN
         collector.checkThat(out.toString(), equalTo(""));
@@ -195,7 +194,7 @@ public class AuAnnotateCommandTest {
 
         // WHEN
         int status = TestHelper.execute(Application.builder().filesFacade(mockedFilesFacade).build(),
-                "au annotate " + str(changedAuWithComponentsPath) + " " + str(rootPath));
+                "au annotate " + toString(changedAuWithComponentsPath) + " " + toString(rootPath));
 
         // THEN
         collector.checkThat(out.toString(), equalTo(""));
@@ -206,7 +205,7 @@ public class AuAnnotateCommandTest {
 
     }
 
-    private String str(Path path) {
+    private String toString(Path path) {
         return path.toAbsolutePath().toString();
     }
 }
